@@ -1,0 +1,19 @@
+{
+  "_comment": "Fixture + format template for squads.json entries (ARCHITECTURE.md §5). Argentina 1986 final XI. Ratings PLACEHOLDER per ADR-006 rubric (R-01).",
+  "id": "arg-1986",
+  "country": "Argentina",
+  "year": 1986,
+  "players": [
+    { "id": "arg-1986-pumpido",       "name": "Nery Pumpido",        "positionRaw": "GK", "positionBucket": "GK",  "rating": 84 },
+    { "id": "arg-1986-cuciuffo",      "name": "José Luis Cuciuffo",  "positionRaw": "CB", "positionBucket": "DEF", "rating": 82 },
+    { "id": "arg-1986-brown",         "name": "José Luis Brown",     "positionRaw": "SW", "positionBucket": "DEF", "rating": 86 },
+    { "id": "arg-1986-ruggeri",       "name": "Oscar Ruggeri",       "positionRaw": "CB", "positionBucket": "DEF", "rating": 88 },
+    { "id": "arg-1986-olarticoechea", "name": "Julio Olarticoechea", "positionRaw": "LB", "positionBucket": "DEF", "rating": 83 },
+    { "id": "arg-1986-giusti",        "name": "Ricardo Giusti",      "positionRaw": "DM", "positionBucket": "MID", "rating": 82 },
+    { "id": "arg-1986-batista",       "name": "Sergio Batista",      "positionRaw": "DM", "positionBucket": "MID", "rating": 83 },
+    { "id": "arg-1986-enrique",       "name": "Héctor Enrique",      "positionRaw": "CM", "positionBucket": "MID", "rating": 82 },
+    { "id": "arg-1986-burruchaga",    "name": "Jorge Burruchaga",    "positionRaw": "AM", "positionBucket": "MID", "rating": 87 },
+    { "id": "arg-1986-maradona",      "name": "Diego Maradona",      "positionRaw": "AM", "positionBucket": "MID", "rating": 98 },
+    { "id": "arg-1986-valdano",       "name": "Jorge Valdano",       "positionRaw": "ST", "positionBucket": "ATT", "rating": 89 }
+  ]
+}

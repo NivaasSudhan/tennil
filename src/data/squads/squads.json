@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "_comment": "7-squad MVP corpus (ADR-007), 77 players. Each squad = the World Cup FINAL starting XI for that tournament (substitutes excluded, incl. Altobelli/Schürrle/Götze/Torres/Boghossian). Ratings per ADR-006 rubric, anchored: Pele 98, Maradona 98, Ronaldo'02 96, Zidane 95, Iniesta 93, Neuer 92. positionBucket must equal position-map.json[positionRaw] (validated). See RISKS_AND_UNKNOWNS.md R-01/R-02.",
+  "squads": [
+    {
+      "id": "bra-1970",
+      "country": "Brazil",
+      "year": 1970,
+      "players": [
+        { "id": "bra-1970-felix",         "name": "Félix",              "positionRaw": "GK", "positionBucket": "GK",  "rating": 82 },
+        { "id": "bra-1970-carlos-alberto","name": "Carlos Alberto",     "positionRaw": "RB", "positionBucket": "DEF", "rating": 88 },
+        { "id": "bra-1970-brito",         "name": "Brito",              "positionRaw": "CB", "positionBucket": "DEF", "rating": 82 },
+        { "id": "bra-1970-piazza",        "name": "Wilson Piazza",      "positionRaw": "CB", "positionBucket": "DEF", "rating": 82 },
+        { "id": "bra-1970-everaldo",      "name": "Everaldo",           "positionRaw": "LB", "positionBucket": "DEF", "rating": 80 },
+        { "id": "bra-1970-clodoaldo",     "name": "Clodoaldo",          "positionRaw": "DM", "positionBucket": "MID", "rating": 84 },
+        { "id": "bra-1970-gerson",        "name": "Gérson",             "positionRaw": "CM", "positionBucket": "MID", "rating": 88 },
+        { "id": "bra-1970-rivelino",      "name": "Rivelino",           "positionRaw": "AM", "positionBucket": "MID", "rating": 89 },
+        { "id": "bra-1970-jairzinho",     "name": "Jairzinho",          "positionRaw": "RW", "positionBucket": "ATT", "rating": 90 },
+        { "id": "bra-1970-tostao",        "name": "Tostão",             "positionRaw": "CF", "positionBucket": "ATT", "rating": 87 },
+        { "id": "bra-1970-pele",          "name": "Pelé",               "positionRaw": "SS", "positionBucket": "ATT", "rating": 98 }
+      ]
+    },
+    {
+      "id": "ita-1982",
+      "country": "Italy",
+      "year": 1982,
+      "players": [
+        { "id": "ita-1982-zoff",       "name": "Dino Zoff",          "positionRaw": "GK", "positionBucket": "GK",  "rating": 88 },
+        { "id": "ita-1982-gentile",    "name": "Claudio Gentile",    "positionRaw": "RB", "positionBucket": "DEF", "rating": 84 },
+        { "id": "ita-1982-collovati",  "name": "Fulvio Collovati",   "positionRaw": "CB", "positionBucket": "DEF", "rating": 80 },
+        { "id": "ita-1982-scirea",     "name": "Gaetano Scirea",     "positionRaw": "SW", "positionBucket": "DEF", "rating": 88 },
+        { "id": "ita-1982-bergomi",    "name": "Giuseppe Bergomi",   "positionRaw": "CB", "positionBucket": "DEF", "rating": 80 },
+        { "id": "ita-1982-cabrini",    "name": "Antonio Cabrini",    "positionRaw": "LB", "positionBucket": "DEF", "rating": 84 },
+        { "id": "ita-1982-oriali",     "name": "Gabriele Oriali",    "positionRaw": "DM", "positionBucket": "MID", "rating": 80 },
+        { "id": "ita-1982-tardelli",   "name": "Marco Tardelli",     "positionRaw": "CM", "positionBucket": "MID", "rating": 86 },
+        { "id": "ita-1982-conti",      "name": "Bruno Conti",        "positionRaw": "RM", "positionBucket": "MID", "rating": 86 },
+        { "id": "ita-1982-rossi",      "name": "Paolo Rossi",        "positionRaw": "CF", "positionBucket": "ATT", "rating": 90 },
+        { "id": "ita-1982-graziani",   "name": "Francesco Graziani", "positionRaw": "CF", "positionBucket": "ATT", "rating": 82 }
+      ]
+    },
+    {
+      "id": "arg-1986",
+      "country": "Argentina",
+      "year": 1986,
+      "players": [
+        { "id": "arg-1986-pumpido",       "name": "Nery Pumpido",        "positionRaw": "GK", "positionBucket": "GK",  "rating": 84 },
+        { "id": "arg-1986-cuciuffo",      "name": "José Luis Cuciuffo",  "positionRaw": "CB", "positionBucket": "DEF", "rating": 82 },
+        { "id": "arg-1986-brown",         "name": "José Luis Brown",     "positionRaw": "SW", "positionBucket": "DEF", "rating": 86 },
+        { "id": "arg-1986-ruggeri",       "name": "Oscar Ruggeri",       "positionRaw": "CB", "positionBucket": "DEF", "rating": 88 },
+        { "id": "arg-1986-olarticoechea", "name": "Julio Olarticoechea", "positionRaw": "LB", "positionBucket": "DEF", "rating": 83 },
+        { "id": "arg-1986-giusti",        "name": "Ricardo Giusti",      "positionRaw": "DM", "positionBucket": "MID", "rating": 82 },
+        { "id": "arg-1986-batista",       "name": "Sergio Batista",      "positionRaw": "DM", "positionBucket": "MID", "rating": 83 },
+        { "id": "arg-1986-enrique",       "name": "Héctor Enrique",      "positionRaw": "CM", "positionBucket": "MID", "rating": 82 },
+        { "id": "arg-1986-burruchaga",    "name": "Jorge Burruchaga",    "positionRaw": "AM", "positionBucket": "MID", "rating": 87 },
+        { "id": "arg-1986-maradona",      "name": "Diego Maradona",      "positionRaw": "AM", "positionBucket": "MID", "rating": 98 },
+        { "id": "arg-1986-valdano",       "name": "Jorge Valdano",       "positionRaw": "ST", "positionBucket": "ATT", "rating": 89 }
+      ]
+    },
+    {
+      "id": "fra-1998",
+      "country": "France",
+      "year": 1998,
+      "players": [
+        { "id": "fra-1998-barthez",   "name": "Fabien Barthez",     "positionRaw": "GK", "positionBucket": "GK",  "rating": 85 },
+        { "id": "fra-1998-thuram",    "name": "Lilian Thuram",      "positionRaw": "RB", "positionBucket": "DEF", "rating": 87 },
+        { "id": "fra-1998-leboeuf",   "name": "Frank Leboeuf",      "positionRaw": "CB", "positionBucket": "DEF", "rating": 82 },
+        { "id": "fra-1998-desailly",  "name": "Marcel Desailly",    "positionRaw": "CB", "positionBucket": "DEF", "rating": 87 },
+        { "id": "fra-1998-lizarazu",  "name": "Bixente Lizarazu",   "positionRaw": "LB", "positionBucket": "DEF", "rating": 85 },
+        { "id": "fra-1998-karembeu",  "name": "Christian Karembeu", "positionRaw": "CM", "positionBucket": "MID", "rating": 80 },
+        { "id": "fra-1998-deschamps", "name": "Didier Deschamps",   "positionRaw": "DM", "positionBucket": "MID", "rating": 84 },
+        { "id": "fra-1998-petit",     "name": "Emmanuel Petit",     "positionRaw": "CM", "positionBucket": "MID", "rating": 84 },
+        { "id": "fra-1998-zidane",    "name": "Zinedine Zidane",    "positionRaw": "AM", "positionBucket": "MID", "rating": 95 },
+        { "id": "fra-1998-djorkaeff", "name": "Youri Djorkaeff",    "positionRaw": "SS", "positionBucket": "ATT", "rating": 85 },
+        { "id": "fra-1998-guivarch",  "name": "Stéphane Guivarc'h", "positionRaw": "CF", "positionBucket": "ATT", "rating": 76 }
+      ]
+    },
+    {
+      "id": "bra-2002",
+      "country": "Brazil",
+      "year": 2002,
+      "players": [
+        { "id": "bra-2002-marcos",         "name": "Marcos",           "positionRaw": "GK",  "positionBucket": "GK",  "rating": 82 },
+        { "id": "bra-2002-cafu",           "name": "Cafu",             "positionRaw": "RWB", "positionBucket": "DEF", "rating": 87 },
+        { "id": "bra-2002-lucio",          "name": "Lúcio",            "positionRaw": "CB",  "positionBucket": "DEF", "rating": 85 },
+        { "id": "bra-2002-edmilson",       "name": "Edmílson",         "positionRaw": "CB",  "positionBucket": "DEF", "rating": 80 },
+        { "id": "bra-2002-roque-junior",   "name": "Roque Júnior",     "positionRaw": "CB",  "positionBucket": "DEF", "rating": 79 },
+        { "id": "bra-2002-roberto-carlos", "name": "Roberto Carlos",   "positionRaw": "LWB", "positionBucket": "DEF", "rating": 88 },
+        { "id": "bra-2002-gilberto",       "name": "Gilberto Silva",   "positionRaw": "DM",  "positionBucket": "MID", "rating": 81 },
+        { "id": "bra-2002-kleberson",      "name": "Kléberson",        "positionRaw": "CM",  "positionBucket": "MID", "rating": 78 },
+        { "id": "bra-2002-ronaldinho",     "name": "Ronaldinho",       "positionRaw": "AM",  "positionBucket": "MID", "rating": 89 },
+        { "id": "bra-2002-rivaldo",        "name": "Rivaldo",          "positionRaw": "SS",  "positionBucket": "ATT", "rating": 90 },
+        { "id": "bra-2002-ronaldo",        "name": "Ronaldo",          "positionRaw": "ST",  "positionBucket": "ATT", "rating": 96 }
+      ]
+    },
+    {
+      "id": "esp-2010",
+      "country": "Spain",
+      "year": 2010,
+      "players": [
+        { "id": "esp-2010-casillas",   "name": "Iker Casillas",    "positionRaw": "GK", "positionBucket": "GK",  "rating": 89 },
+        { "id": "esp-2010-ramos",      "name": "Sergio Ramos",     "positionRaw": "RB", "positionBucket": "DEF", "rating": 87 },
+        { "id": "esp-2010-pique",      "name": "Gerard Piqué",     "positionRaw": "CB", "positionBucket": "DEF", "rating": 86 },
+        { "id": "esp-2010-puyol",      "name": "Carles Puyol",     "positionRaw": "CB", "positionBucket": "DEF", "rating": 87 },
+        { "id": "esp-2010-capdevila",  "name": "Joan Capdevila",   "positionRaw": "LB", "positionBucket": "DEF", "rating": 79 },
+        { "id": "esp-2010-busquets",   "name": "Sergio Busquets",  "positionRaw": "DM", "positionBucket": "MID", "rating": 84 },
+        { "id": "esp-2010-alonso",     "name": "Xabi Alonso",      "positionRaw": "CM", "positionBucket": "MID", "rating": 86 },
+        { "id": "esp-2010-xavi",       "name": "Xavi",             "positionRaw": "CM", "positionBucket": "MID", "rating": 92 },
+        { "id": "esp-2010-iniesta",    "name": "Andrés Iniesta",   "positionRaw": "AM", "positionBucket": "MID", "rating": 93 },
+        { "id": "esp-2010-pedro",      "name": "Pedro",            "positionRaw": "RW", "positionBucket": "ATT", "rating": 80 },
+        { "id": "esp-2010-villa",      "name": "David Villa",      "positionRaw": "CF", "positionBucket": "ATT", "rating": 88 }
+      ]
+    },
+    {
+      "id": "ger-2014",
+      "country": "Germany",
+      "year": 2014,
+      "players": [
+        { "id": "ger-2014-neuer",          "name": "Manuel Neuer",           "positionRaw": "GK", "positionBucket": "GK",  "rating": 92 },
+        { "id": "ger-2014-lahm",           "name": "Philipp Lahm",           "positionRaw": "RB", "positionBucket": "DEF", "rating": 89 },
+        { "id": "ger-2014-boateng",        "name": "Jérôme Boateng",         "positionRaw": "CB", "positionBucket": "DEF", "rating": 85 },
+        { "id": "ger-2014-hummels",        "name": "Mats Hummels",           "positionRaw": "CB", "positionBucket": "DEF", "rating": 86 },
+        { "id": "ger-2014-howedes",        "name": "Benedikt Höwedes",       "positionRaw": "LB", "positionBucket": "DEF", "rating": 79 },
+        { "id": "ger-2014-schweinsteiger", "name": "Bastian Schweinsteiger", "positionRaw": "CM", "positionBucket": "MID", "rating": 88 },
+        { "id": "ger-2014-kramer",         "name": "Christoph Kramer",       "positionRaw": "CM", "positionBucket": "MID", "rating": 75 },
+        { "id": "ger-2014-kroos",          "name": "Toni Kroos",             "positionRaw": "CM", "positionBucket": "MID", "rating": 89 },
+        { "id": "ger-2014-ozil",           "name": "Mesut Özil",             "positionRaw": "AM", "positionBucket": "MID", "rating": 87 },
+        { "id": "ger-2014-muller",         "name": "Thomas Müller",          "positionRaw": "RW", "positionBucket": "ATT", "rating": 89 },
+        { "id": "ger-2014-klose",          "name": "Miroslav Klose",         "positionRaw": "CF", "positionBucket": "ATT", "rating": 84 }
+      ]
+    }
+  ]
+}

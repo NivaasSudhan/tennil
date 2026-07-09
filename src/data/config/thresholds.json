@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "_comment": "ALL numeric values PLACEHOLDER until Day-7 tune (T-015, R-04). Band evaluation: priority descending, first band whose predicates ALL pass; exactly one fallback. Engine reads BandDef fields generically — never hardcode band ids in code (ADR-004).",
+  "referenceFormation": "4-3-3",
+  "minCounts": { "GK": 1, "DEF": 4, "MID": 3, "ATT": 3 },
+  "ratingScale": { "min": 1, "max": 100 },
+  "bands": [
+    {
+      "id": "10-0",
+      "priority": 100,
+      "label": "LEGENDARY ROUT",
+      "requireAllBucketsNonEmpty": true,
+      "requireMinCounts": true,
+      "minBucketSums": { "GK": 92, "DEF": 352, "MID": 286, "ATT": 284 },
+      "minWeakLink": 88
+    },
+    {
+      "id": "5-0",
+      "priority": 80,
+      "label": "DOMINANT DISPLAY",
+      "requireAllBucketsNonEmpty": true,
+      "requireMinCounts": true,
+      "minBucketSums": { "GK": 92, "DEF": 351, "MID": 286, "ATT": 284 },
+      "minWeakLink": 86
+    },
+    {
+      "id": "3-1",
+      "priority": 60,
+      "label": "COMFORTABLE WIN",
+      "requireAllBucketsNonEmpty": true,
+      "requireMinCounts": true,
+      "minBucketSums": { "GK": 92, "DEF": 349, "MID": 286, "ATT": 284 },
+      "minWeakLink": 84
+    },
+    {
+      "id": "2-2",
+      "priority": 40,
+      "label": "NERVY DRAW",
+      "requireAllBucketsNonEmpty": true,
+      "requireMinCounts": false,
+      "minBucketSums": { "GK": 80, "DEF": 300, "MID": 250, "ATT": 250 },
+      "minWeakLink": 76
+    },
+    {
+      "id": "1-2",
+      "priority": 20,
+      "label": "UPSET LOSS",
+      "requireAllBucketsNonEmpty": true,
+      "requireMinCounts": false,
+      "minBucketSums": { "GK": 0, "DEF": 0, "MID": 0, "ATT": 0 },
+      "minWeakLink": 0
+    },
+    {
+      "id": "0-4",
+      "priority": 0,
+      "label": "TOTAL COLLAPSE",
+      "fallback": true
+    }
+  ]
+}

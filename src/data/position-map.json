@@ -1,0 +1,6 @@
+{
+  "GK": "GK",
+  "RB": "DEF", "LB": "DEF", "CB": "DEF", "SW": "DEF", "WB": "DEF", "RWB": "DEF", "LWB": "DEF", "DF": "DEF",
+  "DM": "MID", "CM": "MID", "AM": "MID", "RM": "MID", "LM": "MID", "MF": "MID",
+  "RW": "ATT", "LW": "ATT", "CF": "ATT", "ST": "ATT", "SS": "ATT", "FW": "ATT"
+}
