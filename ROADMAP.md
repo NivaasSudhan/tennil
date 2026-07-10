@@ -1,6 +1,6 @@
 # fifaTenZero — Product & Architecture Roadmap (MVP → Full Product)
 
-**Status:** planning artifact for Fable/subagent orchestration.
+**Status:** planning artifact for Fable/subagent orchestration; subject to Phase 0 refinement before execution.
 **Basis:** grounded in the shipped MVP source (`src/domain/**`, `src/app/**`, `scripts/simulate.ts`, config JSON) plus the locked handoff docs (PROJECT / ARCHITECTURE / DECISIONS / TASKS / RISKS).
 **Non-goal of this doc:** code changes. It decomposes work; it does not perform it.
 
@@ -37,10 +37,25 @@ The roadmap is staged deliberately because the single biggest lever — corpus s
 1. **Content authoring is manual** — the hard blocker on corpus growth.
 2. **Balance is a manual loop** — retuning after each corpus change needs richer diagnostics than a single histogram.
 3. **Explainability gap** — the product's core promise (a *legible* deterministic result) is only half-delivered.
+4. **Decision depth is shallow** (see §3.1) — not a Phase-1 blocker, but the thing Phases 2-3 must actually solve; nothing in Phase 1 should pretend to solve it.
 
 ---
 
-## 3. Product gaps to close first (prioritized)
+## 3. Design principles (taste — read before executing anything)
+
+Product-taste commitments, not architecture invariants. They shape *what* gets built and *what gets refused*; deviating needs a written case in the PR, not an ADR.
+
+1. **Decision depth is the existential risk — not corpus size.** The 2026-07-09 simulation showed skilled (greedy) play is near-deterministic: GK 92 / MID 286 / ATT 284 land almost every run; only DEF and the weak link vary. Translation: the draft is close to *solved* — "take the highest-rated player in a needed bucket" is nearly optimal, and outcomes hinge mostly on reveal luck. Corpus growth adds variety, not depth. Every phase must ask: does this make the *pick* decision harder in an interesting way? Formation legality (Phase 2) and synergy (Phase 3) are the real depth levers — treat them as product-critical, not spectacle.
+2. **Explainability = margins, not audits.** The result screen should say "you were 3 rating points from a 5-0", not render a predicate truth-table. `explainScoreBand` therefore exposes exact `required`/`actual` deltas, and the UI leads with the *nearest miss*. Near-misses are the retention engine — "one more draft" lives there.
+3. **Determinism is a feature; monotony is not.** Variety must come only from deterministic sources: reveal RNG (already), corpus breadth (Phase 1), and **commentary variants selected by a hash of the final XI** — multiple scripts per band, variant = `hash(xi ids) % variants`. Same XI ⇒ same story; different XI ⇒ different story. No RNG enters scoring/commentary, ever (schema bump + small ADR when it lands, Phase 3).
+4. **Ratings are editorial content, not data.** The pipeline (ADR-012) *proposes*; the human override file is *canon* and survives every regeneration. Maradona's 98 is an opinion held with conviction — players arguing with a rating is engagement, and a generator must never silently overwrite a curated number.
+5. **The daily seed is the shareability feature.** Same seed for everyone, compare results — Wordle mechanics, nearly free on this architecture (seed + action log, ADR-014). Everything else in Phase 3 spectacle is polish; this is the growth loop. Do not ship a generic "share my result" before shared-seed comparison exists.
+6. **The top band should get rarer as the corpus grows.** ~5% (1 in 20 skilled drafts) was forced by 7-squad lumpiness, not chosen. As distributions smooth, retune toward **2-3%** so 10-0 feels legendary. A player's first 10-0 should be a screenshot moment.
+7. **Anti-roadmap (will not build):** meta-progression, unlock trees, login/accounts, energy or daily-limit mechanics, currencies. One draft is a complete, self-contained 3-minute artifact. Retention comes from depth, near-misses, and the daily seed — never from withholding the game.
+
+---
+
+## 4. Product gaps to close first (prioritized)
 
 | # | Gap | Why first | Primary artifact |
 |---|-----|-----------|------------------|
@@ -55,7 +70,46 @@ Gaps 1, 4, 5 are the first sprint. Gaps 2, 3 are the platform investment that ma
 
 ---
 
-## 4. Roadmap by phase
+## 5. Phase 0 — Fable discovery, critique, and roadmap refinement
+
+**Objective:** before execution begins, Fable ingests full project context, independently analyzes the MVP and roadmap using its own product/architecture judgment, then refines this roadmap into the best executable plan for subagents.
+
+**Inputs**
+- This roadmap artifact.
+- Locked docs: PROJECT.md, ARCHITECTURE.md, DECISIONS.md, IMPLEMENTATION_PLAN.md, TASKS.md, RISKS_AND_UNKNOWNS.md, CLAUDE.md.
+- Current source tree: `src/domain/**`, `src/app/**`, `src/data/**`, `scripts/**, tests, config JSON.
+- Current simulation outputs and any available notes from earlier tuning.
+
+**Required Fable responsibilities**
+1. Reassess current MVP architecture and product shape from first principles.
+2. Validate whether this roadmap's sequencing is still the best one.
+3. Propose missing workstreams, components, or guardrails.
+4. Simplify, reorder, merge, or remove roadmap items where it improves execution quality.
+5. Propose stronger abstractions, tighter decomposition, or additional diagnostics.
+6. Preserve all locked invariants unless explicitly recommending a new ADR.
+7. Flag any place where this roadmap is too conservative, too ambitious, or operationally awkward.
+
+**Outputs**
+- A revised roadmap or annotated delta from this roadmap.
+- A recommended execution sequence for subagents.
+- A list of proposed additions, removals, and modifications with rationale.
+- Any newly recommended ADRs or ADR timing changes.
+- A confidence/risk assessment for the revised plan.
+
+**Guardrails**
+- Fable may refine this roadmap, but may not casually violate locked invariants around deterministic scoring, commentary downstreamness, config-driven thresholds, RNG isolation, vendored runtime data, or pure domain rules without explicitly calling for an ADR.
+- Fable should prefer strengthening the current architecture over rewriting it.
+- Fable should treat this roadmap as a strong draft, not a final authority.
+
+**Exit criteria**
+- [ ] Fable has reviewed all supplied context.
+- [ ] Fable has produced a revised execution plan or an explicit "no major changes needed" verdict.
+- [ ] Any proposed deviation from current invariants is surfaced as an ADR recommendation, not silently adopted.
+- [ ] Subagent workstreams launched only after the revised Phase 0 plan is accepted.
+
+---
+
+## 6. Roadmap by phase
 
 ### Phase 1 — Scalable content platform (no core-loop change)
 **Objective:** make corpus growth cheap and safe, and land the two quick UX wins, without touching the draft/scoring engine.
@@ -64,7 +118,7 @@ Gaps 1, 4, 5 are the first sprint. Gaps 2, 3 are the platform investment that ma
 - `scripts/ingest/**`: build-time roster ingestion from jfjelstul/worldcup DB and/or Zafronix free tier → normalized to the frozen `squads.json` schema (never fetched at runtime — Invariant 5).
 - Reproducible rating-generation script applying the ADR-006 rubric (anchors + tier bands + tournament adjustment), emitting a diffable ratings table with the human-override points preserved.
 - Corpus expansion **7 → 24-32** iconic squads across eras, with per-squad validation fixtures.
-- Simulation diagnostics upgrade: `runSimulation` reports **per-band frequency by seed range and by corpus slice** (era/confederation/tier), plus **percentile distributions (p10/p25/p50/p75/p90) for each bucket sum and the weak-link floor, by corpus slice** — these show *threshold pressure* directly (where a gate actually bites) far better than band frequency alone. Emits a machine-readable `sim-report.json` for CI regression.
+- Simulation diagnostics upgrade: `runSimulation` reports **per-band frequency by seed range and by corpus slice** (era/confederation/tier), plus **percentile distributions (p10/p25/p50/p75/p90) for each bucket sum and the weak-link floor, by corpus slice** — these show *threshold pressure* directly (where a gate actually bites) far better than band frequency alone. Also reports **near-miss rates** — the share of drafts that failed the next-higher band only on numeric predicates and only by ≤3 rating points — the direct measure of "one more draft" tension (§3.2), computed through the shared predicate evaluator (never a second reimplementation inside the sim). Emits a machine-readable `sim-report.json` for CI regression.
 - **Landing / start screen** (`StartScreen.tsx`) gated by an app-level `appPhase: 'landing' | 'playing'` UI state; draft starts only on the **Start Game** CTA.
 - **Result playback controls**: lift `BEAT_REVEAL_MS` into playback state with 1×/2×/4× speed; keep existing skip-to-result. **Speed/skip are presentation-only controls; they do not alter commentary contents or result derivation.**
 
@@ -86,7 +140,7 @@ Gaps 1, 4, 5 are the first sprint. Gaps 2, 3 are the platform investment that ma
 **Exit criteria**
 - [ ] 24-32 squads authored, all pass `loadGameData` clean.
 - [ ] Ingestion + rating scripts reproduce the corpus from sources deterministically.
-- [ ] Post-expansion retune lands top band in the 5-7% protocol window (greedy), ~0% random, no dead bands; logged.
+- [ ] Post-expansion retune lands top band in the 5-7% protocol window (greedy), ~0% random, no dead bands; logged. (Directional: window tightens toward 2-3% as the corpus smooths — §3.6.)
 - [ ] Landing screen + Start CTA shipped; draft no longer auto-starts.
 - [ ] Result playback: skip + 1×/2×/4× speed working; content proven timing-independent.
 
@@ -95,8 +149,8 @@ Gaps 1, 4, 5 are the first sprint. Gaps 2, 3 are the platform investment that ma
 
 **Deliverables**
 - `src/domain/scoring/explainScoreBand.ts` — pure `explainScoreBand(input, config)` returning, per band, each predicate's `{ name, required, actual, passed }` and the specific failing predicates for the next-higher band ("you missed 10-0 because DEF 349 < 352 and weakLink 82 < 88").
-- `ResultBreakdown` UI: position-bucket sums/counts, weak-link and strongest-link callouts, and the "why not the next band" explanation, fed entirely by `explainScoreBand`.
-- **DraftSession truth/ops split** (only now, because explain/achievements consume it): introduce a `DraftTruth` view (`picks`, `phase`, `skipRemaining`) distinct from operational metadata (`seenSquadIds`, `roundsPlayed`, `breachLog`, `currentReveal`). Governed by its own **ADR-015** (§7) — this is a type-ownership boundary, not just an explainability detail.
+- `ResultBreakdown` UI: position-bucket sums/counts, weak-link and strongest-link callouts, and the "why not the next band" explanation, fed entirely by `explainScoreBand`. **Presentation leads with margins ("3 points from a 5-0"), not a predicate truth-table (§3.2)** — the pass/fail detail is available behind a disclosure, never the headline.
+- **DraftSession truth/ops split** (only now, because explain/achievements consume it): introduce a `DraftTruth` view (`picks`, `phase`, `skipRemaining`) distinct from operational metadata (`seenSquadIds`, `roundsPlayed`, `breachLog`, `currentReveal`). Governed by its own **ADR-015** (§9) — this is a type-ownership boundary, not just an explainability detail.
 - First strategic-depth layer: **formation legality / legal-XI shape** validation surfaced pre-lock (advisory, not a hard block unless configured).
 
 **Architecture implications**
@@ -121,9 +175,9 @@ Gaps 1, 4, 5 are the first sprint. Gaps 2, 3 are the platform investment that ma
 **Objective:** deepen experience and shareability without engine complexity.
 
 **Deliverables**
-- Richer per-band commentary templates; pre-result tension screen.
+- Richer per-band commentary templates; pre-result tension screen. **Multiple script variants per band, selected deterministically by a hash of the final XI's player ids (§3.3)** — variety without RNG; requires a `commentary.json` schema bump + small ADR.
 - Animated result screen with momentum arc / turning points / strengths-weaknesses; match-report artifact explaining 5-0 vs 10-0 (built on `explainScoreBand`).
-- **Seed + action-log persistence/shareability** (no backend): store `seed` + the ordered pick/skip actions; replay through the pure state machine to reconstruct any session. Enables seeded challenge mode, daily curated draft, shareable results.
+- **Seed + action-log persistence/shareability** (no backend): store `seed` + the ordered pick/skip actions; replay through the pure state machine to reconstruct any session. Enables seeded challenge mode, daily curated draft, shareable results. **Priority inside this bundle: the daily shared seed ships first (§3.5)** — it is the growth loop; generic result-sharing without a common seed to compare against is deferred behind it.
 - Synergy layer (same-country/same-era boosts or penalties) — **only after balance tooling is mature**, expressed as config-driven modifiers to `ScoreInput`.
 - Audio: draft click, reveal sting, goal pacing, victory/near-miss stings.
 - Era/country themed collections; achievements ("Perfect Defense", "No Weak Links") derived from `explainScoreBand` + `DraftTruth`.
@@ -143,21 +197,34 @@ Gaps 1, 4, 5 are the first sprint. Gaps 2, 3 are the platform investment that ma
 
 ---
 
-## 5. Next sprint plan (highest leverage)
+## 7. Next sprint plan (highest leverage)
 
-**Theme:** ship the two UX wins + stand up the balance/diagnostics spine, then take the first safe corpus step. Concrete sequence:
+**Detailed, executable version: [docs/plans/2026-07-10-sprint-1.md](docs/plans/2026-07-10-sprint-1.md)** — bite-sized TDD tasks with exact files, signatures, test code, and commands. This section is the summary; the plan doc is authoritative for execution.
 
-1. **Landing screen** (frontend). Add `appPhase: 'landing' | 'playing'` UI state in `App.tsx`; extract current auto-start (`App.tsx:19`) so `startDraft` fires on the **Start Game** CTA in a new `StartScreen.tsx`. Domain untouched. *Fastest visible win.*
-2. **Result playback speed control** (frontend). Lift `BEAT_REVEAL_MS` (`ResultScreen.tsx:8`) into a small `usePlaythrough(totalBeats)` hook exposing `{ visibleBeats, showScoreline, speed, setSpeed, skipToResult }` with 1×/2×/4×. Keep existing skip. Assert content computed pre-timer.
-3. **Simulation diagnostics** (sim/balance). Extend `runSimulation` (`simulate.ts:256`) to emit per-seed-range and per-corpus-slice band frequencies, **bucket-sum + weak-link percentile distributions (p10-p90) per slice**, and a `sim-report.json`. This is the safety net for step 5 — the percentiles are what make the next retune fast.
-4. **`explainScoreBand` skeleton** (domain/scoring). Refactor `bandMatches` to structured per-predicate output; implement `explainScoreBand.ts`; tests. (UI `ResultBreakdown` can trail into Phase 2, but land the pure function now — it's the dependency for everything downstream.)
-5. **Corpus step 7 → ~16** (data/content) as a *proving* increment for the ingestion pipeline, then re-simulate (step 3 tooling) and retune `thresholds.json` numbers-only; log it. (Full 24-32 completes in Phase 1 proper.)
+**Theme:** two visible UX wins, then the explain/diagnostics spine, then the first safe corpus step.
 
-Sequencing rationale: 1 and 2 are independent, parallelizable, low-risk, high-visibility. 3 must precede any data change. 4 is pure and unblocks Phase 2. 5 exercises the whole pipeline on a small, reversible step before committing to the full expansion.
+| # | Task | Area | Depends on |
+|---|------|------|------------|
+| 0 | Tag `v0.1.0-mvp`; branch `roadmap/sprint-1` | infra | — |
+| 1 | Landing screen: `StartScreen.tsx`; App session becomes `DraftSession \| null`; Start CTA calls `startDraft` | frontend | 0 |
+| 2 | Playback speed: `usePlaythrough(totalBeats)` hook (1×/2×/4× + existing skip); `BEAT_REVEAL_MS` lifted | frontend | 0 (parallel with 1) |
+| 3 | ADR-013 written (explain contract; margins-first per §3.2) | docs | 0 |
+| 4 | `evaluateBandPredicates` extracted from `bandMatches` — behavior-preserving; scoring tests untouched and green | domain | 3 |
+| 5 | `explainScoreBand.ts` + tests (exact deltas; `bandId` always equals `scoreBand`'s) | domain | 4 |
+| 6 | Sim diagnostics: bucket-sum/weak-link percentiles (p10-p90), per-seed-quartile band frequencies, near-miss rates via `explainScoreBand`, `--report sim-report.json` | sim | 5 |
+| 7 | ADR-011 + ADR-012 written | docs | — |
+| 8 | Corpus 7 → 16, hand-authored under the ADR-006 rubric (proving increment) + corpus-integrity test | content | 7 |
+| 9 | Re-simulate; retune `thresholds.json` numbers-only; Experiment log + committed `sim-report.json` | balance | 6, 8 |
+
+**Sequencing judgement (supersedes the earlier draft order):** the predicate refactor and `explainScoreBand` now land *before* sim diagnostics, because near-miss rates must be computed by the one shared predicate evaluator — not by a second, drift-prone reimplementation inside `simulate.ts`. Diagnostics still land before any corpus change.
+
+**Deliberately deferred out of this sprint:**
+- Per-corpus-slice (era/confederation) diagnostics — the `Squad` schema has no era/confed field; adding one is a schema change that belongs to the ADR-011/012 work, not a sprint drive-by.
+- The full `scripts/ingest/**` pipeline — Phase 1 proper. The 7→16 step is deliberately hand-authored: it proves the *rubric* and the retune loop before any tooling is built to automate them.
 
 ---
 
-## 6. Fable orchestration plan (subagent workstreams)
+## 8. Fable orchestration plan (subagent workstreams)
 
 > Model routing reminder: hardest reasoning (rating methodology, balance tuning, truth/ops refactor) → top-tier; mechanical/UI/pipeline glue → mid-tier; repetitive data entry/config → light-tier. Protect the invariants in every stream.
 
@@ -165,16 +232,16 @@ Sequencing rationale: 1 and 2 are independent, parallelizable, low-risk, high-vi
 |---|---|---|---|---|---|---|
 | **W1 Domain/Scoring** | Senior (top-tier) | `explainScoreBand.ts`; refactor `bandMatches` to structured predicates; DraftSession truth/ops split (Phase 2) | `scoreBand.ts`, `types.ts`, ADR-004/013 | Pure explain fn + tests; shared predicate evaluator; split types | none (self-contained) | Predicate refactor breaking scoring tests; keep behavior-preserving |
 | **W2 Data pipeline** | Mid-tier + top-tier for rubric | `scripts/ingest/**`; rating generator; corpus expansion; per-squad fixtures | jfjelstul DB, Zafronix, ADR-006/012, `squads.json` schema | Reproducible ingestion; expanded `squads.json`; fixtures | schema (frozen); W3 for post-expansion retune | Roster accuracy; rating fairness; schema drift |
-| **W3 Simulation/Balance** | Top-tier (tuning judgment) | Diagnostics upgrade (band freq + bucket-sum/weak-link percentiles per slice); `sim-report.json`; re-simulate + retune after each corpus bump | `simulate.ts`, RISKS protocol, `thresholds.json` | Sliceable histograms + percentile tables; CI report; retuned config + Experiment-log entries | W2 (needs corpus); W1 (explain aids diagnosis) | Lumpy distributions (see 2026-07-09 log); config-only discipline |
+| **W3 Simulation/Balance** | Top-tier (tuning judgment) | Diagnostics upgrade (band freq + bucket-sum/weak-link percentiles per slice + near-miss rates via shared evaluator); `sim-report.json`; re-simulate + retune after each corpus bump | `simulate.ts`, RISKS protocol, `thresholds.json`, W1's `explainScoreBand` | Sliceable histograms + percentile + near-miss tables; CI report; retuned config + Experiment-log entries | W1 (near-miss needs explain); W2 (needs corpus) | Lumpy distributions (see 2026-07-09 log); config-only discipline |
 | **W4 Frontend UX** | Mid-tier | Landing screen + `appPhase`; playback speed hook; `ResultBreakdown` (Phase 2); animated result (Phase 3) | `App.tsx`, `ResultScreen.tsx`, `app.css`, W1 explain output | `StartScreen.tsx`, `usePlaythrough`, breakdown UI | W1 for breakdown; independent for landing/speed | UI reimplementing rules (R-08) — must call domain only |
 | **W5 Content/Commentary** | Mid-tier (writing) | Richer per-band templates; new-band scripts as corpus/bands evolve; themed collections | `commentary.json`, band ids, slot rules | Expanded scripts; validated slot usage | band-id set (config); loadData band↔script check | Slot/schema violations; tone drift |
 | **W6 QA/Test** | Mid-tier | Invariant guards across refactors; replay-determinism tests; CI wiring for sim-report diff | all test suites, ARCHITECTURE §7 | Extended suites; CI gates; regression fixtures | all streams | Coverage gaps on state-machine + explain edges |
 
-**Coordination rules:** W2 never lands a corpus change without W3 re-simulating and retuning in the same PR. W4 changes are reviewed against the R-08 leakage checklist (no rules logic in components). Any change to schemas, module boundaries, state-machine rules, or the band algorithm requires an ADR first (see §7).
+**Coordination rules:** W2 never lands a corpus change without W3 re-simulating and retuning in the same PR. W4 changes are reviewed against the R-08 leakage checklist (no rules logic in components). Any change to schemas, module boundaries, state-machine rules, or the band algorithm requires an ADR first (see §9).
 
 ---
 
-## 7. ADR plan
+## 9. ADR plan
 
 **Create now (Phase 1 → early Phase 2):**
 - **ADR-011 Corpus expansion strategy** — staged 7 → 24-32 → 60-80 → 140; mandatory re-sim + config-only retune per increment; squad-selection criteria (icon density, era/confederation spread, weak-link presence). *Now: it governs W2/W3 immediately.*
@@ -192,7 +259,7 @@ Rationale for timing: 011-013 are needed to safely *start* the platform work; 01
 
 ---
 
-## 8. Implementation order & guardrails
+## 10. Implementation order & guardrails
 
 **Order (deviate only with written justification):**
 1. Freeze & tag current MVP (`v0.1.0-mvp`).
@@ -218,6 +285,9 @@ Landing screen and result playback controls slot into step 4's sprint window (th
 **Must remain config-driven:**
 - All band gates, min counts, weak-link floors, reference formation, and any future synergy modifiers — numbers in JSON, never in engine code. Balance = config edits + re-simulation.
 
+**Do not introduce EVER (anti-roadmap, §3.7):**
+- Meta-progression, unlock trees, currencies, energy/daily-limit mechanics, login walls.
+
 **Do not introduce yet:**
 - Backend, accounts, databases, runtime network calls for game data.
 - Multiplayer / live match simulation.
@@ -228,7 +298,7 @@ Landing screen and result playback controls slot into step 4's sprint window (th
 
 ---
 
-## 9. Deliverable checklist (Fable execution tracker)
+## 11. Deliverable checklist (Fable execution tracker)
 
 **Phase 1**
 - [ ] Tag `v0.1.0-mvp`; branch for roadmap work.
