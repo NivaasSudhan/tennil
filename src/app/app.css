@@ -429,3 +429,40 @@ button {
     align-items: flex-start;
   }
 }
+
+/* ---------- Start screen (Sprint-1 Task 1) ---------- */
+
+.start-screen {
+  max-width: 34rem;
+  margin: 10vh auto 0;
+  padding: 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: center;
+}
+
+.start-blurb {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.start-rules {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+.start-button {
+  font-size: 1.15rem;
+  font-weight: 700;
+  padding: 0.85rem 2.5rem;
+  cursor: pointer;
+}
