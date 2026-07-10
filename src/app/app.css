@@ -466,3 +466,24 @@ button {
   padding: 0.85rem 2.5rem;
   cursor: pointer;
 }
+
+/* ---------- Playback controls (Sprint-1 Task 2) ---------- */
+
+.playback-controls {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.speed-button {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.speed-button-active {
+  opacity: 1;
+  font-weight: 700;
+  text-decoration: underline;
+}
