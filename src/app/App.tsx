@@ -5,24 +5,32 @@ import { pick as domainPick, skip as domainSkip, startDraft } from '../domain/dr
 import { systemRng } from '../lib/rng';
 import DraftScreen from './DraftScreen';
 import ResultScreen from './ResultScreen';
+import StartScreen from './StartScreen';
 import './app.css';
 
 /**
  * App shell (ARCHITECTURE.md §1/§4; ADR-002). Owns the ONE `DraftSession` in
- * `useState`. Every state change goes through `pick`/`skip` from
- * `src/domain/draft/session.ts`, seeded with `systemRng()`. This component never
- * evaluates draft legality itself — it only reads `session.phase` to choose which
- * screen to render, and catches `IllegalActionError` defensively (should never fire
- * if the child screens disable illegal actions correctly).
+ * `useState`. `session === null` means landing — UI state only, deliberately
+ * NOT a DraftSession phase (ROADMAP §10). Every state change goes through
+ * `pick`/`skip`/`startDraft` from `src/domain/draft/session.ts`, seeded with
+ * `systemRng()`. This component never evaluates draft legality itself.
+ * "Draft again" restarts directly — replay never bounces through landing.
  */
 export default function App({ data }: { data: GameData }) {
-  const [session, setSession] = useState<DraftSession>(() => startDraft(data, systemRng()));
+  const [session, setSession] = useState<DraftSession | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+
+  function handleStart() {
+    setActionError(null);
+    setSession(startDraft(data, systemRng()));
+  }
 
   function handlePick(playerId: string) {
     setActionError(null);
     try {
-      setSession((current) => domainPick(current, data, playerId, systemRng()));
+      setSession((current) =>
+        current === null ? current : domainPick(current, data, playerId, systemRng()),
+      );
     } catch (err) {
       if (err instanceof IllegalActionError) {
         setActionError(err.message);
@@ -35,7 +43,9 @@ export default function App({ data }: { data: GameData }) {
   function handleSkip() {
     setActionError(null);
     try {
-      setSession((current) => domainSkip(current, data, systemRng()));
+      setSession((current) =>
+        current === null ? current : domainSkip(current, data, systemRng()),
+      );
     } catch (err) {
       if (err instanceof IllegalActionError) {
         setActionError(err.message);
@@ -52,7 +62,9 @@ export default function App({ data }: { data: GameData }) {
 
   return (
     <div className="app-shell">
-      {session.phase === 'COMPLETE' ? (
+      {session === null ? (
+        <StartScreen onStart={handleStart} />
+      ) : session.phase === 'COMPLETE' ? (
         <ResultScreen session={session} data={data} onRestart={handleRestart} />
       ) : (
         <DraftScreen session={session} error={actionError} onPick={handlePick} onSkip={handleSkip} />

@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { usePlaythrough } from './usePlaythrough';
 import type { DraftSession, FinalXI, GameData, Pick, PositionBucket } from '../domain/types';
 import { getFinalXI } from '../domain/draft/session';
 import { computeScoreInput, scoreBand } from '../domain/scoring/scoreBand';
 import { buildCommentary } from '../domain/commentary/build';
 
 const BUCKET_ORDER: PositionBucket[] = ['GK', 'DEF', 'MID', 'ATT'];
-const BEAT_REVEAL_MS = 900;
 
 interface ResultScreenProps {
   session: DraftSession;
@@ -31,23 +31,8 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
     };
   }, [session, data]);
 
-  const totalBeats = commentary.beats.length;
-  // 0 = none, 1..totalBeats = beats revealed, totalBeats+1 = scoreline
-  const [revealStep, setRevealStep] = useState(0);
-  const showScoreline = revealStep > totalBeats;
-  const visibleBeatCount = Math.min(revealStep, totalBeats);
-
-  useEffect(() => {
-    if (revealStep > totalBeats) return;
-    const id = window.setTimeout(() => {
-      setRevealStep((step) => step + 1);
-    }, BEAT_REVEAL_MS);
-    return () => window.clearTimeout(id);
-  }, [revealStep, totalBeats]);
-
-  function skipToResult() {
-    setRevealStep(totalBeats + 1);
-  }
+  const { visibleBeatCount, showScoreline, speed, setSpeed, skipToResult } =
+    usePlaythrough(commentary.beats.length);
 
   return (
     <div className="result-screen">
@@ -87,9 +72,22 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
         <div className="playthrough-header">
           <h2>Match feed</h2>
           {!showScoreline && (
-            <button type="button" className="skip-result-button" onClick={skipToResult}>
-              Skip to result
-            </button>
+            <div className="playback-controls">
+              {([1, 2, 4] as const).map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  className={`speed-button${speed === s ? ' speed-button-active' : ''}`}
+                  aria-pressed={speed === s}
+                  onClick={() => setSpeed(s)}
+                >
+                  {s}&times;
+                </button>
+              ))}
+              <button type="button" className="skip-result-button" onClick={skipToResult}>
+                Skip to result
+              </button>
+            </div>
           )}
         </div>
         <ol className="playthrough-beats">

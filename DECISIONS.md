@@ -186,3 +186,36 @@ Changing anything marked **Invariant** in PROJECT.md requires a new ADR here fir
 - **Tradeoffs**: An accidental reload loses a draft — acceptable.
 - **Consequences**: Stated in PROJECT.md product decisions; no "resume?" UI needed.
 - **Revisit when**: post-MVP polish pass.
+
+---
+
+## ADR-011 — Corpus expansion: staged, with mandatory retune gates
+
+- **Decision**: Corpus grows in stages: 7 → 16 (hand-authored proving step) → 24-32 → 60-80 → 140. A stage ships only after the previous stage's retune is logged and green. Every corpus change lands in the same PR as a re-simulation (`npx tsx scripts/simulate.ts --n 500 --seed 42` for both bots) and a **numbers-only** `thresholds.json` retune per the RISKS rarity protocol: top band 5-7% greedy / ~0% random / no dead bands, tightening toward 2-3% as distributions smooth (ROADMAP §3.6). Squad selection criteria in priority order: (a) icon density; (b) era + confederation spread; (c) weak-link presence — famous stars AND soft spots make picks interesting; (d) ≤2 squads per country per stage. A squad = the starting XI of that tournament's final (consistent with the existing 7); player `id` = `<squadId>-<lastname>`, lowercase ASCII. Era/confederation metadata on `Squad` is a schema change: it enters with the 24-32 stage under a version bump governed by this ADR, never as a drive-by.
+- **Rationale**: Corpus size is the biggest content lever and the biggest balance risk — every squad shifts the best-XI ceiling and reveal distribution, invalidating the tune (ROADMAP §1).
+- **Alternatives**: Big-bang expansion to 140 (rejected: one untunable cliff); ad-hoc additions (rejected: silent balance drift).
+- **Tradeoffs**: Slow growth; each increment carries sim+retune overhead — that overhead is the safety mechanism.
+- **Consequences**: `sim-report.json` snapshots accompany every stage for regression diffing; Experiment log grows one entry per stage.
+- **Revisit when**: balance tooling (W3) proves increments stable two stages running — then stage sizes may grow.
+
+---
+
+## ADR-012 — Ratings are editorial: pipeline proposes, overrides are canon
+
+- **Decision**: (1) Build-time only: ingestion tooling (`scripts/ingest/**`, target source jfjelstul/worldcup DB) runs at authoring time; runtime data stays vendored static JSON (Invariant 5). (2) The ADR-006 rubric (anchors + tier bands + tournament adjustment) is the rating METHOD for both hands and scripts. (3) A human-override file is canon: generated ratings never overwrite a curated number; regeneration produces a diffable proposal, overrides re-apply on top, and the diff is reviewed like code. (4) Until the 24-32 stage, authoring stays manual — the 7→16 step deliberately proves the rubric + retune loop before tooling automates them.
+- **Rationale**: Hand-authoring doesn't scale past ~30 squads, but ratings are the soul of the game — Maradona's 98 is an opinion held with conviction (ROADMAP §3.4); players arguing with ratings is engagement.
+- **Alternatives**: Fully generated ratings (rejected: kills editorial voice); fully manual forever (rejected: caps corpus at ~30).
+- **Tradeoffs**: Two sources of truth reconciled by convention (generator output + override file) — acceptable because the override file always wins.
+- **Consequences**: The generator can be rewritten freely; canon lives in the override file, not in the generator.
+- **Revisit when**: the 60-80 stage — evaluate whether rubric + overrides still produce defensible ratings at that volume.
+
+---
+
+## ADR-013 — Score explainability via a single shared predicate evaluator
+
+- **Decision**: (1) `bandMatches` in `src/domain/scoring/scoreBand.ts` delegates to a new exported `evaluateBandPredicates(band, input, config): PredicateResult[]` — one structured result per configured check (`allBucketsNonEmpty` and `minCounts` emit one entry per bucket; `minBucketSum` one per configured bucket; `minWeakLink` one; fallback band → `[]`, matches unconditionally). `PredicateResult = { name, bucket?, required, actual, passed }` with `passed === (actual >= required)` always, so any consumer computes the margin `required - actual` with no new logic. (2) New pure module `src/domain/scoring/explainScoreBand.ts` exports `explainScoreBand(input, config): ScoreExplanation` = awarded band + priority-descending `BandEvaluation[]` + `nextBetter` (nearest higher-priority band with its failing predicates), built ONLY on `evaluateBandPredicates`. (3) Guarantee, enforced by test: `explainScoreBand(input, config).bandId === scoreBand(input, config).bandId` for every input — explain can never alter, re-roll, or disagree with `scoreBand` truth. (4) The simulator's near-miss diagnostics consume `explainScoreBand`; predicate logic is never re-implemented in `scripts/`.
+- **Rationale**: Explainability is the retention engine and must present as margins ("3 points from a 5-0"), not audits (ROADMAP §3.2); a second predicate implementation would drift from scoring truth.
+- **Alternatives**: Separate explain module duplicating predicate checks (rejected: drift); explaining in the UI from raw config (rejected: rules leak into components, R-08).
+- **Tradeoffs**: `scoreBand`'s hot path allocates predicate arrays — negligible at 11-player scale.
+- **Consequences**: One source of predicate truth, three consumers (scoring boolean, ResultBreakdown UI in Phase 2, sim near-miss diagnostics). No RNG, no hardcoded band ids, no schema change; `thresholds.json` remains the only balance knob.
+- **Revisit when**: a future predicate type (e.g. synergy) lands — extend the evaluator, never fork it.

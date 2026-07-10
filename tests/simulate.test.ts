@@ -9,7 +9,13 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { loadGameDataFromDisk, runSimulation } from '../scripts/simulate';
+import {
+  buildSimReport,
+  loadGameDataFromDisk,
+  percentile,
+  runSimulation,
+  summarizeDistribution,
+} from '../scripts/simulate';
 
 describe('simulate harness smoke test', () => {
   const data = loadGameDataFromDisk();
@@ -40,5 +46,57 @@ describe('simulate harness smoke test', () => {
     const b = runSimulation(data, { n: 10, seed: 42, bot: 'greedy', skipThreshold: 84 });
 
     expect(a.results.map((r) => r.bandId)).toEqual(b.results.map((r) => r.bandId));
+  });
+});
+
+describe('sim diagnostics (Sprint-1 T6)', () => {
+  it('percentile: exact linear interpolation', () => {
+    const sorted = [10, 20, 30, 40];
+    expect(percentile(sorted, 50)).toBe(25);
+    expect(percentile(sorted, 25)).toBe(17.5);
+    expect(percentile(sorted, 10)).toBe(13);
+    expect(percentile(sorted, 0)).toBe(10);
+    expect(percentile(sorted, 100)).toBe(40);
+    expect(percentile([7], 50)).toBe(7);
+    expect(() => percentile([], 50)).toThrow();
+  });
+
+  it('summarizeDistribution does not mutate its input and reports min/max', () => {
+    const values = [30, 10, 40, 20];
+    const summary = summarizeDistribution(values);
+    expect(values).toEqual([30, 10, 40, 20]);
+    expect(summary.min).toBe(10);
+    expect(summary.max).toBe(40);
+    expect(summary.p50).toBe(25);
+  });
+
+  it('runSimulation attaches deterministic diagnostics with valid shape', () => {
+    const data = loadGameDataFromDisk();
+    const a = runSimulation(data, { n: 40, seed: 7, bot: 'greedy', skipThreshold: 84 });
+    const b = runSimulation(data, { n: 40, seed: 7, bot: 'greedy', skipThreshold: 84 });
+    expect(a.diagnostics).toEqual(b.diagnostics);
+
+    expect(a.diagnostics.nearMissDelta).toBe(3);
+    for (const bucket of ['GK', 'DEF', 'MID', 'ATT'] as const) {
+      const d = a.diagnostics.bucketSums[bucket];
+      expect(d.p10).toBeLessThanOrEqual(d.p90);
+    }
+    expect(a.diagnostics.seedQuartiles).toHaveLength(4);
+
+    const validBands = new Set(data.thresholds.bands.map((band) => band.id));
+    for (const row of a.diagnostics.nearMisses) {
+      expect(validBands.has(row.missedBandId)).toBe(true);
+      expect(row.percent).toBeGreaterThanOrEqual(0);
+      expect(row.percent).toBeLessThanOrEqual(100);
+    }
+  });
+
+  it('buildSimReport is JSON-serializable and carries histogram + diagnostics', () => {
+    const data = loadGameDataFromDisk();
+    const sim = runSimulation(data, { n: 10, seed: 3, bot: 'random', skipThreshold: 84 });
+    const report = JSON.parse(JSON.stringify(buildSimReport(sim)));
+    expect(report.schema).toBe(1);
+    expect(report.histogram.length).toBe(data.thresholds.bands.length);
+    expect(report.diagnostics.weakLink.p50).toBeTypeOf('number');
   });
 });

@@ -8,7 +8,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { computeScoreInput, scoreBand } from '../src/domain/scoring/scoreBand';
+import { computeScoreInput, evaluateBandPredicates, scoreBand } from '../src/domain/scoring/scoreBand';
 import type { BandDef, FinalXI, Player, PositionBucket, PositionMap, ThresholdConfig } from '../src/domain/types';
 
 // ---------- synthetic config ----------
@@ -291,5 +291,51 @@ describe('scoreBand', () => {
     const xi = buildXI({ GK: [1], DEF: [1, 1, 1, 1], MID: [1, 1, 1], ATT: [1, 1, 1] });
     scoreBand(computeScoreInput(xi, POSITION_MAP), CONFIG);
     expect(CONFIG.bands.map((b) => b.id)).toEqual(originalOrder);
+  });
+});
+
+describe('evaluateBandPredicates (ADR-013)', () => {
+  it('emits one structured result per configured check, with exact required/actual', () => {
+    const xi = buildXI({
+      GK: [80],
+      DEF: [80, 80, 80, 74], // weakLink 74 < TOP's 75 -> exactly one failing predicate
+      MID: [80, 80, 80],
+      ATT: [80, 80, 80],
+    });
+    const input = computeScoreInput(xi, POSITION_MAP);
+    const results = evaluateBandPredicates(TOP_BAND, input, CONFIG);
+
+    // TOP_BAND configures: allBucketsNonEmpty (4 buckets) + minCounts (4) +
+    // minBucketSums (4 buckets configured) + minWeakLink (1) = 13 entries.
+    expect(results).toHaveLength(13);
+    for (const r of results) {
+      expect(r.passed).toBe(r.actual >= r.required);
+    }
+
+    const failing = results.filter((r) => !r.passed);
+    // DEF sum 80+80+80+74=314 < TOP minBucketSums.DEF 320; weakLink 74 < 75.
+    expect(failing).toEqual([
+      { name: 'minBucketSum', bucket: 'DEF', required: 320, actual: 314, passed: false },
+      { name: 'minWeakLink', required: 75, actual: 74, passed: false },
+    ]);
+  });
+
+  it('returns [] for the fallback band', () => {
+    const xi = buildXI({ GK: [1], DEF: [1, 1, 1, 1], MID: [1, 1, 1], ATT: [1, 1, 1] });
+    const input = computeScoreInput(xi, POSITION_MAP);
+    expect(evaluateBandPredicates(FALLBACK_BAND, input, CONFIG)).toEqual([]);
+  });
+
+  it('bandMatches semantics: scoreBand still equals the conjunction of predicate results', () => {
+    const xi = buildXI({
+      GK: [80],
+      DEF: [80, 80],
+      MID: [80, 80, 80, 80, 80],
+      ATT: [80, 80, 80, 80],
+    });
+    const input = computeScoreInput(xi, POSITION_MAP);
+    const allPass = evaluateBandPredicates(TOP_BAND, input, CONFIG).every((r) => r.passed);
+    expect(allPass).toBe(false);
+    expect(scoreBand(input, CONFIG).bandId).not.toBe('TOP');
   });
 });

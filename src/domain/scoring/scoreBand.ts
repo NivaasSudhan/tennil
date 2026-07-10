@@ -10,6 +10,7 @@ import type {
   FinalXI,
   PositionBucket,
   PositionMap,
+  PredicateResult,
   ScoreBand,
   ScoreInput,
   ThresholdConfig,
@@ -40,33 +41,77 @@ export function computeScoreInput(xi: FinalXI, positionMap: PositionMap): ScoreI
   return { bucketSums, bucketCounts, weakLink };
 }
 
-function bandMatches(band: BandDef, input: ScoreInput, config: ThresholdConfig): boolean {
-  if (band.fallback) return true;
+/**
+ * evaluateBandPredicates (ADR-013). The ONE place band predicates are
+ * evaluated — consumed by scoreBand (conjunction), explainScoreBand
+ * (structured margins), and the simulator's near-miss diagnostics.
+ * Fixed emission order (nonEmpty -> minCounts -> minBucketSums -> minWeakLink,
+ * buckets in GK/DEF/MID/ATT order) so output is deterministic.
+ * A fallback band configures no predicates: returns [].
+ */
+export function evaluateBandPredicates(
+  band: BandDef,
+  input: ScoreInput,
+  config: ThresholdConfig,
+): PredicateResult[] {
+  if (band.fallback) return [];
+
+  const results: PredicateResult[] = [];
 
   if (band.requireAllBucketsNonEmpty) {
     for (const bucket of BUCKETS) {
-      if (input.bucketCounts[bucket] < 1) return false;
+      results.push({
+        name: 'allBucketsNonEmpty',
+        bucket,
+        required: 1,
+        actual: input.bucketCounts[bucket],
+        passed: input.bucketCounts[bucket] >= 1,
+      });
     }
   }
 
   if (band.requireMinCounts) {
     for (const bucket of BUCKETS) {
-      if (input.bucketCounts[bucket] < config.minCounts[bucket]) return false;
+      results.push({
+        name: 'minCounts',
+        bucket,
+        required: config.minCounts[bucket],
+        actual: input.bucketCounts[bucket],
+        passed: input.bucketCounts[bucket] >= config.minCounts[bucket],
+      });
     }
   }
 
   if (band.minBucketSums) {
     for (const bucket of BUCKETS) {
       const min = band.minBucketSums[bucket];
-      if (min !== undefined && input.bucketSums[bucket] < min) return false;
+      if (min !== undefined) {
+        results.push({
+          name: 'minBucketSum',
+          bucket,
+          required: min,
+          actual: input.bucketSums[bucket],
+          passed: input.bucketSums[bucket] >= min,
+        });
+      }
     }
   }
 
-  if (band.minWeakLink !== undefined && input.weakLink < band.minWeakLink) {
-    return false;
+  if (band.minWeakLink !== undefined) {
+    results.push({
+      name: 'minWeakLink',
+      required: band.minWeakLink,
+      actual: input.weakLink,
+      passed: input.weakLink >= band.minWeakLink,
+    });
   }
 
-  return true;
+  return results;
+}
+
+function bandMatches(band: BandDef, input: ScoreInput, config: ThresholdConfig): boolean {
+  if (band.fallback) return true;
+  return evaluateBandPredicates(band, input, config).every((p) => p.passed);
 }
 
 /**

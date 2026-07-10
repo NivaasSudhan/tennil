@@ -60,3 +60,75 @@ RULES: Keep test prompts trivial (few tokens). Never print or write API keys/tok
 
 FINAL REPLY: summarize findings (working commands, root cause, doc path) — the orchestrator will relay this to the user.
 ```
+
+---
+
+## P-002 — Sprint-1 Task 1 (landing screen)
+- date: 2026-07-10
+- target: opencode-go/glm-5.2 --variant high
+- status: succeeded (TASK1-DONE, 61 tests green)
+- task: Implement Task 1 from docs/plans/2026-07-10-sprint-1.md
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch roadmap/sprint-1. Open docs/plans/2026-07-10-sprint-1.md and implement Task 1 (Landing screen) EXACTLY as written — every step in order, code verbatim from the doc. EXCEPTION: skip Step 1 (npm install) — jsdom and @testing-library/react are already installed. Obey the plan's Global Constraints section. Touch ONLY the files in Task 1's Files list. Do NOT run git commit or git add — the orchestrator commits. When appending to src/app/app.css, add the Task 1 block at the end of the file without altering existing rules. Finish by running the full suite (npm test) and print, as your final output: TASK1-DONE followed by the vitest summary lines (Test Files / Tests). If any test fails, print TASK1-FAILED plus the failing output instead.
+```
+
+---
+
+## P-003 — Sprint-1 Task 4 (predicate evaluator refactor)
+- date: 2026-07-10
+- target: opencode/grok-4.5 --variant high
+- status: succeeded (TASK4-DONE, 61 tests green; caught plan-doc test-fixture math error — DEF 314 also fails minBucketSum 320 — fixed in new test only)
+- task: Implement Task 4 from docs/plans/2026-07-10-sprint-1.md
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch roadmap/sprint-1. Open docs/plans/2026-07-10-sprint-1.md and implement Task 4 (Extract evaluateBandPredicates — behavior-preserving refactor) EXACTLY as written — every step in order, code verbatim from the doc. Also read DECISIONS.md ADR-013 (the contract you are implementing). Obey the plan's Global Constraints section. Touch ONLY: src/domain/types.ts, src/domain/scoring/scoreBand.ts, tests/scoring.test.ts. Do NOT run git commit or git add. HARD GATE: every pre-existing test in tests/scoring.test.ts must pass byte-unchanged — if you find yourself editing an existing test to make it pass, STOP and report failure instead. Finish by running npm test and the purity grep (grep -rn "Math.random\|rng" src/domain/scoring src/domain/commentary — must be empty) and print, as your final output: TASK4-DONE followed by the vitest summary lines. If anything fails, print TASK4-FAILED plus the failing output instead.
+```
+
+---
+
+## P-004 — Sprint-1 Task 2 (playback speed hook)
+- date: 2026-07-10
+- target: opencode/deepseek-v4-flash-free --variant max
+- status: succeeded (TASK2-DONE, 70 tests green; compute-once invariant verified — useMemo untouched, hook consumes beat count only)
+- task: Implement Task 2 from docs/plans/2026-07-10-sprint-1.md
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch roadmap/sprint-1. Open docs/plans/2026-07-10-sprint-1.md and implement Task 2 (Playback speed — usePlaythrough hook) EXACTLY as written — every step in order, code verbatim from the doc. jsdom and @testing-library/react are already installed. Obey the plan's Global Constraints section. Touch ONLY: src/app/usePlaythrough.ts (create), tests/usePlaythrough.test.tsx (create), src/app/ResultScreen.tsx (modify per the doc's exact replacement instructions), src/app/app.css (append the Task 2 block at the end without altering existing rules). The useMemo in ResultScreen computing band/groups/commentary must remain byte-identical. Do NOT run git commit or git add. Finish by running npm test and print, as your final output: TASK2-DONE followed by the vitest summary lines. If any test fails, print TASK2-FAILED plus the failing output instead.
+```
+
+---
+
+## P-005 — Sprint-1 Task 5 (explainScoreBand)
+- date: 2026-07-10
+- target: opencode/grok-4.5 --variant high
+- status: succeeded (TASK5 files green 5/5, purity clean; concurrent T2 test failure observed was not T5's scope)
+- task: Implement Task 5 from docs/plans/2026-07-10-sprint-1.md
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch roadmap/sprint-1. Task 4 (evaluateBandPredicates) is already merged. Open docs/plans/2026-07-10-sprint-1.md and implement Task 5 (explainScoreBand) EXACTLY as written — every step in order, code verbatim from the doc. Also read DECISIONS.md ADR-013. Obey the plan's Global Constraints section. Touch ONLY: src/domain/scoring/explainScoreBand.ts (create), tests/explainScoreBand.test.ts (create). NOTE on the plan's second test: verify the fixture math yourself — DEF [80,80,80,74] sums to 314, failing BOTH minBucketSum (320) and minWeakLink (75); the plan's expected failing array already lists both, in evaluator emission order. Do NOT run git commit or git add. Finish by running npm test plus both purity greps from Global Constraints (must be empty) and print, as your final output: TASK5-DONE followed by the vitest summary lines. If anything fails, print TASK5-FAILED plus the failing output instead.
+```
+
+---
+
+## P-006 — Sprint-1 Task 6 (sim diagnostics)
+- date: 2026-07-10
+- target: opencode-go/glm-5.2 --variant high
+- status: succeeded (TASK6-DONE, 74 tests green, histogram identical to baseline; one sane deviation — dropped unused computeDiagnostics import that would trip noUnusedLocals)
+- task: Implement Task 6 from docs/plans/2026-07-10-sprint-1.md
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch roadmap/sprint-1. Tasks 4 and 5 (evaluateBandPredicates, explainScoreBand) are merged. Open docs/plans/2026-07-10-sprint-1.md and implement Task 6 (Simulator diagnostics) EXACTLY as written — every step in order, code verbatim from the doc. Obey the plan's Global Constraints section. Touch ONLY: scripts/simulate.ts, tests/simulate.test.ts. Predicate logic must never be re-implemented in scripts/ — near-miss goes through explainScoreBand (ADR-013). Do NOT run git commit or git add. After tests pass, also run: npx tsx scripts/simulate.ts --n 500 --seed 42 --bot greedy — the band histogram MUST match the tuned baseline (10-0 ≈ 5.0%, 5-0 ≈ 43.8%, 3-1 ≈ 36.4%, 2-2 ≈ 14.8%); diagnostics must not change results. Print, as your final output: TASK6-DONE, the vitest summary lines, and the histogram lines from that simulate run. If anything fails or the histogram deviates, print TASK6-FAILED plus the output instead.
+```
+
+---
+
+## P-007 — Sprint-1 Task 8 (corpus 7→16, content authoring)
+- date: 2026-07-10
+- target: opencode/grok-4.5 --variant high
+- status: succeeded (TASK8-DONE, 80 tests green; justified out-of-scope edit: loadData.test.ts corpus-size assertions 7/77 → 16/176 — forced by corpus growth, plan gap; REVIEW-NOTES in oc-t8-grok.log; ratings/rosters PENDING HUMAN REVIEW)
+- task: Implement Task 8 from docs/plans/2026-07-10-sprint-1.md (rosters/ratings flagged for human review)
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch roadmap/sprint-1. Open docs/plans/2026-07-10-sprint-1.md and implement Task 8 (Corpus 7 -> 16) EXACTLY as written. Also read DECISIONS.md ADR-011 (selection criteria, XI rule, id format) and ADR-006 (rating rubric), and tests/fixtures/squad-arg-1986.json (the exact JSON shape). Steps: (1) create tests/corpus.test.ts verbatim from the plan; (2) run it — must fail ONLY on squad count 7 != 16; (3) author the 9 squads listed in the plan's table (hun-1954, eng-1966, ned-1974, ger-1974, arg-1978, ger-1990, bra-1994, ita-2006, fra-2018), each the starting XI of that tournament's final, appended to src/data/squads/squads.json; (4) if a positionRaw key is missing from src/data/position-map.json, ADD the key with the correct bucket — never change existing mappings; (5) rate every player per the ADR-006 rubric; (6) npm test must be fully green. Touch ONLY: src/data/squads/squads.json, src/data/position-map.json (additive keys only), tests/corpus.test.ts. Do NOT run git commit or git add. ACCURACY RULES: use historically correct starting XIs of the finals — if unsure of a lineup detail, choose the most widely documented XI and note the uncertainty; never invent players. Print, as your final output: TASK8-DONE, the vitest summary, then a REVIEW-NOTES section listing per squad: any lineup uncertainties and your 3 highest/lowest rating opinions with one-line rationale — a human will review before merge. If anything fails, print TASK8-FAILED plus output.
+```

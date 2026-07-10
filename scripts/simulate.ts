@@ -27,6 +27,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { loadGameData } from '../src/domain/loadData';
 import { startDraft, pick, skip, getFinalXI } from '../src/domain/draft/session';
 import { computeScoreInput, scoreBand } from '../src/domain/scoring/scoreBand';
+import { explainScoreBand } from '../src/domain/scoring/explainScoreBand';
 import { mulberry32 } from '../src/lib/rng';
 import type {
   DraftSession,
@@ -34,6 +35,7 @@ import type {
   GameData,
   Player,
   PositionBucket,
+  PredicateName,
   Rng,
   ScoreInput,
 } from '../src/domain/types';
@@ -69,6 +71,8 @@ export interface SimArgs {
   seed: number;
   bot: 'greedy' | 'random';
   skipThreshold: number;
+  nearMissDelta?: number; // default 3
+  report?: string;        // path for sim-report.json; omit = no file
 }
 
 export function parseArgs(argv: string[]): SimArgs {
@@ -98,6 +102,14 @@ export function parseArgs(argv: string[]): SimArgs {
         args.skipThreshold = Number(value);
         i++;
         break;
+      case '--nearMissDelta':
+        args.nearMissDelta = Number(value);
+        i++;
+        break;
+      case '--report':
+        args.report = value;
+        i++;
+        break;
       default:
         throw new Error(`unknown argument: ${flag}`);
     }
@@ -107,6 +119,9 @@ export function parseArgs(argv: string[]): SimArgs {
   if (!Number.isFinite(args.seed)) throw new Error(`--seed must be a number (got ${args.seed})`);
   if (!Number.isFinite(args.skipThreshold)) {
     throw new Error(`--skipThreshold must be a number (got ${args.skipThreshold})`);
+  }
+  if (args.nearMissDelta !== undefined && (!Number.isFinite(args.nearMissDelta) || args.nearMissDelta < 0)) {
+    throw new Error(`--nearMissDelta must be a non-negative number (got ${args.nearMissDelta})`);
   }
 
   return args;
@@ -251,6 +266,7 @@ export interface SimResult {
   histogram: { bandId: string; label: string; priority: number; count: number; percent: number }[];
   topBandExample: DraftResult | null;
   fallbackExample: DraftResult | null;
+  diagnostics: SimDiagnostics;
 }
 
 export function runSimulation(data: GameData, args: SimArgs): SimResult {
@@ -278,7 +294,100 @@ export function runSimulation(data: GameData, args: SimArgs): SimResult {
   const topBandExample = topBand ? results.find((r) => r.bandId === topBand.id) ?? null : null;
   const fallbackExample = fallbackBand ? results.find((r) => r.bandId === fallbackBand.id) ?? null : null;
 
-  return { args, results, histogram, topBandExample, fallbackExample };
+  const diagnostics = computeDiagnostics(results, data, args.nearMissDelta ?? 3);
+  return { args, results, histogram, topBandExample, fallbackExample, diagnostics };
+}
+
+// ---------------------------------------------------------------------------
+// Diagnostics (Sprint-1 T6; ROADMAP §3.2/§7). Percentiles show where each
+// threshold gate bites; near-misses (computed through explainScoreBand — the
+// shared evaluator, never a reimplementation) measure "one more draft" tension.
+// ---------------------------------------------------------------------------
+
+export interface DistributionSummary {
+  p10: number; p25: number; p50: number; p75: number; p90: number;
+  min: number; max: number;
+}
+
+export interface SimDiagnostics {
+  bucketSums: Record<PositionBucket, DistributionSummary>;
+  weakLink: DistributionSummary;
+  seedQuartiles: { drafts: string; bands: Record<string, number> }[];
+  nearMisses: { missedBandId: string; count: number; percent: number }[];
+  nearMissDelta: number;
+}
+
+/** Linear-interpolation percentile over an ASCENDING-sorted array. */
+export function percentile(sortedValues: number[], p: number): number {
+  if (sortedValues.length === 0) throw new Error('percentile: empty input');
+  if (p <= 0) return sortedValues[0];
+  if (p >= 100) return sortedValues[sortedValues.length - 1];
+  const rank = (p / 100) * (sortedValues.length - 1);
+  const lo = Math.floor(rank);
+  const hi = Math.ceil(rank);
+  return sortedValues[lo] + (sortedValues[hi] - sortedValues[lo]) * (rank - lo);
+}
+
+export function summarizeDistribution(values: number[]): DistributionSummary {
+  const sorted = [...values].sort((a, b) => a - b);
+  return {
+    p10: percentile(sorted, 10),
+    p25: percentile(sorted, 25),
+    p50: percentile(sorted, 50),
+    p75: percentile(sorted, 75),
+    p90: percentile(sorted, 90),
+    min: sorted[0],
+    max: sorted[sorted.length - 1],
+  };
+}
+
+const NUMERIC_PREDICATES: ReadonlySet<PredicateName> = new Set(['minBucketSum', 'minWeakLink']);
+
+export function computeDiagnostics(
+  results: DraftResult[],
+  data: GameData,
+  nearMissDelta: number,
+): SimDiagnostics {
+  const buckets: PositionBucket[] = ['GK', 'DEF', 'MID', 'ATT'];
+
+  const bucketSums = {} as Record<PositionBucket, DistributionSummary>;
+  for (const bucket of buckets) {
+    bucketSums[bucket] = summarizeDistribution(results.map((r) => r.scoreInput.bucketSums[bucket]));
+  }
+  const weakLink = summarizeDistribution(results.map((r) => r.scoreInput.weakLink));
+
+  // Contiguous quartiles over the seed range: detects drift across seeds
+  // (should be roughly flat when n is large enough to trust the histogram).
+  const bandIds = data.thresholds.bands.map((b) => b.id);
+  const quartileSize = Math.ceil(results.length / 4);
+  const seedQuartiles = [0, 1, 2, 3].map((q) => {
+    const slice = results.slice(q * quartileSize, (q + 1) * quartileSize);
+    const bands: Record<string, number> = {};
+    for (const id of bandIds) bands[id] = 0;
+    for (const r of slice) bands[r.bandId] += 1;
+    return { drafts: `${q * quartileSize}..${q * quartileSize + slice.length - 1}`, bands };
+  });
+
+  // Near miss: nextBetter exists AND every failing predicate is numeric with
+  // shortfall <= delta. Structural failures (counts/empty buckets) never count.
+  const nearMissCounts = new Map<string, number>();
+  for (const r of results) {
+    const next = explainScoreBand(r.scoreInput, data.thresholds).nextBetter;
+    if (!next || next.failing.length === 0) continue;
+    const close = next.failing.every(
+      (p) => NUMERIC_PREDICATES.has(p.name) && p.required - p.actual <= nearMissDelta,
+    );
+    if (close) nearMissCounts.set(next.bandId, (nearMissCounts.get(next.bandId) ?? 0) + 1);
+  }
+  const nearMisses = bandIds
+    .filter((id) => nearMissCounts.has(id))
+    .map((id) => ({
+      missedBandId: id,
+      count: nearMissCounts.get(id)!,
+      percent: (nearMissCounts.get(id)! / results.length) * 100,
+    }));
+
+  return { bucketSums, weakLink, seedQuartiles, nearMisses, nearMissDelta };
 }
 
 // ---------------------------------------------------------------------------
@@ -330,7 +439,36 @@ export function formatReport(data: GameData, sim: SimResult): string {
     lines.push('Example fallback-band draft: none occurred in this run.');
   }
 
+  lines.push('');
+  lines.push(`Diagnostics (nearMissDelta=${sim.diagnostics.nearMissDelta}):`);
+  const fmt = (d: DistributionSummary) =>
+    `p10 ${d.p10.toFixed(1)}  p25 ${d.p25.toFixed(1)}  p50 ${d.p50.toFixed(1)}  p75 ${d.p75.toFixed(1)}  p90 ${d.p90.toFixed(1)}  (min ${d.min} / max ${d.max})`;
+  for (const bucket of ['GK', 'DEF', 'MID', 'ATT'] as PositionBucket[]) {
+    lines.push(`  sum ${bucket.padEnd(3)}  ${fmt(sim.diagnostics.bucketSums[bucket])}`);
+  }
+  lines.push(`  weakLink ${fmt(sim.diagnostics.weakLink)}`);
+  if (sim.diagnostics.nearMisses.length > 0) {
+    for (const nm of sim.diagnostics.nearMisses) {
+      lines.push(`  near-miss ${nm.missedBandId}: ${nm.count} drafts (${nm.percent.toFixed(2)}%) within ${sim.diagnostics.nearMissDelta} pts`);
+    }
+  } else {
+    lines.push('  near-miss: none within delta');
+  }
+  for (const q of sim.diagnostics.seedQuartiles) {
+    const cells = Object.entries(q.bands).map(([id, c]) => `${id}:${c}`).join(' ');
+    lines.push(`  quartile ${q.drafts}: ${cells}`);
+  }
+
   return lines.join('\n');
+}
+
+export function buildSimReport(sim: SimResult): object {
+  return {
+    schema: 1,
+    args: sim.args,
+    histogram: sim.histogram,
+    diagnostics: sim.diagnostics,
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -348,4 +486,8 @@ if (isMainModule()) {
   const data = loadGameDataFromDisk();
   const sim = runSimulation(data, args);
   console.log(formatReport(data, sim));
+  if (args.report) {
+    fs.writeFileSync(args.report, JSON.stringify(buildSimReport(sim), null, 2) + '\n');
+    console.log(`\nreport written: ${args.report}`);
+  }
 }
