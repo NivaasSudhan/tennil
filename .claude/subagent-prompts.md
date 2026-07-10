@@ -126,7 +126,7 @@ You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch roadmap/
 ## P-007 — Sprint-1 Task 8 (corpus 7→16, content authoring)
 - date: 2026-07-10
 - target: opencode/grok-4.5 --variant high
-- status: dispatched
+- status: succeeded (TASK8-DONE, 80 tests green; justified out-of-scope edit: loadData.test.ts corpus-size assertions 7/77 → 16/176 — forced by corpus growth, plan gap; REVIEW-NOTES in oc-t8-grok.log; ratings/rosters PENDING HUMAN REVIEW)
 - task: Implement Task 8 from docs/plans/2026-07-10-sprint-1.md (rosters/ratings flagged for human review)
 
 ```

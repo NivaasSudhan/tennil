@@ -2,8 +2,8 @@
 
 You are continuing a planned 1-week MVP. All judgment lives in the docs, not in any prior chat.
 
-## NEXT: Sprint 1 planned — execute docs/plans/2026-07-10-sprint-1.md starting at Task 0 (tag v0.1.0-mvp + branch roadmap/sprint-1). Read ROADMAP.md §3 (design principles/taste) and §7 (sprint table) first; the plan doc is authoritative for execution.
-Remaining human steps unchanged: enable Pages (Settings → Pages → Source: GitHub Actions), verify live URL after first deploy and record it below, ≥5 human playtest drafts (RISKS rarity protocol step 5), and human review of Sprint-1 Task 8 rosters/ratings before merge.
+## NEXT: Sprint-1 T9 (retune) on branch roadmap/sprint-1 — Tasks 0-8 done and committed (see docs/plans/2026-07-10-sprint-1.md; T8 corpus is 16 squads, tests green on OLD thresholds — retune per T9 using the new sim diagnostics). BEFORE merging to main: human review of T8 rosters/ratings (review notes in .claude/subagent-prompts.md P-007 + Sprint-1 session log).
+Remaining human steps: T8 roster/rating review; enable Pages (Settings → Pages → Source: GitHub Actions); verify live URL after first deploy and record it below; ≥5 human playtest drafts (RISKS rarity protocol step 5).
 
 ## Read order (do this before any work)
 1. PROJECT.md — goals, non-goals, invariants, assumptions
