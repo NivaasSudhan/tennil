@@ -84,3 +84,27 @@ You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch roadmap/
 ```
 You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch roadmap/sprint-1. Open docs/plans/2026-07-10-sprint-1.md and implement Task 4 (Extract evaluateBandPredicates — behavior-preserving refactor) EXACTLY as written — every step in order, code verbatim from the doc. Also read DECISIONS.md ADR-013 (the contract you are implementing). Obey the plan's Global Constraints section. Touch ONLY: src/domain/types.ts, src/domain/scoring/scoreBand.ts, tests/scoring.test.ts. Do NOT run git commit or git add. HARD GATE: every pre-existing test in tests/scoring.test.ts must pass byte-unchanged — if you find yourself editing an existing test to make it pass, STOP and report failure instead. Finish by running npm test and the purity grep (grep -rn "Math.random\|rng" src/domain/scoring src/domain/commentary — must be empty) and print, as your final output: TASK4-DONE followed by the vitest summary lines. If anything fails, print TASK4-FAILED plus the failing output instead.
 ```
+
+---
+
+## P-004 — Sprint-1 Task 2 (playback speed hook)
+- date: 2026-07-10
+- target: opencode/deepseek-v4-flash-free --variant max
+- status: succeeded (TASK2-DONE, 70 tests green; compute-once invariant verified — useMemo untouched, hook consumes beat count only)
+- task: Implement Task 2 from docs/plans/2026-07-10-sprint-1.md
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch roadmap/sprint-1. Open docs/plans/2026-07-10-sprint-1.md and implement Task 2 (Playback speed — usePlaythrough hook) EXACTLY as written — every step in order, code verbatim from the doc. jsdom and @testing-library/react are already installed. Obey the plan's Global Constraints section. Touch ONLY: src/app/usePlaythrough.ts (create), tests/usePlaythrough.test.tsx (create), src/app/ResultScreen.tsx (modify per the doc's exact replacement instructions), src/app/app.css (append the Task 2 block at the end without altering existing rules). The useMemo in ResultScreen computing band/groups/commentary must remain byte-identical. Do NOT run git commit or git add. Finish by running npm test and print, as your final output: TASK2-DONE followed by the vitest summary lines. If any test fails, print TASK2-FAILED plus the failing output instead.
+```
+
+---
+
+## P-005 — Sprint-1 Task 5 (explainScoreBand)
+- date: 2026-07-10
+- target: opencode/grok-4.5 --variant high
+- status: succeeded (TASK5 files green 5/5, purity clean; concurrent T2 test failure observed was not T5's scope)
+- task: Implement Task 5 from docs/plans/2026-07-10-sprint-1.md
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch roadmap/sprint-1. Task 4 (evaluateBandPredicates) is already merged. Open docs/plans/2026-07-10-sprint-1.md and implement Task 5 (explainScoreBand) EXACTLY as written — every step in order, code verbatim from the doc. Also read DECISIONS.md ADR-013. Obey the plan's Global Constraints section. Touch ONLY: src/domain/scoring/explainScoreBand.ts (create), tests/explainScoreBand.test.ts (create). NOTE on the plan's second test: verify the fixture math yourself — DEF [80,80,80,74] sums to 314, failing BOTH minBucketSum (320) and minWeakLink (75); the plan's expected failing array already lists both, in evaluator emission order. Do NOT run git commit or git add. Finish by running npm test plus both purity greps from Global Constraints (must be empty) and print, as your final output: TASK5-DONE followed by the vitest summary lines. If anything fails, print TASK5-FAILED plus the failing output instead.
+```
