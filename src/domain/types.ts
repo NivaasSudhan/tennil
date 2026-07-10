@@ -83,6 +83,35 @@ export interface ScoreBand {
   label: string;
 }
 
+// ---------- Scoring explainability (ADR-013) ----------
+
+export type PredicateName = 'allBucketsNonEmpty' | 'minCounts' | 'minBucketSum' | 'minWeakLink';
+
+/** One structured check result. passed === (actual >= required), always. */
+export interface PredicateResult {
+  name: PredicateName;
+  bucket?: PositionBucket; // absent only for minWeakLink
+  required: number;
+  actual: number;
+  passed: boolean;
+}
+
+export interface BandEvaluation {
+  bandId: string;
+  label: string;
+  priority: number;
+  fallback: boolean;
+  matched: boolean;
+  predicates: PredicateResult[]; // [] for the fallback band
+}
+
+export interface ScoreExplanation {
+  bandId: string; // ALWAYS equals scoreBand(input, config).bandId
+  label: string;
+  evaluations: BandEvaluation[]; // priority descending
+  nextBetter: { bandId: string; label: string; failing: PredicateResult[] } | null;
+}
+
 // ---------- Commentary (ADR-005) ----------
 
 export type BeatType = 'kickoff' | 'goal' | 'chance' | 'halftime' | 'drama' | 'fulltime';

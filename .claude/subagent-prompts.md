@@ -60,3 +60,27 @@ RULES: Keep test prompts trivial (few tokens). Never print or write API keys/tok
 
 FINAL REPLY: summarize findings (working commands, root cause, doc path) — the orchestrator will relay this to the user.
 ```
+
+---
+
+## P-002 — Sprint-1 Task 1 (landing screen)
+- date: 2026-07-10
+- target: opencode-go/glm-5.2 --variant high
+- status: succeeded (TASK1-DONE, 61 tests green)
+- task: Implement Task 1 from docs/plans/2026-07-10-sprint-1.md
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch roadmap/sprint-1. Open docs/plans/2026-07-10-sprint-1.md and implement Task 1 (Landing screen) EXACTLY as written — every step in order, code verbatim from the doc. EXCEPTION: skip Step 1 (npm install) — jsdom and @testing-library/react are already installed. Obey the plan's Global Constraints section. Touch ONLY the files in Task 1's Files list. Do NOT run git commit or git add — the orchestrator commits. When appending to src/app/app.css, add the Task 1 block at the end of the file without altering existing rules. Finish by running the full suite (npm test) and print, as your final output: TASK1-DONE followed by the vitest summary lines (Test Files / Tests). If any test fails, print TASK1-FAILED plus the failing output instead.
+```
+
+---
+
+## P-003 — Sprint-1 Task 4 (predicate evaluator refactor)
+- date: 2026-07-10
+- target: opencode/grok-4.5 --variant high
+- status: succeeded (TASK4-DONE, 61 tests green; caught plan-doc test-fixture math error — DEF 314 also fails minBucketSum 320 — fixed in new test only)
+- task: Implement Task 4 from docs/plans/2026-07-10-sprint-1.md
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch roadmap/sprint-1. Open docs/plans/2026-07-10-sprint-1.md and implement Task 4 (Extract evaluateBandPredicates — behavior-preserving refactor) EXACTLY as written — every step in order, code verbatim from the doc. Also read DECISIONS.md ADR-013 (the contract you are implementing). Obey the plan's Global Constraints section. Touch ONLY: src/domain/types.ts, src/domain/scoring/scoreBand.ts, tests/scoring.test.ts. Do NOT run git commit or git add. HARD GATE: every pre-existing test in tests/scoring.test.ts must pass byte-unchanged — if you find yourself editing an existing test to make it pass, STOP and report failure instead. Finish by running npm test and the purity grep (grep -rn "Math.random\|rng" src/domain/scoring src/domain/commentary — must be empty) and print, as your final output: TASK4-DONE followed by the vitest summary lines. If anything fails, print TASK4-FAILED plus the failing output instead.
+```
