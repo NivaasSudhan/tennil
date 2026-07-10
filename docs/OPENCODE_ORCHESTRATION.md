@@ -3,19 +3,24 @@
 Environment: macOS (zsh), `opencode` 1.17.17 installed at `/opt/homebrew/bin/opencode`.
 Investigated 2026-07-10.
 
+## ROUTING DECISION (recorded 2026-07-10, user)
+
+**GLM 5.2 runs ONLY on `opencode-go/glm-5.2`. Deepseek V4 Flash and Grok 4.5 run on Zen (`opencode/`).**
+Orchestrators must use these provider prefixes; do not route GLM through `opencode/glm-5.2` even though it exists there. Verified live: `opencode run --model opencode-go/glm-5.2 --variant high` → `OK-glm-go`, exit 0.
+
 ## TL;DR — working commands
 
 ```bash
-# 1. Deepseek V4 Flash, Max reasoning, free tier
+# 1. Deepseek V4 Flash, Max reasoning, free tier (Zen)
 opencode run --model opencode/deepseek-v4-flash-free --variant max \
   "Reply with exactly: OK-deepseek" < /dev/null
 
-# 2. Grok 4.5, high reasoning
+# 2. Grok 4.5, high reasoning (Zen)
 opencode run --model opencode/grok-4.5 --variant high \
   "Reply with exactly: OK-grok" < /dev/null
 
-# 3. GLM 5.2, high reasoning
-opencode run --model opencode/glm-5.2 --variant high \
+# 3. GLM 5.2, high reasoning (Go — per routing decision above)
+opencode run --model opencode-go/glm-5.2 --variant high \
   "Reply with exactly: OK-glm" < /dev/null
 ```
 
@@ -61,7 +66,7 @@ Marketing names → CLI IDs:
 |---|---|---|
 | Deepseek v4 Flash (Max reasoning) | `deepseek-v4-flash-free` | `opencode` (Zen) |
 | Grok 4.5 (high reasoning) | `grok-4.5` | `opencode` (Zen) |
-| GLM 5.2 (high reasoning) | `glm-5.2` | `opencode` (Zen) — provider was ambiguous in the request; confirmed via `opencode models` and the Zen model-metadata cache |
+| GLM 5.2 (high reasoning) | `glm-5.2` | **`opencode-go` (Go) — by recorded routing decision (see top of doc)**; also exists on Zen but is not used there |
 
 Full catalog: `opencode models` (no args) lists every provider/model pair currently configured
 (providers: `opencode`, `opencode-go`, `ollama`; plus any credentialed provider in `~/.local/share/opencode/auth.json`).
@@ -231,8 +236,8 @@ opencode run --model opencode/deepseek-v4-flash-free --variant max "<prompt>" < 
 # Grok 4.5, high reasoning
 opencode run --model opencode/grok-4.5 --variant high "<prompt>" < /dev/null > <log> 2>&1
 
-# GLM 5.2, high reasoning
-opencode run --model opencode/glm-5.2 --variant high "<prompt>" < /dev/null > <log> 2>&1
+# GLM 5.2, high reasoning (opencode-go per routing decision)
+opencode run --model opencode-go/glm-5.2 --variant high "<prompt>" < /dev/null > <log> 2>&1
 ```
 
 Do not use bare `&` without redirection and without `run_in_background: true` (or an explicit poll) — that
