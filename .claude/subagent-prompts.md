@@ -108,3 +108,27 @@ You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch roadmap/
 ```
 You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch roadmap/sprint-1. Task 4 (evaluateBandPredicates) is already merged. Open docs/plans/2026-07-10-sprint-1.md and implement Task 5 (explainScoreBand) EXACTLY as written — every step in order, code verbatim from the doc. Also read DECISIONS.md ADR-013. Obey the plan's Global Constraints section. Touch ONLY: src/domain/scoring/explainScoreBand.ts (create), tests/explainScoreBand.test.ts (create). NOTE on the plan's second test: verify the fixture math yourself — DEF [80,80,80,74] sums to 314, failing BOTH minBucketSum (320) and minWeakLink (75); the plan's expected failing array already lists both, in evaluator emission order. Do NOT run git commit or git add. Finish by running npm test plus both purity greps from Global Constraints (must be empty) and print, as your final output: TASK5-DONE followed by the vitest summary lines. If anything fails, print TASK5-FAILED plus the failing output instead.
 ```
+
+---
+
+## P-006 — Sprint-1 Task 6 (sim diagnostics)
+- date: 2026-07-10
+- target: opencode-go/glm-5.2 --variant high
+- status: succeeded (TASK6-DONE, 74 tests green, histogram identical to baseline; one sane deviation — dropped unused computeDiagnostics import that would trip noUnusedLocals)
+- task: Implement Task 6 from docs/plans/2026-07-10-sprint-1.md
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch roadmap/sprint-1. Tasks 4 and 5 (evaluateBandPredicates, explainScoreBand) are merged. Open docs/plans/2026-07-10-sprint-1.md and implement Task 6 (Simulator diagnostics) EXACTLY as written — every step in order, code verbatim from the doc. Obey the plan's Global Constraints section. Touch ONLY: scripts/simulate.ts, tests/simulate.test.ts. Predicate logic must never be re-implemented in scripts/ — near-miss goes through explainScoreBand (ADR-013). Do NOT run git commit or git add. After tests pass, also run: npx tsx scripts/simulate.ts --n 500 --seed 42 --bot greedy — the band histogram MUST match the tuned baseline (10-0 ≈ 5.0%, 5-0 ≈ 43.8%, 3-1 ≈ 36.4%, 2-2 ≈ 14.8%); diagnostics must not change results. Print, as your final output: TASK6-DONE, the vitest summary lines, and the histogram lines from that simulate run. If anything fails or the histogram deviates, print TASK6-FAILED plus the output instead.
+```
+
+---
+
+## P-007 — Sprint-1 Task 8 (corpus 7→16, content authoring)
+- date: 2026-07-10
+- target: opencode/grok-4.5 --variant high
+- status: dispatched
+- task: Implement Task 8 from docs/plans/2026-07-10-sprint-1.md (rosters/ratings flagged for human review)
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch roadmap/sprint-1. Open docs/plans/2026-07-10-sprint-1.md and implement Task 8 (Corpus 7 -> 16) EXACTLY as written. Also read DECISIONS.md ADR-011 (selection criteria, XI rule, id format) and ADR-006 (rating rubric), and tests/fixtures/squad-arg-1986.json (the exact JSON shape). Steps: (1) create tests/corpus.test.ts verbatim from the plan; (2) run it — must fail ONLY on squad count 7 != 16; (3) author the 9 squads listed in the plan's table (hun-1954, eng-1966, ned-1974, ger-1974, arg-1978, ger-1990, bra-1994, ita-2006, fra-2018), each the starting XI of that tournament's final, appended to src/data/squads/squads.json; (4) if a positionRaw key is missing from src/data/position-map.json, ADD the key with the correct bucket — never change existing mappings; (5) rate every player per the ADR-006 rubric; (6) npm test must be fully green. Touch ONLY: src/data/squads/squads.json, src/data/position-map.json (additive keys only), tests/corpus.test.ts. Do NOT run git commit or git add. ACCURACY RULES: use historically correct starting XIs of the finals — if unsure of a lineup detail, choose the most widely documented XI and note the uncertainty; never invent players. Print, as your final output: TASK8-DONE, the vitest summary, then a REVIEW-NOTES section listing per squad: any lineup uncertainties and your 3 highest/lowest rating opinions with one-line rationale — a human will review before merge. If anything fails, print TASK8-FAILED plus output.
+```
