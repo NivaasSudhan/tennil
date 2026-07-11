@@ -158,7 +158,7 @@ You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch main. sr
 ## P-010 — Logic audit + extensive edge-case tests
 - date: 2026-07-11
 - target: opencode-go/glm-5.2 --variant high
-- status: dispatched
+- status: succeeded (AUDIT-DONE; 84 new tests green, 0 functional bugs, 4 LOW defensive findings; 2-GK = design not bug, recommends formation advisory per ADR-017, hard block rejected)
 - task: Hunt logical errors (incl. 2-goalkeepers question); new audit test files + report; no src changes
 
 ```
@@ -218,6 +218,12 @@ P-012r status: succeeded (CORPUS68-DONE as 60 squads/660 players, 85 tests green
 ### P-014r retry addendum (appended to the verbatim P-014 prompt):
 ```
 PRIOR RUN DIED using /tmp — paths outside the repo are permission-blocked. Do ALL font download/extraction inside the repo: use ./.fontdl/ as the working dir (curl the gwfh zips there, unzip there, copy woff2 into src/assets/fonts/, then rm -rf ./.fontdl). The gwfh API is confirmed working (HTTP 200). Everything else identical.
+```
+P-014r status: failed(downloads OK but `cd .fontdl && cp ../…` compound tripped sandbox path resolution → copy rejected → died; no app code written). Orchestrator copied fonts into src/assets/fonts/ manually. → retried as P-014r2.
+
+### P-014r2 retry addendum (replaces item 1 of the verbatim P-014 prompt):
+```
+FONTS ARE ALREADY IN PLACE at src/assets/fonts/ (courier-prime-400/700.woff2, anton-400.woff2, archivo-400/600/800.woff2) — do NOT download anything; just write the @font-face blocks referencing them (relative url from app.css). SHELL DISCIPLINE: never cd; always use absolute paths inside /Users/nivaassudhan/Desktop/code/games/fifaTenZero; no compound cd-&&-relative-path commands (they trip the sandbox and kill the run). Known unrelated failures owned by another agent: tests/audit-*.test.ts (2 failing + a type error) — ignore those files entirely; your gate is startScreen/appGate/usePlaythrough green + npm run build green for src/app (if the build fails ONLY inside tests/audit-*, state that explicitly). Everything else identical to P-014.
 ```
 
 ```
