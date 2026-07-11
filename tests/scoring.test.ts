@@ -11,6 +11,7 @@ import { describe, expect, it } from 'vitest';
 import { computeScoreInput, evaluateBandPredicates, scoreBand } from '../src/domain/scoring/scoreBand';
 import { withFormationMinCounts } from '../src/domain/scoring/withFormation';
 import type { BandDef, FinalXI, Player, PositionBucket, PositionMap, ThresholdConfig } from '../src/domain/types';
+import realThresholdsRaw from '../src/data/config/thresholds.json';
 
 // ---------- synthetic config ----------
 
@@ -71,6 +72,8 @@ function makeConfig(bands: BandDef[]): ThresholdConfig {
 }
 
 const CONFIG = makeConfig([TOP_BAND, MID_BAND, LOW_BAND, FALLBACK_BAND]);
+
+const REAL_THRESHOLDS = realThresholdsRaw as ThresholdConfig;
 
 // ---------- XI builder ----------
 
@@ -316,7 +319,17 @@ describe('withFormationMinCounts', () => {
     const result = withFormationMinCounts(configWithFormations, '3-5-2');
     expect(result.minCounts).toEqual({ GK: 1, DEF: 3, MID: 5, ATT: 2 });
     expect(result.referenceFormation).toBe('3-5-2');
-    expect(result.bands).toBe(CONFIG.bands);
+    // Bands rebuilt with scaled minBucketSums (never same reference)
+    expect(result.bands).not.toBe(configWithFormations.bands);
+    expect(result.bands).toHaveLength(4);
+    // TOP: DEF gate 320 * 3/4 = 240
+    expect(result.bands[0].minBucketSums).toEqual({ GK: 80, DEF: 240, MID: 400, ATT: 160 });
+    // MID: DEF gate 280 * 3/4 = 210
+    expect(result.bands[1].minBucketSums).toEqual({ GK: 70, DEF: 210, MID: 350, ATT: 140 });
+    // LOW band has no minBucketSums -> unchanged
+    expect(result.bands[2].minBucketSums).toBeUndefined();
+    // Fallback has no predicates
+    expect(result.bands[3].fallback).toBe(true);
   });
 
   it('returns config unchanged when formationId not found', () => {
@@ -356,6 +369,54 @@ describe('withFormationMinCounts', () => {
     }, '3-5-2');
     const band352 = scoreBand(input, config352);
     expect(band352.bandId).toBe('SHAPE');
+  });
+
+  it('scales minBucketSums: 3-5-2 DEF gate 320 → 240 (reference 4 DEF → 3 DEF)', () => {
+    const cfg = {
+      ...CONFIG,
+      formations: [
+        ...CONFIG.formations,
+        { id: '3-5-2', label: '3-5-2', description: 'test', minCounts: { GK: 1, DEF: 3, MID: 5, ATT: 2 } },
+      ],
+    };
+    const r = withFormationMinCounts(cfg, '3-5-2');
+    const top = r.bands.find((b) => b.id === 'TOP')!;
+    expect(top.minBucketSums).toEqual({ GK: 80, DEF: 240, MID: 400, ATT: 160 });
+  });
+
+  it('4-3-3 view returns gates unchanged (identity scaling)', () => {
+    const r = withFormationMinCounts(CONFIG, '4-3-3');
+    const top = r.bands.find((b) => b.id === 'TOP')!;
+    expect(top.minBucketSums).toEqual(TOP_BAND.minBucketSums);
+    // Bands are new objects (never mutate caller)
+    expect(r.bands).not.toBe(CONFIG.bands);
+  });
+
+  it('does not mutate the caller config', () => {
+    const origBands = CONFIG.bands;
+    const origTopMinBucketSums = CONFIG.bands[0].minBucketSums;
+    withFormationMinCounts(CONFIG, '4-3-3');
+    expect(CONFIG.bands).toBe(origBands);
+    expect(CONFIG.bands[0].minBucketSums).toBe(origTopMinBucketSums);
+  });
+
+  it('reachability: every formation in thresholds.json can reach every non-fallback band', () => {
+    const BUCKETS: PositionBucket[] = ['GK', 'DEF', 'MID', 'ATT'];
+    const MAX_RATING = REAL_THRESHOLDS.ratingScale.max;
+
+    for (const formation of REAL_THRESHOLDS.formations) {
+      const view = withFormationMinCounts(REAL_THRESHOLDS, formation.id);
+      for (const band of view.bands) {
+        if (band.fallback) continue;
+        if (!band.minBucketSums) continue;
+        for (const bucket of BUCKETS) {
+          const gate = band.minBucketSums[bucket];
+          if (gate === undefined) continue;
+          const maxPossible = MAX_RATING * formation.minCounts[bucket];
+          expect(gate).toBeLessThanOrEqual(maxPossible);
+        }
+      }
+    }
   });
 });
 

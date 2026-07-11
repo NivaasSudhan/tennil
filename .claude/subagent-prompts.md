@@ -282,6 +282,21 @@ P-014r2 status: succeeded (U1-DONE; 169 tests green; paper world complete — Te
 - target: opencode/deepseek-v4-flash-free --variant max
 - status: dispatched
 - task: Band first digit = player's goals, but Scoreboard rendered home digits under 'HOME' and away under 'DRAFT XI' → 10-0 win displayed as a loss. Swap labels: ['DRAFT XI','OPPONENTS'], DRAFT XI on home/first digits; fix aria + ResultScreen caller + scoreboard tests only.
+- P-022 status: succeeded; P-023 legibility (Deepseek): succeeded, committed.
+
+---
+
+## P-024 — Formation-gate scaling hotfix (ADR-017 amend)
+- date: 2026-07-11
+- target: opencode/deepseek-v4-flash-free --variant max
+- status: dispatched
+- task: withFormationMinCounts also scales band minBucketSums by formation.minCounts/reference.minCounts (3-5-2 DEF 320→240); reachability property test all formations × bands; 4-3-3 identity; sim histogram unchanged.
+
+## P-025 — Relative scoring W1: domain (ADR-019) [QUEUED behind P-024 — same scoring dir]
+- date: 2026-07-11
+- target: Claude Code Agent tool, general-purpose, model sonnet
+- status: queued
+- task: Per docs/plans/2026-07-11-relative-scoring.md W1 row: revealLog on DraftSession; sessionCeiling.ts DP; ScoreInput v2 (+ceiling); evaluator gains minEfficiency/minBucketEfficiency (integer % points for margins); thresholds v3 + 9-band ladder placeholders; loadData validation; PROJECT/CLAUDE/ARCHITECTURE invariant wording; ceiling-property tests. W2/W3/W4 (P-026/027/028) dispatch after per plan table.
 - task: PlayerRow mine-variant never renders taken state (bug: YOUR XI shows mangled overlapping Taken graphics); reveal rows disabled when id-taken OR isPersonTaken (call domain helper — zero rules logic in components); clean taken treatment: single strikethrough + small red TAKEN tag right-aligned, leader hidden, no overlap with POS chip/rating circle; RTL tests for both variants.
 
 ```

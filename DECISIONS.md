@@ -203,6 +203,8 @@ Changing anything marked **Invariant** in PROJECT.md requires a new ADR here fir
 
 **Amendment (2026-07-11, user product directive — supersedes stage sizes above):** Corpus window is World Cups **1986–2026 only**. Selection rule: **semifinalists (4)** of 1986/1990/1994/1998/2002 + **quarterfinalists (8)** of 2006/2010/2014/2018/2022/2026 = **68 squads target**. Prior icon-density / ≤2-per-country-per-stage criteria are superseded by this per-tournament stage rule. Shipped now: **60 squads** (1986–2022 complete); eight **2026 quarterfinalist** slots remain a documented gap for human fill after the tournament. Thresholds retune stays a separate gate after this data ship.
 
+**Amendment (2026-07-11, ADR-017 hotfix — formation gate scaling):** `withFormationMinCounts` previously swapped only `minCounts` in the config view. That made 3-5-2, 4-4-2, and 5-3-2 mathematical traps: their max bucket sums fell below the band gates (tuned for 4-3-3's shape), so those formations could never beat 2-2. Fix: every band's `minBucketSums` are now scaled by `formation.minCounts[bucket] / referenceFormation.minCounts[bucket]`, rounded. The reference formation is looked up from `config.referenceFormation` in the formations catalog on each call (guard: missing or zero minCounts throws). Scaling preserves identity when the target matches the reference (4-3-3). Only `withFormation.ts` changes; `scoreBand`/`explainScoreBand` signatures untouched per ADR-017/C2.
+
 ---
 
 ## ADR-012 — Ratings are editorial: pipeline proposes, overrides are canon
