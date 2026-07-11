@@ -251,8 +251,16 @@ P-014r2 status: succeeded (U1-DONE; 169 tests green; paper world complete — Te
 ## P-018 — Matchday UI wave U3: visual defect fixes (browser-verified)
 - date: 2026-07-11
 - target: opencode-go/glm-5.2 --variant high
-- status: dispatched
+- status: succeeded (U3-DONE; 197 tests + build green; D1 fixed-layer pitch, D2 grid→flex row w/ fixed 1.8rem rating circle, D3 masthead added but shipped opacity:0 — see P-019, D4 landing fits 720p; browser-verified except D3)
 - task: Fix 4 defects found by orchestrator driving the live app at 1280x720
+
+---
+
+## P-019 — Masthead opacity:0 anti-pattern fix
+- date: 2026-07-11
+- target: opencode/deepseek-v4-flash-free --variant max
+- status: succeeded (MASTHEAD-FIX-DONE; masthead + stamp + confetti all de-gated to visible-base/from{}-only pattern; browser-verified)
+- task: app.css only — masthead base state visible, entrance animates from{} only; audit whole file for opacity:0-base + animation-gated visibility; reduced-motion keeps full visibility
 
 ```
 You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch main. The orchestrator drove the live app (vite dev, 1280x720) and found these VISUAL DEFECTS in the Matchday UI. Read PRODUCT.md + DESIGN.md first (binding spec), then fix all four. Allowed files: src/app/app.css, src/app/TeamSheet.tsx, src/app/PlayerRow.tsx, src/app/DraftScreen.tsx, src/app/StartScreen.tsx only. Do NOT touch ResultScreen/broadcast components, domain, tests (unless a matcher breaks from copy you change — then update that matcher in the same pass).

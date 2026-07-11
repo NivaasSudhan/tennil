@@ -17,7 +17,7 @@ export default function StartScreen({ formations, defaultFormationId, variant, o
       {variant === 'landing' && (
         <>
           <span className="start-screen__eyebrow">World Cup Draft-XI</span>
-          <h1 className="start-screen__masthead">fifaTenZero</h1>
+          <h1 className="start-screen__masthead">FIFA Ten Zero</h1>
           <p className="start-screen__blurb">
             Legendary World Cup squads, revealed one at a time under the lights.
             Take one player from each reveal, lock an XI, and see what scoreline

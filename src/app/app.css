@@ -124,6 +124,32 @@ body {
   min-height: 100vh;
   font-family: 'Archivo', system-ui, -apple-system, sans-serif;
   color: var(--broadcast-text);
+  /* Solid pitch fallback — guarantees the document canvas never reveals a flat
+     dark band at any scroll position even before the pseudo-element layers
+     paint (defends D1 pitch-void-on-scroll). */
+  background-color: var(--pitch);
+  /* Subtle grass grain baked into the canvas itself (SVG feTurbulence, 6%
+     alpha), fixed to the viewport so it never shears on scroll. This is the
+     DESIGN.md "grain" texture layer. */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  background-repeat: repeat;
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+
+/* Pitch surface — fixed full-viewport background: vertical mowing stripes
+   via repeating-linear-gradient + floodlit radial vignette (DESIGN.md
+   Texture). Position: fixed inset 0 fills the viewport at every scroll
+   position (D1 fix). Sits below the chalk layer and all content (z-index 0),
+   does not capture pointer events. Body's solid pitch color is the fallback
+   behind it. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
   background:
     radial-gradient(ellipse at 50% 42%, transparent 18%, var(--pitch-shadow) 92%),
     repeating-linear-gradient(
@@ -131,32 +157,16 @@ body {
       var(--pitch) 0 7vw,
       var(--pitch-stripe) 7vw 14vw
     );
-  background-attachment: fixed;
-  background-color: var(--pitch);
-  overflow-x: hidden;
-}
-
-/* Grain overlay — SVG feTurbulence, low-opacity, fixed full viewport.
-   Sits above the painted pitch but below all real content. */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 200px 200px;
-  mix-blend-mode: overlay;
 }
 
 /* Chalk pitch markings — center circle, halfway line, penalty boxes.
-   Subtly off-center like a broadcast camera frame. */
+   Subtly off-center like a broadcast camera frame. Sits above the pitch
+   gradient (body::before) but below all content. */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
-  z-index: 1;
+  z-index: 0;
   pointer-events: none;
   opacity: 0.35;
   background-position: 54% 38%;
@@ -194,14 +204,14 @@ button {
    ===================================================================== */
 
 .start-screen {
-  min-height: 90vh;
+  min-height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 1.4rem;
+  justify-content: flex-start;
+  gap: 0.85rem;
   text-align: center;
-  padding: 3rem 1rem;
+  padding: 1.4rem 1rem 1.2rem;
   text-wrap: balance;
 }
 
@@ -209,7 +219,7 @@ button {
   font-family: 'Archivo', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.28em;
-  font-size: clamp(0.7rem, 2.2vw, 0.85rem);
+  font-size: clamp(0.66rem, 1.8vw, 0.78rem);
   font-weight: 600;
   color: var(--gold);
   opacity: 0.92;
@@ -220,18 +230,20 @@ button {
   font-family: 'Anton', 'Archivo', sans-serif;
   font-weight: 400;
   text-transform: uppercase;
-  line-height: 0.9;
-  letter-spacing: 0.01em;
-  font-size: clamp(2.75rem, 11vw, 6rem);
+  line-height: 0.94;
+  letter-spacing: 0.012em;
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
   color: var(--broadcast-text);
-  text-shadow: 0 0 28px oklch(0.82 0.14 88 / 0.25);
-  animation: flood-flare 900ms var(--ease-out-quint) both;
+  text-shadow:
+    0 0 32px oklch(0.82 0.14 88 / 0.3),
+    0 2px 4px oklch(0 0 0 / 0.45);
+  animation: masthead-in 450ms var(--ease-out-quart) both;
 }
 
 .start-screen__blurb {
-  max-width: min(40rem, 92vw);
-  font-size: clamp(0.98rem, 2.6vw, 1.15rem);
-  line-height: 1.5;
+  max-width: min(38rem, 92vw);
+  font-size: clamp(0.88rem, 1.8vw, 1rem);
+  line-height: 1.4;
   color: oklch(0.9 0.02 140);
   opacity: 0.95;
 }
@@ -239,11 +251,11 @@ button {
 .start-rules {
   list-style: none;
   margin: 0;
-  padding: 0.4rem 1rem;
+  padding: 0.3rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  max-width: min(36rem, 92vw);
+  gap: 0.22rem;
+  max-width: min(34rem, 92vw);
   text-align: left;
   border-top: 1px solid oklch(0.92 0.02 140 / 0.25);
   border-bottom: 1px solid oklch(0.92 0.02 140 / 0.25);
@@ -251,10 +263,11 @@ button {
 
 .start-rules li {
   font-family: 'Courier Prime', 'Archivo', monospace;
-  font-size: clamp(0.85rem, 2.4vw, 0.98rem);
+  font-size: clamp(0.76rem, 1.8vw, 0.86rem);
   color: oklch(0.92 0.02 140);
-  padding: 0.32rem 0;
+  padding: 0.16rem 0;
   letter-spacing: 0.01em;
+  line-height: 1.3;
 }
 
 .start-rules li::before {
@@ -267,12 +280,12 @@ button {
 .formation-picker {
   position: relative;
   width: 100%;
-  max-width: min(40rem, 92vw);
+  max-width: min(38rem, 92vw);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.9rem;
-  padding: 1.2rem 1rem;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem 0.95rem;
   background: var(--paper);
   color: var(--ink);
   border-radius: 4px;
@@ -300,18 +313,18 @@ button {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  font-size: 0.82rem;
+  font-size: 0.74rem;
   color: var(--ink-faded);
   border-bottom: 1.5px solid oklch(0.7 0.02 260 / 0.5);
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.35rem;
   width: 100%;
   text-align: center;
 }
 
 .formation-picker__options {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 0.6rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
   width: 100%;
 }
 
@@ -320,8 +333,8 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.2rem;
-  padding: 0.75rem 0.6rem 0.65rem;
+  gap: 0.12rem;
+  padding: 0.45rem 0.5rem 0.45rem;
   background: transparent;
   border: 1.5px solid oklch(0.7 0.02 260 / 0.35);
   border-radius: 4px;
@@ -346,23 +359,23 @@ button {
 
 .formation-option__label {
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 0.98rem;
   letter-spacing: 0.04em;
 }
 
 .formation-option__desc {
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   color: var(--ink-faded);
-  line-height: 1.25;
+  line-height: 1.2;
 }
 
 .formation-option__counts {
   font-family: 'Archivo', sans-serif;
   font-variant-numeric: tabular-nums;
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   font-weight: 600;
   color: oklch(0.5 0.02 260);
-  margin-top: 0.2rem;
+  margin-top: 0.1rem;
 }
 
 .formation-option--selected .formation-option__counts {
@@ -372,10 +385,10 @@ button {
 .formation-picker__advisory {
   margin: 0;
   font-family: 'Courier Prime', monospace;
-  font-size: 0.78rem;
+  font-size: 0.7rem;
   color: var(--ink-faded);
   text-align: center;
-  line-height: 1.4;
+  line-height: 1.35;
   max-width: 32rem;
 }
 
@@ -391,7 +404,7 @@ button {
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  font-size: clamp(1rem, 3.4vw, 1.35rem);
+  font-size: clamp(0.95rem, 2.8vw, 1.15rem);
   color: var(--broadcast-text);
   background: linear-gradient(
     180deg,
@@ -400,7 +413,7 @@ button {
   );
   border: 1.5px solid var(--gold);
   border-radius: 6px;
-  padding: 0.85rem 2.4rem;
+  padding: 0.65rem 2rem;
   box-shadow: var(--stadium-glow);
   transition: transform 220ms var(--ease-out-quart),
               box-shadow 220ms var(--ease-out-quart),
@@ -658,23 +671,26 @@ button {
   font-style: italic;
 }
 
-/* ---------- PlayerRow — one typed line ---------- */
+/* ---------- PlayerRow — one typed line (D2 fix) ----------
+   ONE compact typed row: NAME (Courier Prime) … dotted leader filling the
+   middle … POS abbrev … small inked rating circle (~1.8rem diameter).
+   Flex (not grid) so the leader stretches to fill whatever space the name
+   leaves; the rating circle is a fixed-size badge, never full width. */
 .player-row {
   --row-state: pickable;
   position: relative;
-  display: grid;
-  grid-template-columns: 1fr auto auto auto;
-  align-items: center;
-  gap: 0.5rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
   width: 100%;
-  padding: 0.42rem 0.5rem 0.4rem;
+  padding: 0.32rem 0.5rem 0.3rem;
   text-align: left;
   background: transparent;
   border: none;
   color: inherit;
   font-family: 'Courier Prime', monospace;
-  font-size: clamp(0.82rem, 2.4vw, 0.95rem);
-  line-height: 1.25;
+  font-size: clamp(0.78rem, 1.6vw, 0.9rem);
+  line-height: 1.2;
   letter-spacing: 0.01em;
   font-variant-numeric: tabular-nums;
   overflow: hidden;
@@ -727,12 +743,16 @@ button {
 }
 
 .row__name {
+  flex: 0 1 max-content;
+  min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .row__leader {
+  flex: 1 1 1rem;
+  min-width: 0;
   font-family: 'Courier Prime', monospace;
   color: oklch(0.6 0.02 260);
   letter-spacing: 0.04em;
@@ -740,9 +760,11 @@ button {
   font-size: 0.78rem;
   opacity: 0.7;
   white-space: nowrap;
+  overflow: hidden;
 }
 
 .row__pos {
+  flex: 0 0 auto;
   font-family: 'Courier Prime', monospace;
   font-weight: 700;
   font-size: 0.7rem;
@@ -760,26 +782,31 @@ button {
 .bucket-ATT { color: var(--bucket-ATT); border-color: oklch(0.55 0.17 27 / 0.6); }
 
 .row__sep {
+  flex: 0 0 auto;
   color: var(--ink-faded);
   opacity: 0.6;
 }
 
-/* Inked rating circle — colored by tier per DESIGN.md */
+/* Inked rating circle — SMALL fixed-size badge (~1.8rem diameter), colored by
+   tier per DESIGN.md (93+ red / 86-92 blue / <=85 plain ink). Fixed width and
+   height so it never grows to a full-width pill (D2 root cause). */
 .row__rating {
+  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 1.9rem;
-  height: 1.9rem;
-  padding: 0 0.3rem;
+  width: 1.8rem;
+  height: 1.8rem;
+  padding: 0;
   font-family: 'Courier Prime', monospace;
   font-weight: 700;
-  font-size: 0.86rem;
+  font-size: 0.82rem;
   line-height: 1;
   font-variant-numeric: tabular-nums;
   color: var(--rating-solid);
   border: 1.4px solid var(--rating-solid);
   border-radius: 999px;
+  box-sizing: border-box;
 }
 
 .row__rating--icon {
@@ -803,7 +830,7 @@ button {
   position: absolute;
   right: 0.45rem;
   top: 50%;
-  transform: translateY(-50%) rotate(-8deg) scale(0.6);
+  transform: translateY(-50%) rotate(-8deg) scale(1);
   font-family: 'Anton', 'Archivo', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -813,7 +840,7 @@ button {
   border-radius: 2px;
   padding: 0.1rem 0.4rem;
   background: oklch(0.95 0.02 95 / 0.6);
-  opacity: 0;
+  opacity: 1;
   pointer-events: none;
   animation: stamp-punch 120ms var(--ease-out-quart) both;
 }
@@ -1124,12 +1151,16 @@ button {
   .app-shell { padding: 1rem 0.7rem 3rem; }
   .team-sheet { padding: 1.1rem 1.1rem 1.3rem; }
   .row__leader { display: none; }
-  .player-row { grid-template-columns: 1fr auto auto; }
+  .player-row { gap: 0.6rem; }
 }
 
 /* =====================================================================
    KEYFRAMES — ease-out-quart/quint only; visible by default.
    ===================================================================== */
+@keyframes masthead-in {
+  from { opacity: 0; transform: translateY(8px); }
+}
+
 @keyframes flood-flare {
   from { opacity: 0; }
   12%  { opacity: 1; }
@@ -1153,10 +1184,6 @@ button {
   from {
     opacity: 0;
     transform: translateY(-50%) rotate(-8deg) scale(0.6);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(-50%) rotate(-8deg) scale(1);
   }
 }
 
@@ -1570,7 +1597,7 @@ button {
   height: 10px;
   background: var(--gold);
   border-radius: 1px;
-  opacity: 0;
+  opacity: 1;
   animation: confetti-burst 900ms var(--ease-out-quint) both;
   animation-delay: calc(var(--i, 0) * 22ms);
 }
