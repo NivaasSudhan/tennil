@@ -273,7 +273,15 @@ P-014r2 status: succeeded (U1-DONE; 169 tests green; paper world complete — Te
 ## P-021 — Taken-state UI fix (reveal-only)
 - date: 2026-07-11
 - target: Claude Code Agent tool, general-purpose, model sonnet, background
-- status: dispatched (P-020 committed as ADR-018; 10-0 6.2% vs 6.4% — no retune)
+- status: succeeded (212 tests + build green; root cause = TeamSheet gave non-newest mine rows state='taken'; new 'owned' state; reveal rows flag id- OR person-taken via domain helper)
+
+---
+
+## P-022 — Scoreboard side inversion fix
+- date: 2026-07-11
+- target: opencode/deepseek-v4-flash-free --variant max
+- status: dispatched
+- task: Band first digit = player's goals, but Scoreboard rendered home digits under 'HOME' and away under 'DRAFT XI' → 10-0 win displayed as a loss. Swap labels: ['DRAFT XI','OPPONENTS'], DRAFT XI on home/first digits; fix aria + ResultScreen caller + scoreboard tests only.
 - task: PlayerRow mine-variant never renders taken state (bug: YOUR XI shows mangled overlapping Taken graphics); reveal rows disabled when id-taken OR isPersonTaken (call domain helper — zero rules logic in components); clean taken treatment: single strikethrough + small red TAKEN tag right-aligned, leader hidden, no overlap with POS chip/rating circle; RTL tests for both variants.
 
 ```

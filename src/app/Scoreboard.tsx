@@ -15,13 +15,13 @@ export interface ScoreboardProps {
   label?: string;
 }
 
-export default function Scoreboard({ home, away, label = 'HOME  ·  DRAFT XI' }: ScoreboardProps) {
+export default function Scoreboard({ home, away, label = 'DRAFT XI  ·  OPPONENTS' }: ScoreboardProps) {
   const [homeLabel, awayLabel] = label.includes('·')
     ? (label.split('·').map((s) => s.trim()) as [string, string])
-    : (['HOME', 'DRAFT XI'] as [string, string]);
+    : (['DRAFT XI', 'OPPONENTS'] as [string, string]);
 
   return (
-    <div className="scoreboard" role="status" aria-live="polite" aria-label={`Home ${home} away ${away}`}>
+    <div className="scoreboard" role="status" aria-live="polite" aria-label={`Draft XI ${home}, Opponents ${away}`}>
       <div className="scoreboard__row">
         <div className="scoreboard__team">
           <span className="scoreboard__club">{homeLabel}</span>

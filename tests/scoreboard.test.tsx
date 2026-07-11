@@ -12,13 +12,13 @@ afterEach(cleanup);
 describe('Scoreboard', () => {
   it('renders the supplied home/away numbers', () => {
     render(<Scoreboard home={3} away={1} />);
-    expect(screen.getByLabelText('Home 3 away 1')).toBeTruthy();
+    expect(screen.getByLabelText('Draft XI 3, Opponents 1')).toBeTruthy();
   });
 
-  it('defaults club labels to HOME / DRAFT XI', () => {
+  it('defaults club labels to DRAFT XI / OPPONENTS', () => {
     render(<Scoreboard home={0} away={0} />);
-    expect(screen.getByText('HOME')).toBeTruthy();
     expect(screen.getByText('DRAFT XI')).toBeTruthy();
+    expect(screen.getByText('OPPONENTS')).toBeTruthy();
   });
 
   it('accepts a custom split label', () => {
