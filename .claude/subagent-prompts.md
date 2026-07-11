@@ -262,6 +262,20 @@ P-014r2 status: succeeded (U1-DONE; 169 tests green; paper world complete — Te
 - status: succeeded (MASTHEAD-FIX-DONE; masthead + stamp + confetti all de-gated to visible-base/from{}-only pattern; browser-verified)
 - task: app.css only — masthead base state visible, entrance animates from{} only; audit whole file for opacity:0-base + animation-gated visibility; reduced-motion keeps full visibility
 
+---
+
+## P-020 — Person-identity pick rule (domain, ADR-018)
+- date: 2026-07-11
+- target: Claude Code Agent tool, general-purpose, model sonnet, background
+- status: dispatched
+- task: ADR-018; src/domain/draft/person.ts (personKey normalize name / pickedPersonKeys / isPersonTaken); pick() throws on era-duplicate person; simulate.ts bots filter pickable via isPersonTaken (else they crash); tests incl. cross-era block + diacritics collide + sim completes n=200 both bots; report greedy 10-0 drift vs 6.4%. Full prompt in Agent dispatch 2026-07-11 (Claude subagent — user requested sonnet for this pair).
+
+## P-021 — Taken-state UI fix (reveal-only) [QUEUED, dispatch after P-020]
+- date: 2026-07-11
+- target: Claude Code Agent tool, general-purpose, model sonnet
+- status: queued
+- task: PlayerRow mine-variant never renders taken state (bug: YOUR XI shows mangled overlapping Taken graphics); reveal rows disabled when id-taken OR isPersonTaken (call domain helper — zero rules logic in components); clean taken treatment: single strikethrough + small red TAKEN tag right-aligned, leader hidden, no overlap with POS chip/rating circle; RTL tests for both variants.
+
 ```
 You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch main. The orchestrator drove the live app (vite dev, 1280x720) and found these VISUAL DEFECTS in the Matchday UI. Read PRODUCT.md + DESIGN.md first (binding spec), then fix all four. Allowed files: src/app/app.css, src/app/TeamSheet.tsx, src/app/PlayerRow.tsx, src/app/DraftScreen.tsx, src/app/StartScreen.tsx only. Do NOT touch ResultScreen/broadcast components, domain, tests (unless a matcher breaks from copy you change — then update that matcher in the same pass).
 

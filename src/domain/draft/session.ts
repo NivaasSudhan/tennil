@@ -15,6 +15,7 @@ import type {
   Squad,
 } from '../types';
 import { IllegalActionError } from '../types';
+import { isPersonTaken } from './person';
 
 interface SelectResult {
   reveal: Squad;
@@ -111,6 +112,11 @@ export function pick(
   }
   if (session.picks.some((p) => p.id === playerId)) {
     throw new IllegalActionError(`player ${playerId} has already been picked`);
+  }
+  if (isPersonTaken(session, player)) {
+    throw new IllegalActionError(
+      `player ${playerId}: person already picked (era-duplicate)`,
+    );
   }
 
   const picks = [...session.picks, player];

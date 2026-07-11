@@ -26,6 +26,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { loadGameData } from '../src/domain/loadData';
 import { startDraft, pick, skip, getFinalXI } from '../src/domain/draft/session';
+import { isPersonTaken } from '../src/domain/draft/person';
 import { computeScoreInput, scoreBand } from '../src/domain/scoring/scoreBand';
 import { explainScoreBand } from '../src/domain/scoring/explainScoreBand';
 import { mulberry32 } from '../src/lib/rng';
@@ -234,7 +235,11 @@ export function runSingleDraft(
     if (!reveal) throw new Error('runSingleDraft: AWAIT_PICK session has no currentReveal');
 
     const pickedIds = new Set(session.picks.map((p) => p.id));
-    const pickable = reveal.players.filter((p) => !pickedIds.has(p.id));
+    // Filter by id AND person (ADR-018) — an era-duplicate of an already-picked
+    // human would make pick() throw if a bot chose it.
+    const pickable = reveal.players.filter(
+      (p) => !pickedIds.has(p.id) && !isPersonTaken(session, p),
+    );
 
     const decision: BotDecision =
       botType === 'greedy'
