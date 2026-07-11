@@ -127,6 +127,11 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       {/* Miniature team sheet docked bottom-left (the finished XI). */}
       <aside className="result-sheet-mini" aria-label="Your final XI (miniature)">
         <h2>Your XI</h2>
+        <FormationExplain
+          formationId={session.formationId}
+          formations={data.thresholds.formations}
+          groups={groups}
+        />
         <div className="squad-groups">
           {BUCKET_ORDER.map((bucket) => (
             <div key={bucket} className="squad-group">
@@ -173,6 +178,42 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
           Draft again
         </button>
       </div>
+    </div>
+  );
+}
+
+/**
+ * FormationExplain — compact formation summary for the result sheet.
+ * Shows formation label + per-bucket count/cap with met/unmet indicator.
+ */
+function FormationExplain({
+  formationId,
+  formations,
+  groups,
+}: {
+  formationId: string;
+  formations: readonly { id: string; label: string; minCounts: Record<string, number> }[];
+  groups: Record<PositionBucket, Pick[]>;
+}) {
+  const f = formations.find((x) => x.id === formationId);
+  if (!f) return null;
+  const { label, minCounts } = f;
+  return (
+    <div className="formation-explain">
+      <span className="formation-explain__label">{label}</span>
+      <span className="formation-explain__buckets">
+        {BUCKET_ORDER.map((b, i) => {
+          const count = groups[b].length;
+          const cap = minCounts[b] ?? 0;
+          const met = count >= cap;
+          return (
+            <span key={b} className={`formation-explain__bucket bucket-${b}`}>
+              {i > 0 && <span className="formation-explain__sep">|</span>}
+              {b} {count}/{cap} {met ? '✓' : '✗'}
+            </span>
+          );
+        })}
+      </span>
     </div>
   );
 }

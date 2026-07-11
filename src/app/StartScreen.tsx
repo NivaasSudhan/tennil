@@ -56,7 +56,9 @@ export default function StartScreen({ formations, defaultFormationId, variant, o
           <p className="formation-picker__advisory">
             {variant === 'landing' ? 'Your shape:' : 'Locking'} {selected.label} &mdash;{' '}
             {selected.minCounts.GK} GK, {selected.minCounts.DEF} DEF, {selected.minCounts.MID} MID, {selected.minCounts.ATT} ATT
-            {variant === 'landing' ? '. You can still pick any player; this sets your scoring target.' : '.'}
+            {variant === 'landing'
+              ? '. Your formation sets the scoring target for the broadcast finale — fill each position bucket to qualify for the highest result bands.'
+              : '.'}
           </p>
         )}
       </section>

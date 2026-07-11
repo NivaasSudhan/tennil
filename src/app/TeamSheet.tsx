@@ -13,6 +13,8 @@ interface TeamSheetBaseProps {
   /** Last picked player id — renders a SELECTED stamp on the matching reveal row. */
   lastPickId?: string | null;
   onPick?: (playerId: string) => void;
+  /** Advisory per-bucket caps from chosen formation (mine variant only). */
+  bucketCaps?: Record<PositionBucket, number>;
 }
 
 export type TeamSheetProps = TeamSheetBaseProps & {
@@ -36,6 +38,7 @@ export default function TeamSheet({
   takenIds,
   lastPickId,
   onPick,
+  bucketCaps,
 }: TeamSheetProps) {
   if (variant === 'reveal') {
     if (!reveal) return null;
@@ -84,13 +87,15 @@ export default function TeamSheet({
             groups[bucket].length === 0 ? null : (
               <div key={bucket}>
                 <div className="team-sheet__section">
-                  {bucket} ({groups[bucket].length})
+                  {bucket} ({groups[bucket].length}{bucketCaps ? ` / ${bucketCaps[bucket]}` : ''})
                 </div>
                 {groups[bucket].map((p) => (
                   <PlayerRow
                     key={p.id}
                     player={p}
-                    state={p.id === lastPickId ? 'picked' : 'taken'}
+                    // Mine sheet never renders 'taken' — the user OWNS these rows.
+                    // Newest pick gets the stamped 'picked' state; the rest are 'owned'.
+                    state={p.id === lastPickId ? 'picked' : 'owned'}
                     as="line"
                     showStamp={p.id === lastPickId}
                   />

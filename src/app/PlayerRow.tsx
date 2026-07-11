@@ -1,6 +1,6 @@
 import type { Player } from '../domain/types';
 
-export type RowState = 'pickable' | 'picked' | 'taken';
+export type RowState = 'pickable' | 'picked' | 'taken' | 'owned';
 
 interface PlayerRowProps {
   player: Player;
@@ -22,9 +22,13 @@ function ratingTier(rating: number): 'icon' | 'strong' | 'solid' {
  * `NAME ······ POS · ⬤RATING`. Rating is an inked circle badge colored by
  * tier (93+ red / 86-92 blue / <=85 plain). States:
  *   pickable — hover paints a ballpoint underline
- *   picked   — a red SELECTED stamp punches in (120ms)
- *   taken    — typed `— TAKEN —` strikethrough, not clickable
- * Presentation only. `state` is derived by the parent from `session.picks`.
+ *   picked   — a red SELECTED stamp punches in (120ms); mine-sheet's newest pick
+ *   owned    — mine-sheet row for an already-owned pick (not the newest); clean,
+ *              no stamp, no taken markup — mine rows NEVER render 'taken'
+ *   taken    — reveal-sheet row disabled (id already picked, or same person
+ *              picked under a different era-id); small red TAKEN tag, not clickable
+ * Presentation only. `state` is derived by the parent from `session.picks`
+ * (+ isPersonTaken for reveal rows) — never computed here.
  */
 export default function PlayerRow({ player, state, onPick, as, showStamp }: PlayerRowProps) {
   const tier = ratingTier(player.rating);
@@ -36,6 +40,11 @@ export default function PlayerRow({ player, state, onPick, as, showStamp }: Play
       <span className="row__leader" aria-hidden="true">
         ·······
       </span>
+      {state === 'taken' && (
+        <span className="row__taken-tag" aria-hidden="true">
+          Taken
+        </span>
+      )}
       <span className={`row__pos bucket-${player.positionBucket}`}>{player.positionRaw}</span>
       <span className="row__sep" aria-hidden="true">
         ·
@@ -44,11 +53,6 @@ export default function PlayerRow({ player, state, onPick, as, showStamp }: Play
       {showStamp && state === 'picked' && (
         <span className="row__stamp" aria-hidden="true">
           Selected
-        </span>
-      )}
-      {state === 'taken' && (
-        <span className="row__taken" aria-hidden="true">
-          — Taken —
         </span>
       )}
     </>
@@ -72,7 +76,7 @@ export default function PlayerRow({ player, state, onPick, as, showStamp }: Play
   // for a11y, but disabled.
   if (as === 'button') {
     return (
-      <button type="button" className="player-row" data-state={state} disabled>
+      <button type="button" className="player-row" data-state={state} disabled aria-disabled="true">
         {inner}
       </button>
     );

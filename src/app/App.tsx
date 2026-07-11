@@ -88,7 +88,14 @@ export default function App({ data }: { data: GameData }) {
       ) : session === null ? null : session.phase === 'COMPLETE' ? (
         <ResultScreen session={session} data={data} onRestart={handleRestart} />
       ) : (
-        <DraftScreen session={session} error={actionError} onPick={handlePick} onSkip={handleSkip} />
+        <DraftScreen
+          session={session}
+          error={actionError}
+          onPick={handlePick}
+          onSkip={handleSkip}
+          formations={data.thresholds.formations}
+          formationId={session.formationId}
+        />
       )}
     </div>
   );

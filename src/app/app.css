@@ -729,6 +729,7 @@ button {
 .player-row[data-state='taken'] {
   cursor: not-allowed;
   color: var(--ink-faded);
+  opacity: 0.55;
 }
 
 .player-row[data-state='taken'] .row__name {
@@ -737,9 +738,16 @@ button {
   text-decoration-color: var(--ink-faded);
 }
 
-.player-row[data-state='taken'] .row__pos,
+/* Dotted leader hidden for taken rows, but keep its flex-grow space so the
+   TAKEN tag / POS chip / rating stay pinned to the right (U-fix). */
+.player-row[data-state='taken'] .row__leader {
+  visibility: hidden;
+}
+
 .player-row[data-state='taken'] .row__rating {
-  opacity: 0.55;
+  color: var(--ink-faded);
+  border-color: var(--ink-faded);
+  background: none;
 }
 
 .row__name {
@@ -845,17 +853,28 @@ button {
   animation: stamp-punch 120ms var(--ease-out-quart) both;
 }
 
-/* "— TAKEN —" typed strikethrough label for disabled rows. */
-.row__taken {
-  position: absolute;
-  right: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
+/* =====================================================================
+   U-fix — taken-row tag + reveal/mine taken-state split
+   Reveal rows disabled for an exact id match OR a same-person match (a
+   different era-id) render this small red TAKEN tag inline, right-aligned
+   before the POS chip via normal flex flow (never absolutely positioned,
+   so it can't collide with the rating circle at any width >= 360px). The
+   mine sheet never uses `state="taken"` — see PlayerRow RowState/TeamSheet.
+   ===================================================================== */
+.row__taken-tag {
+  flex: 0 0 auto;
   font-family: 'Courier Prime', monospace;
   font-weight: 700;
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--stamp);
+  border: 1px solid var(--stamp);
+  border-radius: 2px;
+  padding: 2px;
+  line-height: 1;
+  white-space: nowrap;
+  transform: rotate(-4deg);
   pointer-events: none;
 }
 
@@ -1452,6 +1471,43 @@ button {
   color: var(--ink);
   border-bottom: 1px solid oklch(0.6 0.02 260 / 0.4);
   padding-bottom: 0.25rem;
+}
+
+/* Formation explain — compact per-bucket advisory line (D change). */
+.formation-explain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 0.6rem;
+  margin: 0 0 0.5rem;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.68rem;
+  line-height: 1.3;
+}
+.formation-explain__label {
+  font-weight: 700;
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.formation-explain__buckets {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.3rem;
+}
+.formation-explain__bucket {
+  white-space: nowrap;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.formation-explain__bucket.bucket-GK  { color: var(--bucket-GK); }
+.formation-explain__bucket.bucket-DEF { color: var(--bucket-DEF); }
+.formation-explain__bucket.bucket-MID { color: var(--bucket-MID); }
+.formation-explain__bucket.bucket-ATT { color: var(--bucket-ATT); }
+.formation-explain__sep {
+  margin: 0 0.2rem;
+  color: oklch(0.6 0.02 260 / 0.4);
 }
 
 /* ---------- Ticker stage (lower third) ---------- */

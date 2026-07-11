@@ -270,10 +270,10 @@ P-014r2 status: succeeded (U1-DONE; 169 tests green; paper world complete — Te
 - status: dispatched
 - task: ADR-018; src/domain/draft/person.ts (personKey normalize name / pickedPersonKeys / isPersonTaken); pick() throws on era-duplicate person; simulate.ts bots filter pickable via isPersonTaken (else they crash); tests incl. cross-era block + diacritics collide + sim completes n=200 both bots; report greedy 10-0 drift vs 6.4%. Full prompt in Agent dispatch 2026-07-11 (Claude subagent — user requested sonnet for this pair).
 
-## P-021 — Taken-state UI fix (reveal-only) [QUEUED, dispatch after P-020]
+## P-021 — Taken-state UI fix (reveal-only)
 - date: 2026-07-11
-- target: Claude Code Agent tool, general-purpose, model sonnet
-- status: queued
+- target: Claude Code Agent tool, general-purpose, model sonnet, background
+- status: dispatched (P-020 committed as ADR-018; 10-0 6.2% vs 6.4% — no retune)
 - task: PlayerRow mine-variant never renders taken state (bug: YOUR XI shows mangled overlapping Taken graphics); reveal rows disabled when id-taken OR isPersonTaken (call domain helper — zero rules logic in components); clean taken treatment: single strikethrough + small red TAKEN tag right-aligned, leader hidden, no overlap with POS chip/rating circle; RTL tests for both variants.
 
 ```
