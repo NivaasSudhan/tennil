@@ -2,8 +2,8 @@
 
 You are continuing a planned 1-week MVP. All judgment lives in the docs, not in any prior chat.
 
-## NEXT: Sprint-1 T9 (retune) on branch roadmap/sprint-1 — Tasks 0-8 done and committed (see docs/plans/2026-07-10-sprint-1.md; T8 corpus is 16 squads, tests green on OLD thresholds — retune per T9 using the new sim diagnostics). BEFORE merging to main: human review of T8 rosters/ratings (review notes in .claude/subagent-prompts.md P-007 + Sprint-1 session log).
-Remaining human steps: T8 roster/rating review; enable Pages (Settings → Pages → Source: GitHub Actions); verify live URL after first deploy and record it below; ≥5 human playtest drafts (RISKS rarity protocol step 5).
+## NEXT: Sprint 1 COMPLETE (Tasks 0-9 + corpus fact-check pass; see docs/plans/2026-07-10-sprint-1.md and RISKS experiment log 2026-07-11). Corpus 16 squads, thresholds retuned (greedy 10-0 = 5.8%, near-miss 18.4%). Next: ≥5 human playtest drafts to confirm the 1-2/2-2 wall is gone, then Phase 1 proper — scripts/ingest pipeline + corpus 24-32 under ADR-011/012, and Phase 2 ResultBreakdown UI on explainScoreBand.
+Remaining human steps: playtest drafts (verify 3-1/5-0 now reachable); record live URL below if not yet done.
 
 ## Read order (do this before any work)
 1. PROJECT.md — goals, non-goals, invariants, assumptions

@@ -150,7 +150,7 @@ You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch main. sr
 ## P-009 — Sprint-1 Task 9: retune thresholds for 16-squad corpus
 - date: 2026-07-10
 - target: opencode/grok-4.5 --variant high
-- status: dispatched
+- status: succeeded (TASK9-DONE; greedy 5.8/27.2/67/0/0/0, random 0/0/2.4/19/33.4/45.2; near-miss 10-0 = 18.4% — sweet spot; all six acceptance gates met)
 - task: Numbers-only thresholds.json retune using T6 diagnostics; fix human playtest problem (stuck in 1-2/2-2)
 
 ```

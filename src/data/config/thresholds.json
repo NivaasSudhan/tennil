@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "_comment": "ALL numeric values PLACEHOLDER until Day-7 tune (T-015, R-04). Band evaluation: priority descending, first band whose predicates ALL pass; exactly one fallback. Engine reads BandDef fields generically — never hardcode band ids in code (ADR-004).",
+  "_comment": "Sprint-1 T9 retune for 16-squad corpus. Band evaluation: priority descending, first band whose predicates ALL pass; exactly one fallback. Engine reads BandDef fields generically — never hardcode band ids in code (ADR-004).",
   "referenceFormation": "4-3-3",
   "minCounts": { "GK": 1, "DEF": 4, "MID": 3, "ATT": 3 },
   "ratingScale": { "min": 1, "max": 100 },
@@ -11,7 +11,7 @@
       "label": "LEGENDARY ROUT",
       "requireAllBucketsNonEmpty": true,
       "requireMinCounts": true,
-      "minBucketSums": { "GK": 92, "DEF": 352, "MID": 286, "ATT": 284 },
+      "minBucketSums": { "GK": 90, "DEF": 362, "MID": 280, "ATT": 282 },
       "minWeakLink": 88
     },
     {
@@ -20,7 +20,7 @@
       "label": "DOMINANT DISPLAY",
       "requireAllBucketsNonEmpty": true,
       "requireMinCounts": true,
-      "minBucketSums": { "GK": 92, "DEF": 351, "MID": 286, "ATT": 284 },
+      "minBucketSums": { "GK": 90, "DEF": 357, "MID": 276, "ATT": 279 },
       "minWeakLink": 86
     },
     {
@@ -29,8 +29,8 @@
       "label": "COMFORTABLE WIN",
       "requireAllBucketsNonEmpty": true,
       "requireMinCounts": true,
-      "minBucketSums": { "GK": 92, "DEF": 349, "MID": 286, "ATT": 284 },
-      "minWeakLink": 84
+      "minBucketSums": { "GK": 84, "DEF": 325, "MID": 245, "ATT": 230 },
+      "minWeakLink": 78
     },
     {
       "id": "2-2",
@@ -38,8 +38,8 @@
       "label": "NERVY DRAW",
       "requireAllBucketsNonEmpty": true,
       "requireMinCounts": false,
-      "minBucketSums": { "GK": 80, "DEF": 300, "MID": 250, "ATT": 250 },
-      "minWeakLink": 76
+      "minBucketSums": { "GK": 70, "DEF": 240, "MID": 190, "ATT": 150 },
+      "minWeakLink": 74
     },
     {
       "id": "1-2",

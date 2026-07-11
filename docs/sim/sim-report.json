@@ -1,0 +1,162 @@
+{
+  "schema": 1,
+  "args": {
+    "n": 500,
+    "seed": 42,
+    "bot": "greedy",
+    "skipThreshold": 84,
+    "report": "docs/sim/sim-report.json"
+  },
+  "histogram": [
+    {
+      "bandId": "10-0",
+      "label": "LEGENDARY ROUT",
+      "priority": 100,
+      "count": 29,
+      "percent": 5.800000000000001
+    },
+    {
+      "bandId": "5-0",
+      "label": "DOMINANT DISPLAY",
+      "priority": 80,
+      "count": 136,
+      "percent": 27.200000000000003
+    },
+    {
+      "bandId": "3-1",
+      "label": "COMFORTABLE WIN",
+      "priority": 60,
+      "count": 335,
+      "percent": 67
+    },
+    {
+      "bandId": "2-2",
+      "label": "NERVY DRAW",
+      "priority": 40,
+      "count": 0,
+      "percent": 0
+    },
+    {
+      "bandId": "1-2",
+      "label": "UPSET LOSS",
+      "priority": 20,
+      "count": 0,
+      "percent": 0
+    },
+    {
+      "bandId": "0-4",
+      "label": "TOTAL COLLAPSE",
+      "priority": 0,
+      "count": 0,
+      "percent": 0
+    }
+  ],
+  "diagnostics": {
+    "bucketSums": {
+      "GK": {
+        "p10": 89,
+        "p25": 92,
+        "p50": 92,
+        "p75": 93,
+        "p90": 93,
+        "min": 84,
+        "max": 93
+      },
+      "DEF": {
+        "p10": 352,
+        "p25": 355,
+        "p50": 359,
+        "p75": 361,
+        "p90": 363,
+        "min": 346,
+        "max": 369
+      },
+      "MID": {
+        "p10": 273,
+        "p25": 276,
+        "p50": 280,
+        "p75": 283,
+        "p90": 286,
+        "min": 266,
+        "max": 286
+      },
+      "ATT": {
+        "p10": 278,
+        "p25": 280,
+        "p50": 283,
+        "p75": 286,
+        "p90": 288,
+        "min": 270,
+        "max": 291
+      }
+    },
+    "weakLink": {
+      "p10": 84,
+      "p25": 86,
+      "p50": 87,
+      "p75": 88,
+      "p90": 88,
+      "min": 84,
+      "max": 90
+    },
+    "seedQuartiles": [
+      {
+        "drafts": "0..124",
+        "bands": {
+          "10-0": 9,
+          "5-0": 32,
+          "3-1": 84,
+          "2-2": 0,
+          "1-2": 0,
+          "0-4": 0
+        }
+      },
+      {
+        "drafts": "125..249",
+        "bands": {
+          "10-0": 7,
+          "5-0": 34,
+          "3-1": 84,
+          "2-2": 0,
+          "1-2": 0,
+          "0-4": 0
+        }
+      },
+      {
+        "drafts": "250..374",
+        "bands": {
+          "10-0": 5,
+          "5-0": 39,
+          "3-1": 81,
+          "2-2": 0,
+          "1-2": 0,
+          "0-4": 0
+        }
+      },
+      {
+        "drafts": "375..499",
+        "bands": {
+          "10-0": 8,
+          "5-0": 31,
+          "3-1": 86,
+          "2-2": 0,
+          "1-2": 0,
+          "0-4": 0
+        }
+      }
+    ],
+    "nearMisses": [
+      {
+        "missedBandId": "10-0",
+        "count": 92,
+        "percent": 18.4
+      },
+      {
+        "missedBandId": "5-0",
+        "count": 202,
+        "percent": 40.400000000000006
+      }
+    ],
+    "nearMissDelta": 3
+  }
+}
