@@ -10,8 +10,13 @@
 import { describe, expect, it } from 'vitest';
 import { computeScoreInput, evaluateBandPredicates, scoreBand } from '../src/domain/scoring/scoreBand';
 import { withFormationMinCounts } from '../src/domain/scoring/withFormation';
-import type { BandDef, FinalXI, Player, PositionBucket, PositionMap, ThresholdConfig } from '../src/domain/types';
+import type { BandDef, CeilingResult, FinalXI, Player, PositionBucket, PositionMap, ThresholdConfig } from '../src/domain/types';
 import realThresholdsRaw from '../src/data/config/thresholds.json';
+
+// ADR-019: these synthetic bands never configure minEfficiency/minBucketEfficiency, so
+// a zero ceiling is inert here — computeSessionCeiling itself is exercised in
+// tests/sessionCeiling.test.ts.
+const ZERO_CEILING: CeilingResult = { bucketSums: { GK: 0, DEF: 0, MID: 0, ATT: 0 }, total: 0 };
 
 // ---------- synthetic config ----------
 
@@ -120,7 +125,7 @@ describe('scoreBand', () => {
       MID: [80, 80, 80],
       ATT: [80, 80, 80],
     });
-    const input = computeScoreInput(xi, POSITION_MAP);
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
     const result = scoreBand(input, CONFIG);
     expect(result).toEqual({ bandId: 'TOP', label: 'LEGENDARY ROUT' });
   });
@@ -134,12 +139,12 @@ describe('scoreBand', () => {
       MID: [80, 80, 80],
       ATT: [80, 80, 80],
     });
-    const baseline = scoreBand(computeScoreInput(xi, POSITION_MAP), CONFIG);
+    const baseline = scoreBand(computeScoreInput(xi, POSITION_MAP, ZERO_CEILING), CONFIG);
     expect(baseline.bandId).toBe('TOP');
 
     // Drop one DEF player from 80 to 74 (TOP requires minWeakLink 75; MID requires 65).
     const weakened: FinalXI = xi.map((p, i) => (i === 1 ? { ...p, rating: 74 } : p));
-    const input = computeScoreInput(weakened, POSITION_MAP);
+    const input = computeScoreInput(weakened, POSITION_MAP, ZERO_CEILING);
     expect(input.weakLink).toBe(74);
 
     const result = scoreBand(input, CONFIG);
@@ -154,7 +159,7 @@ describe('scoreBand', () => {
       MID: [80, 80, 80],
       ATT: [80, 80, 80, 80],
     });
-    const input = computeScoreInput(xi, POSITION_MAP);
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
     expect(input.bucketCounts.GK).toBe(0);
 
     const result = scoreBand(input, CONFIG);
@@ -174,7 +179,7 @@ describe('scoreBand', () => {
       MID: [80, 80, 80, 80, 80],
       ATT: [80, 80, 80, 80],
     });
-    const input = computeScoreInput(xi, POSITION_MAP);
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
     expect(input.bucketCounts).toEqual({ GK: 1, DEF: 2, MID: 5, ATT: 4 });
 
     const result = scoreBand(input, CONFIG);
@@ -194,7 +199,7 @@ describe('scoreBand', () => {
       MID: [80, 80, 80],
       ATT: [80, 80, 80],
     });
-    const input = computeScoreInput(xi, POSITION_MAP);
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
 
     // Sanity: confirm the lower-priority bands' predicates also pass independently.
     expect(input.bucketSums.GK).toBeGreaterThanOrEqual(MID_BAND.minBucketSums!.GK!);
@@ -213,7 +218,7 @@ describe('scoreBand', () => {
       MID: [1, 1, 1],
       ATT: [1, 1, 1],
     });
-    const input = computeScoreInput(xi, POSITION_MAP);
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
     const result = scoreBand(input, CONFIG);
     expect(result).toEqual({ bandId: 'FALLBACK', label: 'TOTAL COLLAPSE' });
   });
@@ -227,7 +232,7 @@ describe('scoreBand', () => {
       MID: [70, 71, 72],
       ATT: [60, 61, 62],
     });
-    const input = computeScoreInput(xi, POSITION_MAP);
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
 
     expect(input.bucketSums).toEqual({ GK: 90, DEF: 326, MID: 213, ATT: 183 });
     expect(input.bucketCounts).toEqual({ GK: 1, DEF: 4, MID: 3, ATT: 3 });
@@ -249,7 +254,7 @@ describe('scoreBand', () => {
     );
     expect(xi.every((p) => p.positionBucket === 'GK')).toBe(true);
 
-    const input = computeScoreInput(xi, POSITION_MAP);
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
     expect(input.bucketSums).toEqual({ GK: 90, DEF: 326, MID: 213, ATT: 183 });
     expect(input.bucketCounts).toEqual({ GK: 1, DEF: 4, MID: 3, ATT: 3 });
   });
@@ -264,8 +269,8 @@ describe('scoreBand', () => {
       ATT: [84, 85, 86],
     });
 
-    const input1 = computeScoreInput(xi, POSITION_MAP);
-    const input2 = computeScoreInput(xi, POSITION_MAP);
+    const input1 = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
+    const input2 = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
     expect(input1).toEqual(input2);
 
     const result1 = scoreBand(input1, CONFIG);
@@ -285,7 +290,7 @@ describe('scoreBand', () => {
       MID: [80, 80, 80],
       ATT: [80, 80, 80],
     });
-    const input = computeScoreInput(xi, POSITION_MAP);
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
     const result = scoreBand(input, ascendingConfig);
 
     expect(result.bandId).toBe('TOP');
@@ -296,7 +301,7 @@ describe('scoreBand', () => {
   it('does not mutate or sort the caller-supplied config.bands array (descending config too)', () => {
     const originalOrder = CONFIG.bands.map((b) => b.id);
     const xi = buildXI({ GK: [1], DEF: [1, 1, 1, 1], MID: [1, 1, 1], ATT: [1, 1, 1] });
-    scoreBand(computeScoreInput(xi, POSITION_MAP), CONFIG);
+    scoreBand(computeScoreInput(xi, POSITION_MAP, ZERO_CEILING), CONFIG);
     expect(CONFIG.bands.map((b) => b.id)).toEqual(originalOrder);
   });
 });
@@ -345,7 +350,7 @@ describe('withFormationMinCounts', () => {
       MID: [80, 80, 80, 80, 80],
       ATT: [80, 80],
     });
-    const input = computeScoreInput(xi, POSITION_MAP);
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
 
     // A band that only checks minCounts + allBucketsNonEmpty + high weakLink
     const SHAPE_BAND: BandDef = {
@@ -428,7 +433,7 @@ describe('evaluateBandPredicates (ADR-013)', () => {
       MID: [80, 80, 80],
       ATT: [80, 80, 80],
     });
-    const input = computeScoreInput(xi, POSITION_MAP);
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
     const results = evaluateBandPredicates(TOP_BAND, input, CONFIG);
 
     // TOP_BAND configures: allBucketsNonEmpty (4 buckets) + minCounts (4) +
@@ -448,7 +453,7 @@ describe('evaluateBandPredicates (ADR-013)', () => {
 
   it('returns [] for the fallback band', () => {
     const xi = buildXI({ GK: [1], DEF: [1, 1, 1, 1], MID: [1, 1, 1], ATT: [1, 1, 1] });
-    const input = computeScoreInput(xi, POSITION_MAP);
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
     expect(evaluateBandPredicates(FALLBACK_BAND, input, CONFIG)).toEqual([]);
   });
 
@@ -459,9 +464,74 @@ describe('evaluateBandPredicates (ADR-013)', () => {
       MID: [80, 80, 80, 80, 80],
       ATT: [80, 80, 80, 80],
     });
-    const input = computeScoreInput(xi, POSITION_MAP);
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
     const allPass = evaluateBandPredicates(TOP_BAND, input, CONFIG).every((r) => r.passed);
     expect(allPass).toBe(false);
     expect(scoreBand(input, CONFIG).bandId).not.toBe('TOP');
+  });
+});
+
+describe('evaluateBandPredicates efficiency (ADR-019)', () => {
+  const CEILING: CeilingResult = {
+    bucketSums: { GK: 80, DEF: 320, MID: 240, ATT: 240 },
+    total: 880,
+  };
+
+  it('minEfficiency: actual is round(100 * userTotal / ceilingTotal), integer % points', () => {
+    const band: BandDef = { id: 'EFF', priority: 50, label: 'EFF', minEfficiency: 90 };
+    // userTotal 792 / ceilingTotal 880 = 0.9 exactly -> 90.
+    const xi = buildXI({ GK: [72], DEF: [72, 72, 72, 72], MID: [72, 72, 72], ATT: [72, 72, 72] });
+    const input = computeScoreInput(xi, POSITION_MAP, CEILING);
+    const results = evaluateBandPredicates(band, input, CONFIG);
+    expect(results).toEqual([{ name: 'minEfficiency', required: 90, actual: 90, passed: true }]);
+  });
+
+  it('minEfficiency: one point below required fails', () => {
+    const band: BandDef = { id: 'EFF', priority: 50, label: 'EFF', minEfficiency: 91 };
+    const xi = buildXI({ GK: [72], DEF: [72, 72, 72, 72], MID: [72, 72, 72], ATT: [72, 72, 72] });
+    const input = computeScoreInput(xi, POSITION_MAP, CEILING);
+    const [result] = evaluateBandPredicates(band, input, CONFIG);
+    expect(result).toEqual({ name: 'minEfficiency', required: 91, actual: 90, passed: false });
+  });
+
+  it('minEfficiency: perfect XI (userTotal === ceilingTotal) gives 100', () => {
+    const band: BandDef = { id: 'EFF', priority: 50, label: 'EFF', minEfficiency: 100 };
+    const xi = buildXI({ GK: [80], DEF: [80, 80, 80, 80], MID: [80, 80, 80], ATT: [80, 80, 80] });
+    const input = computeScoreInput(xi, POSITION_MAP, CEILING); // sums == CEILING.bucketSums, total 880
+    const [result] = evaluateBandPredicates(band, input, CONFIG);
+    expect(result).toEqual({ name: 'minEfficiency', required: 100, actual: 100, passed: true });
+  });
+
+  it('minEfficiency: ceilingTotal 0 -> actual 100 (never penalize a degenerate ceiling)', () => {
+    const band: BandDef = { id: 'EFF', priority: 50, label: 'EFF', minEfficiency: 100 };
+    const xi = buildXI({ GK: [1], DEF: [1, 1, 1, 1], MID: [1, 1, 1], ATT: [1, 1, 1] });
+    const zeroCeiling: CeilingResult = { bucketSums: { GK: 0, DEF: 0, MID: 0, ATT: 0 }, total: 0 };
+    const input = computeScoreInput(xi, POSITION_MAP, zeroCeiling);
+    const [result] = evaluateBandPredicates(band, input, CONFIG);
+    expect(result).toEqual({ name: 'minEfficiency', required: 100, actual: 100, passed: true });
+  });
+
+  it('minBucketEfficiency: one entry per configured bucket, same integer-% convention', () => {
+    const band: BandDef = {
+      id: 'BEFF', priority: 50, label: 'BEFF',
+      minBucketEfficiency: { DEF: 90, ATT: 95 },
+    };
+    // DEF 288/320 = 90%; ATT 240/240 = 100%.
+    const xi = buildXI({ GK: [80], DEF: [72, 72, 72, 72], MID: [80, 80, 80], ATT: [80, 80, 80] });
+    const input = computeScoreInput(xi, POSITION_MAP, CEILING);
+    const results = evaluateBandPredicates(band, input, CONFIG);
+    expect(results).toEqual([
+      { name: 'minBucketEfficiency', bucket: 'DEF', required: 90, actual: 90, passed: true },
+      { name: 'minBucketEfficiency', bucket: 'ATT', required: 95, actual: 100, passed: true },
+    ]);
+  });
+
+  it('minBucketEfficiency: a bucket-zero ceiling gives that bucket actual 100', () => {
+    const band: BandDef = { id: 'BEFF0', priority: 50, label: 'BEFF0', minBucketEfficiency: { GK: 100 } };
+    const xi = buildXI({ GK: [1], DEF: [1, 1, 1, 1], MID: [1, 1, 1], ATT: [1, 1, 1] });
+    const ceilingNoGk: CeilingResult = { bucketSums: { GK: 0, DEF: 320, MID: 240, ATT: 240 }, total: 800 };
+    const input = computeScoreInput(xi, POSITION_MAP, ceilingNoGk);
+    const results = evaluateBandPredicates(band, input, CONFIG);
+    expect(results).toEqual([{ name: 'minBucketEfficiency', bucket: 'GK', required: 100, actual: 100, passed: true }]);
   });
 });

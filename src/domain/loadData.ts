@@ -69,8 +69,8 @@ function validateThresholds(raw: unknown, problems: string[]): ThresholdConfig {
     return fallback;
   }
 
-  if (raw.version !== 1 && raw.version !== 2) {
-    problems.push(`thresholds: version must be 1 or 2 (got ${JSON.stringify(raw.version)})`);
+  if (raw.version !== 1 && raw.version !== 2 && raw.version !== 3) {
+    problems.push(`thresholds: version must be 1, 2, or 3 (got ${JSON.stringify(raw.version)})`);
   }
 
   const minCounts: Record<PositionBucket, number> = { GK: 0, DEF: 0, MID: 0, ATT: 0 };
@@ -146,6 +146,37 @@ function validateThresholds(raw: unknown, problems: string[]): ThresholdConfig {
       if (bandRaw.minWeakLink !== undefined && typeof bandRaw.minWeakLink !== 'number') {
         problems.push(`${entity}: minWeakLink must be a number`);
       }
+
+      // ADR-019: authored in JSON as a fraction in [0,1] (matches the ladder's "~.NN"
+      // notation); converted here to an integer percentage point for the runtime
+      // BandDef, since evaluateBandPredicates compares required/actual both as
+      // integer % points.
+      let minEfficiency: number | undefined;
+      if (bandRaw.minEfficiency !== undefined) {
+        if (typeof bandRaw.minEfficiency !== 'number' || bandRaw.minEfficiency < 0 || bandRaw.minEfficiency > 1) {
+          problems.push(`${entity}: minEfficiency must be a number in [0,1] (got ${JSON.stringify(bandRaw.minEfficiency)})`);
+        } else {
+          minEfficiency = Math.round(bandRaw.minEfficiency * 100);
+        }
+      }
+
+      let minBucketEfficiency: Partial<Record<PositionBucket, number>> | undefined;
+      if (bandRaw.minBucketEfficiency !== undefined) {
+        if (!isPlainObject(bandRaw.minBucketEfficiency)) {
+          problems.push(`${entity}: minBucketEfficiency must be an object`);
+        } else {
+          minBucketEfficiency = {};
+          for (const [k, v] of Object.entries(bandRaw.minBucketEfficiency)) {
+            if (!BUCKET_SET.has(k)) {
+              problems.push(`${entity}: minBucketEfficiency key '${k}' is not a valid bucket (GK/DEF/MID/ATT)`);
+            } else if (typeof v !== 'number' || v < 0 || v > 1) {
+              problems.push(`${entity}: minBucketEfficiency.${k} must be a number in [0,1] (got ${JSON.stringify(v)})`);
+            } else {
+              minBucketEfficiency[k as PositionBucket] = Math.round(v * 100);
+            }
+          }
+        }
+      }
       if (bandRaw.requireAllBucketsNonEmpty !== undefined && typeof bandRaw.requireAllBucketsNonEmpty !== 'boolean') {
         problems.push(`${entity}: requireAllBucketsNonEmpty must be a boolean`);
       }
@@ -157,7 +188,7 @@ function validateThresholds(raw: unknown, problems: string[]): ThresholdConfig {
       }
       if (bandRaw.fallback === true) fallbackCount += 1;
 
-      bands.push(bandRaw as unknown as BandDef);
+      bands.push({ ...(bandRaw as unknown as BandDef), minEfficiency, minBucketEfficiency });
     });
 
     if (fallbackCount === 0) {

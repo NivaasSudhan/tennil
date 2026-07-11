@@ -35,7 +35,7 @@ Solo football fans. Casual, short sessions, replay-driven ("can I get the 10-0?"
 
 1. Exactly 11 final picks; exactly 1 skip token per draft session.
 2. No budget/cost mechanic.
-3. Outcome = deterministic score band from squad composition + config only.
+3. Outcome = deterministic score band from squad composition + the session's reveal sequence + config only (ADR-019).
 4. Commentary never overrides or re-rolls the outcome.
 5. Runtime squad/player data = vendored static JSON only.
 6. Thresholds, bands, completeness mins = external config JSON. No hardcoded magic numbers in the engine.

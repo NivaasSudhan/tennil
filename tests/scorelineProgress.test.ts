@@ -1,6 +1,8 @@
 /**
  * tests/scorelineProgress.test.ts — WAVE U2 pure scoreline helpers.
- * Real band ids from thresholds.json corpus (5 bands): 10-0,5-0,3-1,2-2,1-2,0-4.
+ * parseBandScoreline/progressScoreline are generic "N-M" string parsers, not tied to
+ * the live band ladder — '2-2' below is a valid scoreline string regardless of whether
+ * thresholds.json still ships a '2-2' band id (ADR-019 retired it in favor of '1-1').
  * Key invariants: floor intermediate, monotonic non-decreasing, snap exact at 1.
  */
 import { describe, it, expect } from 'vitest';

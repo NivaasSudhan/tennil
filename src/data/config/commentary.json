@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "_comment": "ADR-019: 7-1/4-1/2-1/1-1 are W1 MINIMAL placeholders (_placeholder:true) -- Wave W2 (Deepseek) authors the real scripts. 10-0/5-0/3-1/1-2/0-4 are reused unchanged from the pre-ADR-019 ladder.",
   "scripts": {
     "10-0": {
       "beats": [
@@ -33,15 +34,36 @@
         { "minute": 90, "type": "fulltime", "text": "Full time: 3-1. A professional win with one uncomfortable wobble." }
       ]
     },
-    "2-2": {
+    "7-1": {
+      "_placeholder": true,
+      "beats": [
+        { "minute": 1,  "type": "kickoff",  "text": "{captain} leads the side out — a statement performance in the making." },
+        { "minute": 40, "type": "goal",     "text": "{topAtt} runs riot. Seven goals, one reply. Ruthless from start to finish." },
+        { "minute": 90, "type": "fulltime", "text": "Full time: 7-1. {gk} shrugs off the lone concession — a rout all the same." }
+      ]
+    },
+    "4-1": {
+      "_placeholder": true,
+      "beats": [
+        { "minute": 1,  "type": "kickoff",  "text": "{captain} leads out a side that means business." },
+        { "minute": 55, "type": "goal",     "text": "{topMid} adds the fourth. A strong, one-sided win taking shape." },
+        { "minute": 90, "type": "fulltime", "text": "Full time: 4-1. A strong win, {weakest}'s lapse the only blemish." }
+      ]
+    },
+    "2-1": {
+      "_placeholder": true,
+      "beats": [
+        { "minute": 1,  "type": "kickoff",  "text": "{captain} leads out a side ready for a scrap." },
+        { "minute": 70, "type": "drama",    "text": "Hard-fought, edgy, {topDef} standing firm when it mattered." },
+        { "minute": 90, "type": "fulltime", "text": "Full time: 2-1. Hard-fought, but {gk} and the XI get there." }
+      ]
+    },
+    "1-1": {
+      "_placeholder": true,
       "beats": [
         { "minute": 1,  "type": "kickoff",  "text": "{captain} leads out a side that knows this one could go either way." },
-        { "minute": 10, "type": "goal",     "text": "Early lead! One-nil, and the belief is high." },
-        { "minute": 24, "type": "goal",     "text": "Pulled level almost immediately. This is going to be a rollercoaster." },
-        { "minute": 45, "type": "halftime", "text": "Level at the break. Stomachs churning in the stands." },
-        { "minute": 58, "type": "goal",     "text": "{topMid} restores the lead with a moment of real quality! Two-one." },
-        { "minute": 80, "type": "drama",    "text": "Deep, deep into the game — they're pegged back. Two-two. Nobody can watch." },
-        { "minute": 90, "type": "fulltime", "text": "Full time: 2-2. A seesaw, a scare, a share of the spoils. {gk} slumps to the turf, drained." }
+        { "minute": 60, "type": "drama",    "text": "Nip and tuck all match — {weakest} feeling the pressure of a tight scoreline." },
+        { "minute": 90, "type": "fulltime", "text": "Full time: 1-1. A nervy draw, honours even, {gk} drained by the tension." }
       ]
     },
     "1-2": {

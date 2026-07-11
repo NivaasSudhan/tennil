@@ -7,6 +7,7 @@
 
 import type {
   BandDef,
+  CeilingResult,
   FinalXI,
   PositionBucket,
   PositionMap,
@@ -19,11 +20,17 @@ import type {
 const BUCKETS: PositionBucket[] = ['GK', 'DEF', 'MID', 'ATT'];
 
 /**
- * computeScoreInput (ADR-004).
+ * computeScoreInput (ADR-004; ceiling param added ADR-019).
  * Bucket for each player = `positionMap[player.positionRaw]` — the map is the
  * source of truth, never the player's own (denormalized) `positionBucket` field.
+ * `ceiling` is the session-relative denominator (computeSessionCeiling) that
+ * powers the minEfficiency/minBucketEfficiency predicates below.
  */
-export function computeScoreInput(xi: FinalXI, positionMap: PositionMap): ScoreInput {
+export function computeScoreInput(
+  xi: FinalXI,
+  positionMap: PositionMap,
+  ceiling: CeilingResult,
+): ScoreInput {
   const bucketSums: Record<PositionBucket, number> = { GK: 0, DEF: 0, MID: 0, ATT: 0 };
   const bucketCounts: Record<PositionBucket, number> = { GK: 0, DEF: 0, MID: 0, ATT: 0 };
 
@@ -38,15 +45,22 @@ export function computeScoreInput(xi: FinalXI, positionMap: PositionMap): ScoreI
 
   if (xi.length === 0) weakLink = 0;
 
-  return { bucketSums, bucketCounts, weakLink };
+  return { bucketSums, bucketCounts, weakLink, ceiling };
+}
+
+/** Integer percentage points, ADR-019 convention: 0 ceiling => 100 (perfect). */
+function efficiencyPct(userValue: number, ceilingValue: number): number {
+  if (ceilingValue === 0) return 100;
+  return Math.round((100 * userValue) / ceilingValue);
 }
 
 /**
  * evaluateBandPredicates (ADR-013). The ONE place band predicates are
  * evaluated — consumed by scoreBand (conjunction), explainScoreBand
  * (structured margins), and the simulator's near-miss diagnostics.
- * Fixed emission order (nonEmpty -> minCounts -> minBucketSums -> minWeakLink,
- * buckets in GK/DEF/MID/ATT order) so output is deterministic.
+ * Fixed emission order (nonEmpty -> minCounts -> minBucketSums -> minWeakLink
+ * -> minEfficiency -> minBucketEfficiency, buckets in GK/DEF/MID/ATT order)
+ * so output is deterministic.
  * A fallback band configures no predicates: returns [].
  */
 export function evaluateBandPredicates(
@@ -104,6 +118,33 @@ export function evaluateBandPredicates(
       actual: input.weakLink,
       passed: input.weakLink >= band.minWeakLink,
     });
+  }
+
+  if (band.minEfficiency !== undefined) {
+    const userTotal = BUCKETS.reduce((sum, b) => sum + input.bucketSums[b], 0);
+    const actual = efficiencyPct(userTotal, input.ceiling.total);
+    results.push({
+      name: 'minEfficiency',
+      required: band.minEfficiency,
+      actual,
+      passed: actual >= band.minEfficiency,
+    });
+  }
+
+  if (band.minBucketEfficiency) {
+    for (const bucket of BUCKETS) {
+      const required = band.minBucketEfficiency[bucket];
+      if (required !== undefined) {
+        const actual = efficiencyPct(input.bucketSums[bucket], input.ceiling.bucketSums[bucket]);
+        results.push({
+          name: 'minBucketEfficiency',
+          bucket,
+          required,
+          actual,
+          passed: actual >= required,
+        });
+      }
+    }
   }
 
   return results;

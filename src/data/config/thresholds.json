@@ -1,6 +1,6 @@
 {
-  "version": 2,
-  "_comment": "Corpus-60 retune (1986-2022 SF+QF). Band evaluation: priority descending, first band whose predicates ALL pass; exactly one fallback. Engine reads BandDef fields generically — never hardcode band ids in code (ADR-004). v2: added formations array (ADR-017).",
+  "version": 3,
+  "_comment": "ADR-019 relative session scoring. Band evaluation: priority descending, first band whose predicates ALL pass; exactly one fallback. minEfficiency/minBucketEfficiency are authored as fractions in [0,1] (loadData converts to integer percentage points: userTotal/ceilingTotal from computeSessionCeiling). Placeholder numbers -- W3 (Grok) retunes from sim data. minBucketSums retired: efficiency replaces it as the scoring denominator.",
   "referenceFormation": "4-3-3",
   "minCounts": { "GK": 1, "DEF": 4, "MID": 3, "ATT": 3 },
   "formations": [
@@ -17,8 +17,17 @@
       "label": "LEGENDARY ROUT",
       "requireAllBucketsNonEmpty": true,
       "requireMinCounts": true,
-      "minBucketSums": { "GK": 85, "DEF": 355, "MID": 270, "ATT": 268 },
+      "minEfficiency": 0.98,
       "minWeakLink": 86
+    },
+    {
+      "id": "7-1",
+      "priority": 90,
+      "label": "RUTHLESS DISPLAY",
+      "requireAllBucketsNonEmpty": true,
+      "requireMinCounts": true,
+      "minEfficiency": 0.96,
+      "minWeakLink": 85
     },
     {
       "id": "5-0",
@@ -26,8 +35,17 @@
       "label": "DOMINANT DISPLAY",
       "requireAllBucketsNonEmpty": true,
       "requireMinCounts": true,
-      "minBucketSums": { "GK": 85, "DEF": 349, "MID": 270, "ATT": 268 },
+      "minEfficiency": 0.93,
       "minWeakLink": 84
+    },
+    {
+      "id": "4-1",
+      "priority": 70,
+      "label": "STRONG WIN",
+      "requireAllBucketsNonEmpty": true,
+      "requireMinCounts": true,
+      "minEfficiency": 0.90,
+      "minWeakLink": 81
     },
     {
       "id": "3-1",
@@ -35,16 +53,25 @@
       "label": "COMFORTABLE WIN",
       "requireAllBucketsNonEmpty": true,
       "requireMinCounts": true,
-      "minBucketSums": { "GK": 80, "DEF": 320, "MID": 250, "ATT": 230 },
+      "minEfficiency": 0.86,
       "minWeakLink": 78
     },
     {
-      "id": "2-2",
+      "id": "2-1",
+      "priority": 50,
+      "label": "HARD-FOUGHT WIN",
+      "requireAllBucketsNonEmpty": true,
+      "requireMinCounts": false,
+      "minEfficiency": 0.81,
+      "minWeakLink": 76
+    },
+    {
+      "id": "1-1",
       "priority": 40,
       "label": "NERVY DRAW",
       "requireAllBucketsNonEmpty": true,
       "requireMinCounts": false,
-      "minBucketSums": { "GK": 70, "DEF": 240, "MID": 180, "ATT": 150 },
+      "minEfficiency": 0.74,
       "minWeakLink": 74
     },
     {
@@ -53,7 +80,7 @@
       "label": "UPSET LOSS",
       "requireAllBucketsNonEmpty": true,
       "requireMinCounts": false,
-      "minBucketSums": { "GK": 0, "DEF": 0, "MID": 0, "ATT": 0 },
+      "minEfficiency": 0.62,
       "minWeakLink": 0
     },
     {

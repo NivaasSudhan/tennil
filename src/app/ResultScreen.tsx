@@ -3,7 +3,9 @@ import { usePlaythrough } from './usePlaythrough';
 import { useAudio } from './useAudio';
 import type { DraftSession, FinalXI, GameData, Pick, PositionBucket, ScoreExplanation } from '../domain/types';
 import { getFinalXI } from '../domain/draft/session';
+import { personKey } from '../domain/draft/person';
 import { computeScoreInput, scoreBand } from '../domain/scoring/scoreBand';
+import { computeSessionCeiling } from '../domain/scoring/sessionCeiling';
 import { explainScoreBand } from '../domain/scoring/explainScoreBand';
 import { withFormationMinCounts } from '../domain/scoring/withFormation';
 import { buildCommentary } from '../domain/commentary/build';
@@ -32,8 +34,16 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
   // -- Compute-once: band + commentary + explanation, before any timer. --
   const { band, groups, commentary, explanation, goalBeatIndices, totalBeats } = useMemo(() => {
     const xi: FinalXI = getFinalXI(session);
-    const scoreInput = computeScoreInput(xi, data.positionMap);
     const config = withFormationMinCounts(data.thresholds, session.formationId);
+    const squadsById = Object.fromEntries(data.squads.map((s) => [s.id, s]));
+    const ceiling = computeSessionCeiling(
+      session.revealLog,
+      squadsById,
+      config.minCounts,
+      data.positionMap,
+      personKey,
+    );
+    const scoreInput = computeScoreInput(xi, data.positionMap, ceiling);
     const scored = scoreBand(scoreInput, config);
     const expl = explainScoreBand(scoreInput, config);
     const script = buildCommentary(scored, xi, data.commentary);

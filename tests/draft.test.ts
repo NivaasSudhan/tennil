@@ -92,6 +92,7 @@ function assertInvariants(session: DraftSession): void {
     seenSquadIds,
     excludedSquadIds,
     breachLog,
+    revealLog,
   } = session;
 
   // Core arithmetic invariant.
@@ -111,6 +112,12 @@ function assertInvariants(session: DraftSession): void {
 
   // seenSquadIds length always equals roundsPlayed (one draw per round).
   expect(seenSquadIds.length).toBe(roundsPlayed);
+
+  // ADR-019: revealLog is the canonical ordered-per-round reveal history —
+  // one entry per round (skipped round included), so it always tracks
+  // roundsPlayed exactly, in lockstep with seenSquadIds.
+  expect(revealLog.length).toBe(roundsPlayed);
+  expect(revealLog).toEqual(seenSquadIds);
 
   // Product = one skip token → at most one permanent exclude entry.
   expect(excludedSquadIds).toBeDefined();
@@ -471,5 +478,70 @@ describe('permanent skip exclude', () => {
       assertInvariants(session);
     }
     expect(session.picks.length).toBe(11);
+  });
+});
+
+describe('revealLog (ADR-019)', () => {
+  it('startDraft seeds revealLog with the first reveal', () => {
+    const session = startDraft(corpus(7), mulberry32(1));
+    expect(session.revealLog).toEqual([session.currentReveal!.id]);
+  });
+
+  it('revealLog grows by exactly one id per pick, including the skipped round', () => {
+    const data = corpus(7);
+    const rng = mulberry32(555);
+    let session = startDraft(data, rng);
+    const round1SquadId = session.currentReveal!.id;
+
+    session = skip(session, data, rng);
+    // The skipped round's squad id stays in the log (round 1 contributed nothing to
+    // the final XI, but it WAS revealed) — the replacement is round 2.
+    expect(session.revealLog).toEqual([round1SquadId, session.currentReveal!.id]);
+
+    while (session.phase !== 'COMPLETE') {
+      session = pick(session, data, firstPickable(session), rng);
+    }
+    // 12 rounds with the skip; every id present, order preserved.
+    expect(session.revealLog.length).toBe(12);
+    expect(session.revealLog[0]).toBe(round1SquadId);
+  });
+
+  it('revealLog === seenSquadIds at every step (same append points)', () => {
+    const data = corpus(3);
+    const rng = mulberry32(9001);
+    let session = startDraft(data, rng);
+    expect(session.revealLog).toEqual(session.seenSquadIds);
+    session = skip(session, data, rng);
+    expect(session.revealLog).toEqual(session.seenSquadIds);
+    while (session.phase !== 'COMPLETE') {
+      session = pick(session, data, firstPickable(session), rng);
+      expect(session.revealLog).toEqual(session.seenSquadIds);
+    }
+  });
+
+  it('determinism: same seed + same scripted actions => identical revealLog', () => {
+    const data = corpus(4);
+    function run(): string[] {
+      const rng = mulberry32(24680);
+      let session = startDraft(data, rng);
+      let usedSkip = false;
+      while (session.phase !== 'COMPLETE') {
+        if (!usedSkip && session.roundsPlayed === 2 && session.skipRemaining === 1) {
+          session = skip(session, data, rng);
+          usedSkip = true;
+        } else {
+          session = pick(session, data, firstPickable(session), rng);
+        }
+      }
+      return session.revealLog;
+    }
+    expect(run()).toEqual(run());
+  });
+
+  it('no-skip full draft: revealLog has exactly 11 entries, one per pick', () => {
+    const data = corpus(7);
+    const history = driveToComplete(data, 424242);
+    const final = history[history.length - 1];
+    expect(final.revealLog.length).toBe(11);
   });
 });

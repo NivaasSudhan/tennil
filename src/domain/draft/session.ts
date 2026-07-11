@@ -85,6 +85,7 @@ export function startDraft(data: GameData, rng: Rng, formationId?: string): Draf
     currentReveal: reveal,
     breachLog,
     formationId: id,
+    revealLog: [reveal.id],
   };
 }
 
@@ -149,6 +150,7 @@ export function pick(
     currentReveal: next,
     seenSquadIds: [...session.seenSquadIds, next.id],
     breachLog,
+    revealLog: [...session.revealLog, next.id],
   };
 }
 
@@ -189,6 +191,7 @@ export function skip(
     seenSquadIds: [...session.seenSquadIds, next.id],
     excludedSquadIds,
     breachLog,
+    revealLog: [...session.revealLog, next.id],
   };
 }
 

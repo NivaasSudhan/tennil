@@ -26,8 +26,9 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { loadGameData } from '../src/domain/loadData';
 import { startDraft, pick, skip, getFinalXI } from '../src/domain/draft/session';
-import { isPersonTaken } from '../src/domain/draft/person';
+import { isPersonTaken, personKey } from '../src/domain/draft/person';
 import { computeScoreInput, scoreBand } from '../src/domain/scoring/scoreBand';
+import { computeSessionCeiling } from '../src/domain/scoring/sessionCeiling';
 import { explainScoreBand } from '../src/domain/scoring/explainScoreBand';
 import { mulberry32 } from '../src/lib/rng';
 import type {
@@ -39,6 +40,7 @@ import type {
   PredicateName,
   Rng,
   ScoreInput,
+  Squad,
 } from '../src/domain/types';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -221,6 +223,18 @@ export interface DraftResult {
   scoreInput: ScoreInput;
 }
 
+// Cheap memo so repeated sim runs (N drafts, same `data` object) don't rebuild
+// the id->Squad lookup every draft.
+const squadsByIdCache = new WeakMap<GameData, Record<string, Squad>>();
+function squadsById(data: GameData): Record<string, Squad> {
+  let map = squadsByIdCache.get(data);
+  if (!map) {
+    map = Object.fromEntries(data.squads.map((s) => [s.id, s]));
+    squadsByIdCache.set(data, map);
+  }
+  return map;
+}
+
 export function runSingleDraft(
   data: GameData,
   seed: number,
@@ -228,6 +242,7 @@ export function runSingleDraft(
   skipThreshold: number,
 ): DraftResult {
   const rng = mulberry32(seed);
+  // ADR-017 C6: sim drives the default (reference) formation only.
   let session = startDraft(data, rng);
 
   while (session.phase !== 'COMPLETE') {
@@ -255,7 +270,14 @@ export function runSingleDraft(
   }
 
   const finalXI = getFinalXI(session);
-  const scoreInput = computeScoreInput(finalXI, data.positionMap);
+  const ceiling = computeSessionCeiling(
+    session.revealLog,
+    squadsById(data),
+    data.thresholds.minCounts,
+    data.positionMap,
+    personKey,
+  );
+  const scoreInput = computeScoreInput(finalXI, data.positionMap, ceiling);
   const { bandId } = scoreBand(scoreInput, data.thresholds);
 
   return { bandId, finalXI, scoreInput };
@@ -317,6 +339,7 @@ export interface DistributionSummary {
 export interface SimDiagnostics {
   bucketSums: Record<PositionBucket, DistributionSummary>;
   weakLink: DistributionSummary;
+  efficiency: DistributionSummary; // ADR-019: integer % points, userTotal/ceilingTotal
   seedQuartiles: { drafts: string; bands: Record<string, number> }[];
   nearMisses: { missedBandId: string; count: number; percent: number }[];
   nearMissDelta: number;
@@ -346,7 +369,15 @@ export function summarizeDistribution(values: number[]): DistributionSummary {
   };
 }
 
-const NUMERIC_PREDICATES: ReadonlySet<PredicateName> = new Set(['minBucketSum', 'minWeakLink']);
+// ADR-019: minBucketSum retired from real thresholds (efficiency replaces it) but kept
+// here for synthetic/legacy configs; minEfficiency/minBucketEfficiency are the new
+// numeric gates near-miss diagnostics care about.
+const NUMERIC_PREDICATES: ReadonlySet<PredicateName> = new Set([
+  'minBucketSum',
+  'minWeakLink',
+  'minEfficiency',
+  'minBucketEfficiency',
+]);
 
 export function computeDiagnostics(
   results: DraftResult[],
@@ -360,6 +391,13 @@ export function computeDiagnostics(
     bucketSums[bucket] = summarizeDistribution(results.map((r) => r.scoreInput.bucketSums[bucket]));
   }
   const weakLink = summarizeDistribution(results.map((r) => r.scoreInput.weakLink));
+  const efficiency = summarizeDistribution(
+    results.map((r) => {
+      const userTotal = buckets.reduce((sum, b) => sum + r.scoreInput.bucketSums[b], 0);
+      const ceilingTotal = r.scoreInput.ceiling.total;
+      return ceilingTotal === 0 ? 100 : Math.round((100 * userTotal) / ceilingTotal);
+    }),
+  );
 
   // Contiguous quartiles over the seed range: detects drift across seeds
   // (should be roughly flat when n is large enough to trust the histogram).
@@ -392,7 +430,7 @@ export function computeDiagnostics(
       percent: (nearMissCounts.get(id)! / results.length) * 100,
     }));
 
-  return { bucketSums, weakLink, seedQuartiles, nearMisses, nearMissDelta };
+  return { bucketSums, weakLink, efficiency, seedQuartiles, nearMisses, nearMissDelta };
 }
 
 // ---------------------------------------------------------------------------
@@ -452,6 +490,7 @@ export function formatReport(data: GameData, sim: SimResult): string {
     lines.push(`  sum ${bucket.padEnd(3)}  ${fmt(sim.diagnostics.bucketSums[bucket])}`);
   }
   lines.push(`  weakLink ${fmt(sim.diagnostics.weakLink)}`);
+  lines.push(`  efficiency% ${fmt(sim.diagnostics.efficiency)}`);
   if (sim.diagnostics.nearMisses.length > 0) {
     for (const nm of sim.diagnostics.nearMisses) {
       lines.push(`  near-miss ${nm.missedBandId}: ${nm.count} drafts (${nm.percent.toFixed(2)}%) within ${sim.diagnostics.nearMissDelta} pts`);

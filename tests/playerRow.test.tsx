@@ -92,6 +92,7 @@ function makeSession(): DraftSession {
     currentReveal: REVEAL_SQUAD,
     breachLog: [],
     formationId: 'x',
+    revealLog: [],
   };
 }
 

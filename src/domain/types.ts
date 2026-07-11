@@ -46,6 +46,9 @@ export interface DraftSession {
   currentReveal: Squad | null; // null iff COMPLETE
   breachLog: string[];         // Invariant-7 relaxations (forced squad repeats)
   formationId: string;         // chosen formation id, set at startDraft
+  revealLog: string[];         // ADR-019: ordered squad id per reveal round (skipped round
+                                // included); canonical truth for computeSessionCeiling.
+                                // revealLog.length === roundsPlayed, always.
 }
 
 /** Injectable randomness (ADR-008). NEVER imported by scoring/ or commentary/. */
@@ -55,10 +58,17 @@ export interface Rng {
 
 // ---------- Scoring (ADR-004) ----------
 
+/** ADR-019: max-total XI a session's reveals could have produced (see sessionCeiling.ts). */
+export interface CeilingResult {
+  bucketSums: Record<PositionBucket, number>;
+  total: number;
+}
+
 export interface ScoreInput {
   bucketSums: Record<PositionBucket, number>;
   bucketCounts: Record<PositionBucket, number>;
   weakLink: number; // min individual rating in the FinalXI
+  ceiling: CeilingResult; // ADR-019: session-relative denominator for efficiency predicates
 }
 
 export interface BandDef {
@@ -69,6 +79,10 @@ export interface BandDef {
   requireMinCounts?: boolean; // vs ThresholdConfig.minCounts
   minBucketSums?: Partial<Record<PositionBucket, number>>;
   minWeakLink?: number;
+  /** ADR-019: integer percentage points (0-100) of userTotal/ceilingTotal required. */
+  minEfficiency?: number;
+  /** ADR-019: per-bucket variant, same integer-% convention. */
+  minBucketEfficiency?: Partial<Record<PositionBucket, number>>;
   fallback?: boolean;         // exactly one band; matches unconditionally
 }
 
@@ -95,7 +109,13 @@ export interface ScoreBand {
 
 // ---------- Scoring explainability (ADR-013) ----------
 
-export type PredicateName = 'allBucketsNonEmpty' | 'minCounts' | 'minBucketSum' | 'minWeakLink';
+export type PredicateName =
+  | 'allBucketsNonEmpty'
+  | 'minCounts'
+  | 'minBucketSum'
+  | 'minWeakLink'
+  | 'minEfficiency'
+  | 'minBucketEfficiency';
 
 /** One structured check result. passed === (actual >= required), always. */
 export interface PredicateResult {

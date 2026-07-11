@@ -12,11 +12,16 @@
 import { describe, expect, it } from 'vitest';
 import { computeScoreInput, evaluateBandPredicates, scoreBand } from '../src/domain/scoring/scoreBand';
 import { explainScoreBand } from '../src/domain/scoring/explainScoreBand';
-import type { BandDef, FinalXI, Player, PositionBucket, PositionMap, ThresholdConfig } from '../src/domain/types';
+import type { BandDef, CeilingResult, FinalXI, Player, PositionBucket, PositionMap, ThresholdConfig } from '../src/domain/types';
 
 // ---------------------------------------------------------------------------
 // Synthetic config + XI builder
 // ---------------------------------------------------------------------------
+
+// ADR-019: none of this file's bands configure minEfficiency/minBucketEfficiency,
+// so a zero ceiling is inert — computeSessionCeiling itself is exercised in
+// tests/sessionCeiling.test.ts.
+const ZERO_CEILING: CeilingResult = { bucketSums: { GK: 0, DEF: 0, MID: 0, ATT: 0 }, total: 0 };
 
 const POSITION_MAP: PositionMap = { GK: 'GK', CB: 'DEF', CM: 'MID', ST: 'ATT' };
 const RAW_FOR_BUCKET: Record<PositionBucket, string> = { GK: 'GK', DEF: 'CB', MID: 'CM', ATT: 'ST' };
@@ -73,7 +78,7 @@ function buildXI(
 
 describe('audit: empty XI', () => {
   it('computeScoreInput on a 0-player XI yields zeroed sums/counts and weakLink 0', () => {
-    const input = computeScoreInput([], POSITION_MAP);
+    const input = computeScoreInput([], POSITION_MAP, ZERO_CEILING);
     expect(input.bucketSums).toEqual({ GK: 0, DEF: 0, MID: 0, ATT: 0 });
     expect(input.bucketCounts).toEqual({ GK: 0, DEF: 0, MID: 0, ATT: 0 });
     // weakLink starts at +Infinity and is reset to 0 for an empty XI.
@@ -81,13 +86,13 @@ describe('audit: empty XI', () => {
   });
 
   it('an empty XI falls through every gating band to the fallback', () => {
-    const input = computeScoreInput([], POSITION_MAP);
+    const input = computeScoreInput([], POSITION_MAP, ZERO_CEILING);
     const result = scoreBand(input, CONFIG);
     expect(result).toEqual({ bandId: 'FALL', label: 'COLLAPSE' });
   });
 
   it('explain/score consistency holds for an empty XI', () => {
-    const input = computeScoreInput([], POSITION_MAP);
+    const input = computeScoreInput([], POSITION_MAP, ZERO_CEILING);
     expect(explainScoreBand(input, CONFIG).bandId).toBe(scoreBand(input, CONFIG).bandId);
   });
 });
@@ -95,7 +100,7 @@ describe('audit: empty XI', () => {
 describe('audit: single-bucket XI', () => {
   it('all 11 players in MID: MID count 11, others 0, allGatesNonEmpty bands blocked', () => {
     const xi = buildXI({ MID: [80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80] });
-    const input = computeScoreInput(xi, POSITION_MAP);
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
     expect(input.bucketCounts).toEqual({ GK: 0, DEF: 0, MID: 11, ATT: 0 });
     expect(input.bucketSums).toEqual({ GK: 0, DEF: 0, MID: 880, ATT: 0 });
     expect(input.weakLink).toBe(80);
@@ -105,7 +110,7 @@ describe('audit: single-bucket XI', () => {
 
   it('all 11 in GK: bucketSums.GK = sum, weakLink = min; LOW band still matches', () => {
     const xi = buildXI({ GK: [60, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88] });
-    const input = computeScoreInput(xi, POSITION_MAP);
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
     expect(input.bucketCounts).toEqual({ GK: 11, DEF: 0, MID: 0, ATT: 0 });
     expect(input.bucketSums.GK).toBe(850);
     expect(input.weakLink).toBe(60);
@@ -120,7 +125,7 @@ describe('audit: exact boundary values (actual == required) PASS', () => {
     const xi = buildXI({
       GK: [80], DEF: [80, 80, 80, 80], MID: [80, 80, 80], ATT: [80, 80, 80],
     });
-    const input = computeScoreInput(xi, POSITION_MAP);
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
     expect(input.bucketSums).toEqual({ GK: 80, DEF: 320, MID: 240, ATT: 240 });
     expect(input.bucketCounts).toEqual({ GK: 1, DEF: 4, MID: 3, ATT: 3 });
     expect(input.weakLink).toBe(80);
@@ -136,7 +141,7 @@ describe('audit: exact boundary values (actual == required) PASS', () => {
       if (!mutated && p.positionRaw === 'CB') { mutated = true; return { ...p, rating: 79 }; }
       return p;
     });
-    const wInput = computeScoreInput(oneDown, POSITION_MAP);
+    const wInput = computeScoreInput(oneDown, POSITION_MAP, ZERO_CEILING);
     expect(wInput.bucketSums.DEF).toBe(319);
     expect(scoreBand(wInput, CONFIG).bandId).not.toBe('TOP');
     void weakened;
@@ -149,10 +154,10 @@ describe('audit: exact boundary values (actual == required) PASS', () => {
       GK: [75], DEF: [90, 90, 90, 90], MID: [90, 90, 90], ATT: [90, 90, 90],
     });
     const failing = passing.map((p, i) => (i === 0 ? { ...p, rating: 74 } : p));
-    expect(computeScoreInput(passing, POSITION_MAP).weakLink).toBe(75);
-    expect(scoreBand(computeScoreInput(passing, POSITION_MAP), cfg2).bandId).toBe('WK');
-    expect(computeScoreInput(failing, POSITION_MAP).weakLink).toBe(74);
-    expect(scoreBand(computeScoreInput(failing, POSITION_MAP), cfg2).bandId).toBe('FALL');
+    expect(computeScoreInput(passing, POSITION_MAP, ZERO_CEILING).weakLink).toBe(75);
+    expect(scoreBand(computeScoreInput(passing, POSITION_MAP, ZERO_CEILING), cfg2).bandId).toBe('WK');
+    expect(computeScoreInput(failing, POSITION_MAP, ZERO_CEILING).weakLink).toBe(74);
+    expect(scoreBand(computeScoreInput(failing, POSITION_MAP, ZERO_CEILING), cfg2).bandId).toBe('FALL');
   });
 
   it('minCounts exactly == required passes; one short fails', () => {
@@ -160,10 +165,10 @@ describe('audit: exact boundary values (actual == required) PASS', () => {
     const exact = buildXI({
       GK: [80], DEF: [80, 80, 80, 80], MID: [80, 80, 80], ATT: [80, 80, 80],
     });
-    expect(computeScoreInput(exact, POSITION_MAP).bucketCounts).toEqual({
+    expect(computeScoreInput(exact, POSITION_MAP, ZERO_CEILING).bucketCounts).toEqual({
       GK: 1, DEF: 4, MID: 3, ATT: 3,
     });
-    expect(scoreBand(computeScoreInput(exact, POSITION_MAP), cfg).bandId).toBe('MID');
+    expect(scoreBand(computeScoreInput(exact, POSITION_MAP, ZERO_CEILING), cfg).bandId).toBe('MID');
 
     // Reclassify one ATT player as MID → ATT count 2 < 3 → MID blocked → fallback.
     let moved = false;
@@ -174,7 +179,7 @@ describe('audit: exact boundary values (actual == required) PASS', () => {
       }
       return p;
     });
-    const s = computeScoreInput(reshaped, POSITION_MAP);
+    const s = computeScoreInput(reshaped, POSITION_MAP, ZERO_CEILING);
     expect(s.bucketCounts).toEqual({ GK: 1, DEF: 4, MID: 4, ATT: 2 });
     expect(scoreBand(s, cfg).bandId).toBe('FALL');
   });
@@ -183,10 +188,10 @@ describe('audit: exact boundary values (actual == required) PASS', () => {
     const ne: BandDef = { id: 'NE', priority: 60, label: 'NE', requireAllBucketsNonEmpty: true };
     const cfg = makeConfig([ne, FALLBACK]);
     const xi = buildXI({ GK: [50], DEF: [50], MID: [50], ATT: [60, 60, 60, 60, 60, 60, 60, 60] });
-    expect(computeScoreInput(xi, POSITION_MAP).bucketCounts).toEqual({
+    expect(computeScoreInput(xi, POSITION_MAP, ZERO_CEILING).bucketCounts).toEqual({
       GK: 1, DEF: 1, MID: 1, ATT: 8,
     });
-    expect(scoreBand(computeScoreInput(xi, POSITION_MAP), cfg).bandId).toBe('NE');
+    expect(scoreBand(computeScoreInput(xi, POSITION_MAP, ZERO_CEILING), cfg).bandId).toBe('NE');
 
     // Replace the lone GK with a MID player → GK count 0 → NE blocked → fallback.
     const noGk: FinalXI = xi.map((p) =>
@@ -194,7 +199,7 @@ describe('audit: exact boundary values (actual == required) PASS', () => {
         ? { ...p, positionRaw: 'CM', positionBucket: 'MID' as PositionBucket }
         : p,
     );
-    const mixed = computeScoreInput(noGk, POSITION_MAP);
+    const mixed = computeScoreInput(noGk, POSITION_MAP, ZERO_CEILING);
     expect(mixed.bucketCounts.GK).toBe(0);
     expect(mixed.bucketCounts.MID).toBe(2);
     expect(scoreBand(mixed, cfg).bandId).toBe('FALL');
@@ -212,7 +217,7 @@ describe('audit: fallback selection', () => {
     ];
     for (const spec of shapes) {
       const xi = buildXI(spec);
-      const input = computeScoreInput(xi, POSITION_MAP);
+      const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
       expect(scoreBand(input, cfg)).toEqual({ bandId: 'FALL', label: 'COLLAPSE' });
       expect(explainScoreBand(input, cfg).bandId).toBe('FALL');
     }
@@ -223,7 +228,7 @@ describe('audit: fallback selection', () => {
     const xi = buildXI({
       GK: [80], DEF: [80, 80, 80, 80], MID: [80, 80, 80], ATT: [80, 80, 40],
     });
-    const input = computeScoreInput(xi, POSITION_MAP);
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
     // weakLink 40 < TOP.minWeakLink 75 AND TOP ATT sum 200 < 240 — TOP fails.
     // LOW needs weakLink>=10 — 40 passes → LOW matches, not fallback. Ensure LOW wins.
     expect(scoreBand(input, CONFIG).bandId).toBe('LOW');
@@ -243,7 +248,7 @@ describe('audit: duplicate priorities stay deterministic and stable', () => {
     // Both pass for an XI with weakLink 80. Stable sort preserves insertion order,
     // so the band listed EARLIER in config.bands is evaluated first and wins.
     const xi = buildXI({ GK: [80], DEF: [80, 80, 80, 80], MID: [80, 80, 80], ATT: [80, 80, 80] });
-    const input = computeScoreInput(xi, POSITION_MAP);
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
 
     const cfgAlphaFirst = makeConfig([alpha, beta, FALLBACK]);
     expect(scoreBand(input, cfgAlphaFirst).bandId).toBe('ALPHA');
@@ -258,7 +263,7 @@ describe('audit: duplicate priorities stay deterministic and stable', () => {
     const alpha: BandDef = { id: 'ALPHA', priority: 50, label: 'Alpha', minWeakLink: 90 };
     const beta: BandDef = { id: 'BETA', priority: 50, label: 'Beta', minWeakLink: 10 };
     const xi = buildXI({ GK: [80], DEF: [80, 80, 80, 80], MID: [80, 80, 80], ATT: [80, 80, 80] });
-    const input = computeScoreInput(xi, POSITION_MAP); // weakLink 80
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING); // weakLink 80
     const cfg = makeConfig([alpha, beta, FALLBACK]);
     expect(scoreBand(input, cfg).bandId).toBe('BETA');
   });
@@ -273,13 +278,13 @@ describe('audit: minBucketSums subset behaviour', () => {
     const cfg = makeConfig([onlyAtt, FALLBACK]);
     // ATT sum 250 exactly → ATT-ONLY passes even though other buckets are empty.
     const xi = buildXI({ DEF: [80, 80, 80], ATT: [80, 85, 85] }); // ATT sum 250
-    const input = computeScoreInput(xi, POSITION_MAP);
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
     expect(input.bucketSums.ATT).toBe(250);
     expect(scoreBand(input, cfg).bandId).toBe('ATT-ONLY');
     // ATT sum 249 → fails → fallback. xi indices: 0-2 DEF, 3-5 ATT (3=ATT 80).
     const xi2 = xi.map((p, i) => (i === 3 ? { ...p, rating: 79 } : p)); // [79,85,85]=249
-    expect(computeScoreInput(xi2, POSITION_MAP).bucketSums.ATT).toBe(249);
-    expect(scoreBand(computeScoreInput(xi2, POSITION_MAP), cfg).bandId).toBe('FALL');
+    expect(computeScoreInput(xi2, POSITION_MAP, ZERO_CEILING).bucketSums.ATT).toBe(249);
+    expect(scoreBand(computeScoreInput(xi2, POSITION_MAP, ZERO_CEILING), cfg).bandId).toBe('FALL');
   });
 
   it('evaluateBandPredicates emits one minBucketSum entry per configured bucket only', () => {
@@ -288,7 +293,7 @@ describe('audit: minBucketSums subset behaviour', () => {
       minBucketSums: { GK: 80, ATT: 240 },
     };
     const xi = buildXI({ GK: [80], DEF: [80, 80, 80, 80], MID: [80, 80, 80], ATT: [80, 80, 80] });
-    const results = evaluateBandPredicates(band, computeScoreInput(xi, POSITION_MAP), CONFIG);
+    const results = evaluateBandPredicates(band, computeScoreInput(xi, POSITION_MAP, ZERO_CEILING), CONFIG);
     const sumEntries = results.filter((r) => r.name === 'minBucketSum');
     expect(sumEntries.map((r) => r.bucket)).toEqual(['GK', 'ATT']);
     expect(sumEntries.every((r) => r.passed)).toBe(true);
@@ -303,7 +308,7 @@ describe('audit: positionMap is the source of truth, not positionBucket field', 
       { wrongPositionBucketField: true },
     );
     expect(xi.every((p) => p.positionBucket === 'GK')).toBe(true);
-    const input = computeScoreInput(xi, POSITION_MAP);
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
     expect(input.bucketSums).toEqual({ GK: 90, DEF: 326, MID: 213, ATT: 183 });
     expect(input.bucketCounts).toEqual({ GK: 1, DEF: 4, MID: 3, ATT: 3 });
   });
@@ -318,7 +323,7 @@ describe('audit: positionMap is the source of truth, not positionBucket field', 
       { id: 'm2', name: 'am', positionRaw: 'AM', positionBucket: 'MID', rating: 84 },
       { id: 's1', name: 'st', positionRaw: 'ST', positionBucket: 'ATT', rating: 90 },
     ];
-    const input = computeScoreInput(xi, map);
+    const input = computeScoreInput(xi, map, ZERO_CEILING);
     expect(input.bucketCounts).toEqual({ GK: 1, DEF: 2, MID: 2, ATT: 1 });
     expect(input.bucketSums).toEqual({ GK: 85, DEF: 158, MID: 166, ATT: 90 });
     expect(input.weakLink).toBe(78);
@@ -334,14 +339,14 @@ describe('audit: explain ↔ score consistency across weird shapes', () => {
       { GK: [75], DEF: [80, 80, 80, 80], MID: [80, 80, 80], ATT: [80, 80, 75] },
     ];
     for (const spec of shapes) {
-      const input = computeScoreInput(buildXI(spec), POSITION_MAP);
+      const input = computeScoreInput(buildXI(spec), POSITION_MAP, ZERO_CEILING);
       expect(explainScoreBand(input, CONFIG).bandId).toBe(scoreBand(input, CONFIG).bandId);
     }
   });
 
   it('nextBetter is null only when the awarded band is the highest-priority matched band', () => {
     const xi = buildXI({ GK: [80], DEF: [80, 80, 80, 80], MID: [80, 80, 80], ATT: [80, 80, 80] });
-    const input = computeScoreInput(xi, POSITION_MAP);
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
     const ex = explainScoreBand(input, CONFIG);
     expect(ex.bandId).toBe('TOP');
     expect(ex.nextBetter).toBeNull();
@@ -351,11 +356,11 @@ describe('audit: explain ↔ score consistency across weird shapes', () => {
 describe('audit: weakLink semantics', () => {
   it('weakLink is the single minimum rating across the XI (not per-bucket)', () => {
     const xi = buildXI({ GK: [90], DEF: [88, 87, 86, 30], MID: [85, 84, 83], ATT: [82, 81, 80] });
-    expect(computeScoreInput(xi, POSITION_MAP).weakLink).toBe(30);
+    expect(computeScoreInput(xi, POSITION_MAP, ZERO_CEILING).weakLink).toBe(30);
   });
 
   it('two players tied for the minimum rating: weakLink is that value (counts once)', () => {
     const xi = buildXI({ GK: [55], DEF: [55, 80, 80, 80], MID: [80, 80, 80], ATT: [80, 80, 80] });
-    expect(computeScoreInput(xi, POSITION_MAP).weakLink).toBe(55);
+    expect(computeScoreInput(xi, POSITION_MAP, ZERO_CEILING).weakLink).toBe(55);
   });
 });

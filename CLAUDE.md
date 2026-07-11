@@ -18,7 +18,7 @@ Orchestration rules: Fable never writes code — dispatch opencode per docs/OPEN
 ## Invariants checklist (verify before every commit)
 - [ ] Exactly 11 final picks; exactly 1 skip token per session
 - [ ] No budget/cost mechanic
-- [ ] Outcome = deterministic band from squad composition + config only
+- [ ] Outcome = deterministic band from squad composition + the session's reveal sequence + config only (ADR-019)
 - [ ] Commentary never overrides/re-rolls outcome; no RNG in `src/domain/scoring/` or `src/domain/commentary/`
 - [ ] Runtime data = vendored static JSON only (no fetch for game data)
 - [ ] No magic numbers in engine — thresholds/bands/minCounts live in `src/data/config/thresholds.json`

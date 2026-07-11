@@ -22,7 +22,7 @@ Companion to DECISIONS.md (ADR ids referenced throughout). All code TypeScript s
                            └────────────────────────────────┘
 ```
 
-Flow: `loadData → validate → startDraft → (pick | skip)* → getFinalXI → computeScoreInput → scoreBand → buildCommentary → UI`.
+Flow: `loadData → validate → startDraft → (pick | skip)* → getFinalXI` ‖ `computeSessionCeiling(session.revealLog, ...) → computeScoreInput(xi, positionMap, ceiling) → scoreBand → buildCommentary → UI` (ADR-019: ceiling is derived from the same session's `revealLog` in parallel with `getFinalXI`, then both feed `computeScoreInput`).
 
 Stage split (Invariant 3–4): **Stage A (truth)** = `scoreBand(XI, ThresholdConfig)` → band. **Stage B (skin)** = `buildCommentary(band, XI, scripts)` → `CommentaryScript`. Stage B contains no RNG and cannot change the band.
 
@@ -72,8 +72,15 @@ function pick(session: DraftSession, data: GameData, playerId: string, rng: Rng)
 function skip(session: DraftSession, data: GameData, rng: Rng): DraftSession;
 function getFinalXI(session: DraftSession): FinalXI;   // throws unless phase === 'COMPLETE'
 
+// src/domain/scoring/sessionCeiling.ts   (pure; NO Rng import allowed in this module)
+function computeSessionCeiling(
+  revealLog: string[], squadsById: Record<string, Squad>,
+  formationCounts: Record<PositionBucket, number>, positionMap: PositionMap,
+  personKeyFn: (player: Player) => string,
+): CeilingResult;                    // ADR-019; max-total XI this session's reveals allowed
+
 // src/domain/scoring/scoreBand.ts   (pure; NO Rng import allowed in this module)
-function computeScoreInput(xi: FinalXI, positionMap: PositionMap): ScoreInput;
+function computeScoreInput(xi: FinalXI, positionMap: PositionMap, ceiling: CeilingResult): ScoreInput; // ADR-019
 function scoreBand(input: ScoreInput, config: ThresholdConfig): ScoreBand;
 
 // src/domain/commentary/build.ts    (pure; NO Rng import allowed in this module)

@@ -55,7 +55,7 @@ describe('loadGameData — happy path', () => {
     expect(data.squads).toHaveLength(60);
     const totalPlayers = data.squads.reduce((n, s) => n + s.players.length, 0);
     expect(totalPlayers).toBe(660);
-    expect(data.thresholds.version).toBe(2);
+    expect(data.thresholds.version).toBe(3);
     expect(data.commentary.version).toBe(1);
     expect(Object.keys(data.positionMap).length).toBeGreaterThan(0);
   });
