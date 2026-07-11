@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "_comment": "ADR-019 relative session scoring. Band evaluation: priority descending, first band whose predicates ALL pass; exactly one fallback. minEfficiency/minBucketEfficiency are authored as fractions in [0,1] (loadData converts to integer percentage points: userTotal/ceilingTotal from computeSessionCeiling). Placeholder numbers -- W3 (Grok) retunes from sim data. minBucketSums retired: efficiency replaces it as the scoring denominator.",
+  "_comment": "ADR-019 relative session scoring. Band evaluation: priority descending, first band whose predicates ALL pass; exactly one fallback. minEfficiency/minBucketEfficiency are authored as fractions in [0,1] (loadData converts to integer percentage points: userTotal/ceilingTotal from computeSessionCeiling). W3 retune (sim n=500 seed=42 greedy+random): greedy total-eff compressed 96-100 (p50 99), so per-bucket efficiency (MID/ATT cascade 99->98->97->none) is the primary discriminator within the eff=98-99 majority. 10-0 requires near-perfect MID+ATT (99) AND WL>=86 — efficiency alone cannot let a star-XI-with-one-62 through. 7-1 shares WL>=86 with 10-0 but drops per-bucket (great total, strong floor, imperfect somewhere). 1-2 drops requireAllBucketsNonEmpty to catch structurally-broken-but-decent-eff drafts (empty GK, strong outfield). Six-gate protocol: greedy 10-0 6%, no band >40%, random top-3 0%, all bands >=1%, near-miss-10-0 11%, WL floor has teeth.",
   "referenceFormation": "4-3-3",
   "minCounts": { "GK": 1, "DEF": 4, "MID": 3, "ATT": 3 },
   "formations": [
@@ -17,8 +17,9 @@
       "label": "LEGENDARY ROUT",
       "requireAllBucketsNonEmpty": true,
       "requireMinCounts": true,
-      "minEfficiency": 0.98,
-      "minWeakLink": 86
+      "minEfficiency": 0.99,
+      "minWeakLink": 86,
+      "minBucketEfficiency": { "MID": 0.99, "ATT": 0.99 }
     },
     {
       "id": "7-1",
@@ -26,8 +27,8 @@
       "label": "RUTHLESS DISPLAY",
       "requireAllBucketsNonEmpty": true,
       "requireMinCounts": true,
-      "minEfficiency": 0.96,
-      "minWeakLink": 85
+      "minEfficiency": 0.985,
+      "minWeakLink": 86
     },
     {
       "id": "5-0",
@@ -35,8 +36,9 @@
       "label": "DOMINANT DISPLAY",
       "requireAllBucketsNonEmpty": true,
       "requireMinCounts": true,
-      "minEfficiency": 0.93,
-      "minWeakLink": 84
+      "minEfficiency": 0.98,
+      "minWeakLink": 84,
+      "minBucketEfficiency": { "MID": 0.99, "ATT": 0.99 }
     },
     {
       "id": "4-1",
@@ -44,8 +46,9 @@
       "label": "STRONG WIN",
       "requireAllBucketsNonEmpty": true,
       "requireMinCounts": true,
-      "minEfficiency": 0.90,
-      "minWeakLink": 81
+      "minEfficiency": 0.98,
+      "minWeakLink": 82,
+      "minBucketEfficiency": { "MID": 0.98, "ATT": 0.98 }
     },
     {
       "id": "3-1",
@@ -53,8 +56,9 @@
       "label": "COMFORTABLE WIN",
       "requireAllBucketsNonEmpty": true,
       "requireMinCounts": true,
-      "minEfficiency": 0.86,
-      "minWeakLink": 78
+      "minEfficiency": 0.97,
+      "minWeakLink": 80,
+      "minBucketEfficiency": { "MID": 0.97, "ATT": 0.97 }
     },
     {
       "id": "2-1",
@@ -62,8 +66,8 @@
       "label": "HARD-FOUGHT WIN",
       "requireAllBucketsNonEmpty": true,
       "requireMinCounts": false,
-      "minEfficiency": 0.81,
-      "minWeakLink": 76
+      "minEfficiency": 0.93,
+      "minWeakLink": 78
     },
     {
       "id": "1-1",
@@ -71,16 +75,16 @@
       "label": "NERVY DRAW",
       "requireAllBucketsNonEmpty": true,
       "requireMinCounts": false,
-      "minEfficiency": 0.74,
-      "minWeakLink": 74
+      "minEfficiency": 0.90,
+      "minWeakLink": 0
     },
     {
       "id": "1-2",
       "priority": 20,
       "label": "UPSET LOSS",
-      "requireAllBucketsNonEmpty": true,
+      "requireAllBucketsNonEmpty": false,
       "requireMinCounts": false,
-      "minEfficiency": 0.62,
+      "minEfficiency": 0.92,
       "minWeakLink": 0
     },
     {

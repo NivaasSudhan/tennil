@@ -172,6 +172,73 @@ Report snapshot: `docs/sim/sim-report.json`.
   Random top band: 0.00%. Percentile drivers: greedy DEF p90 355, weakLink
   p90 86. Deviations from 5-7% window: none.
 
+### 2026-07-11 — W3 ADR-019 relative-scoring 9-band retune (n=500, seed=42)
+
+**Motivation.** ADR-019 replaced absolute bucket-sum gates with
+session-relative efficiency (userTotal/ceilingTotal). The placeholder
+thresholds (W1) gave greedy 10-0 = 19.4% (too common), 5-0 = 48.8% (one band
+swallowed half the drafts), and four dead rungs. Retune numbers-only so the
+9-band ladder actually spreads inside the compressed efficiency range.
+
+**Key finding: compressed efficiency.** Greedy total-efficiency is 96–100
+(p50 99, p90 100) — only **5 integer values for 9 bands**. Total efficiency
+alone cannot discriminate; the 269 drafts at eff=99 (53.8%) must be split
+across 7-1/5-0/4-1/3-1 using **per-bucket efficiency** (MID/ATT cascade:
+99→98→97→none), which the engine already supports via `minBucketEfficiency`.
+Random total-efficiency is 90–98 (p50 94); random per-bucket efficiency is
+meaningless (wrong formation counts → buckets over-stacked or empty), so
+per-bucket gates only appear on bands with `requireMinCounts: true`.
+
+**1-2 structural fix.** The old 1-2 required `requireAllBucketsNonEmpty` +
+eff≥0.62. Random's efficiency floor is 90, so 1-2 caught nothing (dead rung)
+— every structurally-broken draft (empty bucket) fell straight to 0-4.
+Fix: drop `requireAllBucketsNonEmpty` from 1-2 and raise minEfficiency to
+0.92. Now 1-2 catches "structurally broken but decent outfield" (empty GK,
+strong MID/ATT) = 44.4% of random; 0-4 keeps only the truly broken (empty
+bucket + eff<92) = 1.0%. Both bands alive, no dead rungs.
+
+**Near-miss design.** 10-0 and 7-1 share minEfficiency (0.99→99) and
+minWeakLink (86) — the discriminator is per-bucket (10-0 requires MID/ATT≥99,
+7-1 does not). This makes 7-1 small (~57 drafts, 11.4%): only eff≥99 +
+WL≥86 drafts that drop points in one position group. Because 7-1 is small,
+the 10-0 near-miss pool (7-1 drafts within 3 integer-efficiency-points of
+10-0 on all numeric predicates) is 54 (10.8%) — inside the 10–20% window.
+When 7-1 had a lower WL floor (85) and per-bucket requirements close to
+10-0's, all 7-1 drafts near-missed 10-0 (24–28%) — too high. The shared
+WL=86 + per-bucket cascade solved it.
+
+**Baseline (W1 placeholders):** greedy 10-0 **19.40%**, 5-0 48.80%, 7-1
+24.20%, four dead rungs. Near-miss 10-0 24.20%.
+
+**Final:** greedy 10-0 **6.00%** → 7-1 11.40% / 5-0 22.00% / 4-1 20.20% /
+3-1 17.80% / 2-1 22.60% (majority spread across 7-1/5-0/4-1/3-1, no single
+>40%). Random 10-0 **0%**, 7-1 0%, 5-0 0% (top-3 clean); 2-1 44.40%, 1-1
+10.20%, 1-2 44.40%, 0-4 1.00% (no single >55%). Near-miss(3pts) 10-0
+**10.80%** (in 10–20% window). Every band ≥1% in at least one bot
+(10-0→3-1 greedy; 2-1 greedy+random; 1-1/1-2/0-4 random). WL floor has
+teeth: 10-0 requires WL≥86, so a star-XI-with-one-62 cannot reach the top
+band regardless of efficiency.
+
+Gates (fractions; loadData rounds to integer pct): **10-0** eff 0.99, WL 86,
+MID 0.99, ATT 0.99 · **7-1** eff 0.985, WL 86 · **5-0** eff 0.98, WL 84,
+MID 0.99, ATT 0.99 · **4-1** eff 0.98, WL 82, MID 0.98, ATT 0.98 · **3-1**
+eff 0.97, WL 80, MID 0.97, ATT 0.97 · **2-1** eff 0.93, WL 78 (minCounts
+off) · **1-1** eff 0.90, WL 0 (minCounts off) · **1-2** eff 0.92, WL 0
+(allBucketsNonEmpty OFF) · **0-4** fallback. Numbers-only; engine untouched
+(Invariant 6). Report snapshot: `docs/sim/sim-report.json`.
+
+Stability (greedy, default skip 84): seed 42 → 10-0 6.0 / 7-1 11.4 / 5-0 22.0
+/ 4-1 20.2 / 3-1 17.8 / 2-1 22.6; seed 1000 → 6.2 / 8.6 / 20.2 / 22.2 / 19.6
+/ 23.2; seed 5000 → 4.4 / 10.8 / 18.4 / 23.4 / 19.8 / 23.2. No single band
+>40% across all three seeds. Random top-3 = 0% across all seeds; max band
+51.2% (seed 5000) < 55%.
+
+- **2026-07-11 (W3 ADR-019 9-band retune):** baseline 19.40% → final 6.00%
+  (greedy, n=500, seed=42). Per-bucket MID/ATT cascade 99→98→97 splits the
+  eff=99 majority (53.8%). 1-2 drops allBucketsNonEmpty → catches
+  structurally-broken decent-eff. Near-miss(3pts): 10-0 10.80%. Random
+  top-3: 0.00%. WL floor 86 has teeth. Deviations from 5-7% window: none.
+
 ## Open questions (answer before or during the named task)
 
 1. Should skip replacement exclude only the skipped squad or all seen? **Answered in ADR-003**: excludes skipped squad id; normal seen-preference applies.
