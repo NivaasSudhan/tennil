@@ -201,6 +201,8 @@ Changing anything marked **Invariant** in PROJECT.md requires a new ADR here fir
 - **Consequences**: `sim-report.json` snapshots accompany every stage for regression diffing; Experiment log grows one entry per stage.
 - **Revisit when**: balance tooling (W3) proves increments stable two stages running — then stage sizes may grow.
 
+**Amendment (2026-07-11, user product directive — supersedes stage sizes above):** Corpus window is World Cups **1986–2026 only**. Selection rule: **semifinalists (4)** of 1986/1990/1994/1998/2002 + **quarterfinalists (8)** of 2006/2010/2014/2018/2022/2026 = **68 squads target**. Prior icon-density / ≤2-per-country-per-stage criteria are superseded by this per-tournament stage rule. Shipped now: **60 squads** (1986–2022 complete); eight **2026 quarterfinalist** slots remain a documented gap for human fill after the tournament. Thresholds retune stays a separate gate after this data ship.
+
 ---
 
 ## ADR-012 — Ratings are editorial: pipeline proposes, overrides are canon

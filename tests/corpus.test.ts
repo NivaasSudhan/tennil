@@ -6,7 +6,7 @@
 import { describe, expect, it } from 'vitest';
 import { loadGameDataFromDisk } from '../scripts/simulate';
 
-const EXPECTED_SQUAD_COUNT = 16;
+const EXPECTED_SQUAD_COUNT = 60;
 
 describe('corpus integrity', () => {
   const data = loadGameDataFromDisk();
