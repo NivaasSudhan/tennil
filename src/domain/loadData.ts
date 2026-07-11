@@ -14,6 +14,7 @@ import type {
   BandDef,
   CommentaryBeat,
   CommentaryConfig,
+  Formation,
   GameData,
   Player,
   PositionBucket,
@@ -58,6 +59,7 @@ function validateThresholds(raw: unknown, problems: string[]): ThresholdConfig {
     version: 1,
     referenceFormation: '',
     minCounts: { GK: 0, DEF: 0, MID: 0, ATT: 0 },
+    formations: [],
     ratingScale: { min: 1, max: 100 },
     bands: [],
   };
@@ -67,8 +69,8 @@ function validateThresholds(raw: unknown, problems: string[]): ThresholdConfig {
     return fallback;
   }
 
-  if (raw.version !== 1) {
-    problems.push(`thresholds: version must be 1 (got ${JSON.stringify(raw.version)})`);
+  if (raw.version !== 1 && raw.version !== 2) {
+    problems.push(`thresholds: version must be 1 or 2 (got ${JSON.stringify(raw.version)})`);
   }
 
   const minCounts: Record<PositionBucket, number> = { GK: 0, DEF: 0, MID: 0, ATT: 0 };
@@ -165,10 +167,82 @@ function validateThresholds(raw: unknown, problems: string[]): ThresholdConfig {
     }
   }
 
+  // ---------- formations ----------
+  const formations: Formation[] = [];
+  if (!Array.isArray(raw.formations) || raw.formations.length === 0) {
+    problems.push('thresholds.formations: expected a non-empty array of formation definitions');
+  } else {
+    const seenFormationIds = new Set<string>();
+    raw.formations.forEach((fRaw: unknown, i: number) => {
+      if (!isPlainObject(fRaw)) {
+        problems.push(`thresholds.formations[${i}]: expected an object`);
+        return;
+      }
+      const hasId = typeof fRaw.id === 'string' && fRaw.id.length > 0;
+      const fLabel = hasId ? (fRaw.id as string) : `thresholds.formations[${i}]`;
+      if (!hasId) {
+        problems.push(`${fLabel}: missing or invalid 'id'`);
+      } else {
+        const id = fRaw.id as string;
+        if (seenFormationIds.has(id)) {
+          problems.push(`formation ${id}: duplicate formation id`);
+        }
+        seenFormationIds.add(id);
+      }
+      if (typeof fRaw.label !== 'string' || fRaw.label.length === 0) {
+        problems.push(`${fLabel}: missing or invalid 'label'`);
+      }
+      if (typeof fRaw.description !== 'string') {
+        problems.push(`${fLabel}: 'description' must be a string`);
+      }
+      const fmc: Record<PositionBucket, number> = { GK: 0, DEF: 0, MID: 0, ATT: 0 };
+      if (!isPlainObject(fRaw.minCounts)) {
+        problems.push(`${fLabel}.minCounts: expected an object with GK/DEF/MID/ATT counts`);
+      } else {
+        for (const bucket of BUCKETS) {
+          const v = (fRaw.minCounts as Record<string, unknown>)[bucket];
+          if (typeof v !== 'number' || !Number.isInteger(v) || v < 0) {
+            problems.push(`${fLabel}.minCounts.${bucket}: expected a non-negative integer (got ${JSON.stringify(v)})`);
+          } else {
+            fmc[bucket] = v;
+          }
+        }
+        // sum validation: GK===1, DEF+MID+ATT===10
+        if (fmc.GK !== 1) {
+          problems.push(`${fLabel}.minCounts: GK must be 1 (got ${fmc.GK})`);
+        }
+        const outfieldSum = fmc.DEF + fmc.MID + fmc.ATT;
+        if (outfieldSum !== 10) {
+          problems.push(`${fLabel}.minCounts: DEF+MID+ATT must equal 10 (got ${outfieldSum})`);
+        }
+      }
+      formations.push({
+        id: hasId ? (fRaw.id as string) : fLabel,
+        label: typeof fRaw.label === 'string' ? fRaw.label : '',
+        description: typeof fRaw.description === 'string' ? fRaw.description : '',
+        minCounts: fmc,
+      });
+    });
+
+    // Validate default minCounts matches reference formation
+    const refId = typeof raw.referenceFormation === 'string' ? raw.referenceFormation : '';
+    const refFormation = formations.find((f) => f.id === refId);
+    if (refFormation) {
+      for (const bucket of BUCKETS) {
+        if (minCounts[bucket] !== refFormation.minCounts[bucket]) {
+          problems.push(
+            `thresholds: default minCounts.${bucket} (${minCounts[bucket]}) does not match reference formation '${refId}'.minCounts.${bucket} (${refFormation.minCounts[bucket]})`,
+          );
+        }
+      }
+    }
+  }
+
   return {
     version: typeof raw.version === 'number' ? raw.version : 1,
     referenceFormation: typeof raw.referenceFormation === 'string' ? raw.referenceFormation : '',
     minCounts,
+    formations,
     ratingScale,
     bands,
   };

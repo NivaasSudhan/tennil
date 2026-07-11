@@ -61,7 +61,15 @@ function selectSquad(
   return { reveal: pool[idx], breached };
 }
 
-export function startDraft(data: GameData, rng: Rng): DraftSession {
+export function startDraft(data: GameData, rng: Rng, formationId?: string): DraftSession {
+  const id = formationId ?? data.thresholds.referenceFormation;
+  const formation = data.thresholds.formations.find((f) => f.id === id);
+  if (!formation) {
+    throw new IllegalActionError(
+      `formation id '${id}' not found in thresholds.formations (available: ${data.thresholds.formations.map((f) => f.id).join(', ')})`,
+    );
+  }
+
   const { reveal, breached } = selectSquad(data.squads, [], [], null, rng);
   const breachLog: string[] = [];
   if (breached) breachLog.push('repeat:1');
@@ -75,6 +83,7 @@ export function startDraft(data: GameData, rng: Rng): DraftSession {
     excludedSquadIds: [],
     currentReveal: reveal,
     breachLog,
+    formationId: id,
   };
 }
 

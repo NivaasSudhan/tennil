@@ -238,6 +238,30 @@ P-014r2 status: succeeded (U1-DONE; 169 tests green; paper world complete — Te
 - status: succeeded (U2-DONE; 188 tests + build green; hook stayed count-only, progress derived from memoized beats; controls never covered; confetti on 10-0)
 - task: ResultScreen broadcast redesign per DESIGN.md + docs/plans/2026-07-11-progressive-live-score.md + WebAudio stings
 
+---
+
+## P-017 — Feature 2: formation choice
+- date: 2026-07-11
+- target: opencode/deepseek-v4-flash-free --variant max
+- status: succeeded (FORMATION-DONE; 197 tests + build green; thresholds v2 w/ 4 formations; withFormationMinCounts view keeps scoring two-arg; ResultScreen touched as plan required — call-site resolution; no plan deviations)
+- task: Implement docs/plans/2026-07-11-formation-choice.md in full (ADR-017; config-view pattern C2; formation gate C3/C6; Matchday paper styling)
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch main. Implement the feature planned in docs/plans/2026-07-11-formation-choice.md IN FULL, step by step, exactly as the plan file specifies. Before writing anything, read IN THIS ORDER: (1) the plan file, (2) docs/plans/2026-07-11-three-features-index.md cross-cutting challenges C2/C3/C5/C6 — these are BINDING, (3) DECISIONS.md ADR-004/ADR-013 and the tail (ADR-011 amendments), (4) docs/audits/2026-07-11-logic-audit.md section 'The two-goalkeepers question', (5) PRODUCT.md + DESIGN.md (Matchday paper world — any new formation-picker UI must be paper-world styled: typed Courier Prime options on the team-sheet paper, circled-in-ballpoint selection, NOT generic buttons), (6) current src/app/App.tsx, src/app/StartScreen.tsx, src/domain/scoring/scoreBand.ts, src/domain/loadData.ts, scripts/simulate.ts loadGameDataFromDisk, tests/startScreen.test.tsx + tests/appGate.test.tsx.
+
+NON-NEGOTIABLE RULES FROM THE INDEX:
+- C2: scoreBand(input, config) and explainScoreBand(input, config) STAY two-argument. Formation resolves into a ThresholdConfig view ONCE at the call site via a pure helper (withFormationMinCounts or as the plan names it). Do not widen any scoring signature.
+- C3: Draft Again returns to a formation-only gate (pre-selects last formation, one click starts), NOT the full landing blurb. First visit = full StartScreen. Landing/formation gate stays UI state — never a DraftSession phase.
+- C5: if GameData grows a formations shape, prefer embedding formations INSIDE thresholds.json (it already has referenceFormation + minCounts) unless the plan file explicitly decided otherwise; update every GameData constructor the index lists (main.tsx load path, scripts/simulate.ts loadGameDataFromDisk, tests makeData/fixtures) in the same pass.
+- C6: handleStart AND handleRestart gain the formation id; update startScreen/appGate tests for any signature/copy change in the same pass.
+- Write ADR-017 into DECISIONS.md as the plan directs, including the audit's verdict: formation advisory is the chosen surface for composition guidance (2-GK stays pickable; scoring + advisory punish it — no hard block).
+- The formation advisory (if the plan includes the pre-lock advisory surface) is read-only guidance derived from domain data — zero rules logic in components (R-08).
+
+CONSTRAINTS: this is domain + config + UI work; allowed files are exactly those the plan file lists plus the C5/C6 constructor/test touch-list. Do NOT touch ResultScreen/Scoreboard/Ticker/BandSlam/useAudio/usePlaythrough (broadcast world just landed), thresholds band NUMBERS (retuned yesterday — structure additions like a formations block are fine, gate numbers are not yours), squads.json. SHELL DISCIPLINE: never cd; absolute paths only, inside the repo. Do NOT run git commit or git add. If the plan file contradicts current source, trust source and log the deviation in your final output.
+
+FINISH: npm test green AND npm run build green (both mandatory), purity greps clean (grep -rn \"Math.random|rng\" src/domain/scoring src/domain/commentary; grep -rn \"from 'react'\" src/domain src/lib). Also run: npx tsx scripts/simulate.ts --n 100 --seed 42 --bot greedy — must complete and print a histogram (proves loadGameDataFromDisk survived any GameData change). Print FORMATION-DONE, vitest summary, files touched, chosen formations list, and any plan deviations. On failure print FORMATION-FAILED + the failing output.
+```
+
 ```
 You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch main. Read PRODUCT.md and DESIGN.md FIRST (binding spec — Broadcast world sections: Components Scoreboard/Ticker/BandSlam, Motion table rows for draft-complete/goal/full-time, Audio section, z-scale). Then read docs/plans/2026-07-11-progressive-live-score.md and docs/plans/2026-07-11-three-features-index.md challenge C4 (commentary goal beats do not equal scoreline goals — proportional fill toward parsed bandId, snap exact on showScoreline). Implement WAVE U2: the broadcast world.
 

@@ -1,8 +1,14 @@
 {
-  "version": 1,
-  "_comment": "Corpus-60 retune (1986-2022 SF+QF). Band evaluation: priority descending, first band whose predicates ALL pass; exactly one fallback. Engine reads BandDef fields generically — never hardcode band ids in code (ADR-004).",
+  "version": 2,
+  "_comment": "Corpus-60 retune (1986-2022 SF+QF). Band evaluation: priority descending, first band whose predicates ALL pass; exactly one fallback. Engine reads BandDef fields generically — never hardcode band ids in code (ADR-004). v2: added formations array (ADR-017).",
   "referenceFormation": "4-3-3",
   "minCounts": { "GK": 1, "DEF": 4, "MID": 3, "ATT": 3 },
+  "formations": [
+    { "id": "4-3-3", "label": "4-3-3", "description": "Balanced classic — four defenders, three midfielders, three forwards", "minCounts": { "GK": 1, "DEF": 4, "MID": 3, "ATT": 3 } },
+    { "id": "4-4-2", "label": "4-4-2", "description": "Traditional English — two strikers, flat four midfield", "minCounts": { "GK": 1, "DEF": 4, "MID": 4, "ATT": 2 } },
+    { "id": "3-5-2", "label": "3-5-2", "description": "Attack-minded — three at the back, packed midfield", "minCounts": { "GK": 1, "DEF": 3, "MID": 5, "ATT": 2 } },
+    { "id": "5-3-2", "label": "5-3-2", "description": "Defensive solidity — five defenders, counter-attacking outlets", "minCounts": { "GK": 1, "DEF": 5, "MID": 3, "ATT": 2 } }
+  ],
   "ratingScale": { "min": 1, "max": 100 },
   "bands": [
     {

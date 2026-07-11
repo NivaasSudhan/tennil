@@ -45,6 +45,7 @@ export interface DraftSession {
   excludedSquadIds: string[];  // session-scoped permanent ban after skip
   currentReveal: Squad | null; // null iff COMPLETE
   breachLog: string[];         // Invariant-7 relaxations (forced squad repeats)
+  formationId: string;         // chosen formation id, set at startDraft
 }
 
 /** Injectable randomness (ADR-008). NEVER imported by scoring/ or commentary/. */
@@ -71,10 +72,18 @@ export interface BandDef {
   fallback?: boolean;         // exactly one band; matches unconditionally
 }
 
+export interface Formation {
+  id: string;
+  label: string;
+  description: string;
+  minCounts: Record<PositionBucket, number>;
+}
+
 export interface ThresholdConfig {
   version: number;
   referenceFormation: string; // e.g. "4-3-3"
   minCounts: Record<PositionBucket, number>;
+  formations: Formation[];    // NEW required after schema v2
   ratingScale: { min: number; max: number };
   bands: BandDef[];
 }

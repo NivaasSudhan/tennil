@@ -27,6 +27,9 @@ const CONFIG: ThresholdConfig = {
   version: 1,
   referenceFormation: '4-3-3',
   minCounts: { GK: 1, DEF: 4, MID: 3, ATT: 3 },
+  formations: [
+    { id: '4-3-3', label: '4-3-3', description: 'test', minCounts: { GK: 1, DEF: 4, MID: 3, ATT: 3 } },
+  ],
   ratingScale: { min: 1, max: 100 },
   bands: [TOP_BAND, MID_BAND, LOW_BAND, FALLBACK_BAND],
 };

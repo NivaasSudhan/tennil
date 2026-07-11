@@ -23,8 +23,11 @@ function validRaw() {
     positionMap: { GK: 'GK', CB: 'DEF', CM: 'MID', ST: 'ATT' },
     thresholds: {
       version: 1,
-      referenceFormation: '4-3-3',
-      minCounts: { GK: 1, DEF: 1, MID: 1, ATT: 1 },
+      referenceFormation: 'test-form',
+      minCounts: { GK: 1, DEF: 3, MID: 2, ATT: 5 },
+      formations: [
+        { id: 'test-form', label: 'TestForm', description: 'test', minCounts: { GK: 1, DEF: 3, MID: 2, ATT: 5 } },
+      ],
       ratingScale: { min: 1, max: 100 },
       bands: [{ id: 'fb', priority: 0, label: 'FALL', fallback: true }],
     },
@@ -105,8 +108,8 @@ describe('audit: malformed entries COLLECTED, not fail-fast', () => {
     const raw = makeRaw() as unknown as AnyObj;
     // positionMap problem: bad value.
     raw.positionMap.CB = 'WRONG';
-    // thresholds problem: missing version.
-    raw.thresholds.version = 2;
+    // thresholds problem: invalid version.
+    raw.thresholds.version = 99;
     // squads problem: short a player.
     raw.squads.squads[0].players.pop();
 

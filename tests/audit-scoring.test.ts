@@ -38,6 +38,9 @@ const FALLBACK: BandDef = { id: 'FALL', priority: 0, label: 'COLLAPSE', fallback
 function makeConfig(bands: BandDef[], minCounts = MIN_COUNTS): ThresholdConfig {
   return {
     version: 1, referenceFormation: '4-3-3', minCounts,
+    formations: [
+      { id: '4-3-3', label: '4-3-3', description: 'test', minCounts: { GK: 1, DEF: 4, MID: 3, ATT: 3 } },
+    ],
     ratingScale: { min: 1, max: 100 }, bands,
   };
 }

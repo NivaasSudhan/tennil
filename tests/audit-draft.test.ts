@@ -61,8 +61,11 @@ function makeData(squads: Squad[]): GameData {
     positionMap: { GK: 'GK', CB: 'DEF', CM: 'MID', ST: 'ATT' },
     thresholds: {
       version: 1,
-      referenceFormation: '4-3-3',
-      minCounts: { GK: 1, DEF: 3, MID: 2, ATT: 2 },
+      referenceFormation: 'audit-test',
+      minCounts: { GK: 1, DEF: 3, MID: 2, ATT: 5 },
+      formations: [
+        { id: 'audit-test', label: 'AuditTest', description: 'test-only', minCounts: { GK: 1, DEF: 3, MID: 2, ATT: 5 } },
+      ],
       ratingScale: { min: 1, max: 100 },
       bands: [{ id: 'fallback', priority: 0, label: 'MATCH', fallback: true }],
     },

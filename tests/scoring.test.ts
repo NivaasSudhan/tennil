@@ -9,6 +9,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { computeScoreInput, evaluateBandPredicates, scoreBand } from '../src/domain/scoring/scoreBand';
+import { withFormationMinCounts } from '../src/domain/scoring/withFormation';
 import type { BandDef, FinalXI, Player, PositionBucket, PositionMap, ThresholdConfig } from '../src/domain/types';
 
 // ---------- synthetic config ----------
@@ -61,6 +62,9 @@ function makeConfig(bands: BandDef[]): ThresholdConfig {
     version: 1,
     referenceFormation: '4-3-3',
     minCounts: MIN_COUNTS,
+    formations: [
+      { id: '4-3-3', label: '4-3-3', description: 'test', minCounts: { GK: 1, DEF: 4, MID: 3, ATT: 3 } },
+    ],
     ratingScale: { min: 1, max: 100 },
     bands,
   };
@@ -291,6 +295,67 @@ describe('scoreBand', () => {
     const xi = buildXI({ GK: [1], DEF: [1, 1, 1, 1], MID: [1, 1, 1], ATT: [1, 1, 1] });
     scoreBand(computeScoreInput(xi, POSITION_MAP), CONFIG);
     expect(CONFIG.bands.map((b) => b.id)).toEqual(originalOrder);
+  });
+});
+
+describe('withFormationMinCounts', () => {
+  it('returns config unchanged when formationId is null/undefined', () => {
+    const result = withFormationMinCounts(CONFIG, null);
+    expect(result).toBe(CONFIG);
+    expect(withFormationMinCounts(CONFIG, undefined)).toBe(CONFIG);
+  });
+
+  it('overrides minCounts when formationId matches a formation in config', () => {
+    const configWithFormations = {
+      ...CONFIG,
+      formations: [
+        ...CONFIG.formations,
+        { id: '3-5-2', label: '3-5-2', description: 'test', minCounts: { GK: 1, DEF: 3, MID: 5, ATT: 2 } },
+      ],
+    };
+    const result = withFormationMinCounts(configWithFormations, '3-5-2');
+    expect(result.minCounts).toEqual({ GK: 1, DEF: 3, MID: 5, ATT: 2 });
+    expect(result.referenceFormation).toBe('3-5-2');
+    expect(result.bands).toBe(CONFIG.bands);
+  });
+
+  it('returns config unchanged when formationId not found', () => {
+    const result = withFormationMinCounts(CONFIG, 'nonexistent');
+    expect(result).toBe(CONFIG);
+  });
+
+  it('formation minCounts changes which band matches (3-5-2 unlocks band 4-3-3 blocks)', () => {
+    // XI with 3 DEF, 5 MID, 2 ATT
+    const xi = buildXI({
+      GK: [80],
+      DEF: [80, 80, 80],
+      MID: [80, 80, 80, 80, 80],
+      ATT: [80, 80],
+    });
+    const input = computeScoreInput(xi, POSITION_MAP);
+
+    // A band that only checks minCounts + allBucketsNonEmpty + high weakLink
+    const SHAPE_BAND: BandDef = {
+      id: 'SHAPE', priority: 100, label: 'GOOD SHAPE',
+      requireAllBucketsNonEmpty: true, requireMinCounts: true, minWeakLink: 70,
+    };
+    const FB_BAND: BandDef = { id: 'FB', priority: 0, label: 'COLLAPSE', fallback: true };
+    const baseConfig = makeConfig([SHAPE_BAND, FB_BAND]);
+
+    // 4-3-3 config: DEF>=4 fails -> falls to FB
+    const band433 = scoreBand(input, baseConfig);
+    expect(band433.bandId).toBe('FB');
+
+    // 3-5-2 config: DEF>=3/MID>=5/ATT>=2 all pass -> SHAPE band
+    const config352 = withFormationMinCounts({
+      ...baseConfig,
+      formations: [
+        { id: '4-3-3', label: '4-3-3', description: 'test', minCounts: { GK: 1, DEF: 4, MID: 3, ATT: 3 } },
+        { id: '3-5-2', label: '3-5-2', description: 'test', minCounts: { GK: 1, DEF: 3, MID: 5, ATT: 2 } },
+      ],
+    }, '3-5-2');
+    const band352 = scoreBand(input, config352);
+    expect(band352.bandId).toBe('SHAPE');
   });
 });
 

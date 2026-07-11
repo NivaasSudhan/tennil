@@ -5,6 +5,7 @@ import type { DraftSession, FinalXI, GameData, Pick, PositionBucket, ScoreExplan
 import { getFinalXI } from '../domain/draft/session';
 import { computeScoreInput, scoreBand } from '../domain/scoring/scoreBand';
 import { explainScoreBand } from '../domain/scoring/explainScoreBand';
+import { withFormationMinCounts } from '../domain/scoring/withFormation';
 import { buildCommentary } from '../domain/commentary/build';
 import { progressScoreline } from './scorelineProgress';
 import Scoreboard from './Scoreboard';
@@ -32,8 +33,9 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
   const { band, groups, commentary, explanation, goalBeatIndices, totalBeats } = useMemo(() => {
     const xi: FinalXI = getFinalXI(session);
     const scoreInput = computeScoreInput(xi, data.positionMap);
-    const scored = scoreBand(scoreInput, data.thresholds);
-    const expl = explainScoreBand(scoreInput, data.thresholds);
+    const config = withFormationMinCounts(data.thresholds, session.formationId);
+    const scored = scoreBand(scoreInput, config);
+    const expl = explainScoreBand(scoreInput, config);
     const script = buildCommentary(scored, xi, data.commentary);
     const goalIndices: number[] = [];
     script.beats.forEach((b, i) => {

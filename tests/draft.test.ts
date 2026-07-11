@@ -60,8 +60,11 @@ function makeData(squads: Squad[]): GameData {
     positionMap: { GK: 'GK', CB: 'DEF', CM: 'MID', ST: 'ATT' },
     thresholds: {
       version: 1,
-      referenceFormation: '4-3-3',
-      minCounts: { GK: 1, DEF: 3, MID: 2, ATT: 2 },
+      referenceFormation: 'draft-test',
+      minCounts: { GK: 1, DEF: 3, MID: 2, ATT: 5 },
+      formations: [
+        { id: 'draft-test', label: 'DraftTest', description: 'test-only shape, not real', minCounts: { GK: 1, DEF: 3, MID: 2, ATT: 5 } },
+      ],
       ratingScale: { min: 1, max: 100 },
       bands: [{ id: 'fallback', priority: 0, label: 'MATCH', fallback: true }],
     },
@@ -390,6 +393,25 @@ describe('draft state machine (T-007)', () => {
     skip(start, data, rng);
 
     expect(start).toEqual(snapshot);
+  });
+});
+
+describe('formationId', () => {
+  it('startDraft with no formationId uses referenceFormation from config', () => {
+    const data = corpus(7);
+    const session = startDraft(data, mulberry32(1));
+    expect(session.formationId).toBe('draft-test');
+  });
+
+  it('startDraft with valid formationId stores it on session', () => {
+    const data = corpus(7);
+    const session = startDraft(data, mulberry32(1), 'draft-test');
+    expect(session.formationId).toBe('draft-test');
+  });
+
+  it('startDraft with invalid formationId throws IllegalActionError', () => {
+    const data = corpus(7);
+    expect(() => startDraft(data, mulberry32(1), 'nonexistent')).toThrow(IllegalActionError);
   });
 });
 

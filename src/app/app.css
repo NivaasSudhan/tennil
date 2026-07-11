@@ -263,6 +263,122 @@ button {
   margin-right: 0.3rem;
 }
 
+/* ---------- Formation picker — paper-world typed options, circled selection ---------- */
+.formation-picker {
+  position: relative;
+  width: 100%;
+  max-width: min(40rem, 92vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1.2rem 1rem;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 4px;
+  transform: rotate(var(--sheet-tilt));
+  box-shadow:
+    0 1px 1px oklch(0.2 0.02 260 / 0.4),
+    0 14px 28px oklch(0.15 0.03 260 / 0.55);
+}
+
+.formation-picker::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.15' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+  mix-blend-mode: multiply;
+}
+
+.formation-picker__heading {
+  margin: 0;
+  font-family: 'Courier Prime', monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.82rem;
+  color: var(--ink-faded);
+  border-bottom: 1.5px solid oklch(0.7 0.02 260 / 0.5);
+  padding-bottom: 0.5rem;
+  width: 100%;
+  text-align: center;
+}
+
+.formation-picker__options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.6rem;
+  width: 100%;
+}
+
+.formation-option {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.75rem 0.6rem 0.65rem;
+  background: transparent;
+  border: 1.5px solid oklch(0.7 0.02 260 / 0.35);
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Courier Prime', monospace;
+  color: var(--ink);
+  text-align: center;
+  transition: border-color 180ms var(--ease-out-quart),
+              background 180ms var(--ease-out-quart);
+}
+
+.formation-option:hover {
+  background: oklch(0.88 0.01 95 / 0.6);
+  border-color: var(--ink-faded);
+}
+
+.formation-option--selected {
+  border-color: var(--stamp);
+  background: oklch(0.52 0.19 27 / 0.06);
+  box-shadow: inset 0 0 0 1.5px var(--stamp);
+}
+
+.formation-option__label {
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+}
+
+.formation-option__desc {
+  font-size: 0.72rem;
+  color: var(--ink-faded);
+  line-height: 1.25;
+}
+
+.formation-option__counts {
+  font-family: 'Archivo', sans-serif;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: oklch(0.5 0.02 260);
+  margin-top: 0.2rem;
+}
+
+.formation-option--selected .formation-option__counts {
+  color: var(--stamp);
+}
+
+.formation-picker__advisory {
+  margin: 0;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.78rem;
+  color: var(--ink-faded);
+  text-align: center;
+  line-height: 1.4;
+  max-width: 32rem;
+}
+
 /* ---------- StadiumButton — floodlit signage CTA ---------- */
 .stadium-button {
   --stadium-glow: 0 0 18px oklch(0.82 0.14 88 / 0.55), 0 0 44px oklch(0.82 0.14 88 / 0.3);
