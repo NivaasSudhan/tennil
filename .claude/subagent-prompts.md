@@ -310,7 +310,15 @@ P-014r2 status: succeeded (U1-DONE; 169 tests green; paper world complete — Te
 ## P-027 — Relative scoring W3: efficiency retune
 - date: 2026-07-11
 - target: opencode/grok-4.5 --variant high → FAILED: workspace $20/mo spend cap reached → rerouted to opencode-go/glm-5.2 --variant max (same prompt verbatim). GROK UNAVAILABLE until billing reset/raise.
-- status: dispatched (GLM retry)
+- status: succeeded on GLM retry (all six gates: greedy 10-0 6.0%, near-miss 10.8%, per-bucket MID/ATT cascade discriminates compressed efficiency; seed-stable 42/1000/5000; committed)
+
+---
+
+## P-028 — Relative scoring W4: efficiency margins UI
+- date: 2026-07-11
+- target: opencode-go/glm-5.2 --variant high
+- status: dispatched
+- task: nearMiss.ts + BandSlam copy → efficiency-points margins ("2 EFFICIENCY POINTS FROM A 5-0" / bucket callout "LEFT N POINTS IN MID"); handle minEfficiency/minBucketEfficiency predicate names; tests updated.
 - task: Tune 9 efficiency gates inside the compressed window (random p50=94, greedy p50=99, p90=100); consider enabling minBucketEfficiency if total-efficiency alone can't discriminate; six-gate protocol; RISKS log + sim-report.
 - task: PlayerRow mine-variant never renders taken state (bug: YOUR XI shows mangled overlapping Taken graphics); reveal rows disabled when id-taken OR isPersonTaken (call domain helper — zero rules logic in components); clean taken treatment: single strikethrough + small red TAKEN tag right-aligned, leader hidden, no overlap with POS chip/rating circle; RTL tests for both variants.
 
