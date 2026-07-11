@@ -12,6 +12,8 @@ import { describe, expect, it } from 'vitest';
 import { loadGameData } from '../src/domain/loadData';
 import { DataValidationError } from '../src/domain/types';
 
+type RawBundle = Parameters<typeof loadGameData>[0];
+
 // ---------------------------------------------------------------------------
 // A fully valid synthetic baseline bundle (built fresh each call).
 // ---------------------------------------------------------------------------
@@ -55,15 +57,18 @@ function squadRaw(id: string, year: number) {
   return { id, country: id.toUpperCase(), year, players };
 }
 
-type Raw = ReturnType<typeof validRaw>;
-type AnyObj = Record<string, any>;
+type AnyObj = { [K in keyof RawBundle]: any } & Record<string, any>;
 
 function clone<T>(v: T): T {
   return JSON.parse(JSON.stringify(v)) as T;
 }
 
+function makeRaw(): RawBundle {
+  return clone(validRaw()) as unknown as RawBundle;
+}
+
 /** Run loadGameData; if it throws, return the DataValidationError; else null. */
-function tryLoad(raw: Raw): DataValidationError | null {
+function tryLoad(raw: RawBundle): DataValidationError | null {
   try {
     loadGameData(raw);
   } catch (e) {
@@ -73,7 +78,7 @@ function tryLoad(raw: Raw): DataValidationError | null {
   return null;
 }
 
-function expectRejects(raw: Raw, match: (problems: string[]) => void) {
+function expectRejects(raw: RawBundle, match: (problems: string[]) => void) {
   const err = tryLoad(raw);
   expect(err).not.toBeNull();
   expect(err!.problems.length).toBeGreaterThan(0);
@@ -97,7 +102,7 @@ describe('audit: happy path synthetic bundle', () => {
 
 describe('audit: malformed entries COLLECTED, not fail-fast', () => {
   it('problems across positionMap, thresholds, and squads all surface in one throw', () => {
-    const raw = clone(validRaw()) as AnyObj;
+    const raw = makeRaw() as unknown as AnyObj;
     // positionMap problem: bad value.
     raw.positionMap.CB = 'WRONG';
     // thresholds problem: missing version.
@@ -114,7 +119,7 @@ describe('audit: malformed entries COLLECTED, not fail-fast', () => {
   });
 
   it('two unrelated problems in DIFFERENT squads are both reported', () => {
-    const raw = clone(validRaw()) as AnyObj;
+    const raw = makeRaw() as unknown as AnyObj;
     // Problem 1: bad rating in squad 0.
     raw.squads.squads[0].players[1].rating = 999;
     // Problem 2: unmapped positionRaw in squad 1.
@@ -132,7 +137,7 @@ describe('audit: malformed entries COLLECTED, not fail-fast', () => {
   });
 
   it('three problems in three separate config files all collected', () => {
-    const raw = clone(validRaw()) as AnyObj;
+    const raw = makeRaw() as unknown as AnyObj;
     raw.commentary.scripts.fb.beats[0].type = 'bogus'; // commentary
     raw.thresholds.bands[0].priority = 'not-a-number'; // thresholds
     raw.squads.squads[0].players[0].rating = 0; // squads (rating below min)
@@ -145,7 +150,7 @@ describe('audit: malformed entries COLLECTED, not fail-fast', () => {
 
   it('validation never short-circuits past an early squad with a fatal flaw', () => {
     // squad 0 completely missing players; squad 1 still checked for a rating fault.
-    const raw = clone(validRaw()) as AnyObj;
+    const raw = makeRaw() as unknown as AnyObj;
     (raw.squads.squads[0] as AnyObj).players = 'not-an-array';
     raw.squads.squads[1].players[5].rating = -5;
     expectRejects(raw, (problems) => {
@@ -157,14 +162,14 @@ describe('audit: malformed entries COLLECTED, not fail-fast', () => {
 
 describe('audit: boundary ratings', () => {
   it('ratings exactly at ratingScale.min and ratingScale.max are accepted', () => {
-    const raw = clone(validRaw()) as AnyObj;
+    const raw = makeRaw() as unknown as AnyObj;
     raw.squads.squads[0].players[1].rating = 1; // min
     raw.squads.squads[0].players[2].rating = 100; // max
     expect(() => loadGameData(raw)).not.toThrow();
   });
 
   it('one below the min (rating 0) is rejected', () => {
-    const raw = clone(validRaw()) as AnyObj;
+    const raw = makeRaw() as unknown as AnyObj;
     raw.squads.squads[0].players[1].rating = 0;
     expectRejects(raw, (problems) => {
       expect(problems.some((p) => p.includes('rating 0 outside allowed range 1-100'))).toBe(true);
@@ -172,7 +177,7 @@ describe('audit: boundary ratings', () => {
   });
 
   it('one above the max (rating 101) is rejected', () => {
-    const raw = clone(validRaw()) as AnyObj;
+    const raw = makeRaw() as unknown as AnyObj;
     raw.squads.squads[0].players[1].rating = 101;
     expectRejects(raw, (problems) => {
       expect(problems.some((p) => p.includes('rating 101 outside allowed range 1-100'))).toBe(true);
@@ -180,7 +185,7 @@ describe('audit: boundary ratings', () => {
   });
 
   it('a non-integer rating (85.5) is rejected even within range', () => {
-    const raw = clone(validRaw()) as AnyObj;
+    const raw = makeRaw() as unknown as AnyObj;
     raw.squads.squads[0].players[1].rating = 85.5;
     expectRejects(raw, (problems) => {
       expect(problems.some((p) => p.includes('rating must be an integer'))).toBe(true);
@@ -188,7 +193,7 @@ describe('audit: boundary ratings', () => {
   });
 
   it('a custom ratingScale enforces its own endpoints', () => {
-    const raw = clone(validRaw()) as AnyObj;
+    const raw = makeRaw() as unknown as AnyObj;
     raw.thresholds.ratingScale = { min: 50, max: 60 };
     raw.squads.squads[0].players[1].rating = 50; // ok
     raw.squads.squads[0].players[2].rating = 60; // ok
@@ -201,7 +206,7 @@ describe('audit: boundary ratings', () => {
   });
 
   it('a malformed ratingScale itself is reported and bounds default to 1-100', () => {
-    const raw = clone(validRaw()) as AnyObj;
+    const raw = makeRaw() as unknown as AnyObj;
     raw.thresholds.ratingScale = 'bad';
     // rating 100 still <= 100 (fallback) so squads may pass; the ratingScale error alone throws.
     expectRejects(raw, (problems) => {
@@ -212,7 +217,7 @@ describe('audit: boundary ratings', () => {
 
 describe('audit: duplicate ids', () => {
   it('a duplicate PLAYER id across squads is rejected', () => {
-    const raw = clone(validRaw()) as AnyObj;
+    const raw = makeRaw() as unknown as AnyObj;
     raw.squads.squads[1].players[0].id = raw.squads.squads[0].players[0].id;
     expectRejects(raw, (problems) => {
       expect(problems.some((p) => p.includes('duplicate player id'))).toBe(true);
@@ -220,7 +225,7 @@ describe('audit: duplicate ids', () => {
   });
 
   it('a duplicate SQUAD id is rejected', () => {
-    const raw = clone(validRaw()) as AnyObj;
+    const raw = makeRaw() as unknown as AnyObj;
     raw.squads.squads[1].id = raw.squads.squads[0].id;
     expectRejects(raw, (problems) => {
       expect(problems.some((p) => p.includes('duplicate squad id'))).toBe(true);
@@ -228,7 +233,7 @@ describe('audit: duplicate ids', () => {
   });
 
   it('a duplicate BAND id is rejected', () => {
-    const raw = clone(validRaw()) as AnyObj;
+    const raw = makeRaw() as unknown as AnyObj;
     raw.thresholds.bands.push({
       id: 'fb', priority: 5, label: 'DUP', fallback: false,
     });
@@ -240,7 +245,7 @@ describe('audit: duplicate ids', () => {
   });
 
   it('a player id colliding WITHIN the same squad is also caught (corpus-unique)', () => {
-    const raw = clone(validRaw()) as AnyObj;
+    const raw = makeRaw() as unknown as AnyObj;
     raw.squads.squads[0].players[1].id = raw.squads.squads[0].players[0].id;
     expectRejects(raw, (problems) => {
       expect(problems.some((p) => p.includes('duplicate player id'))).toBe(true);
@@ -250,7 +255,7 @@ describe('audit: duplicate ids', () => {
 
 describe('audit: cross-section band↔commentary consistency', () => {
   it('a band id with no commentary script is reported', () => {
-    const raw = clone(validRaw()) as AnyObj;
+    const raw = makeRaw() as unknown as AnyObj;
     // Add a second band; comment will lack its script.
     raw.thresholds.bands.push({ id: 'extra', priority: 10, label: 'X' });
     expectRejects(raw, (problems) => {
@@ -259,12 +264,12 @@ describe('audit: cross-section band↔commentary consistency', () => {
   });
 
   it('zero and multiple fallback bands are both rejected', () => {
-    const zero = clone(validRaw()) as AnyObj;
+    const zero = makeRaw() as unknown as AnyObj;
     delete (zero.thresholds.bands[0] as AnyObj).fallback;
     expectRejects(zero, (p) =>
       expect(p.some((m) => m.includes('no band has fallback:true'))).toBe(true));
 
-    const multi = clone(validRaw()) as AnyObj;
+    const multi = makeRaw() as unknown as AnyObj;
     multi.thresholds.bands.push({ id: 'fb2', priority: 1, label: 'F2', fallback: true });
     multi.commentary.scripts.fb2 = clone(multi.commentary.scripts.fb);
     expectRejects(multi, (p) =>
@@ -274,7 +279,7 @@ describe('audit: cross-section band↔commentary consistency', () => {
 
 describe('audit: structural edge cases', () => {
   it('a squad with exactly 11 players but ZERO GKs is rejected', () => {
-    const raw = clone(validRaw()) as AnyObj;
+    const raw = makeRaw() as unknown as AnyObj;
     // Reclassify the lone GK as a DEF.
     raw.squads.squads[0].players[0].positionRaw = 'CB';
     raw.squads.squads[0].players[0].positionBucket = 'DEF';
@@ -285,7 +290,7 @@ describe('audit: structural edge cases', () => {
   });
 
   it('a squad with exactly 11 players but TWO GKs is rejected', () => {
-    const raw = clone(validRaw()) as AnyObj;
+    const raw = makeRaw() as unknown as AnyObj;
     // Make the first outfield player a second GK.
     raw.squads.squads[0].players[1].positionRaw = 'GK';
     raw.squads.squads[0].players[1].positionBucket = 'GK';
@@ -296,7 +301,7 @@ describe('audit: structural edge cases', () => {
   });
 
   it('a player whose positionBucket disagrees with the position map is rejected', () => {
-    const raw = clone(validRaw()) as AnyObj;
+    const raw = makeRaw() as unknown as AnyObj;
     raw.squads.squads[0].players[1].positionRaw = 'CB';
     raw.squads.squads[0].players[1].positionBucket = 'MID'; // map says DEF
     expectRejects(raw, (problems) => {
@@ -306,7 +311,7 @@ describe('audit: structural edge cases', () => {
   });
 
   it('unknown extra keys prefixed with _ are ignored, not errors', () => {
-    const raw = clone(validRaw()) as AnyObj;
+    const raw = makeRaw() as unknown as AnyObj;
     raw.positionMap._comment = 'ignored';
     raw.commentary._meta = 'ignored';
     (raw.squads as AnyObj)._versionNote = 'ignored';
@@ -314,7 +319,7 @@ describe('audit: structural edge cases', () => {
   });
 
   it('an empty squads array is rejected', () => {
-    const raw = clone(validRaw()) as AnyObj;
+    const raw = makeRaw() as unknown as AnyObj;
     raw.squads.squads = [];
     expectRejects(raw, (problems) => {
       expect(problems.some((p) => p.includes('squads.squads: expected a non-empty array'))).toBe(true);

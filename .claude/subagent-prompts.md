@@ -227,7 +227,7 @@ P-014r2 status: succeeded (U1-DONE; 169 tests green; paper world complete — Te
 ## P-015 — tsc fix in audit-loaddata test
 - date: 2026-07-11
 - target: opencode/deepseek-v4-flash-free --variant max
-- status: dispatched
+- status: succeeded (FIX-DONE; build green, 169 tests green; RawBundle derived via Parameters<typeof loadGameData>[0], no assertion changes)
 - task: tests/audit-loaddata.test.ts AnyObj → RawBundle (Parameters<typeof loadGameData>[0]) so npm run build passes; no assertion changes; single-helper fix preferred. (Audit agent's file passed vitest but broke tsc — orchestrator's commit gate now includes npm run build.)
 
 ### P-014r2 retry addendum (replaces item 1 of the verbatim P-014 prompt):
