@@ -2,8 +2,8 @@
 
 You are continuing a planned 1-week MVP. All judgment lives in the docs, not in any prior chat.
 
-## NEXT: Sprint 1 COMPLETE (Tasks 0-9 + corpus fact-check pass; see docs/plans/2026-07-10-sprint-1.md and RISKS experiment log 2026-07-11). Corpus 16 squads, thresholds retuned (greedy 10-0 = 5.8%, near-miss 18.4%). Next: ≥5 human playtest drafts to confirm the 1-2/2-2 wall is gone, then Phase 1 proper — scripts/ingest pipeline + corpus 24-32 under ADR-011/012, and Phase 2 ResultBreakdown UI on explainScoreBand.
-Remaining human steps: playtest drafts (verify 3-1/5-0 now reachable); record live URL below if not yet done.
+## NEXT: Verify/commit UI wave U3 (P-018 in .claude/subagent-prompts.md — 4 visual defect fixes; agent may have finished unobserved: check `git status`, run npm test + npm run build, eyeball via `npm run dev` per the defect list, commit terse). Then: re-drive full loop in browser (draft → skip → finals broadcast → goal/band-slam), fix-dispatch any remaining visual defects to opencode-go/glm-5.2 (NOT Grok — cost ceiling; see memory), THEN push main to deploy. State: corpus 60 (2026's 8 QF slots pending research), thresholds retuned for 60 (greedy 10-0 6.4%), 197 tests green, skip-exclude + formation (ADR-017) + progressive live score + Matchday UI (paper+broadcast) all committed on main, NOT pushed since f2e367f.
+Orchestration rules: Fable never writes code — dispatch opencode per docs/OPENCODE_ORCHESTRATION.md + prompt cache .claude/subagent-prompts.md (P-001..P-018; reuse on retry). Grok sparingly/hardest-only; Deepseek max for easy+moderate w/ detailed prompts; GLM (go) for UI/volume. Commits ≤2 lines.
 
 ## Read order (do this before any work)
 1. PROJECT.md — goals, non-goals, invariants, assumptions

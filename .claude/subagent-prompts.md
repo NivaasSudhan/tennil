@@ -246,6 +246,30 @@ P-014r2 status: succeeded (U1-DONE; 169 tests green; paper world complete — Te
 - status: succeeded (FORMATION-DONE; 197 tests + build green; thresholds v2 w/ 4 formations; withFormationMinCounts view keeps scoring two-arg; ResultScreen touched as plan required — call-site resolution; no plan deviations)
 - task: Implement docs/plans/2026-07-11-formation-choice.md in full (ADR-017; config-view pattern C2; formation gate C3/C6; Matchday paper styling)
 
+---
+
+## P-018 — Matchday UI wave U3: visual defect fixes (browser-verified)
+- date: 2026-07-11
+- target: opencode-go/glm-5.2 --variant high
+- status: dispatched
+- task: Fix 4 defects found by orchestrator driving the live app at 1280x720
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch main. The orchestrator drove the live app (vite dev, 1280x720) and found these VISUAL DEFECTS in the Matchday UI. Read PRODUCT.md + DESIGN.md first (binding spec), then fix all four. Allowed files: src/app/app.css, src/app/TeamSheet.tsx, src/app/PlayerRow.tsx, src/app/DraftScreen.tsx, src/app/StartScreen.tsx only. Do NOT touch ResultScreen/broadcast components, domain, tests (unless a matcher breaks from copy you change — then update that matcher in the same pass).
+
+D1 (P0) PITCH VOID ON SCROLL: the procedural pitch (stripes/markings/vignette) covers only the first viewport; scrolling reveals a flat dark-green band above/below it. Landing page is 1075px tall at 720px viewport so the break is immediately visible. FIX: make the pitch a position: fixed inset-0 background layer (z-index below all content, pointer-events: none) so it fills the viewport regardless of scroll — or body background-attachment: fixed if gradients allow. Verify: no flat band at any scroll position.
+
+D2 (P0) PLAYER ROWS BLOWN UP: on the draft screen each player renders ~90-110px tall: the rating appears as a FULL-WIDTH pill outline (rounded-rectangle border spanning the whole sheet) with the number centered inside it, the name sits on its own line above, and the dotted leader + POS chip float detached at the far right. The sheet overflows the viewport; its masthead is not even visible. Root cause is almost certainly the rating-circle CSS (border-radius + flex-grow/width on the rating element) and row flex wrap. REQUIRED RESULT per DESIGN.md: ONE compact typed line per player, ~2-2.5rem tall: NAME (Courier Prime), dotted leader filling the middle, POS abbrev, then a SMALL inked rating circle (~1.8rem diameter, fixed width/height, tier-colored border + number inside). Eleven rows + masthead must fit comfortably inside the sheet; the reveal sheet must fit the viewport (internal scroll only if viewport < ~640px tall).
+
+D3 (P1) LANDING HIERARCHY: no big Anton masthead visible — only a small gold letter-spaced eyebrow 'WORLD CUP DRAFT-XI'. DESIGN.md requires an Anton masthead (clamp(2rem,6vw,4.5rem)). Make the title unmistakable at first paint.
+
+D4 (P1) LANDING DOES NOT FIT 720p: CTA sits below the fold (~1075px doc height). Compress vertical rhythm (blurb + rules + formation picker + CTA) so the whole landing fits within ~700px height at 1280x720 with the Kick off CTA visible without scrolling. Formation cards may go smaller/tighter (2x2 grid is fine).
+
+MOTION/QUALITY RULES unchanged: ease-out-quart/quint, prefers-reduced-motion fallbacks, content visible by default, contrast >= 4.5:1 for reading text. SHELL DISCIPLINE: never cd; absolute paths only, inside repo. Do NOT run git commit or git add.
+
+FINISH: npm test green AND npm run build green. Print U3-DONE, vitest summary, and per-defect one-line fix descriptions. On failure print U3-FAILED + output.
+```
+
 ```
 You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch main. Implement the feature planned in docs/plans/2026-07-11-formation-choice.md IN FULL, step by step, exactly as the plan file specifies. Before writing anything, read IN THIS ORDER: (1) the plan file, (2) docs/plans/2026-07-11-three-features-index.md cross-cutting challenges C2/C3/C5/C6 — these are BINDING, (3) DECISIONS.md ADR-004/ADR-013 and the tail (ADR-011 amendments), (4) docs/audits/2026-07-11-logic-audit.md section 'The two-goalkeepers question', (5) PRODUCT.md + DESIGN.md (Matchday paper world — any new formation-picker UI must be paper-world styled: typed Courier Prime options on the team-sheet paper, circled-in-ballpoint selection, NOT generic buttons), (6) current src/app/App.tsx, src/app/StartScreen.tsx, src/domain/scoring/scoreBand.ts, src/domain/loadData.ts, scripts/simulate.ts loadGameDataFromDisk, tests/startScreen.test.tsx + tests/appGate.test.tsx.
 
