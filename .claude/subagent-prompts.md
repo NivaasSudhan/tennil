@@ -132,3 +132,33 @@ You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch roadmap/
 ```
 You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch roadmap/sprint-1. Open docs/plans/2026-07-10-sprint-1.md and implement Task 8 (Corpus 7 -> 16) EXACTLY as written. Also read DECISIONS.md ADR-011 (selection criteria, XI rule, id format) and ADR-006 (rating rubric), and tests/fixtures/squad-arg-1986.json (the exact JSON shape). Steps: (1) create tests/corpus.test.ts verbatim from the plan; (2) run it — must fail ONLY on squad count 7 != 16; (3) author the 9 squads listed in the plan's table (hun-1954, eng-1966, ned-1974, ger-1974, arg-1978, ger-1990, bra-1994, ita-2006, fra-2018), each the starting XI of that tournament's final, appended to src/data/squads/squads.json; (4) if a positionRaw key is missing from src/data/position-map.json, ADD the key with the correct bucket — never change existing mappings; (5) rate every player per the ADR-006 rubric; (6) npm test must be fully green. Touch ONLY: src/data/squads/squads.json, src/data/position-map.json (additive keys only), tests/corpus.test.ts. Do NOT run git commit or git add. ACCURACY RULES: use historically correct starting XIs of the finals — if unsure of a lineup detail, choose the most widely documented XI and note the uncertainty; never invent players. Print, as your final output: TASK8-DONE, the vitest summary, then a REVIEW-NOTES section listing per squad: any lineup uncertainties and your 3 highest/lowest rating opinions with one-line rationale — a human will review before merge. If anything fails, print TASK8-FAILED plus output.
 ```
+
+---
+
+## P-008 — T8 human-review proxy: corpus fact-check pass
+- date: 2026-07-10
+- target: opencode/grok-4.5 --variant high
+- status: succeeded (CORPUS-REVIEW-DONE, 80 green; 7 factual fixes incl. hun-1954 Budai→Tóth; zero rating/bucket changes → no impact on parallel T9 tune)
+- task: Verify/fix rosters, spellings, positions of the 16-squad corpus; factual corrections only
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch main. src/data/squads/squads.json holds 16 squads; the 9 newest (hun-1954, eng-1966, ned-1974, ger-1974, arg-1978, ger-1990, bra-1994, ita-2006, fra-2018) were authored in one pass and need a rigorous second-opinion fact-check; docs/plans/t8-corpus-review-notes.md lists the original author's own uncertainty flags — start there. TASK: verify every squad is the historically correct STARTING XI of that World Cup final (right players, correct name spellings incl. diacritics, plausible positionRaw). Fix FACTUAL errors only: wrong player, misspelling, wrong position. Do NOT redesign ratings; only adjust a rating if it clearly violates the DECISIONS.md ADR-006 rubric (e.g. above the Pele/Maradona 98 ceiling, or a scale-breaking outlier), and log why. Keep player ids stable unless the player himself was wrong. Touch ONLY src/data/squads/squads.json (and src/data/position-map.json additive keys if a corrected position needs one). Do NOT touch src/data/config/thresholds.json — another agent is retuning it in parallel. Do NOT run git commit or git add. Finish with npm test (must be green) and print: CORPUS-REVIEW-DONE, the vitest summary, then a CHANGES section listing every correction made (or 'none') with one-line justification each.
+```
+
+---
+
+## P-009 — Sprint-1 Task 9: retune thresholds for 16-squad corpus
+- date: 2026-07-10
+- target: opencode/grok-4.5 --variant high
+- status: dispatched
+- task: Numbers-only thresholds.json retune using T6 diagnostics; fix human playtest problem (stuck in 1-2/2-2)
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch main. Implement Sprint-1 Task 9 from docs/plans/2026-07-10-sprint-1.md: retune src/data/config/thresholds.json for the new 16-squad corpus. HARD RULES: numbers-only edits — never touch engine code, band ids, labels, priorities, predicate structure, or any file except thresholds.json, RISKS_AND_UNKNOWNS.md (append experiment-log entry), and docs/sim/sim-report.json. Do NOT touch src/data/squads/squads.json — another agent is fact-checking it in parallel. Do NOT run git commit or git add.
+
+CRITICAL PLAYTEST SIGNAL from the human owner on the current (7-squad-era) tune: real human drafts on the 16-squad corpus land almost always in 1-2 or 2-2 — the 3-1/5-0/10-0 bands are effectively unreachable for humans. Diagnosis to verify with the diagnostics: the new squads add many 78-84-rated role players, dragging achievable weak-link and bucket sums down, so the old gates (3-1 needs DEF349/WL84) sit above what good-but-imperfect play produces. The band ladder is a difficulty curve, not a wall.
+
+METHOD: use the T6 diagnostics (npx tsx scripts/simulate.ts --n 500 --seed 42 --bot greedy, and --bot random; percentiles + near-miss + seed quartiles). Greedy bot = skilled-play ceiling; random bot = floor; real humans sit between. Set gates from percentiles, iterating until ALL of: (a) greedy 10-0 in 5-7% (if provably unreachable take closest >=4% and document); (b) greedy lands majority of drafts in 5-0/3-1 combined; (c) random bot ~0% in 10-0 and <=5% in 5-0, with its mass spread across 3-1/2-2/1-2 — NOT collapsed into 1-2; (d) no dead bands (every band >=1% in at least one bot's histogram); (e) near-miss rate for 10-0 at delta 3 lands in 10-20% (the 'one more draft' sweet spot per ROADMAP.md section 3.2 — 0% reads unreachable, >30% reads coin-flip); (f) the 2-2 -> 3-1 boundary must be generous enough that mid-quality XIs (random-bot p50 sums) reach 3-1 — that is where the human playtest complaint lives.
+
+FINISH: write final docs/sim/sim-report.json via --report on the last greedy run; append the RISKS_AND_UNKNOWNS.md experiment-log entry per the plan's template (include the human-playtest motivation); npm test must be green. Print as final output: TASK9-DONE, both final histograms (greedy + random), near-miss lines, the final gate numbers per band, and one paragraph explaining the tuning rationale.
+```

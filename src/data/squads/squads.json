@@ -139,11 +139,11 @@
         { "id": "hun-1954-lantos",     "name": "Mihály Lantos",     "positionRaw": "LB", "positionBucket": "DEF", "rating": 82 },
         { "id": "hun-1954-bozsik",     "name": "József Bozsik",     "positionRaw": "CM", "positionBucket": "MID", "rating": 90 },
         { "id": "hun-1954-zakarias",   "name": "József Zakariás",   "positionRaw": "DM", "positionBucket": "MID", "rating": 83 },
-        { "id": "hun-1954-budai",      "name": "László Budai",      "positionRaw": "RW", "positionBucket": "ATT", "rating": 82 },
+        { "id": "hun-1954-czibor",     "name": "Zoltán Czibor",     "positionRaw": "RW", "positionBucket": "ATT", "rating": 88 },
         { "id": "hun-1954-kocsis",     "name": "Sándor Kocsis",     "positionRaw": "SS", "positionBucket": "ATT", "rating": 92 },
-        { "id": "hun-1954-hidegkuti",  "name": "Nándor Hidegkuti",  "positionRaw": "CF", "positionBucket": "ATT", "rating": 90 },
+        { "id": "hun-1954-hidegkuti",  "name": "Nándor Hidegkuti",  "positionRaw": "SS", "positionBucket": "ATT", "rating": 90 },
         { "id": "hun-1954-puskas",     "name": "Ferenc Puskás",     "positionRaw": "ST", "positionBucket": "ATT", "rating": 96 },
-        { "id": "hun-1954-czibor",     "name": "Zoltán Czibor",     "positionRaw": "LW", "positionBucket": "ATT", "rating": 88 }
+        { "id": "hun-1954-toth",       "name": "Mihály Tóth",       "positionRaw": "LW", "positionBucket": "ATT", "rating": 82 }
       ]
     },
     {
@@ -174,7 +174,7 @@
         { "id": "ned-1974-rijsbergen",    "name": "Wim Rijsbergen",       "positionRaw": "CB", "positionBucket": "DEF", "rating": 83 },
         { "id": "ned-1974-haan",          "name": "Arie Haan",            "positionRaw": "CB", "positionBucket": "DEF", "rating": 85 },
         { "id": "ned-1974-krol",          "name": "Ruud Krol",            "positionRaw": "LB", "positionBucket": "DEF", "rating": 89 },
-        { "id": "ned-1974-jansen",        "name": "Wim Jansen",           "positionRaw": "CM", "positionBucket": "MID", "rating": 84 },
+        { "id": "ned-1974-jansen",        "name": "Wim Jansen",           "positionRaw": "DM", "positionBucket": "MID", "rating": 84 },
         { "id": "ned-1974-neeskens",      "name": "Johan Neeskens",       "positionRaw": "CM", "positionBucket": "MID", "rating": 90 },
         { "id": "ned-1974-van-hanegem",   "name": "Willem van Hanegem",   "positionRaw": "CM", "positionBucket": "MID", "rating": 88 },
         { "id": "ned-1974-rep",           "name": "Johnny Rep",           "positionRaw": "RW", "positionBucket": "ATT", "rating": 85 },
@@ -194,7 +194,7 @@
         { "id": "ger-1974-breitner",       "name": "Paul Breitner",           "positionRaw": "LB", "positionBucket": "DEF", "rating": 87 },
         { "id": "ger-1974-overath",        "name": "Wolfgang Overath",        "positionRaw": "CM", "positionBucket": "MID", "rating": 88 },
         { "id": "ger-1974-bonhof",         "name": "Rainer Bonhof",           "positionRaw": "CM", "positionBucket": "MID", "rating": 84 },
-        { "id": "ger-1974-hoeness",        "name": "Uli Hoeneß",              "positionRaw": "CM", "positionBucket": "MID", "rating": 86 },
+        { "id": "ger-1974-hoeness",        "name": "Uli Hoeneß",              "positionRaw": "AM", "positionBucket": "MID", "rating": 86 },
         { "id": "ger-1974-grabowski",      "name": "Jürgen Grabowski",        "positionRaw": "RW", "positionBucket": "ATT", "rating": 85 },
         { "id": "ger-1974-muller",         "name": "Gerd Müller",             "positionRaw": "ST", "positionBucket": "ATT", "rating": 94 },
         { "id": "ger-1974-holzenbein",     "name": "Bernd Hölzenbein",        "positionRaw": "LW", "positionBucket": "ATT", "rating": 82 }
@@ -215,7 +215,7 @@
         { "id": "arg-1978-kempes",      "name": "Mario Kempes",        "positionRaw": "SS", "positionBucket": "ATT", "rating": 92 },
         { "id": "arg-1978-bertoni",     "name": "Daniel Bertoni",      "positionRaw": "RW", "positionBucket": "ATT", "rating": 84 },
         { "id": "arg-1978-luque",       "name": "Leopoldo Luque",      "positionRaw": "ST", "positionBucket": "ATT", "rating": 85 },
-        { "id": "arg-1978-ortiz",       "name": "Oscar Ortiz",         "positionRaw": "LW", "positionBucket": "ATT", "rating": 80 }
+        { "id": "arg-1978-ortiz",       "name": "Óscar Ortiz",         "positionRaw": "LW", "positionBucket": "ATT", "rating": 80 }
       ]
     },
     {
@@ -226,7 +226,7 @@
         { "id": "ger-1990-illgner",      "name": "Bodo Illgner",         "positionRaw": "GK",  "positionBucket": "GK",  "rating": 84 },
         { "id": "ger-1990-berthold",     "name": "Thomas Berthold",      "positionRaw": "RWB", "positionBucket": "DEF", "rating": 80 },
         { "id": "ger-1990-kohler",       "name": "Jürgen Kohler",        "positionRaw": "CB",  "positionBucket": "DEF", "rating": 86 },
-        { "id": "ger-1990-augenthaler",  "name": "Klaus Augenthaler",    "positionRaw": "CB",  "positionBucket": "DEF", "rating": 84 },
+        { "id": "ger-1990-augenthaler",  "name": "Klaus Augenthaler",    "positionRaw": "SW",  "positionBucket": "DEF", "rating": 84 },
         { "id": "ger-1990-buchwald",     "name": "Guido Buchwald",       "positionRaw": "CB",  "positionBucket": "DEF", "rating": 85 },
         { "id": "ger-1990-brehme",       "name": "Andreas Brehme",       "positionRaw": "LWB", "positionBucket": "DEF", "rating": 88 },
         { "id": "ger-1990-hassler",      "name": "Thomas Häßler",        "positionRaw": "RM",  "positionBucket": "MID", "rating": 85 },
