@@ -81,8 +81,15 @@ function corpus(n: number): GameData {
 // ---------------------------------------------------------------------------
 
 function assertInvariants(session: DraftSession): void {
-  const { roundsPlayed, picks, skipRemaining, phase, seenSquadIds, breachLog } =
-    session;
+  const {
+    roundsPlayed,
+    picks,
+    skipRemaining,
+    phase,
+    seenSquadIds,
+    excludedSquadIds,
+    breachLog,
+  } = session;
 
   // Core arithmetic invariant.
   const expected =
@@ -101,6 +108,10 @@ function assertInvariants(session: DraftSession): void {
 
   // seenSquadIds length always equals roundsPlayed (one draw per round).
   expect(seenSquadIds.length).toBe(roundsPlayed);
+
+  // Product = one skip token → at most one permanent exclude entry.
+  expect(excludedSquadIds).toBeDefined();
+  expect(excludedSquadIds.length).toBeLessThanOrEqual(1);
 
   if (phase === 'COMPLETE') {
     expect(picks.length).toBe(11);
@@ -379,5 +390,64 @@ describe('draft state machine (T-007)', () => {
     skip(start, data, rng);
 
     expect(start).toEqual(snapshot);
+  });
+});
+
+describe('permanent skip exclude', () => {
+  it('skip records squad id in excludedSquadIds', () => {
+    const data = corpus(7);
+    const rng = mulberry32(42);
+    let session = startDraft(data, rng);
+    const skippedId = session.currentReveal!.id;
+    session = skip(session, data, rng);
+    assertInvariants(session);
+    expect(session.excludedSquadIds).toEqual([skippedId]);
+  });
+
+  it('startDraft has empty excludedSquadIds', () => {
+    const session = startDraft(corpus(7), mulberry32(1));
+    expect(session.excludedSquadIds).toEqual([]);
+  });
+
+  it('skipped squad never reappears when corpus has alternatives (corpus 7)', () => {
+    const data = corpus(7);
+    const rng = mulberry32(99);
+    let session = startDraft(data, rng);
+    const skippedId = session.currentReveal!.id;
+    session = skip(session, data, rng);
+    while (session.phase !== 'COMPLETE') {
+      expect(session.currentReveal!.id).not.toBe(skippedId);
+      session = pick(session, data, firstPickable(session), rng);
+      assertInvariants(session);
+    }
+    expect(session.picks.length).toBe(11);
+  });
+
+  it('skipped squad never reappears on breach path (corpus 2)', () => {
+    // After skip, only 1 squad remains for 11 picks → many breaches, never excluded id.
+    const data = corpus(2);
+    const rng = mulberry32(7);
+    let session = startDraft(data, rng);
+    const skippedId = session.currentReveal!.id;
+    session = skip(session, data, rng);
+    while (session.phase !== 'COMPLETE') {
+      expect(session.currentReveal!.id).not.toBe(skippedId);
+      session = pick(session, data, firstPickable(session), rng);
+      assertInvariants(session);
+    }
+  });
+
+  it('corpus of 1 remains playable after skip (degenerate may re-show only squad)', () => {
+    const data = corpus(1);
+    const rng = mulberry32(3);
+    let session = startDraft(data, rng);
+    session = skip(session, data, rng);
+    assertInvariants(session);
+    // Must still be able to complete 11 picks.
+    while (session.phase !== 'COMPLETE') {
+      session = pick(session, data, firstPickable(session), rng);
+      assertInvariants(session);
+    }
+    expect(session.picks.length).toBe(11);
   });
 });

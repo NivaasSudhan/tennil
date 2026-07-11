@@ -86,16 +86,19 @@ UI rule (ADR-002): components may **read** `DraftSession` to render/disable cont
 
 ```
 startDraft(data, rng):
-  reveal = selectSquad(data.squads, seen=[], exclude=null, rng, breachLog)
+  reveal = selectSquad(data.squads, seen=[], excluded=[], excludeId=null, rng)
   return { phase:'AWAIT_PICK', picks:[], skipRemaining:1, roundsPlayed:1,
-           seenSquadIds:[reveal.id], currentReveal:reveal, breachLog }
+           seenSquadIds:[reveal.id], excludedSquadIds:[], currentReveal:reveal, breachLog }
 
-selectSquad(all, seen, excludeId, rng, breachLog):
-  pool = all where (id not in seen) and (id != excludeId)
+selectSquad(all, seen, excluded, excludeId, rng):
+  notExcluded = id not in excluded and id != excludeId
+  pool = all where (id not in seen) and notExcluded
   if pool empty:
-      pool = all where id != excludeId          # last-resort repeat
-      breachLog.push('repeat:<round>')          # Invariant 7 relaxation, asserted in tests
-  if pool empty: pool = all                     # corpus of 1 (degenerate, still playable)
+      pool = all where notExcluded              # relax seen; still honor permanent exclude
+      breached = true                           # breachLog.push('repeat:<round>') at caller
+  if pool empty:
+      pool = all where id != excludeId          # degenerate: re-include excluded if needed
+  if pool empty: pool = all                     # corpus of 1 / everything excluded
   return pool[floor(rng.next() * pool.length)]
 
 pick(session, data, playerId, rng):
@@ -105,14 +108,15 @@ pick(session, data, playerId, rng):
   picks' = picks + player
   if picks'.length == 11:
       return { ...session, picks:picks', phase:'COMPLETE', currentReveal:null }
-  reveal = selectSquad(data.squads, seenSquadIds, null, rng, breachLog)
+  reveal = selectSquad(data.squads, seenSquadIds, excludedSquadIds, null, rng)
   return { ...session, picks:picks', roundsPlayed:+1,
            currentReveal:reveal, seenSquadIds:+reveal.id }
 
 skip(session, data, rng):
   require phase == 'AWAIT_PICK' and skipRemaining == 1   else throw
-  reveal = selectSquad(data.squads, seenSquadIds, currentReveal.id, rng, breachLog)
-  return { ...session, skipRemaining:0, roundsPlayed:+1,
+  excludedSquadIds' = excludedSquadIds + currentReveal.id
+  reveal = selectSquad(data.squads, seenSquadIds, excludedSquadIds', currentReveal.id, rng)
+  return { ...session, skipRemaining:0, roundsPlayed:+1, excludedSquadIds:excludedSquadIds',
            currentReveal:reveal, seenSquadIds:+reveal.id }
 ```
 
@@ -120,6 +124,7 @@ Invariants to assert in every draft test:
 - `roundsPlayed === picks.length + (1 - skipRemaining) + (phase === 'AWAIT_PICK' ? 1 : 0)`
 - On COMPLETE: `picks.length === 11`; `roundsPlayed === 11 + (1 - skipRemaining)`
 - No duplicate player ids in `picks`; `seenSquadIds` has no duplicates unless `breachLog` is non-empty.
+- `excludedSquadIds.length ≤ 1` (product = one skip token); permanent exclude holds while any non-excluded squad remains.
 
 ## 5. Data schemas (frozen Day 1; change via ADR only)
 

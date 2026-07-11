@@ -52,30 +52,33 @@ Changing anything marked **Invariant** in PROJECT.md requires a new ADR here fir
     skipRemaining: 0 | 1
     roundsPlayed: number         // number of reveals so far, includes skipped
     seenSquadIds: string[]       // squad ids revealed this session
+    excludedSquadIds: string[]   // session-scoped permanent ban after skip
     currentReveal: Squad | null  // null iff COMPLETE
     breachLog: string[]          // invariant relaxations, e.g. forced squad repeat
   }
   ```
 
   Transitions (pseudocode in ARCHITECTURE.md §State machine):
-  - `startDraft(data, rng)` → draws first reveal, `roundsPlayed = 1`, `skipRemaining = 1`.
-  - `pick(session, playerId, rng)` → legal iff `AWAIT_PICK`, `playerId` in `currentReveal`, and `playerId` not already in `picks`. Appends pick. If `picks.length === 11` → `COMPLETE`, `currentReveal = null`. Else draw next reveal, `roundsPlayed++`.
-  - `skip(session, rng)` → legal iff `AWAIT_PICK` and `skipRemaining === 1`. Sets `skipRemaining = 0`, `roundsPlayed++`, draws replacement reveal **excluding the squad just skipped**. Does not touch `picks`.
+  - `startDraft(data, rng)` → draws first reveal, `roundsPlayed = 1`, `skipRemaining = 1`, `excludedSquadIds = []`.
+  - `pick(session, playerId, rng)` → legal iff `AWAIT_PICK`, `playerId` in `currentReveal`, and `playerId` not already in `picks`. Appends pick. If `picks.length === 11` → `COMPLETE`, `currentReveal = null`. Else draw next reveal (honoring `excludedSquadIds`), `roundsPlayed++`.
+  - `skip(session, rng)` → legal iff `AWAIT_PICK` and `skipRemaining === 1`. Sets `skipRemaining = 0`, appends skipped reveal's `id` to `excludedSquadIds`, `roundsPlayed++`, draws replacement reveal **excluding the squad just skipped** (permanent list + one-shot). Does not touch `picks`.
   - Illegal actions **throw**; they never silently no-op.
 
-  Squad selection rule (`selectSquad`): pick uniformly from squads not in `seenSquadIds` (and ≠ excluded id). If that pool is empty, relax to all squads except the excluded/current one and append a note to `breachLog` (tests assert the log). Every drawn squad id is added to `seenSquadIds`.
+  Squad selection rule (`selectSquad`): pick uniformly from squads not in `seenSquadIds`, not in `excludedSquadIds`, and ≠ one-shot `excludeId`. If that pool is empty, relax seen preference but still honor permanent + one-shot exclude and append a note to `breachLog` (tests assert the log). If still empty (no non-excluded squad remains), last-resort may re-include excluded squads so the session stays playable (degenerate corpus, e.g. corpus of 1 after skip). Every drawn squad id is added to `seenSquadIds`.
+
+  Permanent skip exclude: user intent of skip is "I do not want this team this draft," not "skip this draw only." Exclusion clears on any new draft (`startDraft`). Product still one skip token → `excludedSquadIds.length ≤ 1` in practice; field is a list so multi-skip can reuse it later.
 
   Arithmetic invariants (assert in tests):
   - `roundsPlayed === picks.length + (1 - skipRemaining) + (phase === 'AWAIT_PICK' ? 1 : 0)`
   - On `COMPLETE`: `picks.length === 11` and `roundsPlayed === 11 + (1 - skipRemaining)` (11 no-skip, 12 with skip).
 
   Repeat-reveal edge: a repeated squad may contain already-picked player ids; those are unpickable (domain throws, UI disables).
-- **Rationale**: Immutable + pure = trivially testable, no hidden mutation bugs, React-friendly (`useState<DraftSession>`).
-- **Alternatives**: Class with mutating methods (rejected: aliasing bugs, harder fixtures); XState (rejected: dependency + learning curve for 2-state machine).
-- **Tradeoffs**: Object copying per transition — negligible at 12 rounds.
-- **Consequences**: `tests/draft.test.ts` can drive full drafts with a seeded RNG and assert every invariant.
+- **Rationale**: Immutable + pure = trivially testable, no hidden mutation bugs, React-friendly (`useState<DraftSession>`). Permanent exclude matches skip intent while degenerate last-resort keeps tiny corpora playable.
+- **Alternatives**: Class with mutating methods (rejected: aliasing bugs, harder fixtures); XState (rejected: dependency + learning curve for 2-state machine); absolute never-reappear (rejected: impossible for corpus of 1).
+- **Tradeoffs**: Object copying per transition — negligible at 12 rounds. Degenerate path can re-show a skipped squad only when no alternative remains.
+- **Consequences**: `tests/draft.test.ts` can drive full drafts with a seeded RNG and assert every invariant, including corpus(1)+skip playability and corpus(2)+skip hard ban.
 - **Risks**: Off-by-one in `roundsPlayed`. Mitigation: the arithmetic invariant above is a required test.
-- **Revisit when**: never for MVP.
+- **Revisit when**: multi-skip product change (list already ready); never for MVP otherwise.
 
 ---
 

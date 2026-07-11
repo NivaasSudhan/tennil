@@ -42,6 +42,7 @@ export interface DraftSession {
   skipRemaining: 0 | 1;        // the SkipToken
   roundsPlayed: number;        // reveals so far, includes the skipped one
   seenSquadIds: string[];
+  excludedSquadIds: string[];  // session-scoped permanent ban after skip
   currentReveal: Squad | null; // null iff COMPLETE
   breachLog: string[];         // Invariant-7 relaxations (forced squad repeats)
 }

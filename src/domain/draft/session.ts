@@ -24,27 +24,36 @@ interface SelectResult {
 
 /**
  * selectSquad (ARCHITECTURE.md §4).
- * Uniform over squads not in `seen` and != `excludeId`. If that pool is empty, relax
- * to all squads except `excludeId` and flag a breach. If STILL empty (single-squad
- * corpus), allow the excluded/same squad — degenerate but playable.
+ * Prefer unseen + non-excluded. Breach relaxes seen but still honors permanent
+ * `excluded` + one-shot `excludeId`. Degenerate last resort may re-include
+ * excluded when no non-excluded squad remains (corpus of one after skip).
  */
 function selectSquad(
   all: Squad[],
   seen: string[],
+  excluded: string[],
   excludeId: string | null,
   rng: Rng,
 ): SelectResult {
-  let pool = all.filter((s) => !seen.includes(s.id) && s.id !== excludeId);
+  const notExcluded = (s: Squad) =>
+    !excluded.includes(s.id) && s.id !== excludeId;
+
+  let pool = all.filter((s) => !seen.includes(s.id) && notExcluded(s));
   let breached = false;
 
   if (pool.length === 0) {
-    // Last-resort repeat: relax the seen-preference, but still honour the exclude id.
-    pool = all.filter((s) => s.id !== excludeId);
+    // Relax seen preference; still honor permanent + one-shot exclude.
+    pool = all.filter(notExcluded);
     breached = true;
   }
 
   if (pool.length === 0) {
-    // Corpus of one (or every squad excluded): allow the same squad.
+    // Degenerate: no non-excluded squad left. Allow any except one-shot excludeId.
+    pool = all.filter((s) => s.id !== excludeId);
+  }
+
+  if (pool.length === 0) {
+    // Corpus of one / everything excluded: allow all (playable).
     pool = all;
   }
 
@@ -53,7 +62,7 @@ function selectSquad(
 }
 
 export function startDraft(data: GameData, rng: Rng): DraftSession {
-  const { reveal, breached } = selectSquad(data.squads, [], null, rng);
+  const { reveal, breached } = selectSquad(data.squads, [], [], null, rng);
   const breachLog: string[] = [];
   if (breached) breachLog.push('repeat:1');
 
@@ -63,6 +72,7 @@ export function startDraft(data: GameData, rng: Rng): DraftSession {
     skipRemaining: 1,
     roundsPlayed: 1,
     seenSquadIds: [reveal.id],
+    excludedSquadIds: [],
     currentReveal: reveal,
     breachLog,
   };
@@ -109,6 +119,7 @@ export function pick(
   const { reveal: next, breached } = selectSquad(
     data.squads,
     session.seenSquadIds,
+    session.excludedSquadIds,
     null,
     rng,
   );
@@ -142,10 +153,12 @@ export function skip(
   }
 
   const roundsPlayed = session.roundsPlayed + 1;
-  // Exclude the squad just skipped from the replacement draw.
+  const excludedSquadIds = [...session.excludedSquadIds, reveal.id];
+  // Permanent exclude + one-shot excludeId (belt) for the replacement draw.
   const { reveal: next, breached } = selectSquad(
     data.squads,
     session.seenSquadIds,
+    excludedSquadIds,
     reveal.id,
     rng,
   );
@@ -159,6 +172,7 @@ export function skip(
     roundsPlayed,
     currentReveal: next,
     seenSquadIds: [...session.seenSquadIds, next.id],
+    excludedSquadIds,
     breachLog,
   };
 }

@@ -153,6 +153,61 @@ You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch main. sr
 - status: succeeded (TASK9-DONE; greedy 5.8/27.2/67/0/0/0, random 0/0/2.4/19/33.4/45.2; near-miss 10-0 = 18.4% — sweet spot; all six acceptance gates met)
 - task: Numbers-only thresholds.json retune using T6 diagnostics; fix human playtest problem (stuck in 1-2/2-2)
 
+---
+
+## P-010 — Logic audit + extensive edge-case tests
+- date: 2026-07-11
+- target: opencode-go/glm-5.2 --variant high
+- status: dispatched
+- task: Hunt logical errors (incl. 2-goalkeepers question); new audit test files + report; no src changes
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch main. Read ARCHITECTURE.md, DECISIONS.md (esp. ADR-003/004/005), and ALL of src/domain/** and src/lib/**. JOB: hunt logical errors via extensive edge-case testing.
+
+WRITE new test files ONLY (do not modify src/ or any existing test): tests/audit-draft.test.ts, tests/audit-scoring.test.ts, tests/audit-commentary.test.ts, tests/audit-loaddata.test.ts. Use SYNTHETIC fixtures built inline (like tests/scoring.test.ts does), never the vendored squads.json. Coverage targets: draft — picking the same player twice across reveals, picking a player not in the current reveal, pick/skip after COMPLETE, 11th-pick completion exactness, roundsPlayed accounting with and without skip, breachLog correctness, rng determinism with fixed seed; scoring — empty XI, single-bucket XI, exact boundary values (actual == required), fallback selection, config with duplicate priorities; commentary — slot resolution ties, missing slots, band with no script; loadData — malformed entries collected (not fail-fast on first), boundary ratings, duplicate ids. EXCLUDE skip re-reveal/exclusion semantics entirely — that behavior is being changed by another agent right now.
+
+RULE: the suite must stay green. Where current behavior is CORRECT, the test locks it in. Where you find a GENUINE BUG, do NOT add a failing test — document it in the report with exact repro, severity, and the test you would add post-fix.
+
+REPORT: write docs/audits/2026-07-11-logic-audit.md — findings table (severity/file:line/repro/proposed fix), plus a REQUIRED section 'The two-goalkeepers question': current design allows any XI composition (11 picks, any positions; scoring punishes via minCounts gates). Analyze bug-vs-design honestly. Options to evaluate: (a) hard block in pick() (draft-level position caps), (b) UI-only warning, (c) formation advisory pre-lock (note: a Formation feature per docs/plans/2026-07-11-formation-choice.md and ADR-017 is planned). Recommend one with rationale grounded in game feel: does blocking bad picks remove meaningful consequence? Any draft-legality change needs an ADR — say so.
+
+Do NOT run git commit or git add. Finish: npm test green (existing + new), purity greps clean. Print AUDIT-DONE, vitest summary, count of new tests, and your top-5 findings one line each.
+```
+
+---
+
+## P-011 — Feature 1: skip permanent exclude
+- date: 2026-07-11
+- target: opencode/grok-4.5 --variant high
+- status: succeeded (SKIP-DONE, 85 tests green; degenerate rule: exclude honored while alternatives remain, last-resort re-include on empty pool)
+- task: Implement docs/plans/2026-07-11-skip-permanent-exclude.md; ADR-003 amendment
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch main. Implement the feature planned in docs/plans/2026-07-11-skip-permanent-exclude.md IN FULL. First read docs/plans/2026-07-11-three-features-index.md — especially cross-cutting challenge C1 (degenerate corpus: exclude holds while any non-excluded squad remains; empty pool = last-resort re-reveal + breachLog entry; corpus(1)+skip test REQUIRED). Follow the plan file's tasks/steps; where the plan and current source disagree, trust source and note the deviation. Amend ADR-003 in DECISIONS.md as the plan directs. Allowed files: src/domain/types.ts, src/domain/draft/session.ts, tests/draft.test.ts and/or new test files, DECISIONS.md, ARCHITECTURE.md (only if the plan updates signatures). Do NOT touch scoring, commentary, UI, squads.json, thresholds.json — other agents own those right now. Do NOT run git commit or git add. Finish: npm test green, purity greps clean. Print SKIP-DONE, vitest summary, and one line stating the degenerate-corpus rule as implemented. On failure print SKIP-FAILED + output.
+```
+
+---
+
+## P-012 — Corpus 68: 1986-2026, trim + rate
+- date: 2026-07-11
+- target: opencode/grok-4.5 --variant high
+- status: failed(agent stalled after recon: found 2026 research missing → 60 squads; died on out-of-repo permission poke; no files written) → retried as P-012r
+- task: Build 68-squad squads.json from squads/*.md research; drop pre-1986; update data tests; NO retune
+
+### P-012r retry addendum (appended to the verbatim P-012 prompt):
+```
+KNOWN FROM PRIOR RUN: the research files cover 1986-2022 only — 2026 is MISSING. Do not search for 2026 data; build the 60-squad corpus (4x5 + 8x5) now and list the eight 2026 quarterfinalist slots as the documented gap for the human to fill. Set test counts to 60/660. STAY INSIDE THE REPO: never touch paths outside /Users/nivaassudhan/Desktop/code/games/fifaTenZero; do not use todo tools; just read, write the JSON and the two test files, append the ADR-011 note, run npm test, and print the final output.
+```
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch main. PRODUCT DIRECTIVE (user, 2026-07-11, supersedes ADR-011 stage sizes): corpus becomes World Cups 1986-2026 only — semifinalists (4) of 1986/1990/1994/1998/2002 + quarterfinalists (8) of 2006/2010/2014/2018/2022/2026 = 68 squads. Research data: squads/*.md (3 files, full member squads gathered from the web). VERIFY the research actually covers all 11 tournaments incl. 2026; if any squad/tournament is missing, list it and proceed with what exists.
+
+BUILD a new src/data/squads/squads.json (version stays 1): every squad trimmed from full roster to its best STARTING XI for that tournament (prefer the actual final/semifinal XI; legal shape: exactly 1 GK, 3-5 DEF, 2-5 MID, 1-4 ATT), squad id <iso3-lowercase>-<year>, player id <squadId>-<lastname> lowercase ASCII, exactly 11 players each. DROP all pre-1986 squads (bra-1970, ita-1982, hun-1954, eng-1966, ned-1974, ger-1974, arg-1978). Existing 1986-2018 squads may be kept/adjusted to match the semifinalist/quarterfinalist XI standard. RATE per DECISIONS.md ADR-006 rubric: 98 ceiling (Maradona 86 tier), icons 90-97, world-class 86-92, established 80-88, role players 76-84; every squad should have a plausible weak link. positionRaw keys must exist in src/data/position-map.json — ADD missing keys additively, never change existing mappings.
+
+UPDATE data-coupled tests only: tests/corpus.test.ts (EXPECTED_SQUAD_COUNT = final count; keep all other invariant assertions) and tests/loadData.test.ts (squad/player count assertions). Do NOT touch thresholds.json (retune is a separate dispatch), scoring/draft/UI code, or other tests. Append a one-paragraph amendment note under ADR-011 in DECISIONS.md recording the user directive (1986-2026 window, 68-squad target, per-stage criteria superseded).
+
+Do NOT run git commit or git add. Finish: npm test green. Print CORPUS68-DONE, vitest summary, per-tournament squad list (year: countries), any research gaps, and top uncertainties for human review. On failure print CORPUS68-FAILED + output.
+```
+
 ```
 You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch main. Implement Sprint-1 Task 9 from docs/plans/2026-07-10-sprint-1.md: retune src/data/config/thresholds.json for the new 16-squad corpus. HARD RULES: numbers-only edits — never touch engine code, band ids, labels, priorities, predicate structure, or any file except thresholds.json, RISKS_AND_UNKNOWNS.md (append experiment-log entry), and docs/sim/sim-report.json. Do NOT touch src/data/squads/squads.json — another agent is fact-checking it in parallel. Do NOT run git commit or git add.
 
