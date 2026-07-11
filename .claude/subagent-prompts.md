@@ -230,6 +230,31 @@ P-014r2 status: succeeded (U1-DONE; 169 tests green; paper world complete — Te
 - status: succeeded (FIX-DONE; build green, 169 tests green; RawBundle derived via Parameters<typeof loadGameData>[0], no assertion changes)
 - task: tests/audit-loaddata.test.ts AnyObj → RawBundle (Parameters<typeof loadGameData>[0]) so npm run build passes; no assertion changes; single-helper fix preferred. (Audit agent's file passed vitest but broke tsc — orchestrator's commit gate now includes npm run build.)
 
+---
+
+## P-016 — Matchday UI wave U2: broadcast world + progressive live score
+- date: 2026-07-11
+- target: opencode-go/glm-5.2 --variant high
+- status: succeeded (U2-DONE; 188 tests + build green; hook stayed count-only, progress derived from memoized beats; controls never covered; confetti on 10-0)
+- task: ResultScreen broadcast redesign per DESIGN.md + docs/plans/2026-07-11-progressive-live-score.md + WebAudio stings
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch main. Read PRODUCT.md and DESIGN.md FIRST (binding spec — Broadcast world sections: Components Scoreboard/Ticker/BandSlam, Motion table rows for draft-complete/goal/full-time, Audio section, z-scale). Then read docs/plans/2026-07-11-progressive-live-score.md and docs/plans/2026-07-11-three-features-index.md challenge C4 (commentary goal beats do not equal scoreline goals — proportional fill toward parsed bandId, snap exact on showScoreline). Implement WAVE U2: the broadcast world.
+
+Scope:
+1. TRANSITION draft->finals per DESIGN.md Motion: finished team sheet folds/slides to bottom-left as miniature; floodlight sweep; scoreboard drops in; (whistle sting if audio on).
+2. SCOREBOARD component: broadcast chrome top center, Archivo tabular digits, HOME vs DRAFT XI, flip-tick per goal progression. Progressive live score EXACTLY per the plan file + C4: score state derived from visibleBeatCount over goal-type beats, proportional fill toward the fixed bandId score, snap to exact H-A when showScoreline. The band/commentary computation stays compute-once in the existing useMemo — the progressive score is pure presentation derived from already-computed data. Never re-derive scoring in a timer.
+3. TICKER: beats as broadcast lower-third lines sliding in (minute stamp in gold), replacing the current list rendering. Keep skip-to-result + 1x/2x/4x speed controls working and visible through everything.
+4. GOAL MOMENT (full takeover per PRODUCT.md principle 5): screen-edge flash overlay (90ms), scoreboard digit flip, 1.5deg camera shake (240ms), roar swell if audio on. Must NEVER block or cover the skip/speed controls.
+5. BANDSLAM full time: band label slam (scale 1.15->1, 250ms ease-out-quint, gold underline); near-miss margin line beneath in Courier typed per-character (use explainScoreBand from src/domain/scoring/explainScoreBand.ts — nextBetter failing predicates give required-actual margins; e.g. '2 POINTS FROM A 5-0'); 10-0 only: gold confetti burst. aria-live polite, no focus trap.
+6. AUDIO: WebAudio-synthesized ONLY per DESIGN.md Audio (no binary assets): whistle chirps (kickoff/FT), goal roar (shaped noise swell 600ms). Muted by default; visible toggle in broadcast chrome; per-session React state only (NO localStorage — ADR-010). Create src/app/useAudio.ts hook.
+7. MOTION RULES: ease-out-quart/quint only; every animation has prefers-reduced-motion: reduce fallback (crossfade/instant; no shake/flash under reduced motion); content visible by default.
+
+HARD CONSTRAINTS: touch ONLY src/app/ResultScreen.tsx, src/app/usePlaythrough.ts (extend outputs if the plan needs e.g. per-beat indices — keep existing API surface backward compatible), new components under src/app/ (Scoreboard.tsx, Ticker.tsx, BandSlam.tsx, useAudio.ts), src/app/app.css (append a clearly-marked U2 section; do not rewrite existing sections), tests/usePlaythrough.test.tsx and new test files for the score-progression logic (pure function tests for the proportional fill: given beats + bandId, assert monotonic non-decreasing scores snapping exact at end). Do NOT touch DraftScreen/StartScreen/TeamSheet/PlayerRow/StadiumButton, src/domain/**, scripts/**, data JSON. The useMemo computing band/groups/commentary in ResultScreen stays byte-identical in meaning: score+script computed once before timers (you may add explainScoreBand to the same useMemo). SHELL DISCIPLINE: never cd; absolute paths only, inside the repo. Do NOT run git commit or git add.
+
+FINISH: npm test green AND npm run build green (both mandatory), purity greps clean. Print U2-DONE, vitest summary, files touched, and one line stating where the progressive score derives from. On failure print U2-FAILED + output.
+```
+
 ### P-014r2 retry addendum (replaces item 1 of the verbatim P-014 prompt):
 ```
 FONTS ARE ALREADY IN PLACE at src/assets/fonts/ (courier-prime-400/700.woff2, anton-400.woff2, archivo-400/600/800.woff2) — do NOT download anything; just write the @font-face blocks referencing them (relative url from app.css). SHELL DISCIPLINE: never cd; always use absolute paths inside /Users/nivaassudhan/Desktop/code/games/fifaTenZero; no compound cd-&&-relative-path commands (they trip the sandbox and kill the run). Known unrelated failures owned by another agent: tests/audit-*.test.ts (2 failing + a type error) — ignore those files entirely; your gate is startScreen/appGate/usePlaythrough green + npm run build green for src/app (if the build fails ONLY inside tests/audit-*, state that explicitly). Everything else identical to P-014.

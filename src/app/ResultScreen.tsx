@@ -1,9 +1,15 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePlaythrough } from './usePlaythrough';
-import type { DraftSession, FinalXI, GameData, Pick, PositionBucket } from '../domain/types';
+import { useAudio } from './useAudio';
+import type { DraftSession, FinalXI, GameData, Pick, PositionBucket, ScoreExplanation } from '../domain/types';
 import { getFinalXI } from '../domain/draft/session';
 import { computeScoreInput, scoreBand } from '../domain/scoring/scoreBand';
+import { explainScoreBand } from '../domain/scoring/explainScoreBand';
 import { buildCommentary } from '../domain/commentary/build';
+import { progressScoreline } from './scorelineProgress';
+import Scoreboard from './Scoreboard';
+import Ticker from './Ticker';
+import BandSlam from './BandSlam';
 
 const BUCKET_ORDER: PositionBucket[] = ['GK', 'DEF', 'MID', 'ATT'];
 
@@ -14,42 +20,111 @@ interface ResultScreenProps {
 }
 
 /**
- * ResultScreen (TASKS.md T-011 + T-013). Reads the completed session through the
- * domain's own read path (`getFinalXI` → `computeScoreInput` → `scoreBand` →
- * `buildCommentary`) — all pure, all domain-owned. This component does no scoring
- * math of its own; the timed reveal is presentation only.
+ * ResultScreen — broadcast world (WAVE U2). Score + script + explanation are
+ * computed EXACTLY ONCE in the useMemo below (compute-once invariant; the timed
+ * reveal is presentation only —pure). The progressive scoreboard is pure
+ * presentation derived from already-computed data: progressScoreline(bandId,
+ * goal-beat progress) floors toward the fixed final and snaps exact at
+ * showScoreline (C4 — never re-score in a timer).
  */
 export default function ResultScreen({ session, data, onRestart }: ResultScreenProps) {
-  const { band, groups, commentary } = useMemo(() => {
+  // -- Compute-once: band + commentary + explanation, before any timer. --
+  const { band, groups, commentary, explanation, goalBeatIndices, totalBeats } = useMemo(() => {
     const xi: FinalXI = getFinalXI(session);
     const scoreInput = computeScoreInput(xi, data.positionMap);
     const scored = scoreBand(scoreInput, data.thresholds);
+    const expl = explainScoreBand(scoreInput, data.thresholds);
+    const script = buildCommentary(scored, xi, data.commentary);
+    const goalIndices: number[] = [];
+    script.beats.forEach((b, i) => {
+      if (b.type === 'goal') goalIndices.push(i);
+    });
     return {
       band: scored,
       groups: groupByBucket(xi, data.positionMap),
-      commentary: buildCommentary(scored, xi, data.commentary),
+      commentary: script,
+      explanation: expl,
+      goalBeatIndices: goalIndices,
+      totalBeats: script.beats.length,
     };
   }, [session, data]);
 
   const { visibleBeatCount, showScoreline, speed, setSpeed, skipToResult } =
-    usePlaythrough(commentary.beats.length);
+    usePlaythrough(totalBeats);
+
+  const audio = useAudio();
+
+  // -- Progressive score purely from already-computed data (pure presentation). --
+  const totalGoalBeats = goalBeatIndices.length;
+  const { home, away } = useMemo(() => {
+    if (showScoreline || totalBeats === 0) {
+      return progressScoreline(band.bandId, 1);
+    }
+    if (totalGoalBeats > 0) {
+      const visibleGoals = goalBeatIndices.filter((idx) => idx < visibleBeatCount).length;
+      return progressScoreline(band.bandId, visibleGoals / totalGoalBeats);
+    }
+    return progressScoreline(band.bandId, Math.min(1, visibleBeatCount / totalBeats));
+  }, [band.bandId, showScoreline, totalBeats, totalGoalBeats, goalBeatIndices, visibleBeatCount]);
+
+  // -- Goal moment: beat reveal just gained a goal-type beat → flash + shake + roar. --
+  const prevVisible = useRef(0);
+  const [flash, setFlash] = useState(false);
+  const [shake, setShake] = useState(false);
+  useEffect(() => {
+    const grew = visibleBeatCount > prevVisible.current;
+    prevVisible.current = visibleBeatCount;
+    if (!grew) return;
+    const newBeat = commentary.beats[visibleBeatCount - 1];
+    if (newBeat && newBeat.type === 'goal') {
+      setFlash(true);
+      setShake(true);
+      window.setTimeout(() => setFlash(false), 90);
+      window.setTimeout(() => setShake(false), 240);
+      audio.playRoar();
+    } else if (newBeat && newBeat.type === 'kickoff') {
+      audio.playWhistle();
+    }
+  }, [visibleBeatCount, commentary.beats, audio]);
+
+  // -- Full-time whistle once the scoreline reveals. --
+  const didFtWhistle = useRef(false);
+  useEffect(() => {
+    if (showScoreline && !didFtWhistle.current) {
+      didFtWhistle.current = true;
+      audio.playWhistle();
+    }
+  }, [showScoreline, audio]);
+
+  const visibleBeats = commentary.beats.slice(0, visibleBeatCount);
 
   return (
-    <div className="result-screen">
-      <header className="result-header">
-        <span className="eyebrow">{showScoreline ? 'Full time' : 'Match in progress'}</span>
-        {showScoreline ? (
-          <>
-            <h1 className="band-headline">{band.label}</h1>
-            <div className="band-scoreline">{band.bandId}</div>
-          </>
-        ) : (
-          <h1 className="band-headline band-headline-pending">Commentary rolling…</h1>
-        )}
-      </header>
+    <div className={`result-screen result-screen--broadcast ${shake ? 'result-screen--shake' : ''}`}>
+      {/* Floodlight sweep across the pitch on entering finals. */}
+      <div className="flood-sweep" aria-hidden="true" />
+      {/* Screen-edge goal flash (pointer-events:none so controls stay live). */}
+      {flash && <div className="goal-flash" aria-hidden="true" />}
 
-      <section className="final-xi" aria-label="Your final XI">
-        <h2>Your Final XI</h2>
+      {/* Broadcast chrome — scoreboard top center + audio toggle. */}
+      <div className="broadcast-chrome">
+        <span className="broadcast-chrome__eyebrow eyebrow">
+          {showScoreline ? 'Full time' : visibleBeatCount === 0 ? 'Kickoff' : 'Live'}
+        </span>
+        <Scoreboard home={home} away={away} />
+        <button
+          type="button"
+          className={`audio-toggle ${audio.muted ? 'audio-toggle--muted' : 'audio-toggle--on'}`}
+          onClick={audio.toggleMuted}
+          aria-pressed={!audio.muted}
+          aria-label={audio.muted ? 'Unmute match audio' : 'Mute match audio'}
+        >
+          {audio.muted ? '♪ off' : '♪ on'}
+        </button>
+      </div>
+
+      {/* Miniature team sheet docked bottom-left (the finished XI). */}
+      <aside className="result-sheet-mini" aria-label="Your final XI (miniature)">
+        <h2>Your XI</h2>
         <div className="squad-groups">
           {BUCKET_ORDER.map((bucket) => (
             <div key={bucket} className="squad-group">
@@ -66,58 +141,38 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
             </div>
           ))}
         </div>
-      </section>
+      </aside>
 
-      <section id="playthrough" className="playthrough" aria-label="Match commentary">
-        <div className="playthrough-header">
-          <h2>Match feed</h2>
-          {!showScoreline && (
-            <div className="playback-controls">
-              {([1, 2, 4] as const).map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  className={`speed-button${speed === s ? ' speed-button-active' : ''}`}
-                  aria-pressed={speed === s}
-                  onClick={() => setSpeed(s)}
-                >
-                  {s}&times;
-                </button>
-              ))}
-              <button type="button" className="skip-result-button" onClick={skipToResult}>
-                Skip to result
-              </button>
-            </div>
-          )}
-        </div>
-        <ol className="playthrough-beats">
-          {commentary.beats.slice(0, visibleBeatCount).map((beat, i) => (
-            <li key={`${beat.minute}-${i}`} className={`playthrough-beat beat-${beat.type}`}>
-              <span className="beat-minute">{formatMinute(beat.minute)}</span>
-              <span className="beat-text">{beat.text}</span>
-            </li>
-          ))}
-        </ol>
+      {/* Ticker — broadcast lower-third commentary feed. */}
+      <section id="playthrough" className="ticker-stage" aria-label="Match commentary">
+        <Ticker beats={visibleBeats} />
         {showScoreline && (
-          <div className="playthrough-fulltime" aria-live="polite">
-            <span className="eyebrow">Full time</span>
-            <div className="band-scoreline">{band.bandId}</div>
-            <p className="band-headline">{band.label}</p>
-          </div>
+          <BandSlam bandId={band.bandId} label={band.label} explanation={explanation as ScoreExplanation} />
         )}
       </section>
 
-      <div className="result-actions">
-        <button type="button" className="restart-button" onClick={onRestart}>
+      {/* Playback controls — kept visible through everything (PRODUCT principle 5). */}
+      <div className="playback-bar" role="group" aria-label="Playback controls">
+        {([1, 2, 4] as const).map((s) => (
+          <button
+            key={s}
+            type="button"
+            className={`speed-button${speed === s ? ' speed-button-active' : ''}`}
+            aria-pressed={speed === s}
+            onClick={() => setSpeed(s)}
+          >
+            {s}&times;
+          </button>
+        ))}
+        <button type="button" className="skip-result-button" onClick={skipToResult} disabled={showScoreline}>
+          Skip to result
+        </button>
+        <button type="button" className="restart-button restart-button--bar" onClick={onRestart}>
           Draft again
         </button>
       </div>
     </div>
   );
-}
-
-function formatMinute(minute: number): string {
-  return `${minute}'`;
 }
 
 function groupByBucket(xi: FinalXI, positionMap: GameData['positionMap']): Record<PositionBucket, Pick[]> {

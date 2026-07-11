@@ -1088,3 +1088,448 @@ button {
     animation: none;
   }
 }
+
+/* =====================================================================
+   WAVE U2 — BROADCAST WORLD (ResultScreen rebuild).
+   Two-material shift: paper draft is gone; this is the finals sim under
+   floodlights. All motion ease-out-quart/quint; reduced-motion crossfade/
+   instant fallbacks at the bottom of this section. z-scale per DESIGN.md
+   Layout: scoreboard 30 / flash 40 / slam 50 / controls above flash.
+   ===================================================================== */
+
+.result-screen--broadcast {
+  --cell-r: 12px;
+  position: relative;
+  z-index: 5;
+  min-height: 80vh;
+  padding: clamp(0.75rem, 2.4vw, 1.6rem) 1rem 5.5rem;
+  animation: broadcast-enter 520ms var(--ease-out-quint) both;
+}
+
+@keyframes broadcast-enter {
+  from { opacity: 0.3; }
+  to   { opacity: 1; }
+}
+
+/* ---------- Floodlight sweep (draft → finals transition) ---------- */
+.flood-sweep {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent 20%,
+    oklch(0.99 0.01 100 / 0.22) 48%,
+    oklch(0.99 0.01 100 / 0.06) 54%,
+    transparent 72%
+  );
+  transform: translateX(-30vw);
+  animation: flood-sweep 1300ms var(--ease-out-quint) both;
+}
+
+@keyframes flood-sweep {
+  from { transform: translateX(-32vw); opacity: 0; }
+  40%  { opacity: 1; }
+  to   { transform: translateX(32vw); opacity: 0; }
+}
+
+/* ---------- Screen-edge goal flash (PRODUCT principle 5: never blocks input) ---------- */
+.goal-flash {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-flash);
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 50%, transparent 56%, var(--flash) 100%),
+    linear-gradient(180deg, var(--flash) 0 14%, transparent 16% 86%, var(--flash) 86% 100%);
+  animation: goal-flash 90ms var(--ease-out-quart) both;
+}
+
+@keyframes goal-flash {
+  from { opacity: 0; }
+  25%  { opacity: 0.85; }
+  to   { opacity: 0; }
+}
+
+/* ---------- 1.5° camera shake on a goal beat ---------- */
+.result-screen--shake {
+  animation: cam-shake 240ms var(--ease-out-quart);
+}
+
+@keyframes cam-shake {
+  0%   { transform: translate(0, 0) rotate(0); }
+  20%  { transform: translate(-4px, 2px) rotate(-1.5deg); }
+  45%  { transform: translate(3px, -2px) rotate(1.1deg); }
+  70%  { transform: translate(-2px, 1px) rotate(-0.5deg); }
+  100% { transform: translate(0, 0) rotate(0); }
+}
+
+/* ---------- Broadcast chrome (scoreboard top center + audio toggle) ---------- */
+.broadcast-chrome {
+  position: relative;
+  z-index: var(--z-scoreboard);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  margin-bottom: 1.4rem;
+  background: var(--broadcast-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--cell-r);
+  animation: scoreboard-drop 520ms var(--ease-out-quint) both;
+}
+
+@keyframes scoreboard-drop {
+  from { transform: translateY(-26px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+.broadcast-chrome__eyebrow {
+  justify-self: start;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.audio-toggle {
+  justify-self: end;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  border: 1px solid var(--panel-border);
+  background: transparent;
+  color: var(--ink-dim);
+  cursor: pointer;
+  transition: color 180ms var(--ease-out-quart), border-color 180ms var(--ease-out-quart);
+}
+
+.audio-toggle--on {
+  color: var(--gold);
+  border-color: var(--gold);
+  box-shadow: 0 0 14px oklch(0.82 0.14 88 / 0.35);
+}
+
+.audio-toggle:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* ---------- Scoreboard component ---------- */
+.scoreboard {
+  justify-self: center;
+  padding: 0.35rem 1.1rem 0.55rem;
+  text-align: center;
+}
+
+.scoreboard__row {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.65rem;
+}
+
+.scoreboard__team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.scoreboard__club {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.scoreboard__digit {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  line-height: 0.85;
+  color: var(--broadcast-text);
+  display: inline-block;
+  min-width: 1.2em;
+  animation: digit-flip 240ms var(--ease-out-quint);
+  transform-origin: center 70%;
+}
+
+.scoreboard__dash {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.25rem, 7vw, 4.25rem);
+  line-height: 0.85;
+  color: var(--gold);
+  transform: translateY(-0.15em);
+}
+
+@keyframes digit-flip {
+  from { transform: rotateX(-78deg) scale(0.7); opacity: 0; }
+  to   { transform: rotateX(0) scale(1); opacity: 1; }
+}
+
+/* ---------- Miniature team sheet (bottom-left) ---------- */
+.result-sheet-mini {
+  position: relative;
+  z-index: var(--z-sheet);
+  max-width: min(22rem, 40vw);
+  margin-bottom: 1.4rem;
+  padding: 0.85rem 1rem 1rem;
+  background: oklch(0.955 0.01 95 / 0.92);
+  color: var(--ink);
+  border-radius: 6px;
+  transform: scale(0.92);
+  transform-origin: left bottom;
+  box-shadow:
+    0 8px 18px oklch(0.15 0.03 260 / 0.5),
+    0 22px 40px oklch(0.1 0.02 260 / 0.35);
+  animation: sheet-fold-down 600ms var(--ease-out-quint) both;
+}
+
+@keyframes sheet-fold-down {
+  from { transform: translateY(-30px) scale(1.2) rotate(2deg); opacity: 0; }
+  60%  { opacity: 1; }
+  to   { transform: translateY(0) scale(0.92) rotate(0); opacity: 1; }
+}
+
+.result-sheet-mini h2 {
+  margin: 0 0 0.5rem;
+  font-family: 'Anton', 'Archivo', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 1rem;
+  color: var(--ink);
+  border-bottom: 1px solid oklch(0.6 0.02 260 / 0.4);
+  padding-bottom: 0.25rem;
+}
+
+/* ---------- Ticker stage (lower third) ---------- */
+.ticker-stage {
+  position: relative;
+  z-index: var(--z-overlay);
+  max-width: min(46rem, 92vw);
+  margin: 0 auto 1.5rem;
+  background: var(--broadcast-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 1rem 1.1rem 1.25rem;
+  min-height: 12rem;
+}
+
+.ticker {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.ticker__line {
+  display: grid;
+  grid-template-columns: 3rem 1fr;
+  gap: 0.7rem;
+  align-items: baseline;
+  padding: 0.5rem 0.7rem;
+  background: oklch(0.3 0.06 260 / 0.4);
+  border-left: 3px solid var(--panel-border);
+  border-radius: 6px;
+  animation: ticker-slide-in 320ms var(--ease-out-quint) both;
+}
+
+@keyframes ticker-slide-in {
+  from { opacity: 0; transform: translateX(18px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.ticker__line--goal    { border-left-color: var(--gold); }
+.ticker__line--chance,
+.ticker__line--save    { border-left-color: var(--bucket-DEF); }
+.ticker__line--halftime,
+.ticker__line--fulltime { border-left-color: var(--bucket-ATT); }
+.ticker__line--drama   { border-left-color: var(--stamp); }
+
+.ticker__minute {
+  font-family: 'Archivo', sans-serif;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  color: var(--gold);
+  font-size: 0.92rem;
+}
+
+.ticker__text {
+  color: var(--broadcast-text);
+  line-height: 1.4;
+  font-size: 0.95rem;
+}
+
+/* ---------- BandSlam — full-time verdict ---------- */
+.bandslam {
+  position: relative;
+  margin-top: 1.25rem;
+  padding: 1.25rem 1rem 1.4rem;
+  text-align: center;
+  background: oklch(0.18 0.03 260 / 0.65);
+  border: 1px solid var(--gold);
+  border-radius: 12px;
+  animation: beat-in 300ms var(--ease-out-quart);
+  overflow: hidden;
+}
+
+.bandslam__label {
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  padding-bottom: 0.35rem;
+  font-family: 'Anton', 'Archivo', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: clamp(1.6rem, 6vw, 2.6rem);
+  color: var(--gold);
+  transform-origin: left center;
+  animation: band-slam 250ms var(--ease-out-quint) both;
+}
+
+@keyframes band-slam {
+  from { transform: scale(1.15); opacity: 0.4; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.bandslam__underline {
+  display: block;
+  height: 3px;
+  margin-top: 0.3rem;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  transform-origin: center;
+  animation: band-underline 280ms var(--ease-out-quint) 60ms both;
+}
+
+@keyframes band-underline {
+  from { transform: scaleX(0); opacity: 0; }
+  to   { transform: scaleX(1); opacity: 1; }
+}
+
+.bandslam__scoreline {
+  margin-top: 0.4rem;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(2rem, 8vw, 3.25rem);
+  letter-spacing: 0.05em;
+  color: var(--broadcast-text);
+}
+
+.bandslam__nearmiss {
+  margin: 0.6rem 0 0;
+  font-family: 'Courier Prime', monospace;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: clamp(0.78rem, 2.6vw, 0.95rem);
+  color: oklch(0.9 0.02 95);
+  min-height: 1.2em;
+}
+
+/* ---------- Confetti burst (10-0 only; pure CSS, no asset) ---------- */
+.bandslam__confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bandslam__confetti-bit {
+  position: absolute;
+  top: -10px;
+  left: calc(50% + (var(--i, 0) - 9) * 7px);
+  width: 6px;
+  height: 10px;
+  background: var(--gold);
+  border-radius: 1px;
+  opacity: 0;
+  animation: confetti-burst 900ms var(--ease-out-quint) both;
+  animation-delay: calc(var(--i, 0) * 22ms);
+}
+
+@keyframes confetti-burst {
+  0%   { transform: translate(0, 0) rotate(0); opacity: 0; }
+  15%  { opacity: 1; }
+  100% { transform: translate(calc((var(--i, 0) - 9) * 10px), 220px) rotate(calc(var(--i, 0) * 33deg)); opacity: 0; }
+}
+
+/* ---------- Playback bar — always visible, above flash, never blocked ---------- */
+.playback-bar {
+  position: fixed;
+  z-index: calc(var(--z-flash) + 5);
+  right: clamp(0.6rem, 2vw, 1.2rem);
+  bottom: clamp(0.6rem, 2vw, 1.2rem);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.55rem;
+  background: oklch(0.22 0.03 260 / 0.86);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  backdrop-filter: blur(4px);
+}
+
+.playback-bar .speed-button { margin: 0; }
+
+.playback-bar .skip-result-button { margin-left: 0.3rem; }
+
+.playback-bar .skip-result-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.restart-button--bar {
+  margin-left: 0.35rem;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.78rem;
+  border-width: 1px;
+}
+
+/* ---------- Broadcast responsive ---------- */
+@media (max-width: 720px) {
+  .broadcast-chrome {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 0.5rem;
+  }
+  .broadcast-chrome__eyebrow { grid-column: 1; }
+  .scoreboard { grid-column: 1 / -1; justify-self: stretch; }
+  .audio-toggle { grid-column: 2; justify-self: end; }
+  .result-sheet-mini { max-width: 92vw; transform: scale(0.88); }
+  .playback-bar { right: 0.5rem; bottom: 0.5rem; }
+}
+
+/* ---------- WAVE U2 reduced-motion fallbacks ----------
+   Crossfade/instant only; no shake, no flash, no confetti motion.
+   Content is visible by default (classes above never set opacity:0 as final). */
+@media (prefers-reduced-motion: reduce) {
+  .result-screen--broadcast,
+  .flood-sweep,
+  .broadcast-chrome,
+  .result-sheet-mini,
+  .bandslam,
+  .bandslam__label,
+  .bandslam__underline,
+  .bandslam__confetti-bit,
+  .scoreboard__digit,
+  .ticker__line {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .result-screen--shake { animation: none !important; transform: none !important; }
+  .goal-flash { display: none; }
+  .flood-sweep { display: none; }
+  .bandslam__confetti { display: none; }
+}
