@@ -297,6 +297,21 @@ P-014r2 status: succeeded (U1-DONE; 169 tests green; paper world complete — Te
 - target: Claude Code Agent tool, general-purpose, model sonnet
 - status: queued
 - task: Per docs/plans/2026-07-11-relative-scoring.md W1 row: revealLog on DraftSession; sessionCeiling.ts DP; ScoreInput v2 (+ceiling); evaluator gains minEfficiency/minBucketEfficiency (integer % points for margins); thresholds v3 + 9-band ladder placeholders; loadData validation; PROJECT/CLAUDE/ARCHITECTURE invariant wording; ceiling-property tests. W2/W3/W4 (P-026/027/028) dispatch after per plan table.
+- P-025 status: succeeded (237 tests + build green; gates authored as fractions, loaded as integer %; efficiency compressed: random p50=94, greedy p50=99 — W3 must tune inside that narrow window; committed)
+
+---
+
+## P-026 — Relative scoring W2: commentary v2 (9 bands)
+- date: 2026-07-11
+- target: opencode/deepseek-v4-flash-free --variant max
+- status: dispatched
+- task: Replace _placeholder scripts for 7-1/4-1/2-1/1-1 with full house-tone scripts; user tone review after.
+
+## P-027 — Relative scoring W3: efficiency retune
+- date: 2026-07-11
+- target: opencode/grok-4.5 --variant high → FAILED: workspace $20/mo spend cap reached → rerouted to opencode-go/glm-5.2 --variant max (same prompt verbatim). GROK UNAVAILABLE until billing reset/raise.
+- status: dispatched (GLM retry)
+- task: Tune 9 efficiency gates inside the compressed window (random p50=94, greedy p50=99, p90=100); consider enabling minBucketEfficiency if total-efficiency alone can't discriminate; six-gate protocol; RISKS log + sim-report.
 - task: PlayerRow mine-variant never renders taken state (bug: YOUR XI shows mangled overlapping Taken graphics); reveal rows disabled when id-taken OR isPersonTaken (call domain helper — zero rules logic in components); clean taken treatment: single strikethrough + small red TAKEN tag right-aligned, leader hidden, no overlap with POS chip/rating circle; RTL tests for both variants.
 
 ```

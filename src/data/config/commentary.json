@@ -35,35 +35,51 @@
       ]
     },
     "7-1": {
-      "_placeholder": true,
       "beats": [
-        { "minute": 1,  "type": "kickoff",  "text": "{captain} leads the side out — a statement performance in the making." },
-        { "minute": 40, "type": "goal",     "text": "{topAtt} runs riot. Seven goals, one reply. Ruthless from start to finish." },
-        { "minute": 90, "type": "fulltime", "text": "Full time: 7-1. {gk} shrugs off the lone concession — a rout all the same." }
+        { "minute": 1,  "type": "kickoff",  "text": "{captain} strides out with the cold stare of a side that came to make an example." },
+        { "minute": 8,  "type": "goal",     "text": "{topAtt} opens the account — a finish so precise it barely makes a sound." },
+        { "minute": 20, "type": "goal",     "text": "Two-nil. {topMid} pulls the strings, the net bulges again. The pattern is set." },
+        { "minute": 33, "type": "drama",    "text": "Against the run of play they pull one back. {weakest} caught napping — a flicker of doubt." },
+        { "minute": 38, "type": "goal",     "text": "Extinguished. {topAtt} pounces immediately — three-one, the wobble lasted four minutes." },
+        { "minute": 45, "type": "halftime", "text": "Three-one at the break and it should be six. The floodlights catch the mist — a dismantling in progress." },
+        { "minute": 67, "type": "drama",    "text": "Fourth, fifth, sixth, seventh — the avalanche resumes. {topAtt} has his hat-trick and keeps going." },
+        { "minute": 90, "type": "fulltime", "text": "Full time: 7-1. Total demolition. {gk} barely broke a sweat beyond the lone goal. Ruthless." }
       ]
     },
     "4-1": {
-      "_placeholder": true,
       "beats": [
-        { "minute": 1,  "type": "kickoff",  "text": "{captain} leads out a side that means business." },
-        { "minute": 55, "type": "goal",     "text": "{topMid} adds the fourth. A strong, one-sided win taking shape." },
-        { "minute": 90, "type": "fulltime", "text": "Full time: 4-1. A strong win, {weakest}'s lapse the only blemish." }
+        { "minute": 1,  "type": "kickoff",  "text": "{captain} leads out a purposeful side — the calm before controlled aggression." },
+        { "minute": 12, "type": "goal",     "text": "{topAtt} sweeps home the opener. One-nil, shape is right, rhythm is building." },
+        { "minute": 27, "type": "goal",     "text": "{topMid} doubles the lead with a curling effort — this is starting to look comfortable." },
+        { "minute": 39, "type": "drama",    "text": "A moment of slumber. {weakest} is caught ball-watching and they punish it. Two-one. The door cracks open." },
+        { "minute": 45, "type": "halftime", "text": "Two-one at the break. That sucker punch has given them a foothold. The dressing room will be tense." },
+        { "minute": 60, "type": "chance",   "text": "{gk} springs low to his left — a sharp stop that keeps the lead intact. The warning is heard." },
+        { "minute": 73, "type": "goal",     "text": "{topAtt} snuffs out the hope. Three-one. The killer instinct returns just in time." },
+        { "minute": 90, "type": "fulltime", "text": "Full time: 4-1. Emphatic, controlled, one wobble weathered. A professional's win." }
       ]
     },
     "2-1": {
-      "_placeholder": true,
       "beats": [
-        { "minute": 1,  "type": "kickoff",  "text": "{captain} leads out a side ready for a scrap." },
-        { "minute": 70, "type": "drama",    "text": "Hard-fought, edgy, {topDef} standing firm when it mattered." },
-        { "minute": 90, "type": "fulltime", "text": "Full time: 2-1. Hard-fought, but {gk} and the XI get there." }
+        { "minute": 1,  "type": "kickoff",  "text": "{captain} rallies the side in the tunnel — this one is going to be a street fight." },
+        { "minute": 14, "type": "goal",     "text": "{topAtt} pounces on the rebound — scrappy, hungry, a lead forged from pure will." },
+        { "minute": 28, "type": "chance",   "text": "{topMid} slides a pass through but the chance goes begging. The margin feels fragile." },
+        { "minute": 38, "type": "drama",    "text": "They're level. {weakest} sold short by a bounce — one-each and the momentum has shifted." },
+        { "minute": 45, "type": "halftime", "text": "All square at the break. This could go either way and everyone in the stadium knows it." },
+        { "minute": 67, "type": "goal",     "text": "{topDef} rises highest from a set piece — two-one and the bench empties in raw celebration." },
+        { "minute": 81, "type": "drama",    "text": "{gk} spills one and scrambles to recover — chaos in the box, hearts in every throat." },
+        { "minute": 90, "type": "fulltime", "text": "Full time: 2-1. A grind, a scrap, a victory earned in the dirt. {captain} sinks to his knees, spent." }
       ]
     },
     "1-1": {
-      "_placeholder": true,
       "beats": [
-        { "minute": 1,  "type": "kickoff",  "text": "{captain} leads out a side that knows this one could go either way." },
-        { "minute": 60, "type": "drama",    "text": "Nip and tuck all match — {weakest} feeling the pressure of a tight scoreline." },
-        { "minute": 90, "type": "fulltime", "text": "Full time: 1-1. A nervy draw, honours even, {gk} drained by the tension." }
+        { "minute": 1,  "type": "kickoff",  "text": "{captain} leads out the side with measured strides — respect for the occasion and the threat." },
+        { "minute": 16, "type": "chance",   "text": "{topMid} slips a delicate ball through but the final touch won't come. A sign of life." },
+        { "minute": 27, "type": "drama",    "text": "They break the deadlock. {gk} gets a strong hand to it but can't keep it out. One-down and rattled." },
+        { "minute": 36, "type": "goal",     "text": "{topAtt} latches onto a loose ball — scrappy, vital, level. The roar is raw relief." },
+        { "minute": 45, "type": "halftime", "text": "One apiece at the break. Honest, hard, too close to call. {captain} gestures for calm." },
+        { "minute": 62, "type": "chance",   "text": "{gk} at full stretch — a fingertip save that keeps the scores level. The crowd exhales as one." },
+        { "minute": 79, "type": "drama",    "text": "{weakest} is being targeted now. Every long ball is aimed his way — he's holding on, but barely." },
+        { "minute": 90, "type": "fulltime", "text": "Full time: 1-1. A nervy draw, honours even, {gk} drained by the tension. Could have gone either way — and that is the truth." }
       ]
     },
     "1-2": {
