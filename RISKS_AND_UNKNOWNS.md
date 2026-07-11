@@ -139,6 +139,39 @@ Report snapshot: `docs/sim/sim-report.json`.
   Random top band: 0.00%. Percentile drivers: greedy DEF p90 363, weakLink
   p90 88. Deviations from 5-7% window: none.
 
+### 2026-07-11 — Corpus-60 retune (1986–2022 SF+QF; n=500, seed=42)
+
+**Motivation.** Corpus grew 16 → 60 (ADR-011 amendment). Old 16-squad gates
+sat above the new distribution: greedy collapsed into 3-1 (**99.60%**), 10-0/5-0
+dead at 0%. Greedy p50 sums (DEF 349 / MID 275 / ATT 273 / WL 84) no longer
+clear 5-0/10-0; retune numbers-only so skilled drafts land majority 5-0+3-1
+and 10-0 is rare-but-reachable.
+
+**Baseline (stale 16-squad gates on 60-squad corpus):** greedy 10-0 **0%**,
+5-0 0%, 3-1 **99.60%**, 2-2 0.40%; random 10-0 0%, 5-0 0%, 3-1 1.60%, 2-2
+17.60%, 1-2 35.40%, 0-4 45.40%. Near-miss 5-0 only 3.80% (top band unreachable).
+
+**Final:** greedy 10-0 **6.40%** → 5-0 31.20% / 3-1 62.40% / 2-2 0% (majority
+in 5-0+3-1 = 93.60%). Random 10-0 **0%**, 5-0 0%, 3-1 1.40%, 2-2 18.40%,
+1-2 34.80%, 0-4 45.40% — mass spread 2-2/1-2/0-4, not collapsed into 1-2.
+Near-miss(3pts) 10-0 **15.80%** (sweet spot 10–20%). Percentile drivers:
+greedy DEF p90=355, weakLink p90=86, MID p10=268, ATT p10=266. Deviations
+from 5–7% window: **none** (6.40% in window). Dead-band note: greedy 2-2/1-2/0-4
+= 0% (skilled bot never fails formation/weak-link floors); random supplies
+≥1% for 3-1/2-2/1-2/0-4 — every band live in ≥1 bot histogram.
+
+Gates: **10-0** GK85/DEF355/MID270/ATT268/WL86; **5-0** GK85/DEF349/MID270/ATT268/WL84;
+**3-1** GK80/DEF320/MID250/ATT230/WL78; **2-2** GK70/DEF240/MID180/ATT150/WL74
+(minCounts off); **1-2** all-0; **0-4** fallback. Numbers-only; engine untouched.
+Report snapshot: `docs/sim/sim-report.json`.
+
+- **2026-07-11 (corpus 60 retune):** baseline 0.00% → final 6.40%
+  (greedy, n=500, seed=42). Gates: 10-0 GK85/DEF355/MID270/ATT268/WL86; 5-0
+  GK85/DEF349/MID270/ATT268/WL84; 3-1 GK80/DEF320/MID250/ATT230/WL78; 2-2
+  GK70/DEF240/MID180/ATT150/WL74. Near-miss(3pts): 10-0 15.80%, 5-0 31.20%.
+  Random top band: 0.00%. Percentile drivers: greedy DEF p90 355, weakLink
+  p90 86. Deviations from 5-7% window: none.
+
 ## Open questions (answer before or during the named task)
 
 1. Should skip replacement exclude only the skipped squad or all seen? **Answered in ADR-003**: excludes skipped squad id; normal seen-preference applies.

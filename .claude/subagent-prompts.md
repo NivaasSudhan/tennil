@@ -197,6 +197,42 @@ You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch main. Im
 ```
 KNOWN FROM PRIOR RUN: the research files cover 1986-2022 only — 2026 is MISSING. Do not search for 2026 data; build the 60-squad corpus (4x5 + 8x5) now and list the eight 2026 quarterfinalist slots as the documented gap for the human to fill. Set test counts to 60/660. STAY INSIDE THE REPO: never touch paths outside /Users/nivaassudhan/Desktop/code/games/fifaTenZero; do not use todo tools; just read, write the JSON and the two test files, append the ADR-011 note, run npm test, and print the final output.
 ```
+P-012r status: succeeded (CORPUS68-DONE as 60 squads/660 players, 85 tests green; 2026 gap documented; uncertainties: ukr-2006 Rusol, por-2022 Dalot/Cancelo, ned-2022 XI, arg-1990 Dezotti/Caniggia)
+
+---
+
+## P-013 — Retune thresholds for 60-squad corpus
+- date: 2026-07-11
+- target: opencode/grok-4.5 --variant high
+- status: succeeded (TASK9R-DONE; greedy 6.4/31.2/62.4, random 0/0/1.4/18.4/34.8/45.4; near-miss 10-0 = 15.8%; all six gates met)
+- task: Reuse of P-009 method verbatim with corpus context updated: "the corpus just grew 16 -> 60 squads (WC 1986-2022); thresholds are stale for it". Same hard rules (numbers-only; only thresholds.json + RISKS log + docs/sim/sim-report.json), same six acceptance gates (greedy 10-0 5-7%, greedy majority 5-0/3-1, random floor spread not collapsed, no dead bands, 10-0 near-miss 10-20% at delta 3, random-p50 reaches 3-1), same finish protocol. Do not touch squads.json or src/app (other agents own them).
+
+---
+
+## P-014 — Matchday UI wave U1: foundation + paper world
+- date: 2026-07-11
+- target: opencode-go/glm-5.2 --variant high
+- status: failed(agent used /tmp for font downloads → permission auto-reject → died before writing any src/app changes) → retried as P-014r with repo-internal download dir
+- task: Fonts vendoring, pitch+paper tokens/app.css, StartScreen + DraftScreen redesign per DESIGN.md
+
+### P-014r retry addendum (appended to the verbatim P-014 prompt):
+```
+PRIOR RUN DIED using /tmp — paths outside the repo are permission-blocked. Do ALL font download/extraction inside the repo: use ./.fontdl/ as the working dir (curl the gwfh zips there, unzip there, copy woff2 into src/assets/fonts/, then rm -rf ./.fontdl). The gwfh API is confirmed working (HTTP 200). Everything else identical.
+```
+
+```
+You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch main. Read PRODUCT.md and DESIGN.md FIRST — they are the binding design spec (Matchday system). Implement WAVE U1: the foundation and the PAPER world. Scope:
+
+1. FONTS: vendor Courier Prime (400/700), Anton (400), Archivo (400/600/800) as woff2 into src/assets/fonts/ (download from Google Fonts at build/authoring time — e.g. google-webfonts-helper API https://gwfh.mranftl.com/api/fonts/<name>?download=zip&subsets=latin&variants=... — commit the files; runtime must never fetch fonts). @font-face with font-display: swap in app.css.
+2. TOKENS + PITCH: rewrite src/app/app.css around the DESIGN.md token block (OKLCH). Body = full-viewport procedural pitch exactly per DESIGN.md Texture spec: mowing stripes + SVG feTurbulence grain overlay + chalk markings SVG (subtle, off-center) + radial vignette. Semantic z-scale per DESIGN.md.
+3. STARTSCREEN: night-stadium landing per DESIGN.md/PRODUCT.md — floodlit signage CTA (StadiumButton), masthead in Anton. Keep the onStart prop contract; update tests/startScreen.test.tsx text-matchers if copy changes but keep the 11-rounds/one-skip rules content present in some form.
+4. DRAFTSCREEN: rebuild as the TeamSheet paper world per DESIGN.md Components: reveal sheet (paper texture, tilt, masthead country+year in Anton, typed Courier Prime player rows NAME....POS.RATING with inked rating circle tiers) + your-XI sheet (grouped GK/DEF/MID/ATT). PlayerRow states: hover ballpoint underline, picked = red SELECTED stamp punch (120ms) then row appears on your sheet, disabled = typed strikethrough -- TAKEN --. Sheet transitions: whip-off + clip-on per DESIGN.md Motion. Floodlight flare entrance on draft start.
+5. MOTION RULES: ease-out-quart/quint only, no bounce; EVERY animation gets a prefers-reduced-motion: reduce fallback (crossfade/instant). Content must be visible by default — never gate visibility on a class-triggered transition.
+
+HARD CONSTRAINTS: touch ONLY src/app/** (App.tsx, StartScreen.tsx, DraftScreen.tsx, app.css, new components under src/app/), src/assets/fonts/**, tests/startScreen.test.tsx and tests/appGate.test.tsx (matcher updates only if copy changed). Do NOT touch ResultScreen.tsx or usePlaythrough.ts (broadcast world = next wave), src/domain/**, scripts/**, data JSON. UI reads session and calls onPick/onSkip only — zero rules logic in components (R-08). Do NOT run git commit or git add. STAY INSIDE THE REPO except the font downloads.
+
+FINISH: npm test green, npm run build green, purity greps clean. Print U1-DONE, vitest summary, list of files touched, and font file sizes. On failure print U1-FAILED + output.
+```
 
 ```
 You are in /Users/nivaassudhan/Desktop/code/games/fifaTenZero on branch main. PRODUCT DIRECTIVE (user, 2026-07-11, supersedes ADR-011 stage sizes): corpus becomes World Cups 1986-2026 only — semifinalists (4) of 1986/1990/1994/1998/2002 + quarterfinalists (8) of 2006/2010/2014/2018/2022/2026 = 68 squads. Research data: squads/*.md (3 files, full member squads gathered from the web). VERIFY the research actually covers all 11 tournaments incl. 2026; if any squad/tournament is missing, list it and proceed with what exists.
