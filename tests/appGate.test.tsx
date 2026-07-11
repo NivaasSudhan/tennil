@@ -14,14 +14,14 @@ afterEach(cleanup);
 describe('App landing gate', () => {
   it('shows the landing screen on mount — no draft auto-start', () => {
     render(<App data={loadGameDataFromDisk()} />);
-    expect(screen.getByRole('button', { name: /start game/i })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /kick off/i })).toBeTruthy();
     expect(screen.queryByText(/now revealing/i)).toBeNull();
   });
 
-  it('clicking Start Game begins a draft (a squad reveal is shown)', () => {
+  it('clicking Kick off begins a draft (a squad reveal is shown)', () => {
     render(<App data={loadGameDataFromDisk()} />);
-    fireEvent.click(screen.getByRole('button', { name: /start game/i }));
+    fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
     expect(screen.getByText(/now revealing/i)).toBeTruthy();
-    expect(screen.queryByRole('button', { name: /start game/i })).toBeNull();
+    expect(screen.queryByRole('button', { name: /kick off/i })).toBeNull();
   });
 });

@@ -1,7 +1,8 @@
-import type { DraftSession, Pick, PositionBucket } from '../domain/types';
+import { useEffect, useRef, useState } from 'react';
+import type { DraftSession, Pick } from '../domain/types';
 import { invariant } from '../lib/assert';
-
-const BUCKET_ORDER: PositionBucket[] = ['GK', 'DEF', 'MID', 'ATT'];
+import StadiumButton from './StadiumButton';
+import TeamSheet from './TeamSheet';
 
 interface DraftScreenProps {
   session: DraftSession;
@@ -11,96 +12,82 @@ interface DraftScreenProps {
 }
 
 /**
- * DraftScreen (TASKS.md T-010). Pure render + input layer: it reads `session`
- * fields to decide what to show and what to disable, but every state change is
- * delegated to `onPick`/`onSkip`, which the App shell wires to the domain
- * `pick`/`skip` functions. No draft rules are evaluated here.
+ * DraftScreen (TASKS.md T-010; DESIGN.md Components — paper world). Render +
+ * input layer only. It reads `session` to decide what to show / disable, but
+ * every state change is delegated to `onPick` / `onSkip`, which the App shell
+ * wires to the domain pick/skip functions. No draft rules are evaluated here.
+ *
+ * Presentation-only local state:
+ *   - `lastPickId` — the most recently picked player's id, so the mine-sheet
+ *     row gets a SELECTED stamp entrance. Reset whenever the reveal squad
+ *     changes. This is display plumbing, not rules logic.
  */
 export default function DraftScreen({ session, error, onPick, onSkip }: DraftScreenProps) {
   invariant(session.currentReveal, 'DraftScreen requires an active reveal (phase !== COMPLETE)');
   const reveal = session.currentReveal;
 
+  const [lastPickId, setLastPickId] = useState<string | null>(null);
+  const prevRevealId = useRef<string>(reveal.id);
+
+  useEffect(() => {
+    if (reveal.id !== prevRevealId.current) {
+      prevRevealId.current = reveal.id;
+      setLastPickId(null);
+    }
+  }, [reveal.id]);
+
+  // The most recent pick (if any) is the latest entry in session.picks — a pure
+  // read used only to place the SELECTED stamp on the mine sheet.
+  const derivedLastPick: string | null =
+    session.picks.length > 0 ? session.picks[session.picks.length - 1].id : null;
+  const stampPickId = lastPickId ?? derivedLastPick;
+
+  const takenIds = new Set(session.picks.map((p: Pick) => p.id));
   const totalRounds = 11 + (1 - session.skipRemaining);
-  const squadByBucket = groupByBucket(session.picks);
+
+  function handlePick(playerId: string) {
+    setLastPickId(playerId);
+    onPick(playerId);
+  }
 
   return (
     <div className="draft-screen">
-      <header className="draft-header">
-        <div className="draft-header-title">
-          <span className="eyebrow">Now revealing</span>
-          <h1>
-            {reveal.country} {reveal.year}
-          </h1>
-        </div>
-        <div className="round-counter">
+      <div className="flood-flare" aria-hidden="true" />
+      <div className="draft-screen__topline">
+        <span className="draft-screen__round">
           Round {session.roundsPlayed} / {totalRounds}
-        </div>
-      </header>
-
-      {error && <div className="action-error" role="alert">{error}</div>}
-
-      <section className="reveal-grid" aria-label="Squad reveal">
-        {reveal.players.map((player) => {
-          const disabled = session.picks.some((p) => p.id === player.id);
-          return (
-            <button
-              key={player.id}
-              type="button"
-              className={`player-card${disabled ? ' player-card-disabled' : ''}`}
-              disabled={disabled}
-              onClick={() => onPick(player.id)}
-            >
-              <span className={`bucket-badge bucket-${player.positionBucket}`}>
-                {player.positionBucket}
-              </span>
-              <span className="player-name">{player.name}</span>
-              <span className="player-meta">
-                {player.positionRaw} &middot; {player.rating}
-              </span>
-              {disabled && <span className="player-picked-tag">Already picked</span>}
-            </button>
-          );
-        })}
-      </section>
-
-      <div className="draft-actions">
-        <button
-          type="button"
-          className="skip-button"
-          disabled={session.skipRemaining === 0}
-          onClick={onSkip}
-        >
-          Skip squad — once per draft
-        </button>
+        </span>
       </div>
 
-      <section className="squad-panel" aria-label="Your squad so far">
-        <h2>Your XI ({session.picks.length} / 11)</h2>
-        <div className="squad-groups">
-          {BUCKET_ORDER.map((bucket) => (
-            <div key={bucket} className="squad-group">
-              <h3>
-                {bucket} ({squadByBucket[bucket].length})
-              </h3>
-              <ul>
-                {squadByBucket[bucket].map((p) => (
-                  <li key={p.id}>
-                    {p.name} <span className="rating-pill">{p.rating}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+      {error && (
+        <div className="action-error" role="alert">
+          {error}
         </div>
-      </section>
+      )}
+
+      <div className="draft-stage">
+        <TeamSheet
+          variant="reveal"
+          reveal={reveal}
+          takenIds={takenIds}
+          onPick={handlePick}
+        />
+        <TeamSheet
+          variant="mine"
+          picks={session.picks}
+          lastPickId={stampPickId}
+        />
+      </div>
+
+      <div className="draft-actions">
+        <StadiumButton
+          variant="ghost"
+          onClick={onSkip}
+          disabled={session.skipRemaining === 0}
+        >
+          Skip squad — once per draft
+        </StadiumButton>
+      </div>
     </div>
   );
-}
-
-function groupByBucket(picks: Pick[]): Record<PositionBucket, Pick[]> {
-  const groups: Record<PositionBucket, Pick[]> = { GK: [], DEF: [], MID: [], ATT: [] };
-  for (const p of picks) {
-    groups[p.positionBucket].push(p);
-  }
-  return groups;
 }

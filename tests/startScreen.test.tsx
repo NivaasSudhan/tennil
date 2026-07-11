@@ -10,18 +10,18 @@ import StartScreen from '../src/app/StartScreen';
 afterEach(cleanup);
 
 describe('StartScreen', () => {
-  it('renders a title, the core rules (11 picks, one skip), and a Start Game button', () => {
+  it('renders a title, the core rules (11 picks, one skip), and a Kick off CTA', () => {
     render(<StartScreen onStart={() => {}} />);
     expect(screen.getByRole('heading', { level: 1 })).toBeTruthy();
     expect(screen.getByText(/11 rounds/i)).toBeTruthy();
     expect(screen.getByText(/one skip/i)).toBeTruthy();
-    expect(screen.getByRole('button', { name: /start game/i })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /kick off/i })).toBeTruthy();
   });
 
   it('invokes onStart exactly once per click', () => {
     const onStart = vi.fn();
     render(<StartScreen onStart={onStart} />);
-    fireEvent.click(screen.getByRole('button', { name: /start game/i }));
+    fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
     expect(onStart).toHaveBeenCalledTimes(1);
   });
 });

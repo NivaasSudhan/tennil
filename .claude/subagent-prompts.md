@@ -220,6 +220,15 @@ P-012r status: succeeded (CORPUS68-DONE as 60 squads/660 players, 85 tests green
 PRIOR RUN DIED using /tmp — paths outside the repo are permission-blocked. Do ALL font download/extraction inside the repo: use ./.fontdl/ as the working dir (curl the gwfh zips there, unzip there, copy woff2 into src/assets/fonts/, then rm -rf ./.fontdl). The gwfh API is confirmed working (HTTP 200). Everything else identical.
 ```
 P-014r status: failed(downloads OK but `cd .fontdl && cp ../…` compound tripped sandbox path resolution → copy rejected → died; no app code written). Orchestrator copied fonts into src/assets/fonts/ manually. → retried as P-014r2.
+P-014r2 status: succeeded (U1-DONE; 169 tests green; paper world complete — TeamSheet/PlayerRow/StadiumButton components, procedural pitch, stamp/whip/clip-on motion, reduced-motion fallbacks; CTA copy now "Kick off")
+
+---
+
+## P-015 — tsc fix in audit-loaddata test
+- date: 2026-07-11
+- target: opencode/deepseek-v4-flash-free --variant max
+- status: dispatched
+- task: tests/audit-loaddata.test.ts AnyObj → RawBundle (Parameters<typeof loadGameData>[0]) so npm run build passes; no assertion changes; single-helper fix preferred. (Audit agent's file passed vitest but broke tsc — orchestrator's commit gate now includes npm run build.)
 
 ### P-014r2 retry addendum (replaces item 1 of the verbatim P-014 prompt):
 ```
