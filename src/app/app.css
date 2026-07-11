@@ -673,7 +673,7 @@ button {
 
 /* ---------- PlayerRow — one typed line (D2 fix) ----------
    ONE compact typed row: NAME (Courier Prime) … dotted leader filling the
-   middle … POS abbrev … small inked rating circle (~1.8rem diameter).
+   middle … POS abbrev … inked rating circle (~2.4rem diameter).
    Flex (not grid) so the leader stretches to fill whatever space the name
    leaves; the rating circle is a fixed-size badge, never full width. */
 .player-row {
@@ -683,7 +683,7 @@ button {
   align-items: baseline;
   gap: 0.4rem;
   width: 100%;
-  padding: 0.32rem 0.5rem 0.3rem;
+  padding: 0.22rem 0.5rem 0.22rem;
   text-align: left;
   background: transparent;
   border: none;
@@ -775,10 +775,10 @@ button {
   flex: 0 0 auto;
   font-family: 'Courier Prime', monospace;
   font-weight: 700;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 0.06rem 0.4rem;
+  padding: 0.1rem 0.5rem;
   border-radius: 2px;
   color: var(--ink);
   border: 1px solid oklch(0.6 0.02 260 / 0.5);
@@ -795,7 +795,7 @@ button {
   opacity: 0.6;
 }
 
-/* Inked rating circle — SMALL fixed-size badge (~1.8rem diameter), colored by
+/* Inked rating circle — fixed-size badge (~2.4rem diameter), colored by
    tier per DESIGN.md (93+ red / 86-92 blue / <=85 plain ink). Fixed width and
    height so it never grows to a full-width pill (D2 root cause). */
 .row__rating {
@@ -803,12 +803,12 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 2.4rem;
+  height: 2.4rem;
   padding: 0;
   font-family: 'Courier Prime', monospace;
   font-weight: 700;
-  font-size: 0.82rem;
+  font-size: 1.05rem;
   line-height: 1;
   font-variant-numeric: tabular-nums;
   color: var(--rating-solid);
