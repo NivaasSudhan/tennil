@@ -19,7 +19,10 @@ import type { PositionBucket } from '../domain/types';
 // ---------- Card dimensions ----------
 export const CARD_W = 1080;
 export const CARD_H = 1350; // 4:5 social/portrait
-const SAFE = 72; // outer safe margin (px in card space)
+const MARGIN = 60; // outer margin (px, left/right)
+// Top-down layout budget (y-values in px on 1080×1350 canvas) — docs
+const VERDICT_START_Y = 1060;
+const FOOTER_Y = 1310;
 export const SHARE_URL = 'https://nivaassudhan.github.io/tennil/';
 
 export const BUCKET_ORDER: PositionBucket[] = ['GK', 'DEF', 'MID', 'ATT'];
@@ -180,106 +183,112 @@ export function renderMatchdayCard(canvas: HTMLCanvasElement, data: MatchdayCard
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, CARD_W, CARD_H);
 
-  // Masthead.
+  // --- Masthead block (ends by y=300) ---
   ctx.fillStyle = INK;
   ctx.textAlign = 'center';
-  // Best-effort: wait for Anton if the FontFace API is present (no-op if not).
   try { void (document as unknown as { fonts?: { ready: Promise<unknown> } }).fonts?.ready; } catch { /* no-op */ }
-  ctx.font = mastheadFont(150);
-  ctx.fillText('TENNIL', CARD_W / 2, SAFE + 120);
+  ctx.font = mastheadFont(120);
+  ctx.fillText('TENNIL', CARD_W / 2, 155);
 
-  // Eyebrow under masthead.
-  ctx.font = uiFont(40, '600');
+  ctx.font = uiFont(36, '600');
   ctx.fillStyle = INK_FADED;
-  ctx.fillText(data.eyebrow, CARD_W / 2, SAFE + 185);
+  ctx.fillText(data.eyebrow, CARD_W / 2, 215);
 
-  // Thin divider rule.
   ctx.strokeStyle = INK_FADED;
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(SAFE + 40, SAFE + 215);
-  ctx.lineTo(CARD_W - SAFE - 40, SAFE + 215);
+  ctx.moveTo(MARGIN + 30, 250);
+  ctx.lineTo(CARD_W - MARGIN - 30, 250);
   ctx.stroke();
 
-  // XI grouped rows — GK / DEF / MID / ATT.
+  // --- Roster block (y=300..1000 MAX) ---
   ctx.textAlign = 'left';
-  const rowH = 70;
-  let y = SAFE + 285;
-  const labelX = SAFE;
-  const nameX = SAFE + 150;
-  const ratingX = CARD_W - SAFE - 70;
+  const playerRows = BUCKET_ORDER.reduce((n, b) => n + data.groups[b].length, 0);
+  const labelCount = BUCKET_ORDER.filter((b) => data.groups[b].length > 0).length;
+  const rowH = Math.min(56, Math.floor(700 / (playerRows + labelCount * 0.6)));
+  let y = 310;
+  const labelX = MARGIN;
+  const nameX = MARGIN + 130;
+  const ratingX = CARD_W - MARGIN - 60;
   for (const bucket of BUCKET_ORDER) {
     const players = data.groups[bucket];
     if (players.length === 0) continue;
-    // Bucket tag.
     ctx.fillStyle = INK_FADED;
-    ctx.font = uiFont(34, '800');
-    ctx.fillText(`${bucket}`, labelX, y - 14);
+    ctx.font = uiFont(28, '800');
+    ctx.fillText(`${bucket}`, labelX, y - 8);
     for (const p of players) {
       ctx.fillStyle = INK;
-      ctx.font = monoFont(38);
+      ctx.font = monoFont(32);
       ctx.fillText(p.name.toUpperCase(), nameX, y);
-      // dotted leader.
       ctx.fillStyle = INK_FADED;
-      ctx.font = monoFont(38);
+      ctx.font = monoFont(32);
       const nameWidth = ctx.measureText(p.name.toUpperCase()).width;
-      const dotsStart = nameX + nameWidth + 12;
-      const dotsEnd = ratingX - 18;
+      const dotsStart = nameX + nameWidth + 10;
+      const dotsEnd = ratingX - 16;
       let dx = dotsStart;
       ctx.beginPath();
       ctx.fillStyle = INK_FADED;
-      while (dx < dotsEnd) { ctx.fillText('·', dx, y); dx += 14; }
-      // Rating circle.
+      while (dx < dotsEnd) { ctx.fillText('·', dx, y); dx += 12; }
       ctx.beginPath();
-      ctx.arc(ratingX, y - 12, 26, 0, Math.PI * 2);
+      ctx.arc(ratingX, y - 10, 22, 0, Math.PI * 2);
       ctx.fillStyle = ratingColor(p.rating);
       ctx.fill();
       ctx.fillStyle = PAPER;
-      ctx.font = uiFont(30, '800');
+      ctx.font = uiFont(26, '800');
       ctx.textAlign = 'center';
-      ctx.fillText(String(p.rating), ratingX, y - 2);
+      ctx.fillText(String(p.rating), ratingX, y);
       ctx.textAlign = 'left';
       y += rowH;
     }
-    y += 14;
+    y += 8;
   }
 
   // Formation id (lower-left, monospace).
+  const rosterEndY = y;
   ctx.fillStyle = INK_FADED;
-  ctx.font = monoFont(30);
-  ctx.fillText(`FORMATION  ${data.formationLabel.toUpperCase()}`, SAFE, y + 10);
+  ctx.font = monoFont(26);
+  ctx.fillText(`FORMATION  ${data.formationLabel.toUpperCase()}`, MARGIN, rosterEndY + 30);
 
-  // Band verdict block (gold underline) + near-miss/mock line.
-  const verdictY = y + 90;
+  // --- Verdict block (stacked from y=1060, end by y=1270) ---
+  const verdictBaseline = VERDICT_START_Y + 30; // 1090
   ctx.textAlign = 'center';
   ctx.fillStyle = INK;
-  ctx.font = uiFont(56, '800');
-  ctx.fillText(data.bandLabel.toUpperCase(), CARD_W / 2, verdictY);
-  // gold underline.
+  ctx.font = uiFont(62, '800');
+  ctx.fillText(data.bandLabel.toUpperCase(), CARD_W / 2, verdictBaseline);
+
   const verdictW = ctx.measureText(data.bandLabel.toUpperCase()).width;
   ctx.strokeStyle = GOLD;
   ctx.lineWidth = 6;
   ctx.beginPath();
-  ctx.moveTo(CARD_W / 2 - verdictW / 2, verdictY + 14);
-  ctx.lineTo(CARD_W / 2 + verdictW / 2, verdictY + 14);
+  ctx.moveTo(CARD_W / 2 - verdictW / 2, verdictBaseline + 10);
+  ctx.lineTo(CARD_W / 2 + verdictW / 2, verdictBaseline + 10);
   ctx.stroke();
 
-  // bandId big.
   ctx.fillStyle = INK;
-  ctx.font = mastheadFont(120);
-  ctx.fillText(data.bandId, CARD_W / 2, verdictY + 130);
+  ctx.font = mastheadFont(84);
+  ctx.fillText(data.bandId, CARD_W / 2, verdictBaseline + 90);
 
-  // near-miss / mock line (Courier).
+  let verdictCursorY = verdictBaseline + 90;
   if (data.nearMissText) {
     ctx.fillStyle = STAMP;
-    ctx.font = monoFont(34, true);
-    ctx.fillText(data.nearMissText, CARD_W / 2, verdictY + 180);
+    let nearMissSize = 28;
+    ctx.font = monoFont(nearMissSize, true);
+    const maxWidth = CARD_W - 2 * MARGIN;
+    while (nearMissSize > 14 && ctx.measureText(data.nearMissText).width > maxWidth) {
+      nearMissSize -= 2;
+      ctx.font = monoFont(nearMissSize, true);
+    }
+    ctx.fillText(data.nearMissText, CARD_W / 2, verdictBaseline + 140);
+    verdictCursorY = verdictBaseline + 140;
   }
 
-  // Footer.
+  // --- Footer URL — drawn last, guarded from collision ---
+  if (verdictCursorY + 15 > FOOTER_Y - 10) {
+    throw new Error(`Card layout overflow: verdict block reaches y=${verdictCursorY}, footer at y=${FOOTER_Y}`);
+  }
   ctx.fillStyle = INK_FADED;
-  ctx.font = monoFont(28);
-  ctx.fillText('nivaassudhan.github.io/tennil', CARD_W / 2, CARD_H - SAFE - 10);
+  ctx.font = monoFont(24);
+  ctx.fillText('nivaassudhan.github.io/tennil', CARD_W / 2, FOOTER_Y);
   ctx.textAlign = 'left';
 }
 
