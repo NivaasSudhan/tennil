@@ -1791,3 +1791,99 @@ button {
   .flood-sweep { display: none; }
   .bandslam__confetti { display: none; }
 }
+
+/* =====================================================================
+   WAVE V4b — Matchday share row + landing marginalia.
+   Share row: broadcast-chrome, small, one row, never overlays the
+   playback controls (sits in the ticker-stage under BandSlam).
+   Marginalia: typed paper-programme footnotes (Courier), bottom of the
+   landing sheet. No global header (PRODUCT ruling).
+   ===================================================================== */
+
+.share-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+  margin-top: 0.7rem;
+  justify-content: center;
+}
+
+.share-row__btn {
+  font-family: 'Archivo', system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--broadcast-text);
+  background: var(--broadcast-bg);
+  border: 1px solid oklch(0.4 0.02 260 / 0.6);
+  border-radius: 0.3rem;
+  padding: 0.35rem 0.65rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 120ms ease-out-quart, border-color 120ms ease-out-quart;
+}
+
+.share-row__btn:hover,
+.share-row__btn:focus-visible {
+  background: oklch(0.30 0.03 260 / 0.95);
+  border-color: var(--gold);
+  outline: none;
+}
+
+.share-row__btn--download {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.share-row__btn--link {
+  display: inline-flex;
+  align-items: center;
+}
+
+.start-marginalia {
+  margin-top: 2.2rem;
+  padding-top: 0.9rem;
+  border-top: 1px dashed oklch(0.92 0.02 140 / 0.35);
+  font-family: 'Courier Prime', 'Courier New', monospace;
+  font-size: 0.72rem;
+  color: var(--pitch-line);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+}
+
+.start-marginalia__link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--pitch-line);
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.start-marginalia__link:hover,
+.start-marginalia__link:focus-visible {
+  color: var(--gold);
+  outline: none;
+}
+
+.start-marginalia__about {
+  margin: 0.1rem 0 0.2rem;
+  max-width: 34rem;
+  line-height: 1.4;
+  color: oklch(0.88 0.02 140);
+}
+
+.start-marginalia__link--issue {
+  margin-top: 0.15rem;
+}
+
+@media (max-width: 720px) {
+  .share-row__btn { font-size: 0.66rem; padding: 0.3rem 0.5rem; }
+}

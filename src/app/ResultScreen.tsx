@@ -10,10 +10,14 @@ import { explainScoreBand } from '../domain/scoring/explainScoreBand';
 import { withFormationMinCounts } from '../domain/scoring/withFormation';
 import { detectFormationFit, scoreUnderFormation } from '../domain/scoring/formationFit';
 import { buildCommentary } from '../domain/commentary/build';
+import { matchdayNumber } from '../lib/daily';
 import { progressScoreline } from './scorelineProgress';
+import { buildCardData } from './matchdayCard';
+import { formatNearMiss } from './nearMiss';
 import Scoreboard from './Scoreboard';
 import Ticker from './Ticker';
 import BandSlam from './BandSlam';
+import ShareRow from './ShareRow';
 
 const BUCKET_ORDER: PositionBucket[] = ['GK', 'DEF', 'MID', 'ATT'];
 
@@ -81,6 +85,30 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       fitInsight: fit,
     };
   }, [session, data]);
+
+  // -- Share card payload (WAVE V4b): compute-once, pure, no scoring calls. --
+  const cardData = useMemo(() => {
+    const formationLabel =
+      data.thresholds.formations.find((f) => f.id === session.formationId)?.label ?? session.formationId;
+    const cardGroups = {
+      GK: groups.GK.map((p) => ({ name: p.name, rating: p.rating })),
+      DEF: groups.DEF.map((p) => ({ name: p.name, rating: p.rating })),
+      MID: groups.MID.map((p) => ({ name: p.name, rating: p.rating })),
+      ATT: groups.ATT.map((p) => ({ name: p.name, rating: p.rating })),
+    };
+    const nearMissText = formatNearMiss(explanation as ScoreExplanation).text;
+    const matchday = session.mode === 'daily' ? matchdayNumber(new Date()) : undefined;
+    return buildCardData({
+      mode: session.mode,
+      matchdayNumber: matchday,
+      formationId: session.formationId,
+      formationLabel,
+      bandId: band.bandId,
+      bandLabel: band.label,
+      nearMissText,
+      groups: cardGroups,
+    });
+  }, [band, groups, explanation, session, data]);
 
   const { visibleBeatCount, showScoreline, speed, setSpeed, skipToResult } =
     usePlaythrough(totalBeats);
@@ -192,6 +220,7 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
             {`YOUR SHAPE WAS ${fitInsight.formationId} — UNDER IT: ${fitInsight.bandId}`.toUpperCase()}
           </p>
         )}
+        {showScoreline && <ShareRow cardData={cardData} />}
       </section>
 
       {/* Playback controls — kept visible through everything (PRODUCT principle 5). */}

@@ -24,6 +24,7 @@ export default function StartScreen({
   // Landing chooses mode via toggle (defaults to daily — the primary CTA).
   // formation-only (Draft Again) repeats whatever mode the finished session used.
   const [selectedMode, setSelectedMode] = useState<'daily' | 'free'>(mode ?? 'daily');
+  const [aboutOpen, setAboutOpen] = useState(false);
   const activeMode = variant === 'formation-only' ? mode ?? 'free' : selectedMode;
   const selected = formations.find((f) => f.id === selectedId);
 
@@ -66,6 +67,35 @@ export default function StartScreen({
             <p className="matchday-badge">MATCHDAY #{matchdayNumber}</p>
           )}
         </>
+      )}
+
+      {variant === 'landing' && (
+        <div className="start-marginalia" aria-label="Programme marginalia">
+          <button
+            type="button"
+            className="start-marginalia__link"
+            aria-expanded={aboutOpen}
+            aria-controls="tennil-about-fold"
+            onClick={() => setAboutOpen((v) => !v)}
+          >
+            About
+          </button>
+          {aboutOpen && (
+            <p id="tennil-about-fold" className="start-marginalia__about">
+              TenNil turns World Cup history into a three-minute draft: pick one
+              player from each revealed squad, lock an XI, and get a deterministic
+              scoreline. No dice &mdash; squad quality is destiny.
+            </p>
+          )}
+          <a
+            className="start-marginalia__link start-marginalia__link--issue"
+            href="https://github.com/NivaasSudhan/tennil/issues"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Report a fault in the programme
+          </a>
+        </div>
       )}
 
       <section className="formation-picker" aria-label="Choose your formation">
