@@ -260,6 +260,31 @@ describe('loadGameData — failure modes (ARCHITECTURE.md §6)', () => {
 // direction for squads v2 is a small synthetic bundle built here.
 // ---------------------------------------------------------------------------
 
+/** Minimal valid synthetic v1 squad bundle: one squad, 1 GK + 10 outfield
+ * players (NO attrs), reusing the REAL thresholds/commentary/positionMap. */
+function validV1Raw(): RawBundle {
+  const base = validRaw();
+  const outfieldRaw: [string, string][] = [
+    ['CB', 'DEF'], ['CB', 'DEF'], ['RB', 'DEF'], ['LB', 'DEF'],
+    ['CM', 'MID'], ['CM', 'MID'], ['DM', 'MID'],
+    ['ST', 'ATT'], ['ST', 'ATT'], ['RW', 'ATT'],
+  ];
+  const players = [
+    { id: 'v1sq-gk', name: 'Keeper', positionRaw: 'GK', positionBucket: 'GK', rating: 80 },
+    ...outfieldRaw.map(([positionRaw, positionBucket], i) => ({
+      id: `v1sq-p${i}`,
+      name: `Player ${i}`,
+      positionRaw,
+      positionBucket,
+      rating: 75,
+    })),
+  ];
+  return {
+    ...base,
+    squads: { version: 1, squads: [{ id: 'v1sq', country: 'Testland', year: 2000, players }] },
+  };
+}
+
 /** Minimal valid synthetic v2 squad bundle: one squad, 1 GK (no attrs) + 10
  * outfield players (attrs 1-99), reusing the REAL thresholds/commentary/positionMap. */
 function validV2Raw(): RawBundle {
@@ -305,9 +330,9 @@ describe('loadGameData — ADR-020 squads v2 attrs (both directions)', () => {
   });
 
   it('rejects squads v1 carrying attrs (attrs are forbidden pre-v2)', () => {
-    const raw = validRaw(); // real corpus, version 1
+    const raw = validV1Raw();
     const squads = (raw.squads as { squads: { players: Record<string, unknown>[] }[] }).squads;
-    const player = squads[0].players[0];
+    const player = squads[0].players.find((p) => p.positionBucket !== 'GK')!;
     (player as Record<string, unknown>).pace = 80;
     expectRejects(raw, (problems) => {
       expect(problems.some((p) => p.includes('squads v1 must not carry pace/strength/accuracy'))).toBe(true);
@@ -346,8 +371,8 @@ describe('loadGameData — ADR-020 squads v2 attrs (both directions)', () => {
     });
   });
 
-  it('real corpus (v1) still loads cleanly when re-flipped to v2 without attrs added (every outfield player rejected)', () => {
-    const raw = validRaw();
+  it('flipping v1 synthetic to v2 without attrs rejects every outfield player', () => {
+    const raw = validV1Raw();
     (raw.squads as { version: number }).version = 2;
     expectRejects(raw, (problems) => {
       expect(problems.some((p) => p.includes('pace must be an integer 1-99'))).toBe(true);
