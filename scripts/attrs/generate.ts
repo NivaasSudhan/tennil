@@ -31,45 +31,58 @@ function clamp(lo: number, hi: number, v: number): number {
   return v < lo ? lo : v > hi ? hi : v;
 }
 
-// ---- archetype table (plan-tied; must match docs/plans/2026-07-12-attrs-v2-plan.md) ----
+// ---- specialization table (Wave B-PRIME: ADR-020 R-13 fix) ----
 interface Archetype {
   pace: number;
   strength: number;
   accuracy: number;
 }
 
+const SPLIT_POSITIONS = new Set(['ST', 'CF', 'FW']);
+
+function splitArchetype(playerId: string): Archetype {
+  return (fnv1a(playerId) % 2 === 0)
+    ? { pace: 0.85, strength: 1.08, accuracy: 0.80 }  // TARGET MAN
+    : { pace: 1.08, strength: 0.85, accuracy: 0.80 };  // RUNNER
+}
+
 const ARCHETYPE_TABLE: Record<string, Archetype> = {
-  // CB / sweeper
-  CB:  { pace: 0.82, strength: 1.02, accuracy: 0.88 },
-  SW:  { pace: 0.82, strength: 1.02, accuracy: 0.88 },
-  DF:  { pace: 0.82, strength: 1.02, accuracy: 0.88 },
-  // Full-backs / wing-backs
-  RB:  { pace: 0.98, strength: 0.90, accuracy: 0.90 },
-  LB:  { pace: 0.98, strength: 0.90, accuracy: 0.90 },
-  RWB: { pace: 0.98, strength: 0.90, accuracy: 0.90 },
-  LWB: { pace: 0.98, strength: 0.90, accuracy: 0.90 },
-  WB:  { pace: 0.98, strength: 0.90, accuracy: 0.90 },
-  // Defensive midfield
-  DM:  { pace: 0.88, strength: 0.98, accuracy: 0.96 },
-  // Central midfield
-  CM:  { pace: 0.90, strength: 0.90, accuracy: 1.00 },
-  MF:  { pace: 0.90, strength: 0.90, accuracy: 1.00 },
-  // Attacking midfield / second striker
-  AM:  { pace: 0.94, strength: 0.82, accuracy: 1.02 },
-  SS:  { pace: 0.94, strength: 0.82, accuracy: 1.02 },
-  // Wide midfield / wingers
-  RM:  { pace: 1.02, strength: 0.80, accuracy: 0.96 },
-  LM:  { pace: 1.02, strength: 0.80, accuracy: 0.96 },
-  RW:  { pace: 1.02, strength: 0.80, accuracy: 0.96 },
-  LW:  { pace: 1.02, strength: 0.80, accuracy: 0.96 },
-  // Strikers / centre-forwards
-  ST:  { pace: 0.96, strength: 0.98, accuracy: 0.94 },
-  CF:  { pace: 0.96, strength: 0.98, accuracy: 0.94 },
-  FW:  { pace: 0.96, strength: 0.98, accuracy: 0.94 },
+  // CB / sweeper — slow & steel
+  CB:  { pace: 0.72, strength: 1.08, accuracy: 0.85 },
+  SW:  { pace: 0.72, strength: 1.08, accuracy: 0.85 },
+  DF:  { pace: 0.72, strength: 1.08, accuracy: 0.85 },
+  // Full-backs / wing-backs — pacey, soft
+  RB:  { pace: 1.05, strength: 0.80, accuracy: 0.88 },
+  LB:  { pace: 1.05, strength: 0.80, accuracy: 0.88 },
+  RWB: { pace: 1.05, strength: 0.80, accuracy: 0.88 },
+  LWB: { pace: 1.05, strength: 0.80, accuracy: 0.88 },
+  WB:  { pace: 1.05, strength: 0.80, accuracy: 0.88 },
+  // Defensive midfield — slowish, steel, moderate accuracy
+  DM:  { pace: 0.75, strength: 1.02, accuracy: 0.95 },
+  // Central midfield — balanced, slight accuracy lean
+  CM:  { pace: 0.85, strength: 0.85, accuracy: 1.05 },
+  MF:  { pace: 0.85, strength: 0.85, accuracy: 1.05 },
+  // Attacking midfield / second striker — craft, no steel
+  AM:  { pace: 0.90, strength: 0.70, accuracy: 1.08 },
+  SS:  { pace: 0.90, strength: 0.70, accuracy: 1.08 },
+  // Wide midfield / wingers — pure pace, frail, decent accuracy
+  RM:  { pace: 1.10, strength: 0.68, accuracy: 0.90 },
+  LM:  { pace: 1.10, strength: 0.68, accuracy: 0.90 },
+  RW:  { pace: 1.10, strength: 0.68, accuracy: 0.90 },
+  LW:  { pace: 1.10, strength: 0.68, accuracy: 0.90 },
+  // Strikers / centre-forwards — SPLIT at runtime
 };
 
+/** Resolve archetype for a player, handling split positions (ST/CF/FW). */
+function getArchetype(positionRaw: string, playerId: string): Archetype {
+  if (SPLIT_POSITIONS.has(positionRaw)) return splitArchetype(playerId);
+  const a = ARCHETYPE_TABLE[positionRaw];
+  if (!a) throw new Error(`Unknown positionRaw '${positionRaw}' for player ${playerId}`);
+  return a;
+}
+
 function generateOne(ovr: number, mult: number, playerId: string, attrName: string): number {
-  const jitter = (fnv1a(playerId + attrName) % 7) - 3;
+  const jitter = (fnv1a(playerId + attrName) % 11) - 5;
   return clamp(1, 99, Math.round(ovr * mult + jitter));
 }
 
@@ -87,11 +100,7 @@ export function generateAttrs(
         continue;
       }
 
-      const arch = ARCHETYPE_TABLE[player.positionRaw];
-      if (!arch) {
-        throw new Error(`Unknown positionRaw '${player.positionRaw}' for player ${player.id}`);
-      }
-
+      const arch = getArchetype(player.positionRaw, player.id);
       const ovr = player.rating;
       const p = player as Record<string, unknown>;
       p.pace = generateOne(ovr, arch.pace, player.id, 'pace');

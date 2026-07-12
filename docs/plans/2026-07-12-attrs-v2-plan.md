@@ -110,5 +110,34 @@ Emitted by `evaluateBandPredicates` only when `band.minFit !== undefined && band
 
 Expected: attrs ≈ OVR×mult (0.80-1.02) ⇒ bucket means ~65-90 vs targets 70-90 ⇒ fit compressed (~80-95) like efficiency was — set gates from measured percentiles, 2-3 significant digits. Method: measure fit p10-p90 per bot per archetype; top-band `minFit` ≈ fitaware p60-p70; verify joint gates land fitaware 10-0 6-7% and attr-blind 3-4%. Fitaware bot exact rule: among need-fillers within ΔOVR ≤ 2 of the OVR-best, maximize `Σ_a w[a]·attr[a]` under today's bucket weights×mods; ties ⇒ ascending id. **Law gate (hard):** `--opposition cycle` at n=500: 10-0 count > 0 for EVERY archetype with the fitaware bot; if any archetype zeroes out, lower minFit, never raise targets.
 
+---
+
+### R-13 revision (2026-07-12) — SPECIALIZATION table replaces flat multipliers
+
+**Diagnosis (ceiling saturation + OVR sacrifice).** The Wave B generator produced attrs ≈ OVR×mult+jitter with mult ∈ [0.80, 1.02] — every strong player good at everything (Pearson r(OVR, attr) = 0.85–0.95). This meant:
+- Fit saturated at 99-100 for both greedy and fitaware skilled bots (any strong XI already maxed all three attrs)
+- `minFit` could not discriminate: raising it cut fitaware ≥ greedy, never the reverse
+- OVR-sacrificing picks (fitaware bot's ΔOVR ≤ 2 swap) lost more OVR-gate ceiling than the attr gain was worth
+
+**Fix: SPECIALIZATION table** replaces Wave B's flat multipliers with aggressive axis-specific coefficients. jitter widened to `(fnv1a % 11) − 5` (±5) from `% 7) − 3` (±3). Authoring-time only; overrides still win afterwards.
+
+| positionRaw | pace | strength | accuracy |
+| CB, SW | 0.72 | 1.08 | 0.85 |
+| RB, LB | 1.05 | 0.80 | 0.88 |
+| DM | 0.75 | 1.02 | 0.95 |
+| CM | 0.85 | 0.85 | 1.05 |
+| AM, SS | 0.90 | 0.70 | 1.08 |
+| RM, LM, RW, LW | 1.10 | 0.68 | 0.90 |
+| ST, CF | split per player: even fnv1a → TARGET MAN (str 1.08 / pace 0.85 / acc 0.80); odd → RUNNER (pace 1.08 / str 0.85 / acc 0.80) |
+
+Post-regeneration correlations: r(OVR, pace) = 0.26, r(OVR, strength) = 0.12, r(OVR, accuracy) = 0.50 — attrs now carry independent variance.
+
+**Revised acceptance for Wave D.** With SPECIALIZATION decoupling attrs from OVR:
+- **fitaware bot** (ΔOVR ≤ 1, attr-tie-break-first — tighter than Wave D's original ΔOVR ≤ 2) can now genuinely win on attrs without sacrificing OVR ceiling
+- Expected: fitaware 10-0 = 5.5–7.0%, attr-blind greedy = 3–4%, separation ≥ 2pp
+- `thresholds.json` untouched this wave; `simulate.ts` unchanged; D4 owns both next
+
+The tooling (`generate.ts`, squads.json v2) lands here. D4 can re-open Wave D by updating `MIN_FIT_TARGETS` and `FITAwareDeltaOVR` knobs in `scripts/simulate.ts` (or similar) and re-running the fitware bot against the new corpus.
+
 ## Self-review
 Spec coverage: §2→A/B, §3→A/C, §4→D, §5→E, §6→F, §7 fenced out, §8→branch+F-ops, §9 gates distributed. No placeholders (minFit "0 this wave" is an explicit staged value, tuned in D by design). Type names consistent: `Attrs`, `FormationProfile`, `OppositionDef`, `computeProfileFit`, `selectOpposition`, `minFit`, ScoreInput `fit`/`oppositionId`.

@@ -20,9 +20,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 70,
-          "strength": 81,
-          "accuracy": 71
+          "pace": 57,
+          "strength": 90,
+          "accuracy": 75
         },
         {
           "id": "arg-1986-brown",
@@ -30,9 +30,9 @@
           "positionRaw": "SW",
           "positionBucket": "DEF",
           "rating": 86,
-          "pace": 73,
-          "strength": 88,
-          "accuracy": 79
+          "pace": 62,
+          "strength": 96,
+          "accuracy": 70
         },
         {
           "id": "arg-1986-ruggeri",
@@ -40,9 +40,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 88,
-          "pace": 69,
-          "strength": 93,
-          "accuracy": 75
+          "pace": 63,
+          "strength": 94,
+          "accuracy": 77
         },
         {
           "id": "arg-1986-olarticoechea",
@@ -50,9 +50,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 81,
-          "strength": 78,
-          "accuracy": 74
+          "pace": 89,
+          "strength": 70,
+          "accuracy": 78
         },
         {
           "id": "arg-1986-giusti",
@@ -60,8 +60,8 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 70,
-          "strength": 78,
+          "pace": 60,
+          "strength": 82,
           "accuracy": 78
         },
         {
@@ -70,9 +70,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 83,
-          "pace": 74,
-          "strength": 78,
-          "accuracy": 80
+          "pace": 59,
+          "strength": 84,
+          "accuracy": 83
         },
         {
           "id": "arg-1986-enrique",
@@ -80,8 +80,8 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 76,
-          "strength": 73,
+          "pace": 67,
+          "strength": 72,
           "accuracy": 84
         },
         {
@@ -90,9 +90,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 87,
-          "pace": 85,
-          "strength": 69,
-          "accuracy": 90
+          "pace": 74,
+          "strength": 62,
+          "accuracy": 89
         },
         {
           "id": "arg-1986-maradona",
@@ -101,7 +101,7 @@
           "positionBucket": "MID",
           "rating": 98,
           "pace": 91,
-          "strength": 78,
+          "strength": 69,
           "accuracy": 99
         },
         {
@@ -110,9 +110,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 89,
-          "pace": 87,
-          "strength": 85,
-          "accuracy": 81
+          "pace": 81,
+          "strength": 95,
+          "accuracy": 72
         }
       ]
     },
@@ -134,9 +134,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 80,
-          "strength": 78,
-          "accuracy": 78
+          "pace": 87,
+          "strength": 62,
+          "accuracy": 76
         },
         {
           "id": "bel-1986-grun",
@@ -144,9 +144,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 65,
-          "strength": 81,
-          "accuracy": 70
+          "pace": 62,
+          "strength": 88,
+          "accuracy": 67
         },
         {
           "id": "bel-1986-renquin",
@@ -154,8 +154,8 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 65,
-          "strength": 84,
+          "pace": 60,
+          "strength": 81,
           "accuracy": 71
         },
         {
@@ -164,8 +164,8 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 81,
-          "pace": 82,
-          "strength": 71,
+          "pace": 85,
+          "strength": 69,
           "accuracy": 76
         },
         {
@@ -174,9 +174,9 @@
           "positionRaw": "LM",
           "positionBucket": "MID",
           "rating": 83,
-          "pace": 88,
-          "strength": 69,
-          "accuracy": 82
+          "pace": 89,
+          "strength": 58,
+          "accuracy": 73
         },
         {
           "id": "bel-1986-scifo",
@@ -184,9 +184,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 87,
-          "pace": 85,
-          "strength": 68,
-          "accuracy": 90
+          "pace": 83,
+          "strength": 58,
+          "accuracy": 92
         },
         {
           "id": "bel-1986-vandereycken",
@@ -194,9 +194,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 80,
-          "pace": 71,
-          "strength": 71,
-          "accuracy": 80
+          "pace": 73,
+          "strength": 67,
+          "accuracy": 84
         },
         {
           "id": "bel-1986-ceulemans",
@@ -204,9 +204,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 88,
-          "pace": 81,
-          "strength": 71,
-          "accuracy": 93
+          "pace": 79,
+          "strength": 63,
+          "accuracy": 94
         },
         {
           "id": "bel-1986-claesen",
@@ -214,9 +214,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 82,
-          "pace": 77,
-          "strength": 83,
-          "accuracy": 75
+          "pace": 88,
+          "strength": 73,
+          "accuracy": 69
         },
         {
           "id": "bel-1986-vandenbergh",
@@ -224,9 +224,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 81,
-          "pace": 79,
-          "strength": 81,
-          "accuracy": 75
+          "pace": 70,
+          "strength": 86,
+          "accuracy": 65
         }
       ]
     },
@@ -248,9 +248,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 86,
-          "pace": 87,
-          "strength": 75,
-          "accuracy": 76
+          "pace": 88,
+          "strength": 64,
+          "accuracy": 78
         },
         {
           "id": "fra-1986-battiston",
@@ -258,9 +258,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 68,
+          "pace": 57,
           "strength": 88,
-          "accuracy": 72
+          "accuracy": 69
         },
         {
           "id": "fra-1986-bossis",
@@ -268,9 +268,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 85,
-          "pace": 68,
-          "strength": 85,
-          "accuracy": 78
+          "pace": 62,
+          "strength": 94,
+          "accuracy": 70
         },
         {
           "id": "fra-1986-ayache",
@@ -278,8 +278,8 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 80,
-          "strength": 72,
+          "pace": 89,
+          "strength": 59,
           "accuracy": 73
         },
         {
@@ -288,9 +288,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 76,
-          "strength": 79,
-          "accuracy": 83
+          "pace": 63,
+          "strength": 84,
+          "accuracy": 76
         },
         {
           "id": "fra-1986-tigana",
@@ -298,9 +298,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 90,
-          "pace": 79,
-          "strength": 81,
-          "accuracy": 87
+          "pace": 74,
+          "strength": 74,
+          "accuracy": 93
         },
         {
           "id": "fra-1986-giresse",
@@ -308,9 +308,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 89,
-          "pace": 82,
-          "strength": 80,
-          "accuracy": 88
+          "pace": 75,
+          "strength": 72,
+          "accuracy": 98
         },
         {
           "id": "fra-1986-platini",
@@ -318,9 +318,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 96,
-          "pace": 91,
-          "strength": 80,
-          "accuracy": 95
+          "pace": 81,
+          "strength": 72,
+          "accuracy": 99
         },
         {
           "id": "fra-1986-rocheteau",
@@ -328,9 +328,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 87,
-          "strength": 65,
-          "accuracy": 80
+          "pace": 96,
+          "strength": 53,
+          "accuracy": 74
         },
         {
           "id": "fra-1986-stopyra",
@@ -338,9 +338,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 83,
-          "pace": 83,
-          "strength": 82,
-          "accuracy": 78
+          "pace": 71,
+          "strength": 88,
+          "accuracy": 71
         }
       ]
     },
@@ -362,9 +362,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 81,
-          "pace": 80,
-          "strength": 71,
-          "accuracy": 74
+          "pace": 84,
+          "strength": 62,
+          "accuracy": 73
         },
         {
           "id": "ger-1986-forster",
@@ -372,8 +372,8 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 88,
-          "pace": 72,
-          "strength": 90,
+          "pace": 64,
+          "strength": 99,
           "accuracy": 78
         },
         {
@@ -382,9 +382,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 70,
-          "strength": 85,
-          "accuracy": 69
+          "pace": 63,
+          "strength": 87,
+          "accuracy": 73
         },
         {
           "id": "ger-1986-briegel",
@@ -392,9 +392,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 81,
-          "strength": 76,
-          "accuracy": 74
+          "pace": 92,
+          "strength": 66,
+          "accuracy": 75
         },
         {
           "id": "ger-1986-eder",
@@ -402,9 +402,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 80,
-          "pace": 73,
-          "strength": 78,
-          "accuracy": 77
+          "pace": 63,
+          "strength": 83,
+          "accuracy": 76
         },
         {
           "id": "ger-1986-matthaus",
@@ -412,9 +412,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 90,
-          "pace": 81,
-          "strength": 83,
-          "accuracy": 90
+          "pace": 74,
+          "strength": 82,
+          "accuracy": 96
         },
         {
           "id": "ger-1986-magath",
@@ -422,9 +422,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 77,
-          "strength": 77,
-          "accuracy": 82
+          "pace": 67,
+          "strength": 75,
+          "accuracy": 86
         },
         {
           "id": "ger-1986-littbarski",
@@ -432,9 +432,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 87,
-          "pace": 86,
-          "strength": 72,
-          "accuracy": 87
+          "pace": 92,
+          "strength": 62,
+          "accuracy": 81
         },
         {
           "id": "ger-1986-rummenigge",
@@ -442,9 +442,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 90,
-          "pace": 83,
-          "strength": 89,
-          "accuracy": 82
+          "pace": 99,
+          "strength": 74,
+          "accuracy": 72
         },
         {
           "id": "ger-1986-voller",
@@ -452,9 +452,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 86,
-          "pace": 83,
-          "strength": 83,
-          "accuracy": 80
+          "pace": 90,
+          "strength": 73,
+          "accuracy": 67
         }
       ]
     },
@@ -476,8 +476,8 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 78,
-          "pace": 76,
-          "strength": 69,
+          "pace": 82,
+          "strength": 66,
           "accuracy": 70
         },
         {
@@ -486,9 +486,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 87,
-          "pace": 68,
-          "strength": 91,
-          "accuracy": 77
+          "pace": 59,
+          "strength": 99,
+          "accuracy": 70
         },
         {
           "id": "arg-1990-simon",
@@ -496,9 +496,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 69,
-          "strength": 85,
-          "accuracy": 69
+          "pace": 60,
+          "strength": 91,
+          "accuracy": 64
         },
         {
           "id": "arg-1990-olarticoechea",
@@ -506,9 +506,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 81,
-          "pace": 79,
-          "strength": 72,
-          "accuracy": 71
+          "pace": 90,
+          "strength": 66,
+          "accuracy": 72
         },
         {
           "id": "arg-1990-basualdo",
@@ -516,9 +516,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 79,
-          "pace": 73,
-          "strength": 70,
-          "accuracy": 82
+          "pace": 65,
+          "strength": 64,
+          "accuracy": 88
         },
         {
           "id": "arg-1990-batista",
@@ -526,9 +526,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 71,
-          "strength": 83,
-          "accuracy": 80
+          "pace": 59,
+          "strength": 85,
+          "accuracy": 79
         },
         {
           "id": "arg-1990-burruchaga",
@@ -536,9 +536,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 82,
-          "strength": 68,
-          "accuracy": 87
+          "pace": 75,
+          "strength": 62,
+          "accuracy": 92
         },
         {
           "id": "arg-1990-maradona",
@@ -547,8 +547,8 @@
           "positionBucket": "MID",
           "rating": 95,
           "pace": 86,
-          "strength": 75,
-          "accuracy": 96
+          "strength": 70,
+          "accuracy": 99
         },
         {
           "id": "arg-1990-caniggia",
@@ -556,9 +556,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 86,
-          "pace": 85,
-          "strength": 85,
-          "accuracy": 78
+          "pace": 93,
+          "strength": 73,
+          "accuracy": 70
         },
         {
           "id": "arg-1990-dezotti",
@@ -566,9 +566,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 78,
-          "pace": 72,
-          "strength": 73,
-          "accuracy": 70
+          "pace": 82,
+          "strength": 63,
+          "accuracy": 57
         }
       ]
     },
@@ -590,9 +590,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 79,
-          "strength": 71,
-          "accuracy": 76
+          "pace": 90,
+          "strength": 66,
+          "accuracy": 70
         },
         {
           "id": "eng-1990-wright",
@@ -600,9 +600,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 65,
-          "strength": 86,
-          "accuracy": 75
+          "pace": 55,
+          "strength": 89,
+          "accuracy": 72
         },
         {
           "id": "eng-1990-butcher",
@@ -610,9 +610,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 85,
-          "pace": 70,
+          "pace": 59,
           "strength": 88,
-          "accuracy": 74
+          "accuracy": 77
         },
         {
           "id": "eng-1990-pearce",
@@ -620,9 +620,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 86,
-          "pace": 87,
-          "strength": 79,
-          "accuracy": 80
+          "pace": 91,
+          "strength": 70,
+          "accuracy": 79
         },
         {
           "id": "eng-1990-platt",
@@ -630,8 +630,8 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 79,
-          "strength": 75,
+          "pace": 69,
+          "strength": 74,
           "accuracy": 86
         },
         {
@@ -640,9 +640,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 89,
-          "pace": 81,
-          "strength": 77,
-          "accuracy": 90
+          "pace": 79,
+          "strength": 71,
+          "accuracy": 91
         },
         {
           "id": "eng-1990-waddle",
@@ -650,9 +650,9 @@
           "positionRaw": "LM",
           "positionBucket": "MID",
           "rating": 86,
-          "pace": 85,
-          "strength": 66,
-          "accuracy": 86
+          "pace": 91,
+          "strength": 58,
+          "accuracy": 81
         },
         {
           "id": "eng-1990-barnes",
@@ -660,9 +660,9 @@
           "positionRaw": "LW",
           "positionBucket": "ATT",
           "rating": 87,
-          "pace": 86,
-          "strength": 73,
-          "accuracy": 83
+          "pace": 99,
+          "strength": 63,
+          "accuracy": 81
         },
         {
           "id": "eng-1990-beardsley",
@@ -670,9 +670,9 @@
           "positionRaw": "SS",
           "positionBucket": "ATT",
           "rating": 85,
-          "pace": 77,
-          "strength": 70,
-          "accuracy": 90
+          "pace": 80,
+          "strength": 60,
+          "accuracy": 88
         },
         {
           "id": "eng-1990-lineker",
@@ -680,9 +680,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 90,
-          "pace": 88,
-          "strength": 85,
-          "accuracy": 84
+          "pace": 77,
+          "strength": 97,
+          "accuracy": 77
         }
       ]
     },
@@ -704,8 +704,8 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 85,
-          "pace": 81,
-          "strength": 79,
+          "pace": 90,
+          "strength": 72,
           "accuracy": 80
         },
         {
@@ -714,8 +714,8 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 92,
-          "pace": 78,
-          "strength": 92,
+          "pace": 67,
+          "strength": 99,
           "accuracy": 81
         },
         {
@@ -724,9 +724,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 65,
-          "strength": 82,
-          "accuracy": 73
+          "pace": 63,
+          "strength": 90,
+          "accuracy": 67
         },
         {
           "id": "ita-1990-maldini",
@@ -734,9 +734,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 88,
-          "pace": 84,
-          "strength": 79,
-          "accuracy": 80
+          "pace": 91,
+          "strength": 70,
+          "accuracy": 74
         },
         {
           "id": "ita-1990-de-napoli",
@@ -744,9 +744,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 73,
-          "strength": 77,
-          "accuracy": 77
+          "pace": 58,
+          "strength": 88,
+          "accuracy": 83
         },
         {
           "id": "ita-1990-berti",
@@ -754,8 +754,8 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 83,
-          "pace": 76,
-          "strength": 74,
+          "pace": 72,
+          "strength": 72,
           "accuracy": 82
         },
         {
@@ -764,9 +764,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 77,
-          "strength": 69,
-          "accuracy": 88
+          "pace": 79,
+          "strength": 63,
+          "accuracy": 97
         },
         {
           "id": "ita-1990-donadoni",
@@ -774,9 +774,9 @@
           "positionRaw": "RM",
           "positionBucket": "MID",
           "rating": 86,
-          "pace": 88,
-          "strength": 71,
-          "accuracy": 84
+          "pace": 90,
+          "strength": 63,
+          "accuracy": 80
         },
         {
           "id": "ita-1990-r-baggio",
@@ -784,9 +784,9 @@
           "positionRaw": "SS",
           "positionBucket": "ATT",
           "rating": 91,
-          "pace": 86,
-          "strength": 75,
-          "accuracy": 93
+          "pace": 78,
+          "strength": 64,
+          "accuracy": 94
         },
         {
           "id": "ita-1990-schillaci",
@@ -794,9 +794,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 88,
-          "pace": 83,
-          "strength": 86,
-          "accuracy": 82
+          "pace": 71,
+          "strength": 91,
+          "accuracy": 68
         }
       ]
     },
@@ -818,9 +818,9 @@
           "positionRaw": "RWB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 76,
-          "strength": 70,
-          "accuracy": 69
+          "pace": 81,
+          "strength": 61,
+          "accuracy": 71
         },
         {
           "id": "ger-1990-kohler",
@@ -828,9 +828,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 86,
-          "pace": 70,
-          "strength": 87,
-          "accuracy": 78
+          "pace": 57,
+          "strength": 89,
+          "accuracy": 72
         },
         {
           "id": "ger-1990-augenthaler",
@@ -838,9 +838,9 @@
           "positionRaw": "SW",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 67,
-          "strength": 84,
-          "accuracy": 71
+          "pace": 62,
+          "strength": 88,
+          "accuracy": 76
         },
         {
           "id": "ger-1990-buchwald",
@@ -848,9 +848,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 85,
-          "pace": 72,
-          "strength": 87,
-          "accuracy": 78
+          "pace": 62,
+          "strength": 90,
+          "accuracy": 77
         },
         {
           "id": "ger-1990-brehme",
@@ -858,9 +858,9 @@
           "positionRaw": "LWB",
           "positionBucket": "DEF",
           "rating": 88,
-          "pace": 89,
-          "strength": 82,
-          "accuracy": 79
+          "pace": 95,
+          "strength": 67,
+          "accuracy": 72
         },
         {
           "id": "ger-1990-hassler",
@@ -868,9 +868,9 @@
           "positionRaw": "RM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 89,
-          "strength": 70,
-          "accuracy": 85
+          "pace": 98,
+          "strength": 59,
+          "accuracy": 80
         },
         {
           "id": "ger-1990-matthaus",
@@ -878,9 +878,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 93,
-          "pace": 86,
-          "strength": 84,
-          "accuracy": 96
+          "pace": 76,
+          "strength": 82,
+          "accuracy": 94
         },
         {
           "id": "ger-1990-littbarski",
@@ -888,9 +888,9 @@
           "positionRaw": "LM",
           "positionBucket": "MID",
           "rating": 86,
-          "pace": 88,
-          "strength": 71,
-          "accuracy": 82
+          "pace": 91,
+          "strength": 62,
+          "accuracy": 79
         },
         {
           "id": "ger-1990-voller",
@@ -898,9 +898,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 87,
-          "pace": 83,
-          "strength": 82,
-          "accuracy": 79
+          "pace": 69,
+          "strength": 97,
+          "accuracy": 69
         },
         {
           "id": "ger-1990-klinsmann",
@@ -908,9 +908,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 88,
-          "pace": 82,
-          "strength": 89,
-          "accuracy": 86
+          "pace": 93,
+          "strength": 80,
+          "accuracy": 67
         }
       ]
     },
@@ -932,9 +932,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 84,
-          "strength": 79,
-          "accuracy": 76
+          "pace": 87,
+          "strength": 69,
+          "accuracy": 73
         },
         {
           "id": "bra-1994-aldair",
@@ -942,8 +942,8 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 86,
-          "pace": 69,
-          "strength": 87,
+          "pace": 65,
+          "strength": 94,
           "accuracy": 76
         },
         {
@@ -952,9 +952,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 65,
-          "strength": 87,
-          "accuracy": 72
+          "pace": 56,
+          "strength": 86,
+          "accuracy": 75
         },
         {
           "id": "bra-1994-branco",
@@ -962,9 +962,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 80,
-          "strength": 77,
-          "accuracy": 77
+          "pace": 82,
+          "strength": 61,
+          "accuracy": 74
         },
         {
           "id": "bra-1994-silva",
@@ -972,9 +972,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 78,
-          "strength": 81,
-          "accuracy": 79
+          "pace": 64,
+          "strength": 92,
+          "accuracy": 84
         },
         {
           "id": "bra-1994-dunga",
@@ -982,9 +982,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 87,
-          "pace": 79,
-          "strength": 86,
-          "accuracy": 85
+          "pace": 64,
+          "strength": 90,
+          "accuracy": 84
         },
         {
           "id": "bra-1994-mazinho",
@@ -992,9 +992,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 72,
+          "pace": 67,
           "strength": 74,
-          "accuracy": 80
+          "accuracy": 90
         },
         {
           "id": "bra-1994-zinho",
@@ -1003,8 +1003,8 @@
           "positionBucket": "MID",
           "rating": 83,
           "pace": 76,
-          "strength": 69,
-          "accuracy": 86
+          "strength": 60,
+          "accuracy": 93
         },
         {
           "id": "bra-1994-romario",
@@ -1012,8 +1012,8 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 94,
-          "pace": 89,
-          "strength": 95,
+          "pace": 77,
+          "strength": 99,
           "accuracy": 96
         },
         {
@@ -1022,9 +1022,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 88,
-          "pace": 86,
-          "strength": 88,
-          "accuracy": 81
+          "pace": 72,
+          "strength": 97,
+          "accuracy": 75
         }
       ]
     },
@@ -1046,9 +1046,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 78,
-          "pace": 78,
-          "strength": 73,
-          "accuracy": 69
+          "pace": 87,
+          "strength": 57,
+          "accuracy": 67
         },
         {
           "id": "bul-1994-ivanov",
@@ -1056,9 +1056,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 69,
-          "strength": 84,
-          "accuracy": 73
+          "pace": 61,
+          "strength": 90,
+          "accuracy": 72
         },
         {
           "id": "bul-1994-hubchev",
@@ -1066,9 +1066,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 81,
-          "pace": 69,
-          "strength": 83,
-          "accuracy": 74
+          "pace": 61,
+          "strength": 84,
+          "accuracy": 67
         },
         {
           "id": "bul-1994-tsvetanov",
@@ -1076,9 +1076,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 79,
-          "pace": 75,
-          "strength": 71,
-          "accuracy": 74
+          "pace": 83,
+          "strength": 63,
+          "accuracy": 71
         },
         {
           "id": "bul-1994-yankov",
@@ -1086,9 +1086,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 80,
-          "pace": 70,
-          "strength": 79,
-          "accuracy": 77
+          "pace": 59,
+          "strength": 80,
+          "accuracy": 75
         },
         {
           "id": "bul-1994-balakov",
@@ -1096,9 +1096,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 87,
-          "pace": 76,
-          "strength": 78,
-          "accuracy": 89
+          "pace": 70,
+          "strength": 71,
+          "accuracy": 88
         },
         {
           "id": "bul-1994-letchkov",
@@ -1106,9 +1106,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 75,
-          "strength": 80,
-          "accuracy": 88
+          "pace": 72,
+          "strength": 77,
+          "accuracy": 84
         },
         {
           "id": "bul-1994-sirakov",
@@ -1116,9 +1116,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 78,
-          "strength": 70,
-          "accuracy": 85
+          "pace": 71,
+          "strength": 57,
+          "accuracy": 84
         },
         {
           "id": "bul-1994-stoichkov",
@@ -1126,9 +1126,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 93,
-          "pace": 88,
-          "strength": 94,
-          "accuracy": 87
+          "pace": 99,
+          "strength": 76,
+          "accuracy": 79
         },
         {
           "id": "bul-1994-kostadinov",
@@ -1136,9 +1136,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 86,
-          "pace": 81,
-          "strength": 82,
-          "accuracy": 84
+          "pace": 97,
+          "strength": 72,
+          "accuracy": 68
         }
       ]
     },
@@ -1160,9 +1160,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 75,
-          "strength": 72,
-          "accuracy": 75
+          "pace": 89,
+          "strength": 66,
+          "accuracy": 67
         },
         {
           "id": "ita-1994-costacurta",
@@ -1170,9 +1170,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 86,
-          "pace": 72,
-          "strength": 90,
-          "accuracy": 77
+          "pace": 62,
+          "strength": 89,
+          "accuracy": 73
         },
         {
           "id": "ita-1994-baresi",
@@ -1180,9 +1180,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 91,
-          "pace": 78,
-          "strength": 92,
-          "accuracy": 80
+          "pace": 67,
+          "strength": 94,
+          "accuracy": 77
         },
         {
           "id": "ita-1994-maldini",
@@ -1190,9 +1190,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 92,
-          "pace": 92,
-          "strength": 81,
-          "accuracy": 80
+          "pace": 98,
+          "strength": 70,
+          "accuracy": 81
         },
         {
           "id": "ita-1994-d-baggio",
@@ -1200,9 +1200,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 83,
-          "pace": 76,
-          "strength": 83,
-          "accuracy": 78
+          "pace": 59,
+          "strength": 87,
+          "accuracy": 77
         },
         {
           "id": "ita-1994-albertini",
@@ -1210,9 +1210,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 76,
-          "strength": 76,
-          "accuracy": 82
+          "pace": 72,
+          "strength": 71,
+          "accuracy": 89
         },
         {
           "id": "ita-1994-berti",
@@ -1220,9 +1220,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 73,
-          "strength": 77,
-          "accuracy": 83
+          "pace": 65,
+          "strength": 72,
+          "accuracy": 81
         },
         {
           "id": "ita-1994-donadoni",
@@ -1230,9 +1230,9 @@
           "positionRaw": "RM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 83,
-          "strength": 69,
-          "accuracy": 79
+          "pace": 87,
+          "strength": 55,
+          "accuracy": 81
         },
         {
           "id": "ita-1994-r-baggio",
@@ -1240,9 +1240,9 @@
           "positionRaw": "SS",
           "positionBucket": "ATT",
           "rating": 94,
-          "pace": 90,
-          "strength": 77,
-          "accuracy": 94
+          "pace": 82,
+          "strength": 69,
+          "accuracy": 99
         },
         {
           "id": "ita-1994-massaro",
@@ -1250,9 +1250,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 82,
-          "pace": 77,
-          "strength": 81,
-          "accuracy": 74
+          "pace": 74,
+          "strength": 84,
+          "accuracy": 65
         }
       ]
     },
@@ -1274,9 +1274,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 78,
-          "strength": 75,
-          "accuracy": 73
+          "pace": 89,
+          "strength": 62,
+          "accuracy": 68
         },
         {
           "id": "swe-1994-p-andersson",
@@ -1284,9 +1284,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 85,
-          "pace": 67,
-          "strength": 87,
-          "accuracy": 76
+          "pace": 66,
+          "strength": 95,
+          "accuracy": 71
         },
         {
           "id": "swe-1994-bjorklund",
@@ -1294,9 +1294,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 69,
+          "pace": 63,
           "strength": 87,
-          "accuracy": 74
+          "accuracy": 72
         },
         {
           "id": "swe-1994-ljung",
@@ -1304,9 +1304,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 81,
-          "strength": 69,
-          "accuracy": 75
+          "pace": 85,
+          "strength": 59,
+          "accuracy": 65
         },
         {
           "id": "swe-1994-thern",
@@ -1314,9 +1314,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 73,
-          "strength": 79,
-          "accuracy": 84
+          "pace": 74,
+          "strength": 73,
+          "accuracy": 91
         },
         {
           "id": "swe-1994-schwarz",
@@ -1324,9 +1324,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 83,
-          "pace": 77,
-          "strength": 76,
-          "accuracy": 81
+          "pace": 67,
+          "strength": 66,
+          "accuracy": 90
         },
         {
           "id": "swe-1994-ingesson",
@@ -1334,9 +1334,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 81,
-          "pace": 70,
-          "strength": 72,
-          "accuracy": 79
+          "pace": 67,
+          "strength": 66,
+          "accuracy": 88
         },
         {
           "id": "swe-1994-brolin",
@@ -1344,9 +1344,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 88,
-          "pace": 82,
-          "strength": 69,
-          "accuracy": 88
+          "pace": 75,
+          "strength": 63,
+          "accuracy": 98
         },
         {
           "id": "swe-1994-dahlin",
@@ -1354,9 +1354,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 85,
-          "pace": 82,
-          "strength": 83,
-          "accuracy": 81
+          "pace": 97,
+          "strength": 74,
+          "accuracy": 71
         },
         {
           "id": "swe-1994-k-andersson",
@@ -1364,9 +1364,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 78,
-          "strength": 85,
-          "accuracy": 80
+          "pace": 76,
+          "strength": 86,
+          "accuracy": 68
         }
       ]
     },
@@ -1388,9 +1388,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 88,
-          "pace": 86,
-          "strength": 76,
-          "accuracy": 76
+          "pace": 90,
+          "strength": 66,
+          "accuracy": 78
         },
         {
           "id": "bra-1998-aldair",
@@ -1398,9 +1398,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 86,
-          "pace": 69,
-          "strength": 86,
-          "accuracy": 74
+          "pace": 67,
+          "strength": 95,
+          "accuracy": 71
         },
         {
           "id": "bra-1998-junior-baiano",
@@ -1408,9 +1408,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 63,
-          "strength": 79,
-          "accuracy": 71
+          "pace": 54,
+          "strength": 85,
+          "accuracy": 65
         },
         {
           "id": "bra-1998-carlos",
@@ -1418,9 +1418,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 90,
-          "pace": 86,
-          "strength": 82,
-          "accuracy": 82
+          "pace": 95,
+          "strength": 71,
+          "accuracy": 81
         },
         {
           "id": "bra-1998-cesar-sampaio",
@@ -1428,8 +1428,8 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 72,
-          "strength": 83,
+          "pace": 57,
+          "strength": 81,
           "accuracy": 82
         },
         {
@@ -1438,9 +1438,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 86,
-          "pace": 77,
-          "strength": 82,
-          "accuracy": 84
+          "pace": 63,
+          "strength": 83,
+          "accuracy": 81
         },
         {
           "id": "bra-1998-rivaldo",
@@ -1448,9 +1448,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 91,
-          "pace": 87,
-          "strength": 72,
-          "accuracy": 90
+          "pace": 83,
+          "strength": 63,
+          "accuracy": 99
         },
         {
           "id": "bra-1998-leonardo",
@@ -1458,9 +1458,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 80,
-          "strength": 70,
-          "accuracy": 85
+          "pace": 81,
+          "strength": 59,
+          "accuracy": 89
         },
         {
           "id": "bra-1998-ronaldo",
@@ -1468,9 +1468,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 95,
-          "pace": 93,
-          "strength": 95,
-          "accuracy": 87
+          "pace": 82,
+          "strength": 98,
+          "accuracy": 72
         },
         {
           "id": "bra-1998-bebeto",
@@ -1478,9 +1478,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 81,
-          "strength": 83,
-          "accuracy": 76
+          "pace": 74,
+          "strength": 92,
+          "accuracy": 69
         }
       ]
     },
@@ -1502,9 +1502,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 76,
-          "strength": 74,
-          "accuracy": 69
+          "pace": 83,
+          "strength": 66,
+          "accuracy": 68
         },
         {
           "id": "cro-1998-stimac",
@@ -1512,9 +1512,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 66,
-          "strength": 83,
-          "accuracy": 73
+          "pace": 61,
+          "strength": 90,
+          "accuracy": 68
         },
         {
           "id": "cro-1998-bilic",
@@ -1522,9 +1522,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 70,
-          "strength": 84,
-          "accuracy": 76
+          "pace": 64,
+          "strength": 88,
+          "accuracy": 67
         },
         {
           "id": "cro-1998-jarni",
@@ -1532,9 +1532,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 85,
-          "pace": 81,
-          "strength": 78,
-          "accuracy": 76
+          "pace": 86,
+          "strength": 69,
+          "accuracy": 72
         },
         {
           "id": "cro-1998-boban",
@@ -1542,9 +1542,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 88,
-          "pace": 77,
-          "strength": 79,
-          "accuracy": 91
+          "pace": 73,
+          "strength": 74,
+          "accuracy": 95
         },
         {
           "id": "cro-1998-asanovic",
@@ -1552,9 +1552,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 83,
-          "pace": 72,
-          "strength": 76,
-          "accuracy": 85
+          "pace": 69,
+          "strength": 68,
+          "accuracy": 92
         },
         {
           "id": "cro-1998-prosinecki",
@@ -1562,9 +1562,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 86,
-          "pace": 81,
-          "strength": 68,
-          "accuracy": 87
+          "pace": 73,
+          "strength": 62,
+          "accuracy": 91
         },
         {
           "id": "cro-1998-stanic",
@@ -1572,9 +1572,9 @@
           "positionRaw": "RM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 81,
-          "strength": 68,
-          "accuracy": 81
+          "pace": 92,
+          "strength": 51,
+          "accuracy": 69
         },
         {
           "id": "cro-1998-suker",
@@ -1582,9 +1582,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 92,
-          "pace": 87,
-          "strength": 90,
-          "accuracy": 85
+          "pace": 79,
+          "strength": 99,
+          "accuracy": 76
         },
         {
           "id": "cro-1998-vlaovic",
@@ -1592,9 +1592,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 81,
-          "pace": 78,
-          "strength": 78,
-          "accuracy": 78
+          "pace": 71,
+          "strength": 89,
+          "accuracy": 68
         }
       ]
     },
@@ -1616,9 +1616,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 87,
-          "pace": 85,
-          "strength": 77,
-          "accuracy": 77
+          "pace": 86,
+          "strength": 75,
+          "accuracy": 76
         },
         {
           "id": "fra-1998-leboeuf",
@@ -1626,9 +1626,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 70,
+          "pace": 62,
           "strength": 84,
-          "accuracy": 69
+          "accuracy": 73
         },
         {
           "id": "fra-1998-desailly",
@@ -1636,9 +1636,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 87,
-          "pace": 74,
-          "strength": 90,
-          "accuracy": 76
+          "pace": 64,
+          "strength": 99,
+          "accuracy": 71
         },
         {
           "id": "fra-1998-lizarazu",
@@ -1646,9 +1646,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 85,
-          "pace": 81,
-          "strength": 79,
-          "accuracy": 78
+          "pace": 94,
+          "strength": 66,
+          "accuracy": 77
         },
         {
           "id": "fra-1998-karembeu",
@@ -1657,8 +1657,8 @@
           "positionBucket": "MID",
           "rating": 80,
           "pace": 70,
-          "strength": 72,
-          "accuracy": 78
+          "strength": 68,
+          "accuracy": 80
         },
         {
           "id": "fra-1998-deschamps",
@@ -1666,8 +1666,8 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 71,
-          "strength": 79,
+          "pace": 67,
+          "strength": 84,
           "accuracy": 79
         },
         {
@@ -1676,9 +1676,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 74,
-          "strength": 73,
-          "accuracy": 81
+          "pace": 66,
+          "strength": 72,
+          "accuracy": 84
         },
         {
           "id": "fra-1998-zidane",
@@ -1686,8 +1686,8 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 95,
-          "pace": 89,
-          "strength": 80,
+          "pace": 83,
+          "strength": 69,
           "accuracy": 99
         },
         {
@@ -1696,9 +1696,9 @@
           "positionRaw": "SS",
           "positionBucket": "ATT",
           "rating": 85,
-          "pace": 77,
-          "strength": 69,
-          "accuracy": 87
+          "pace": 73,
+          "strength": 60,
+          "accuracy": 89
         },
         {
           "id": "fra-1998-guivarch",
@@ -1706,9 +1706,9 @@
           "positionRaw": "CF",
           "positionBucket": "ATT",
           "rating": 76,
-          "pace": 71,
-          "strength": 72,
-          "accuracy": 71
+          "pace": 68,
+          "strength": 78,
+          "accuracy": 62
         }
       ]
     },
@@ -1730,8 +1730,8 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 77,
-          "strength": 71,
+          "pace": 91,
+          "strength": 68,
           "accuracy": 71
         },
         {
@@ -1740,9 +1740,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 89,
-          "pace": 70,
-          "strength": 90,
-          "accuracy": 80
+          "pace": 59,
+          "strength": 92,
+          "accuracy": 72
         },
         {
           "id": "ned-1998-f-de-boer",
@@ -1750,9 +1750,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 87,
-          "pace": 71,
-          "strength": 86,
-          "accuracy": 78
+          "pace": 68,
+          "strength": 99,
+          "accuracy": 69
         },
         {
           "id": "ned-1998-numan",
@@ -1760,8 +1760,8 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 81,
-          "pace": 78,
-          "strength": 76,
+          "pace": 90,
+          "strength": 64,
           "accuracy": 70
         },
         {
@@ -1770,9 +1770,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 88,
-          "pace": 75,
-          "strength": 87,
-          "accuracy": 84
+          "pace": 61,
+          "strength": 86,
+          "accuracy": 81
         },
         {
           "id": "ned-1998-cocu",
@@ -1780,9 +1780,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 79,
-          "strength": 77,
-          "accuracy": 85
+          "pace": 76,
+          "strength": 71,
+          "accuracy": 87
         },
         {
           "id": "ned-1998-r-de-boer",
@@ -1790,9 +1790,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 78,
-          "strength": 70,
-          "accuracy": 88
+          "pace": 74,
+          "strength": 58,
+          "accuracy": 92
         },
         {
           "id": "ned-1998-bergkamp",
@@ -1800,9 +1800,9 @@
           "positionRaw": "SS",
           "positionBucket": "ATT",
           "rating": 92,
-          "pace": 87,
-          "strength": 74,
-          "accuracy": 96
+          "pace": 85,
+          "strength": 64,
+          "accuracy": 95
         },
         {
           "id": "ned-1998-overmars",
@@ -1810,9 +1810,9 @@
           "positionRaw": "LW",
           "positionBucket": "ATT",
           "rating": 87,
-          "pace": 91,
-          "strength": 69,
-          "accuracy": 83
+          "pace": 97,
+          "strength": 63,
+          "accuracy": 82
         },
         {
           "id": "ned-1998-kluivert",
@@ -1820,9 +1820,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 88,
-          "pace": 83,
-          "strength": 83,
-          "accuracy": 86
+          "pace": 91,
+          "strength": 75,
+          "accuracy": 67
         }
       ]
     },
@@ -1844,9 +1844,9 @@
           "positionRaw": "RWB",
           "positionBucket": "DEF",
           "rating": 87,
-          "pace": 86,
-          "strength": 81,
-          "accuracy": 78
+          "pace": 93,
+          "strength": 66,
+          "accuracy": 80
         },
         {
           "id": "bra-2002-lucio",
@@ -1854,9 +1854,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 85,
-          "pace": 69,
-          "strength": 87,
-          "accuracy": 78
+          "pace": 66,
+          "strength": 93,
+          "accuracy": 77
         },
         {
           "id": "bra-2002-edmilson",
@@ -1864,8 +1864,8 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 65,
-          "strength": 81,
+          "pace": 53,
+          "strength": 84,
           "accuracy": 69
         },
         {
@@ -1874,8 +1874,8 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 79,
-          "pace": 65,
-          "strength": 78,
+          "pace": 58,
+          "strength": 89,
           "accuracy": 72
         },
         {
@@ -1884,9 +1884,9 @@
           "positionRaw": "LWB",
           "positionBucket": "DEF",
           "rating": 88,
-          "pace": 85,
-          "strength": 77,
-          "accuracy": 81
+          "pace": 91,
+          "strength": 71,
+          "accuracy": 79
         },
         {
           "id": "bra-2002-gilberto",
@@ -1894,9 +1894,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 81,
-          "pace": 69,
-          "strength": 82,
-          "accuracy": 77
+          "pace": 58,
+          "strength": 85,
+          "accuracy": 80
         },
         {
           "id": "bra-2002-kleberson",
@@ -1904,9 +1904,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 78,
-          "pace": 67,
-          "strength": 72,
-          "accuracy": 79
+          "pace": 64,
+          "strength": 62,
+          "accuracy": 77
         },
         {
           "id": "bra-2002-ronaldinho",
@@ -1915,8 +1915,8 @@
           "positionBucket": "MID",
           "rating": 89,
           "pace": 85,
-          "strength": 76,
-          "accuracy": 92
+          "strength": 60,
+          "accuracy": 99
         },
         {
           "id": "bra-2002-rivaldo",
@@ -1924,9 +1924,9 @@
           "positionRaw": "SS",
           "positionBucket": "ATT",
           "rating": 90,
-          "pace": 85,
-          "strength": 74,
-          "accuracy": 95
+          "pace": 80,
+          "strength": 60,
+          "accuracy": 97
         },
         {
           "id": "bra-2002-ronaldo",
@@ -1936,7 +1936,7 @@
           "rating": 96,
           "pace": 97,
           "strength": 95,
-          "accuracy": 88
+          "accuracy": 79
         }
       ]
     },
@@ -1958,9 +1958,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 77,
-          "strength": 75,
-          "accuracy": 74
+          "pace": 87,
+          "strength": 66,
+          "accuracy": 69
         },
         {
           "id": "ger-2002-linke",
@@ -1968,9 +1968,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 63,
-          "strength": 83,
-          "accuracy": 67
+          "pace": 56,
+          "strength": 90,
+          "accuracy": 72
         },
         {
           "id": "ger-2002-ramelow",
@@ -1978,9 +1978,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 81,
-          "pace": 69,
+          "pace": 57,
           "strength": 84,
-          "accuracy": 68
+          "accuracy": 70
         },
         {
           "id": "ger-2002-metzelder",
@@ -1988,9 +1988,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 79,
-          "pace": 62,
-          "strength": 83,
-          "accuracy": 67
+          "pace": 57,
+          "strength": 88,
+          "accuracy": 66
         },
         {
           "id": "ger-2002-ziege",
@@ -1998,9 +1998,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 81,
-          "strength": 74,
-          "accuracy": 71
+          "pace": 82,
+          "strength": 66,
+          "accuracy": 77
         },
         {
           "id": "ger-2002-hamann",
@@ -2008,9 +2008,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 76,
-          "strength": 85,
-          "accuracy": 84
+          "pace": 61,
+          "strength": 82,
+          "accuracy": 83
         },
         {
           "id": "ger-2002-ballack",
@@ -2018,9 +2018,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 90,
-          "pace": 83,
-          "strength": 79,
-          "accuracy": 93
+          "pace": 74,
+          "strength": 81,
+          "accuracy": 95
         },
         {
           "id": "ger-2002-schneider",
@@ -2028,9 +2028,9 @@
           "positionRaw": "RM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 87,
-          "strength": 69,
-          "accuracy": 79
+          "pace": 89,
+          "strength": 58,
+          "accuracy": 76
         },
         {
           "id": "ger-2002-klose",
@@ -2038,9 +2038,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 87,
-          "pace": 85,
-          "strength": 87,
-          "accuracy": 79
+          "pace": 95,
+          "strength": 69,
+          "accuracy": 65
         },
         {
           "id": "ger-2002-neuville",
@@ -2048,9 +2048,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 83,
-          "pace": 78,
-          "strength": 84,
-          "accuracy": 75
+          "pace": 87,
+          "strength": 67,
+          "accuracy": 69
         }
       ]
     },
@@ -2072,9 +2072,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 81,
-          "pace": 80,
-          "strength": 70,
-          "accuracy": 73
+          "pace": 82,
+          "strength": 66,
+          "accuracy": 70
         },
         {
           "id": "kor-2002-hong",
@@ -2082,9 +2082,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 86,
-          "pace": 71,
-          "strength": 87,
-          "accuracy": 79
+          "pace": 60,
+          "strength": 96,
+          "accuracy": 78
         },
         {
           "id": "kor-2002-choi-jin-cheul",
@@ -2092,9 +2092,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 63,
-          "strength": 79,
-          "accuracy": 70
+          "pace": 56,
+          "strength": 85,
+          "accuracy": 69
         },
         {
           "id": "kor-2002-kim-tae-young",
@@ -2102,9 +2102,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 79,
-          "pace": 64,
-          "strength": 79,
-          "accuracy": 73
+          "pace": 56,
+          "strength": 83,
+          "accuracy": 68
         },
         {
           "id": "kor-2002-lee-young-pyo",
@@ -2112,8 +2112,8 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 79,
-          "strength": 73,
+          "pace": 87,
+          "strength": 61,
           "accuracy": 75
         },
         {
@@ -2122,9 +2122,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 81,
-          "pace": 73,
-          "strength": 81,
-          "accuracy": 78
+          "pace": 56,
+          "strength": 79,
+          "accuracy": 77
         },
         {
           "id": "kor-2002-yoo",
@@ -2132,9 +2132,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 77,
-          "strength": 78,
-          "accuracy": 84
+          "pace": 68,
+          "strength": 69,
+          "accuracy": 89
         },
         {
           "id": "kor-2002-park",
@@ -2142,9 +2142,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 78,
-          "strength": 75,
-          "accuracy": 85
+          "pace": 71,
+          "strength": 69,
+          "accuracy": 90
         },
         {
           "id": "kor-2002-seol",
@@ -2152,9 +2152,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 80,
-          "pace": 83,
-          "strength": 66,
-          "accuracy": 80
+          "pace": 86,
+          "strength": 55,
+          "accuracy": 75
         },
         {
           "id": "kor-2002-ahn",
@@ -2162,9 +2162,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 83,
-          "pace": 80,
-          "strength": 82,
-          "accuracy": 80
+          "pace": 68,
+          "strength": 87,
+          "accuracy": 62
         }
       ]
     },
@@ -2186,9 +2186,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 79,
-          "pace": 77,
-          "strength": 74,
-          "accuracy": 74
+          "pace": 78,
+          "strength": 61,
+          "accuracy": 68
         },
         {
           "id": "tur-2002-alpay",
@@ -2196,9 +2196,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 70,
-          "strength": 85,
-          "accuracy": 74
+          "pace": 58,
+          "strength": 91,
+          "accuracy": 68
         },
         {
           "id": "tur-2002-bulent",
@@ -2206,9 +2206,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 69,
-          "strength": 82,
-          "accuracy": 74
+          "pace": 61,
+          "strength": 84,
+          "accuracy": 65
         },
         {
           "id": "tur-2002-ergun",
@@ -2216,9 +2216,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 76,
-          "strength": 74,
-          "accuracy": 73
+          "pace": 86,
+          "strength": 63,
+          "accuracy": 66
         },
         {
           "id": "tur-2002-umit-davala",
@@ -2226,9 +2226,9 @@
           "positionRaw": "RM",
           "positionBucket": "MID",
           "rating": 81,
-          "pace": 86,
-          "strength": 67,
-          "accuracy": 76
+          "pace": 89,
+          "strength": 59,
+          "accuracy": 78
         },
         {
           "id": "tur-2002-tugay",
@@ -2236,9 +2236,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 77,
-          "strength": 73,
-          "accuracy": 82
+          "pace": 74,
+          "strength": 76,
+          "accuracy": 86
         },
         {
           "id": "tur-2002-emre",
@@ -2246,9 +2246,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 83,
-          "pace": 78,
-          "strength": 76,
-          "accuracy": 84
+          "pace": 70,
+          "strength": 66,
+          "accuracy": 85
         },
         {
           "id": "tur-2002-basturk",
@@ -2256,9 +2256,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 81,
-          "strength": 67,
-          "accuracy": 85
+          "pace": 76,
+          "strength": 57,
+          "accuracy": 95
         },
         {
           "id": "tur-2002-hasan-sas",
@@ -2266,9 +2266,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 89,
-          "strength": 66,
-          "accuracy": 80
+          "pace": 93,
+          "strength": 55,
+          "accuracy": 76
         },
         {
           "id": "tur-2002-hakan-sukur",
@@ -2276,9 +2276,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 87,
-          "pace": 86,
-          "strength": 88,
-          "accuracy": 81
+          "pace": 69,
+          "strength": 89,
+          "accuracy": 66
         }
       ]
     },
@@ -2300,9 +2300,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 86,
-          "pace": 82,
-          "strength": 75,
-          "accuracy": 77
+          "pace": 89,
+          "strength": 72,
+          "accuracy": 80
         },
         {
           "id": "ger-2006-metzelder",
@@ -2310,9 +2310,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 81,
-          "pace": 67,
-          "strength": 80,
-          "accuracy": 72
+          "pace": 55,
+          "strength": 85,
+          "accuracy": 71
         },
         {
           "id": "ger-2006-mertesacker",
@@ -2320,9 +2320,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 68,
-          "strength": 81,
-          "accuracy": 72
+          "pace": 57,
+          "strength": 94,
+          "accuracy": 69
         },
         {
           "id": "ger-2006-friedrich",
@@ -2330,9 +2330,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 80,
-          "strength": 75,
-          "accuracy": 72
+          "pace": 88,
+          "strength": 59,
+          "accuracy": 74
         },
         {
           "id": "ger-2006-frings",
@@ -2340,9 +2340,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 73,
-          "strength": 83,
-          "accuracy": 79
+          "pace": 65,
+          "strength": 89,
+          "accuracy": 77
         },
         {
           "id": "ger-2006-ballack",
@@ -2350,9 +2350,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 89,
-          "pace": 77,
-          "strength": 83,
-          "accuracy": 87
+          "pace": 74,
+          "strength": 79,
+          "accuracy": 97
         },
         {
           "id": "ger-2006-schweinsteiger",
@@ -2360,8 +2360,8 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 76,
-          "strength": 78,
+          "pace": 75,
+          "strength": 74,
           "accuracy": 86
         },
         {
@@ -2370,9 +2370,9 @@
           "positionRaw": "RM",
           "positionBucket": "MID",
           "rating": 83,
-          "pace": 83,
-          "strength": 65,
-          "accuracy": 79
+          "pace": 88,
+          "strength": 52,
+          "accuracy": 71
         },
         {
           "id": "ger-2006-klose",
@@ -2380,9 +2380,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 88,
-          "pace": 85,
-          "strength": 85,
-          "accuracy": 86
+          "pace": 97,
+          "strength": 70,
+          "accuracy": 70
         },
         {
           "id": "ger-2006-podolski",
@@ -2390,9 +2390,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 81,
-          "strength": 80,
-          "accuracy": 82
+          "pace": 70,
+          "strength": 93,
+          "accuracy": 62
         }
       ]
     },
@@ -2414,8 +2414,8 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 88,
-          "pace": 88,
-          "strength": 78,
+          "pace": 96,
+          "strength": 67,
           "accuracy": 79
         },
         {
@@ -2424,9 +2424,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 87,
-          "pace": 70,
-          "strength": 88,
-          "accuracy": 78
+          "pace": 61,
+          "strength": 98,
+          "accuracy": 75
         },
         {
           "id": "arg-2006-coloccini",
@@ -2434,9 +2434,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 67,
-          "strength": 84,
-          "accuracy": 73
+          "pace": 58,
+          "strength": 91,
+          "accuracy": 64
         },
         {
           "id": "arg-2006-heinze",
@@ -2444,9 +2444,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 79,
-          "strength": 78,
-          "accuracy": 74
+          "pace": 83,
+          "strength": 66,
+          "accuracy": 75
         },
         {
           "id": "arg-2006-mascherano",
@@ -2454,9 +2454,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 78,
+          "pace": 60,
           "strength": 82,
-          "accuracy": 80
+          "accuracy": 85
         },
         {
           "id": "arg-2006-cambiasso",
@@ -2464,9 +2464,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 74,
-          "strength": 77,
-          "accuracy": 86
+          "pace": 68,
+          "strength": 76,
+          "accuracy": 89
         },
         {
           "id": "arg-2006-riquelme",
@@ -2474,9 +2474,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 90,
-          "pace": 82,
-          "strength": 75,
-          "accuracy": 90
+          "pace": 79,
+          "strength": 62,
+          "accuracy": 93
         },
         {
           "id": "arg-2006-maxi",
@@ -2484,9 +2484,9 @@
           "positionRaw": "RM",
           "positionBucket": "MID",
           "rating": 83,
-          "pace": 82,
-          "strength": 69,
-          "accuracy": 82
+          "pace": 88,
+          "strength": 59,
+          "accuracy": 74
         },
         {
           "id": "arg-2006-crespo",
@@ -2494,9 +2494,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 87,
-          "pace": 83,
-          "strength": 84,
-          "accuracy": 83
+          "pace": 89,
+          "strength": 72,
+          "accuracy": 68
         },
         {
           "id": "arg-2006-tevez",
@@ -2504,9 +2504,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 85,
-          "pace": 80,
-          "strength": 85,
-          "accuracy": 82
+          "pace": 92,
+          "strength": 70,
+          "accuracy": 64
         }
       ]
     },
@@ -2528,9 +2528,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 86,
-          "pace": 85,
-          "strength": 74,
-          "accuracy": 78
+          "pace": 93,
+          "strength": 66,
+          "accuracy": 80
         },
         {
           "id": "ita-2006-cannavaro",
@@ -2538,9 +2538,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 92,
-          "pace": 77,
+          "pace": 67,
           "strength": 96,
-          "accuracy": 78
+          "accuracy": 73
         },
         {
           "id": "ita-2006-materazzi",
@@ -2548,9 +2548,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 66,
-          "strength": 89,
-          "accuracy": 76
+          "pace": 65,
+          "strength": 94,
+          "accuracy": 68
         },
         {
           "id": "ita-2006-grosso",
@@ -2558,9 +2558,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 80,
-          "strength": 73,
-          "accuracy": 76
+          "pace": 92,
+          "strength": 68,
+          "accuracy": 77
         },
         {
           "id": "ita-2006-camoranesi",
@@ -2568,9 +2568,9 @@
           "positionRaw": "RM",
           "positionBucket": "MID",
           "rating": 83,
-          "pace": 85,
-          "strength": 66,
-          "accuracy": 80
+          "pace": 87,
+          "strength": 53,
+          "accuracy": 71
         },
         {
           "id": "ita-2006-gattuso",
@@ -2578,9 +2578,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 86,
-          "pace": 75,
-          "strength": 77,
-          "accuracy": 84
+          "pace": 74,
+          "strength": 69,
+          "accuracy": 93
         },
         {
           "id": "ita-2006-pirlo",
@@ -2588,9 +2588,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 91,
-          "pace": 82,
-          "strength": 81,
-          "accuracy": 89
+          "pace": 80,
+          "strength": 77,
+          "accuracy": 93
         },
         {
           "id": "ita-2006-perrotta",
@@ -2598,9 +2598,9 @@
           "positionRaw": "LM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 86,
-          "strength": 64,
-          "accuracy": 80
+          "pace": 94,
+          "strength": 53,
+          "accuracy": 75
         },
         {
           "id": "ita-2006-totti",
@@ -2608,9 +2608,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 90,
-          "pace": 86,
-          "strength": 76,
-          "accuracy": 95
+          "pace": 77,
+          "strength": 58,
+          "accuracy": 99
         },
         {
           "id": "ita-2006-toni",
@@ -2618,9 +2618,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 80,
-          "strength": 84,
-          "accuracy": 81
+          "pace": 91,
+          "strength": 76,
+          "accuracy": 70
         }
       ]
     },
@@ -2642,9 +2642,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 81,
-          "strength": 75,
-          "accuracy": 70
+          "pace": 88,
+          "strength": 68,
+          "accuracy": 68
         },
         {
           "id": "ukr-2006-rusol",
@@ -2652,9 +2652,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 64,
-          "strength": 79,
-          "accuracy": 68
+          "pace": 54,
+          "strength": 84,
+          "accuracy": 64
         },
         {
           "id": "ukr-2006-vashchuk",
@@ -2662,9 +2662,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 79,
-          "pace": 66,
-          "strength": 78,
-          "accuracy": 67
+          "pace": 59,
+          "strength": 85,
+          "accuracy": 69
         },
         {
           "id": "ukr-2006-nesmachnyi",
@@ -2672,9 +2672,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 78,
-          "pace": 73,
-          "strength": 69,
-          "accuracy": 67
+          "pace": 80,
+          "strength": 61,
+          "accuracy": 72
         },
         {
           "id": "ukr-2006-tymoshchuk",
@@ -2682,9 +2682,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 77,
-          "strength": 84,
-          "accuracy": 84
+          "pace": 61,
+          "strength": 88,
+          "accuracy": 80
         },
         {
           "id": "ukr-2006-shelayev",
@@ -2693,7 +2693,7 @@
           "positionBucket": "MID",
           "rating": 79,
           "pace": 72,
-          "strength": 71,
+          "strength": 62,
           "accuracy": 80
         },
         {
@@ -2702,9 +2702,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 80,
-          "pace": 75,
-          "strength": 73,
-          "accuracy": 82
+          "pace": 65,
+          "strength": 65,
+          "accuracy": 79
         },
         {
           "id": "ukr-2006-kalynychenko",
@@ -2712,9 +2712,9 @@
           "positionRaw": "LM",
           "positionBucket": "MID",
           "rating": 81,
-          "pace": 82,
-          "strength": 62,
-          "accuracy": 80
+          "pace": 84,
+          "strength": 52,
+          "accuracy": 70
         },
         {
           "id": "ukr-2006-shevchenko",
@@ -2722,9 +2722,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 91,
-          "pace": 89,
-          "strength": 92,
-          "accuracy": 84
+          "pace": 99,
+          "strength": 72,
+          "accuracy": 75
         },
         {
           "id": "ukr-2006-voronin",
@@ -2732,9 +2732,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 82,
-          "pace": 79,
-          "strength": 83,
-          "accuracy": 74
+          "pace": 73,
+          "strength": 91,
+          "accuracy": 62
         }
       ]
     },
@@ -2756,9 +2756,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 82,
-          "strength": 78,
-          "accuracy": 77
+          "pace": 83,
+          "strength": 65,
+          "accuracy": 74
         },
         {
           "id": "eng-2006-ferdinand",
@@ -2766,9 +2766,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 88,
-          "pace": 74,
-          "strength": 88,
-          "accuracy": 80
+          "pace": 60,
+          "strength": 93,
+          "accuracy": 76
         },
         {
           "id": "eng-2006-terry",
@@ -2776,9 +2776,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 88,
-          "pace": 71,
-          "strength": 92,
-          "accuracy": 79
+          "pace": 61,
+          "strength": 99,
+          "accuracy": 80
         },
         {
           "id": "eng-2006-a-cole",
@@ -2786,9 +2786,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 87,
-          "pace": 87,
-          "strength": 76,
-          "accuracy": 80
+          "pace": 90,
+          "strength": 72,
+          "accuracy": 74
         },
         {
           "id": "eng-2006-beckham",
@@ -2797,8 +2797,8 @@
           "positionBucket": "MID",
           "rating": 87,
           "pace": 91,
-          "strength": 72,
-          "accuracy": 87
+          "strength": 63,
+          "accuracy": 79
         },
         {
           "id": "eng-2006-gerrard",
@@ -2806,9 +2806,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 90,
-          "pace": 84,
-          "strength": 79,
-          "accuracy": 92
+          "pace": 78,
+          "strength": 81,
+          "accuracy": 99
         },
         {
           "id": "eng-2006-lampard",
@@ -2816,9 +2816,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 88,
-          "pace": 77,
-          "strength": 78,
-          "accuracy": 89
+          "pace": 74,
+          "strength": 75,
+          "accuracy": 88
         },
         {
           "id": "eng-2006-j-cole",
@@ -2826,9 +2826,9 @@
           "positionRaw": "LM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 88,
-          "strength": 69,
-          "accuracy": 82
+          "pace": 91,
+          "strength": 53,
+          "accuracy": 80
         },
         {
           "id": "eng-2006-rooney",
@@ -2836,9 +2836,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 89,
-          "pace": 84,
-          "strength": 85,
-          "accuracy": 82
+          "pace": 91,
+          "strength": 80,
+          "accuracy": 75
         },
         {
           "id": "eng-2006-owen",
@@ -2846,9 +2846,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 86,
-          "pace": 84,
-          "strength": 87,
-          "accuracy": 80
+          "pace": 77,
+          "strength": 88,
+          "accuracy": 66
         }
       ]
     },
@@ -2870,9 +2870,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 81,
-          "pace": 82,
-          "strength": 71,
-          "accuracy": 71
+          "pace": 86,
+          "strength": 60,
+          "accuracy": 75
         },
         {
           "id": "por-2006-carvalho",
@@ -2880,9 +2880,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 88,
-          "pace": 72,
-          "strength": 87,
-          "accuracy": 78
+          "pace": 68,
+          "strength": 95,
+          "accuracy": 76
         },
         {
           "id": "por-2006-meira",
@@ -2890,9 +2890,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 68,
+          "pace": 59,
           "strength": 86,
-          "accuracy": 69
+          "accuracy": 74
         },
         {
           "id": "por-2006-valente",
@@ -2900,9 +2900,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 77,
-          "strength": 72,
-          "accuracy": 72
+          "pace": 84,
+          "strength": 65,
+          "accuracy": 69
         },
         {
           "id": "por-2006-costinha",
@@ -2910,9 +2910,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 72,
-          "strength": 82,
-          "accuracy": 80
+          "pace": 61,
+          "strength": 85,
+          "accuracy": 79
         },
         {
           "id": "por-2006-maniche",
@@ -2920,9 +2920,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 75,
-          "strength": 76,
-          "accuracy": 87
+          "pace": 70,
+          "strength": 72,
+          "accuracy": 83
         },
         {
           "id": "por-2006-deco",
@@ -2930,9 +2930,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 88,
-          "pace": 83,
-          "strength": 69,
-          "accuracy": 93
+          "pace": 78,
+          "strength": 67,
+          "accuracy": 97
         },
         {
           "id": "por-2006-figo",
@@ -2940,9 +2940,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 90,
-          "pace": 95,
-          "strength": 69,
-          "accuracy": 85
+          "pace": 98,
+          "strength": 66,
+          "accuracy": 77
         },
         {
           "id": "por-2006-ronaldo",
@@ -2950,9 +2950,9 @@
           "positionRaw": "LW",
           "positionBucket": "ATT",
           "rating": 88,
-          "pace": 89,
-          "strength": 73,
-          "accuracy": 87
+          "pace": 93,
+          "strength": 61,
+          "accuracy": 78
         },
         {
           "id": "por-2006-pauleta",
@@ -2960,9 +2960,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 86,
-          "pace": 86,
-          "strength": 83,
-          "accuracy": 84
+          "pace": 77,
+          "strength": 90,
+          "accuracy": 67
         }
       ]
     },
@@ -2984,9 +2984,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 86,
-          "pace": 81,
-          "strength": 74,
-          "accuracy": 74
+          "pace": 93,
+          "strength": 64,
+          "accuracy": 79
         },
         {
           "id": "bra-2006-lucio",
@@ -2994,9 +2994,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 87,
-          "pace": 72,
-          "strength": 89,
-          "accuracy": 77
+          "pace": 59,
+          "strength": 96,
+          "accuracy": 70
         },
         {
           "id": "bra-2006-juan",
@@ -3004,9 +3004,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 71,
-          "strength": 88,
-          "accuracy": 72
+          "pace": 64,
+          "strength": 87,
+          "accuracy": 74
         },
         {
           "id": "bra-2006-carlos",
@@ -3014,9 +3014,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 87,
-          "pace": 86,
-          "strength": 78,
-          "accuracy": 75
+          "pace": 95,
+          "strength": 65,
+          "accuracy": 73
         },
         {
           "id": "bra-2006-emerson",
@@ -3024,8 +3024,8 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 83,
-          "pace": 76,
-          "strength": 81,
+          "pace": 58,
+          "strength": 89,
           "accuracy": 83
         },
         {
@@ -3034,9 +3034,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 77,
-          "strength": 74,
-          "accuracy": 83
+          "pace": 71,
+          "strength": 67,
+          "accuracy": 93
         },
         {
           "id": "bra-2006-kaka",
@@ -3044,9 +3044,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 92,
-          "pace": 83,
-          "strength": 72,
-          "accuracy": 91
+          "pace": 82,
+          "strength": 63,
+          "accuracy": 99
         },
         {
           "id": "bra-2006-ronaldinho",
@@ -3054,9 +3054,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 93,
-          "pace": 86,
-          "strength": 78,
-          "accuracy": 97
+          "pace": 88,
+          "strength": 66,
+          "accuracy": 96
         },
         {
           "id": "bra-2006-adriano",
@@ -3064,9 +3064,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 87,
-          "pace": 81,
-          "strength": 83,
-          "accuracy": 84
+          "pace": 70,
+          "strength": 93,
+          "accuracy": 70
         },
         {
           "id": "bra-2006-ronaldo",
@@ -3074,9 +3074,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 90,
-          "pace": 84,
-          "strength": 89,
-          "accuracy": 88
+          "pace": 98,
+          "strength": 72,
+          "accuracy": 71
         }
       ]
     },
@@ -3098,9 +3098,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 83,
-          "strength": 76,
-          "accuracy": 79
+          "pace": 86,
+          "strength": 70,
+          "accuracy": 76
         },
         {
           "id": "fra-2006-thuram",
@@ -3108,8 +3108,8 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 87,
-          "pace": 70,
-          "strength": 89,
+          "pace": 58,
+          "strength": 92,
           "accuracy": 74
         },
         {
@@ -3118,9 +3118,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 68,
-          "strength": 84,
-          "accuracy": 72
+          "pace": 60,
+          "strength": 94,
+          "accuracy": 68
         },
         {
           "id": "fra-2006-abidal",
@@ -3128,9 +3128,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 81,
-          "strength": 79,
-          "accuracy": 75
+          "pace": 86,
+          "strength": 72,
+          "accuracy": 76
         },
         {
           "id": "fra-2006-makelele",
@@ -3138,9 +3138,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 88,
-          "pace": 78,
-          "strength": 87,
-          "accuracy": 86
+          "pace": 67,
+          "strength": 90,
+          "accuracy": 81
         },
         {
           "id": "fra-2006-vieira",
@@ -3148,9 +3148,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 88,
-          "pace": 80,
-          "strength": 77,
-          "accuracy": 85
+          "pace": 72,
+          "strength": 80,
+          "accuracy": 88
         },
         {
           "id": "fra-2006-malouda",
@@ -3158,9 +3158,9 @@
           "positionRaw": "LM",
           "positionBucket": "MID",
           "rating": 83,
-          "pace": 84,
-          "strength": 64,
-          "accuracy": 77
+          "pace": 91,
+          "strength": 53,
+          "accuracy": 71
         },
         {
           "id": "fra-2006-zidane",
@@ -3168,8 +3168,8 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 94,
-          "pace": 89,
-          "strength": 80,
+          "pace": 80,
+          "strength": 62,
           "accuracy": 99
         },
         {
@@ -3178,9 +3178,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 86,
-          "pace": 86,
-          "strength": 70,
-          "accuracy": 81
+          "pace": 96,
+          "strength": 62,
+          "accuracy": 74
         },
         {
           "id": "fra-2006-henry",
@@ -3188,9 +3188,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 93,
-          "pace": 87,
-          "strength": 88,
-          "accuracy": 90
+          "pace": 83,
+          "strength": 97,
+          "accuracy": 73
         }
       ]
     },
@@ -3212,9 +3212,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 81,
-          "pace": 82,
-          "strength": 72,
-          "accuracy": 72
+          "pace": 85,
+          "strength": 67,
+          "accuracy": 75
         },
         {
           "id": "ned-2010-heitinga",
@@ -3222,9 +3222,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 67,
-          "strength": 83,
-          "accuracy": 71
+          "pace": 55,
+          "strength": 86,
+          "accuracy": 66
         },
         {
           "id": "ned-2010-mathijsen",
@@ -3232,9 +3232,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 81,
-          "pace": 68,
-          "strength": 85,
-          "accuracy": 72
+          "pace": 55,
+          "strength": 88,
+          "accuracy": 68
         },
         {
           "id": "ned-2010-van-bronckhorst",
@@ -3242,9 +3242,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 85,
-          "pace": 86,
-          "strength": 75,
-          "accuracy": 75
+          "pace": 91,
+          "strength": 72,
+          "accuracy": 73
         },
         {
           "id": "ned-2010-van-bommel",
@@ -3252,9 +3252,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 86,
-          "pace": 74,
-          "strength": 83,
-          "accuracy": 85
+          "pace": 65,
+          "strength": 85,
+          "accuracy": 84
         },
         {
           "id": "ned-2010-de-jong",
@@ -3262,9 +3262,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 75,
-          "strength": 85,
-          "accuracy": 80
+          "pace": 58,
+          "strength": 91,
+          "accuracy": 82
         },
         {
           "id": "ned-2010-sneijder",
@@ -3272,9 +3272,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 92,
-          "pace": 88,
-          "strength": 75,
-          "accuracy": 91
+          "pace": 80,
+          "strength": 67,
+          "accuracy": 95
         },
         {
           "id": "ned-2010-robben",
@@ -3282,9 +3282,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 91,
-          "pace": 96,
-          "strength": 76,
-          "accuracy": 90
+          "pace": 97,
+          "strength": 59,
+          "accuracy": 85
         },
         {
           "id": "ned-2010-kuyt",
@@ -3292,9 +3292,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 83,
-          "pace": 86,
-          "strength": 66,
-          "accuracy": 79
+          "pace": 87,
+          "strength": 59,
+          "accuracy": 75
         },
         {
           "id": "ned-2010-van-persie",
@@ -3302,9 +3302,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 90,
-          "pace": 87,
-          "strength": 86,
-          "accuracy": 84
+          "pace": 99,
+          "strength": 79,
+          "accuracy": 75
         }
       ]
     },
@@ -3326,9 +3326,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 88,
-          "pace": 86,
-          "strength": 76,
-          "accuracy": 79
+          "pace": 97,
+          "strength": 69,
+          "accuracy": 72
         },
         {
           "id": "bra-2010-lucio",
@@ -3336,9 +3336,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 88,
-          "pace": 74,
-          "strength": 93,
-          "accuracy": 80
+          "pace": 62,
+          "strength": 94,
+          "accuracy": 75
         },
         {
           "id": "bra-2010-juan",
@@ -3346,9 +3346,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 69,
-          "strength": 86,
-          "accuracy": 71
+          "pace": 60,
+          "strength": 88,
+          "accuracy": 72
         },
         {
           "id": "bra-2010-bastos",
@@ -3356,9 +3356,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 77,
-          "strength": 73,
-          "accuracy": 72
+          "pace": 88,
+          "strength": 61,
+          "accuracy": 71
         },
         {
           "id": "bra-2010-silva",
@@ -3366,9 +3366,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 75,
-          "strength": 83,
-          "accuracy": 82
+          "pace": 67,
+          "strength": 86,
+          "accuracy": 77
         },
         {
           "id": "bra-2010-melo",
@@ -3376,9 +3376,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 81,
-          "pace": 72,
+          "pace": 58,
           "strength": 80,
-          "accuracy": 81
+          "accuracy": 79
         },
         {
           "id": "bra-2010-elano",
@@ -3386,9 +3386,9 @@
           "positionRaw": "RM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 82,
-          "strength": 66,
-          "accuracy": 76
+          "pace": 94,
+          "strength": 58,
+          "accuracy": 77
         },
         {
           "id": "bra-2010-kaka",
@@ -3396,9 +3396,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 89,
-          "pace": 83,
-          "strength": 76,
-          "accuracy": 88
+          "pace": 81,
+          "strength": 61,
+          "accuracy": 99
         },
         {
           "id": "bra-2010-robinho",
@@ -3406,9 +3406,9 @@
           "positionRaw": "LW",
           "positionBucket": "ATT",
           "rating": 86,
-          "pace": 88,
-          "strength": 68,
-          "accuracy": 84
+          "pace": 99,
+          "strength": 59,
+          "accuracy": 74
         },
         {
           "id": "bra-2010-luis-fabiano",
@@ -3416,9 +3416,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 87,
-          "pace": 87,
-          "strength": 83,
-          "accuracy": 80
+          "pace": 95,
+          "strength": 73,
+          "accuracy": 67
         }
       ]
     },
@@ -3440,9 +3440,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 81,
-          "strength": 75,
-          "accuracy": 74
+          "pace": 80,
+          "strength": 69,
+          "accuracy": 73
         },
         {
           "id": "uru-2010-lugano",
@@ -3450,9 +3450,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 85,
-          "pace": 67,
+          "pace": 64,
           "strength": 90,
-          "accuracy": 78
+          "accuracy": 75
         },
         {
           "id": "uru-2010-godin",
@@ -3460,9 +3460,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 68,
-          "strength": 85,
-          "accuracy": 76
+          "pace": 61,
+          "strength": 88,
+          "accuracy": 72
         },
         {
           "id": "uru-2010-caceres",
@@ -3470,9 +3470,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 81,
-          "pace": 81,
-          "strength": 75,
-          "accuracy": 74
+          "pace": 84,
+          "strength": 62,
+          "accuracy": 66
         },
         {
           "id": "uru-2010-perez",
@@ -3480,9 +3480,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 80,
-          "pace": 72,
-          "strength": 77,
-          "accuracy": 79
+          "pace": 63,
+          "strength": 78,
+          "accuracy": 73
         },
         {
           "id": "uru-2010-arevalo",
@@ -3490,9 +3490,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 81,
-          "pace": 70,
-          "strength": 78,
-          "accuracy": 79
+          "pace": 62,
+          "strength": 85,
+          "accuracy": 72
         },
         {
           "id": "uru-2010-pereira",
@@ -3500,9 +3500,9 @@
           "positionRaw": "LM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 86,
-          "strength": 67,
-          "accuracy": 80
+          "pace": 94,
+          "strength": 54,
+          "accuracy": 79
         },
         {
           "id": "uru-2010-forlan",
@@ -3510,9 +3510,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 90,
-          "pace": 84,
-          "strength": 87,
-          "accuracy": 86
+          "pace": 75,
+          "strength": 96,
+          "accuracy": 76
         },
         {
           "id": "uru-2010-suarez",
@@ -3520,9 +3520,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 88,
-          "pace": 83,
-          "strength": 87,
-          "accuracy": 82
+          "pace": 71,
+          "strength": 98,
+          "accuracy": 68
         },
         {
           "id": "uru-2010-cavani",
@@ -3530,9 +3530,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 78,
-          "strength": 80,
-          "accuracy": 77
+          "pace": 68,
+          "strength": 95,
+          "accuracy": 71
         }
       ]
     },
@@ -3554,9 +3554,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 80,
-          "strength": 71,
-          "accuracy": 75
+          "pace": 83,
+          "strength": 66,
+          "accuracy": 66
         },
         {
           "id": "gha-2010-mensah",
@@ -3564,9 +3564,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 68,
-          "strength": 87,
-          "accuracy": 75
+          "pace": 57,
+          "strength": 92,
+          "accuracy": 67
         },
         {
           "id": "gha-2010-vorsah",
@@ -3574,9 +3574,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 79,
-          "pace": 65,
-          "strength": 79,
-          "accuracy": 68
+          "pace": 54,
+          "strength": 83,
+          "accuracy": 71
         },
         {
           "id": "gha-2010-sarpei",
@@ -3584,9 +3584,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 78,
-          "pace": 74,
-          "strength": 70,
-          "accuracy": 70
+          "pace": 86,
+          "strength": 62,
+          "accuracy": 65
         },
         {
           "id": "gha-2010-annan",
@@ -3594,9 +3594,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 80,
-          "pace": 69,
-          "strength": 81,
-          "accuracy": 77
+          "pace": 55,
+          "strength": 83,
+          "accuracy": 75
         },
         {
           "id": "gha-2010-muntari",
@@ -3605,8 +3605,8 @@
           "positionBucket": "MID",
           "rating": 82,
           "pace": 75,
-          "strength": 74,
-          "accuracy": 81
+          "strength": 75,
+          "accuracy": 82
         },
         {
           "id": "gha-2010-asamoah",
@@ -3614,9 +3614,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 83,
-          "pace": 73,
-          "strength": 75,
-          "accuracy": 83
+          "pace": 68,
+          "strength": 70,
+          "accuracy": 90
         },
         {
           "id": "gha-2010-ayew",
@@ -3624,9 +3624,9 @@
           "positionRaw": "LM",
           "positionBucket": "MID",
           "rating": 81,
-          "pace": 84,
-          "strength": 68,
-          "accuracy": 76
+          "pace": 86,
+          "strength": 58,
+          "accuracy": 72
         },
         {
           "id": "gha-2010-gyan",
@@ -3634,9 +3634,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 86,
-          "pace": 85,
-          "strength": 81,
-          "accuracy": 81
+          "pace": 90,
+          "strength": 78,
+          "accuracy": 64
         },
         {
           "id": "gha-2010-tagoe",
@@ -3644,9 +3644,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 78,
-          "pace": 73,
-          "strength": 74,
-          "accuracy": 71
+          "pace": 66,
+          "strength": 87,
+          "accuracy": 59
         }
       ]
     },
@@ -3668,9 +3668,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 67,
-          "strength": 83,
-          "accuracy": 67
+          "pace": 58,
+          "strength": 89,
+          "accuracy": 70
         },
         {
           "id": "arg-2010-demichelis",
@@ -3678,9 +3678,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 66,
-          "strength": 87,
-          "accuracy": 71
+          "pace": 62,
+          "strength": 88,
+          "accuracy": 75
         },
         {
           "id": "arg-2010-samuel",
@@ -3688,9 +3688,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 70,
+          "pace": 64,
           "strength": 86,
-          "accuracy": 76
+          "accuracy": 68
         },
         {
           "id": "arg-2010-c-rodriguez",
@@ -3698,9 +3698,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 78,
-          "pace": 77,
-          "strength": 68,
-          "accuracy": 71
+          "pace": 81,
+          "strength": 61,
+          "accuracy": 65
         },
         {
           "id": "arg-2010-mascherano",
@@ -3708,9 +3708,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 87,
-          "pace": 79,
-          "strength": 83,
-          "accuracy": 86
+          "pace": 60,
+          "strength": 94,
+          "accuracy": 87
         },
         {
           "id": "arg-2010-veron",
@@ -3718,9 +3718,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 79,
-          "strength": 77,
-          "accuracy": 81
+          "pace": 66,
+          "strength": 68,
+          "accuracy": 87
         },
         {
           "id": "arg-2010-di-maria",
@@ -3728,9 +3728,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 85,
-          "pace": 89,
-          "strength": 65,
-          "accuracy": 85
+          "pace": 92,
+          "strength": 59,
+          "accuracy": 82
         },
         {
           "id": "arg-2010-messi",
@@ -3739,8 +3739,8 @@
           "positionBucket": "MID",
           "rating": 95,
           "pace": 90,
-          "strength": 76,
-          "accuracy": 97
+          "strength": 69,
+          "accuracy": 99
         },
         {
           "id": "arg-2010-tevez",
@@ -3748,9 +3748,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 87,
-          "pace": 86,
-          "strength": 82,
-          "accuracy": 85
+          "pace": 78,
+          "strength": 95,
+          "accuracy": 75
         },
         {
           "id": "arg-2010-higuain",
@@ -3758,9 +3758,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 86,
-          "pace": 80,
-          "strength": 82,
-          "accuracy": 79
+          "pace": 96,
+          "strength": 75,
+          "accuracy": 70
         }
       ]
     },
@@ -3782,9 +3782,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 89,
-          "pace": 89,
-          "strength": 83,
-          "accuracy": 79
+          "pace": 95,
+          "strength": 76,
+          "accuracy": 73
         },
         {
           "id": "ger-2010-friedrich",
@@ -3792,9 +3792,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 66,
-          "strength": 85,
-          "accuracy": 69
+          "pace": 57,
+          "strength": 92,
+          "accuracy": 74
         },
         {
           "id": "ger-2010-mertesacker",
@@ -3802,9 +3802,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 70,
-          "strength": 86,
-          "accuracy": 70
+          "pace": 55,
+          "strength": 92,
+          "accuracy": 66
         },
         {
           "id": "ger-2010-boateng",
@@ -3812,9 +3812,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 81,
-          "pace": 76,
-          "strength": 70,
-          "accuracy": 73
+          "pace": 86,
+          "strength": 65,
+          "accuracy": 67
         },
         {
           "id": "ger-2010-khedira",
@@ -3822,9 +3822,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 77,
-          "strength": 76,
-          "accuracy": 84
+          "pace": 75,
+          "strength": 69,
+          "accuracy": 94
         },
         {
           "id": "ger-2010-schweinsteiger",
@@ -3832,9 +3832,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 90,
-          "pace": 79,
-          "strength": 83,
-          "accuracy": 88
+          "pace": 76,
+          "strength": 80,
+          "accuracy": 94
         },
         {
           "id": "ger-2010-ozil",
@@ -3843,8 +3843,8 @@
           "positionBucket": "MID",
           "rating": 88,
           "pace": 83,
-          "strength": 71,
-          "accuracy": 89
+          "strength": 63,
+          "accuracy": 96
         },
         {
           "id": "ger-2010-muller",
@@ -3852,9 +3852,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 87,
-          "pace": 90,
-          "strength": 67,
-          "accuracy": 87
+          "pace": 91,
+          "strength": 54,
+          "accuracy": 74
         },
         {
           "id": "ger-2010-klose",
@@ -3862,9 +3862,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 86,
-          "pace": 84,
-          "strength": 86,
-          "accuracy": 81
+          "pace": 77,
+          "strength": 97,
+          "accuracy": 66
         },
         {
           "id": "ger-2010-podolski",
@@ -3872,9 +3872,9 @@
           "positionRaw": "LW",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 89,
-          "strength": 65,
-          "accuracy": 81
+          "pace": 87,
+          "strength": 59,
+          "accuracy": 79
         }
       ]
     },
@@ -3896,9 +3896,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 79,
-          "pace": 76,
-          "strength": 69,
-          "accuracy": 74
+          "pace": 86,
+          "strength": 68,
+          "accuracy": 68
         },
         {
           "id": "par-2010-da-silva",
@@ -3906,9 +3906,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 68,
-          "strength": 85,
-          "accuracy": 70
+          "pace": 62,
+          "strength": 87,
+          "accuracy": 69
         },
         {
           "id": "par-2010-alcaraz",
@@ -3916,9 +3916,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 81,
-          "pace": 63,
-          "strength": 84,
-          "accuracy": 69
+          "pace": 62,
+          "strength": 87,
+          "accuracy": 65
         },
         {
           "id": "par-2010-morel",
@@ -3926,9 +3926,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 78,
-          "pace": 79,
-          "strength": 72,
-          "accuracy": 73
+          "pace": 78,
+          "strength": 67,
+          "accuracy": 65
         },
         {
           "id": "par-2010-caceres",
@@ -3936,9 +3936,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 80,
-          "pace": 72,
-          "strength": 75,
-          "accuracy": 74
+          "pace": 57,
+          "strength": 82,
+          "accuracy": 77
         },
         {
           "id": "par-2010-riveros",
@@ -3946,9 +3946,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 81,
-          "pace": 74,
-          "strength": 76,
-          "accuracy": 84
+          "pace": 73,
+          "strength": 74,
+          "accuracy": 85
         },
         {
           "id": "par-2010-vera",
@@ -3956,9 +3956,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 79,
-          "pace": 74,
+          "pace": 71,
           "strength": 68,
-          "accuracy": 76
+          "accuracy": 82
         },
         {
           "id": "par-2010-barreto",
@@ -3966,9 +3966,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 80,
-          "pace": 70,
-          "strength": 73,
-          "accuracy": 80
+          "pace": 68,
+          "strength": 71,
+          "accuracy": 83
         },
         {
           "id": "par-2010-cruz",
@@ -3976,9 +3976,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 80,
-          "strength": 80,
-          "accuracy": 77
+          "pace": 89,
+          "strength": 70,
+          "accuracy": 72
         },
         {
           "id": "par-2010-valdez",
@@ -3986,9 +3986,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 82,
-          "pace": 82,
-          "strength": 82,
-          "accuracy": 74
+          "pace": 84,
+          "strength": 71,
+          "accuracy": 67
         }
       ]
     },
@@ -4010,9 +4010,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 87,
-          "pace": 85,
-          "strength": 80,
-          "accuracy": 80
+          "pace": 94,
+          "strength": 65,
+          "accuracy": 77
         },
         {
           "id": "esp-2010-pique",
@@ -4020,9 +4020,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 86,
-          "pace": 70,
+          "pace": 66,
           "strength": 88,
-          "accuracy": 73
+          "accuracy": 69
         },
         {
           "id": "esp-2010-puyol",
@@ -4030,9 +4030,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 87,
-          "pace": 74,
+          "pace": 68,
           "strength": 95,
-          "accuracy": 77
+          "accuracy": 70
         },
         {
           "id": "esp-2010-capdevila",
@@ -4040,9 +4040,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 79,
-          "pace": 76,
-          "strength": 72,
-          "accuracy": 74
+          "pace": 83,
+          "strength": 63,
+          "accuracy": 70
         },
         {
           "id": "esp-2010-busquets",
@@ -4050,8 +4050,8 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 72,
-          "strength": 82,
+          "pace": 61,
+          "strength": 83,
           "accuracy": 78
         },
         {
@@ -4060,9 +4060,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 86,
-          "pace": 78,
-          "strength": 79,
-          "accuracy": 84
+          "pace": 73,
+          "strength": 78,
+          "accuracy": 87
         },
         {
           "id": "esp-2010-xavi",
@@ -4070,9 +4070,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 92,
-          "pace": 82,
-          "strength": 85,
-          "accuracy": 95
+          "pace": 83,
+          "strength": 81,
+          "accuracy": 99
         },
         {
           "id": "esp-2010-iniesta",
@@ -4080,9 +4080,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 93,
-          "pace": 84,
-          "strength": 75,
-          "accuracy": 94
+          "pace": 80,
+          "strength": 64,
+          "accuracy": 97
         },
         {
           "id": "esp-2010-pedro",
@@ -4091,8 +4091,8 @@
           "positionBucket": "ATT",
           "rating": 80,
           "pace": 83,
-          "strength": 67,
-          "accuracy": 77
+          "strength": 55,
+          "accuracy": 71
         },
         {
           "id": "esp-2010-villa",
@@ -4100,9 +4100,9 @@
           "positionRaw": "CF",
           "positionBucket": "ATT",
           "rating": 88,
-          "pace": 83,
-          "strength": 88,
-          "accuracy": 86
+          "pace": 76,
+          "strength": 97,
+          "accuracy": 74
         }
       ]
     },
@@ -4125,8 +4125,8 @@
           "positionBucket": "DEF",
           "rating": 86,
           "pace": 85,
-          "strength": 74,
-          "accuracy": 77
+          "strength": 66,
+          "accuracy": 72
         },
         {
           "id": "bra-2014-silva",
@@ -4134,9 +4134,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 90,
-          "pace": 73,
-          "strength": 90,
-          "accuracy": 79
+          "pace": 60,
+          "strength": 93,
+          "accuracy": 78
         },
         {
           "id": "bra-2014-luiz",
@@ -4144,8 +4144,8 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 67,
-          "strength": 85,
+          "pace": 64,
+          "strength": 87,
           "accuracy": 75
         },
         {
@@ -4154,9 +4154,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 87,
-          "pace": 85,
-          "strength": 81,
-          "accuracy": 81
+          "pace": 92,
+          "strength": 73,
+          "accuracy": 74
         },
         {
           "id": "bra-2014-gustavo",
@@ -4164,9 +4164,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 73,
-          "strength": 82,
-          "accuracy": 80
+          "pace": 60,
+          "strength": 85,
+          "accuracy": 75
         },
         {
           "id": "bra-2014-paulinho",
@@ -4174,9 +4174,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 71,
-          "strength": 75,
-          "accuracy": 85
+          "pace": 68,
+          "strength": 66,
+          "accuracy": 82
         },
         {
           "id": "bra-2014-oscar",
@@ -4184,9 +4184,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 81,
-          "strength": 73,
-          "accuracy": 84
+          "pace": 79,
+          "strength": 59,
+          "accuracy": 89
         },
         {
           "id": "bra-2014-hulk",
@@ -4194,9 +4194,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 87,
-          "strength": 69,
-          "accuracy": 83
+          "pace": 90,
+          "strength": 55,
+          "accuracy": 73
         },
         {
           "id": "bra-2014-neymar",
@@ -4204,9 +4204,9 @@
           "positionRaw": "LW",
           "positionBucket": "ATT",
           "rating": 92,
-          "pace": 96,
-          "strength": 76,
-          "accuracy": 85
+          "pace": 99,
+          "strength": 60,
+          "accuracy": 80
         },
         {
           "id": "bra-2014-fred",
@@ -4214,9 +4214,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 78,
-          "pace": 73,
-          "strength": 77,
-          "accuracy": 72
+          "pace": 61,
+          "strength": 79,
+          "accuracy": 63
         }
       ]
     },
@@ -4238,8 +4238,8 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 77,
-          "strength": 73,
+          "pace": 84,
+          "strength": 59,
           "accuracy": 74
         },
         {
@@ -4248,9 +4248,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 81,
-          "pace": 66,
-          "strength": 83,
-          "accuracy": 69
+          "pace": 61,
+          "strength": 92,
+          "accuracy": 65
         },
         {
           "id": "col-2014-yepes",
@@ -4258,9 +4258,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 64,
+          "pace": 61,
           "strength": 84,
-          "accuracy": 75
+          "accuracy": 67
         },
         {
           "id": "col-2014-armero",
@@ -4268,9 +4268,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 75,
-          "strength": 70,
-          "accuracy": 69
+          "pace": 82,
+          "strength": 61,
+          "accuracy": 65
         },
         {
           "id": "col-2014-sanchez",
@@ -4278,9 +4278,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 81,
-          "pace": 68,
-          "strength": 81,
-          "accuracy": 81
+          "pace": 64,
+          "strength": 87,
+          "accuracy": 74
         },
         {
           "id": "col-2014-aguilar",
@@ -4288,9 +4288,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 80,
-          "pace": 70,
-          "strength": 69,
-          "accuracy": 82
+          "pace": 68,
+          "strength": 63,
+          "accuracy": 88
         },
         {
           "id": "col-2014-cuadrado",
@@ -4298,9 +4298,9 @@
           "positionRaw": "RM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 85,
-          "strength": 70,
-          "accuracy": 80
+          "pace": 97,
+          "strength": 56,
+          "accuracy": 79
         },
         {
           "id": "col-2014-james",
@@ -4308,9 +4308,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 90,
-          "pace": 83,
-          "strength": 73,
-          "accuracy": 94
+          "pace": 76,
+          "strength": 60,
+          "accuracy": 95
         },
         {
           "id": "col-2014-quintero",
@@ -4318,9 +4318,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 80,
-          "strength": 68,
-          "accuracy": 83
+          "pace": 70,
+          "strength": 62,
+          "accuracy": 92
         },
         {
           "id": "col-2014-jackson",
@@ -4328,9 +4328,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 80,
-          "strength": 82,
-          "accuracy": 82
+          "pace": 91,
+          "strength": 73,
+          "accuracy": 64
         }
       ]
     },
@@ -4352,9 +4352,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 81,
-          "pace": 76,
-          "strength": 74,
-          "accuracy": 73
+          "pace": 87,
+          "strength": 66,
+          "accuracy": 76
         },
         {
           "id": "fra-2014-varane",
@@ -4362,9 +4362,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 85,
-          "pace": 71,
-          "strength": 90,
-          "accuracy": 74
+          "pace": 63,
+          "strength": 97,
+          "accuracy": 77
         },
         {
           "id": "fra-2014-sakho",
@@ -4372,9 +4372,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 69,
-          "strength": 81,
-          "accuracy": 69
+          "pace": 55,
+          "strength": 92,
+          "accuracy": 68
         },
         {
           "id": "fra-2014-evra",
@@ -4382,9 +4382,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 83,
-          "strength": 73,
-          "accuracy": 74
+          "pace": 92,
+          "strength": 70,
+          "accuracy": 78
         },
         {
           "id": "fra-2014-matuidi",
@@ -4392,9 +4392,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 73,
-          "strength": 76,
-          "accuracy": 81
+          "pace": 76,
+          "strength": 73,
+          "accuracy": 91
         },
         {
           "id": "fra-2014-pogba",
@@ -4402,9 +4402,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 86,
-          "pace": 76,
-          "strength": 79,
-          "accuracy": 86
+          "pace": 71,
+          "strength": 77,
+          "accuracy": 90
         },
         {
           "id": "fra-2014-cabaye",
@@ -4412,9 +4412,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 83,
-          "pace": 76,
-          "strength": 78,
-          "accuracy": 85
+          "pace": 69,
+          "strength": 72,
+          "accuracy": 86
         },
         {
           "id": "fra-2014-valbuena",
@@ -4422,9 +4422,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 85,
-          "strength": 64,
-          "accuracy": 84
+          "pace": 89,
+          "strength": 62,
+          "accuracy": 80
         },
         {
           "id": "fra-2014-benzema",
@@ -4432,9 +4432,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 88,
-          "pace": 85,
-          "strength": 83,
-          "accuracy": 80
+          "pace": 97,
+          "strength": 80,
+          "accuracy": 73
         },
         {
           "id": "fra-2014-giroud",
@@ -4442,9 +4442,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 82,
-          "pace": 76,
-          "strength": 81,
-          "accuracy": 78
+          "pace": 93,
+          "strength": 74,
+          "accuracy": 65
         }
       ]
     },
@@ -4466,9 +4466,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 89,
-          "pace": 85,
-          "strength": 82,
-          "accuracy": 79
+          "pace": 97,
+          "strength": 68,
+          "accuracy": 75
         },
         {
           "id": "ger-2014-boateng",
@@ -4476,9 +4476,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 85,
-          "pace": 69,
-          "strength": 90,
-          "accuracy": 77
+          "pace": 61,
+          "strength": 94,
+          "accuracy": 72
         },
         {
           "id": "ger-2014-hummels",
@@ -4486,9 +4486,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 86,
-          "pace": 69,
-          "strength": 86,
-          "accuracy": 79
+          "pace": 59,
+          "strength": 98,
+          "accuracy": 68
         },
         {
           "id": "ger-2014-howedes",
@@ -4496,8 +4496,8 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 79,
-          "pace": 74,
-          "strength": 74,
+          "pace": 81,
+          "strength": 59,
           "accuracy": 70
         },
         {
@@ -4507,8 +4507,8 @@
           "positionBucket": "MID",
           "rating": 88,
           "pace": 76,
-          "strength": 77,
-          "accuracy": 88
+          "strength": 76,
+          "accuracy": 96
         },
         {
           "id": "ger-2014-kramer",
@@ -4516,9 +4516,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 75,
-          "pace": 70,
-          "strength": 66,
-          "accuracy": 77
+          "pace": 64,
+          "strength": 69,
+          "accuracy": 84
         },
         {
           "id": "ger-2014-kroos",
@@ -4526,9 +4526,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 89,
-          "pace": 79,
-          "strength": 79,
-          "accuracy": 88
+          "pace": 71,
+          "strength": 75,
+          "accuracy": 97
         },
         {
           "id": "ger-2014-ozil",
@@ -4537,8 +4537,8 @@
           "positionBucket": "MID",
           "rating": 87,
           "pace": 83,
-          "strength": 69,
-          "accuracy": 86
+          "strength": 56,
+          "accuracy": 96
         },
         {
           "id": "ger-2014-muller",
@@ -4546,9 +4546,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 89,
-          "pace": 91,
-          "strength": 72,
-          "accuracy": 84
+          "pace": 96,
+          "strength": 61,
+          "accuracy": 82
         },
         {
           "id": "ger-2014-klose",
@@ -4556,9 +4556,9 @@
           "positionRaw": "CF",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 82,
-          "strength": 81,
-          "accuracy": 76
+          "pace": 70,
+          "strength": 93,
+          "accuracy": 64
         }
       ]
     },
@@ -4580,9 +4580,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 75,
-          "strength": 70,
-          "accuracy": 71
+          "pace": 89,
+          "strength": 61,
+          "accuracy": 67
         },
         {
           "id": "ned-2014-de-vrij",
@@ -4590,9 +4590,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 72,
-          "strength": 86,
-          "accuracy": 75
+          "pace": 62,
+          "strength": 96,
+          "accuracy": 74
         },
         {
           "id": "ned-2014-vlaar",
@@ -4600,9 +4600,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 65,
-          "strength": 86,
-          "accuracy": 73
+          "pace": 54,
+          "strength": 88,
+          "accuracy": 68
         },
         {
           "id": "ned-2014-martins-indi",
@@ -4610,9 +4610,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 68,
+          "pace": 57,
           "strength": 81,
-          "accuracy": 68
+          "accuracy": 64
         },
         {
           "id": "ned-2014-blind",
@@ -4620,9 +4620,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 83,
-          "strength": 75,
-          "accuracy": 73
+          "pace": 90,
+          "strength": 67,
+          "accuracy": 77
         },
         {
           "id": "ned-2014-de-jong",
@@ -4630,9 +4630,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 70,
-          "strength": 78,
-          "accuracy": 77
+          "pace": 64,
+          "strength": 80,
+          "accuracy": 83
         },
         {
           "id": "ned-2014-sneijder",
@@ -4640,9 +4640,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 87,
-          "pace": 82,
-          "strength": 72,
-          "accuracy": 90
+          "pace": 80,
+          "strength": 56,
+          "accuracy": 95
         },
         {
           "id": "ned-2014-robben",
@@ -4650,9 +4650,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 92,
-          "pace": 97,
-          "strength": 77,
-          "accuracy": 88
+          "pace": 99,
+          "strength": 63,
+          "accuracy": 81
         },
         {
           "id": "ned-2014-kuyt",
@@ -4660,9 +4660,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 81,
-          "pace": 81,
-          "strength": 66,
-          "accuracy": 80
+          "pace": 85,
+          "strength": 53,
+          "accuracy": 73
         },
         {
           "id": "ned-2014-van-persie",
@@ -4670,9 +4670,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 89,
-          "pace": 87,
-          "strength": 90,
-          "accuracy": 84
+          "pace": 96,
+          "strength": 75,
+          "accuracy": 68
         }
       ]
     },
@@ -4695,8 +4695,8 @@
           "positionBucket": "DEF",
           "rating": 80,
           "pace": 79,
-          "strength": 72,
-          "accuracy": 72
+          "strength": 69,
+          "accuracy": 67
         },
         {
           "id": "crc-2014-gonzalez",
@@ -4704,9 +4704,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 70,
-          "strength": 85,
-          "accuracy": 73
+          "pace": 64,
+          "strength": 90,
+          "accuracy": 65
         },
         {
           "id": "crc-2014-duarte",
@@ -4714,9 +4714,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 66,
-          "strength": 84,
-          "accuracy": 71
+          "pace": 53,
+          "strength": 82,
+          "accuracy": 72
         },
         {
           "id": "crc-2014-umana",
@@ -4725,8 +4725,8 @@
           "positionBucket": "DEF",
           "rating": 78,
           "pace": 61,
-          "strength": 79,
-          "accuracy": 71
+          "strength": 87,
+          "accuracy": 70
         },
         {
           "id": "crc-2014-diaz",
@@ -4734,9 +4734,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 79,
-          "pace": 75,
-          "strength": 74,
-          "accuracy": 71
+          "pace": 88,
+          "strength": 64,
+          "accuracy": 69
         },
         {
           "id": "crc-2014-borges",
@@ -4744,9 +4744,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 75,
-          "strength": 73,
-          "accuracy": 81
+          "pace": 74,
+          "strength": 71,
+          "accuracy": 87
         },
         {
           "id": "crc-2014-tejeda",
@@ -4754,9 +4754,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 79,
-          "pace": 69,
-          "strength": 72,
-          "accuracy": 76
+          "pace": 65,
+          "strength": 67,
+          "accuracy": 88
         },
         {
           "id": "crc-2014-bolanos",
@@ -4764,9 +4764,9 @@
           "positionRaw": "RM",
           "positionBucket": "MID",
           "rating": 80,
-          "pace": 80,
-          "strength": 61,
-          "accuracy": 77
+          "pace": 93,
+          "strength": 58,
+          "accuracy": 67
         },
         {
           "id": "crc-2014-ruiz",
@@ -4774,9 +4774,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 82,
-          "strength": 67,
-          "accuracy": 89
+          "pace": 80,
+          "strength": 54,
+          "accuracy": 93
         },
         {
           "id": "crc-2014-campbell",
@@ -4784,9 +4784,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 82,
-          "pace": 82,
-          "strength": 80,
-          "accuracy": 79
+          "pace": 68,
+          "strength": 94,
+          "accuracy": 67
         }
       ]
     },
@@ -4808,9 +4808,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 79,
-          "strength": 73,
-          "accuracy": 79
+          "pace": 86,
+          "strength": 62,
+          "accuracy": 78
         },
         {
           "id": "arg-2014-garay",
@@ -4818,9 +4818,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 68,
-          "strength": 87,
-          "accuracy": 75
+          "pace": 56,
+          "strength": 90,
+          "accuracy": 72
         },
         {
           "id": "arg-2014-demichelis",
@@ -4828,9 +4828,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 64,
-          "strength": 86,
-          "accuracy": 74
+          "pace": 61,
+          "strength": 88,
+          "accuracy": 66
         },
         {
           "id": "arg-2014-rojo",
@@ -4838,9 +4838,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 81,
-          "strength": 75,
-          "accuracy": 76
+          "pace": 90,
+          "strength": 67,
+          "accuracy": 71
         },
         {
           "id": "arg-2014-mascherano",
@@ -4848,9 +4848,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 88,
-          "pace": 77,
-          "strength": 88,
-          "accuracy": 86
+          "pace": 71,
+          "strength": 89,
+          "accuracy": 81
         },
         {
           "id": "arg-2014-biglia",
@@ -4858,9 +4858,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 83,
-          "pace": 72,
-          "strength": 75,
-          "accuracy": 86
+          "pace": 66,
+          "strength": 66,
+          "accuracy": 82
         },
         {
           "id": "arg-2014-di-maria",
@@ -4868,9 +4868,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 88,
-          "pace": 93,
-          "strength": 69,
-          "accuracy": 81
+          "pace": 99,
+          "strength": 59,
+          "accuracy": 78
         },
         {
           "id": "arg-2014-messi",
@@ -4879,7 +4879,7 @@
           "positionBucket": "MID",
           "rating": 97,
           "pace": 94,
-          "strength": 82,
+          "strength": 63,
           "accuracy": 99
         },
         {
@@ -4888,9 +4888,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 86,
-          "pace": 86,
-          "strength": 82,
-          "accuracy": 84
+          "pace": 97,
+          "strength": 75,
+          "accuracy": 64
         },
         {
           "id": "arg-2014-lavezzi",
@@ -4898,9 +4898,9 @@
           "positionRaw": "LW",
           "positionBucket": "ATT",
           "rating": 83,
-          "pace": 88,
-          "strength": 65,
-          "accuracy": 79
+          "pace": 94,
+          "strength": 60,
+          "accuracy": 80
         }
       ]
     },
@@ -4922,9 +4922,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 78,
-          "strength": 72,
-          "accuracy": 76
+          "pace": 87,
+          "strength": 65,
+          "accuracy": 69
         },
         {
           "id": "bel-2014-kompany",
@@ -4932,9 +4932,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 88,
-          "pace": 71,
+          "pace": 60,
           "strength": 90,
-          "accuracy": 79
+          "accuracy": 77
         },
         {
           "id": "bel-2014-van-buyten",
@@ -4942,9 +4942,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 65,
-          "strength": 83,
-          "accuracy": 75
+          "pace": 54,
+          "strength": 86,
+          "accuracy": 68
         },
         {
           "id": "bel-2014-vertonghen",
@@ -4952,9 +4952,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 85,
-          "pace": 82,
-          "strength": 77,
-          "accuracy": 77
+          "pace": 84,
+          "strength": 68,
+          "accuracy": 73
         },
         {
           "id": "bel-2014-witsel",
@@ -4962,9 +4962,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 79,
-          "strength": 78,
-          "accuracy": 82
+          "pace": 72,
+          "strength": 74,
+          "accuracy": 85
         },
         {
           "id": "bel-2014-fellaini",
@@ -4972,9 +4972,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 83,
-          "pace": 78,
-          "strength": 78,
-          "accuracy": 86
+          "pace": 72,
+          "strength": 75,
+          "accuracy": 83
         },
         {
           "id": "bel-2014-de-bruyne",
@@ -4982,9 +4982,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 87,
-          "pace": 85,
-          "strength": 68,
-          "accuracy": 88
+          "pace": 74,
+          "strength": 59,
+          "accuracy": 95
         },
         {
           "id": "bel-2014-hazard",
@@ -4992,9 +4992,9 @@
           "positionRaw": "LW",
           "positionBucket": "ATT",
           "rating": 90,
-          "pace": 94,
-          "strength": 72,
-          "accuracy": 84
+          "pace": 99,
+          "strength": 56,
+          "accuracy": 85
         },
         {
           "id": "bel-2014-mertens",
@@ -5002,9 +5002,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 87,
-          "strength": 66,
-          "accuracy": 80
+          "pace": 93,
+          "strength": 54,
+          "accuracy": 75
         },
         {
           "id": "bel-2014-lukaku",
@@ -5012,9 +5012,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 85,
-          "pace": 85,
-          "strength": 80,
-          "accuracy": 80
+          "pace": 69,
+          "strength": 96,
+          "accuracy": 71
         }
       ]
     },
@@ -5036,9 +5036,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 78,
-          "pace": 76,
-          "strength": 70,
-          "accuracy": 67
+          "pace": 79,
+          "strength": 57,
+          "accuracy": 69
         },
         {
           "id": "uru-2018-gimenez",
@@ -5046,9 +5046,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 86,
-          "pace": 70,
-          "strength": 88,
-          "accuracy": 79
+          "pace": 63,
+          "strength": 97,
+          "accuracy": 74
         },
         {
           "id": "uru-2018-godin",
@@ -5056,9 +5056,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 89,
-          "pace": 71,
-          "strength": 94,
-          "accuracy": 75
+          "pace": 61,
+          "strength": 92,
+          "accuracy": 78
         },
         {
           "id": "uru-2018-caceres",
@@ -5066,9 +5066,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 83,
-          "strength": 71,
-          "accuracy": 72
+          "pace": 86,
+          "strength": 67,
+          "accuracy": 67
         },
         {
           "id": "uru-2018-bentancur",
@@ -5076,9 +5076,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 76,
-          "strength": 77,
-          "accuracy": 79
+          "pace": 73,
+          "strength": 71,
+          "accuracy": 84
         },
         {
           "id": "uru-2018-torreira",
@@ -5086,9 +5086,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 75,
-          "strength": 81,
-          "accuracy": 80
+          "pace": 61,
+          "strength": 87,
+          "accuracy": 75
         },
         {
           "id": "uru-2018-vecino",
@@ -5096,9 +5096,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 81,
-          "pace": 76,
-          "strength": 73,
-          "accuracy": 78
+          "pace": 66,
+          "strength": 68,
+          "accuracy": 82
         },
         {
           "id": "uru-2018-sanchez",
@@ -5106,9 +5106,9 @@
           "positionRaw": "RM",
           "positionBucket": "MID",
           "rating": 80,
-          "pace": 82,
-          "strength": 67,
-          "accuracy": 76
+          "pace": 89,
+          "strength": 50,
+          "accuracy": 72
         },
         {
           "id": "uru-2018-suarez",
@@ -5116,9 +5116,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 90,
-          "pace": 85,
-          "strength": 85,
-          "accuracy": 82
+          "pace": 76,
+          "strength": 94,
+          "accuracy": 69
         },
         {
           "id": "uru-2018-cavani",
@@ -5126,9 +5126,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 89,
-          "pace": 84,
-          "strength": 87,
-          "accuracy": 84
+          "pace": 76,
+          "strength": 92,
+          "accuracy": 72
         }
       ]
     },
@@ -5150,9 +5150,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 80,
-          "strength": 73,
-          "accuracy": 71
+          "pace": 84,
+          "strength": 61,
+          "accuracy": 69
         },
         {
           "id": "fra-2018-varane",
@@ -5160,9 +5160,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 88,
-          "pace": 69,
-          "strength": 93,
-          "accuracy": 80
+          "pace": 68,
+          "strength": 92,
+          "accuracy": 72
         },
         {
           "id": "fra-2018-umtiti",
@@ -5170,8 +5170,8 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 68,
-          "strength": 88,
+          "pace": 56,
+          "strength": 87,
           "accuracy": 72
         },
         {
@@ -5180,8 +5180,8 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 85,
-          "pace": 81,
-          "strength": 76,
+          "pace": 88,
+          "strength": 70,
           "accuracy": 77
         },
         {
@@ -5190,9 +5190,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 90,
-          "pace": 78,
-          "strength": 83,
-          "accuracy": 91
+          "pace": 74,
+          "strength": 73,
+          "accuracy": 98
         },
         {
           "id": "fra-2018-pogba",
@@ -5200,9 +5200,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 87,
-          "pace": 75,
-          "strength": 75,
-          "accuracy": 89
+          "pace": 73,
+          "strength": 69,
+          "accuracy": 90
         },
         {
           "id": "fra-2018-matuidi",
@@ -5210,9 +5210,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 73,
-          "strength": 78,
-          "accuracy": 86
+          "pace": 70,
+          "strength": 70,
+          "accuracy": 87
         },
         {
           "id": "fra-2018-mbappe",
@@ -5221,8 +5221,8 @@
           "positionBucket": "ATT",
           "rating": 92,
           "pace": 99,
-          "strength": 72,
-          "accuracy": 90
+          "strength": 64,
+          "accuracy": 85
         },
         {
           "id": "fra-2018-griezmann",
@@ -5230,9 +5230,9 @@
           "positionRaw": "SS",
           "positionBucket": "ATT",
           "rating": 88,
-          "pace": 80,
-          "strength": 74,
-          "accuracy": 89
+          "pace": 76,
+          "strength": 58,
+          "accuracy": 92
         },
         {
           "id": "fra-2018-giroud",
@@ -5240,9 +5240,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 82,
-          "pace": 80,
-          "strength": 79,
-          "accuracy": 76
+          "pace": 91,
+          "strength": 72,
+          "accuracy": 63
         }
       ]
     },
@@ -5264,9 +5264,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 81,
-          "strength": 72,
-          "accuracy": 73
+          "pace": 79,
+          "strength": 65,
+          "accuracy": 65
         },
         {
           "id": "bra-2018-silva",
@@ -5274,8 +5274,8 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 88,
-          "pace": 75,
-          "strength": 88,
+          "pace": 67,
+          "strength": 96,
           "accuracy": 74
         },
         {
@@ -5284,9 +5284,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 68,
-          "strength": 85,
-          "accuracy": 74
+          "pace": 65,
+          "strength": 94,
+          "accuracy": 76
         },
         {
           "id": "bra-2018-marcelo",
@@ -5294,9 +5294,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 87,
-          "pace": 83,
-          "strength": 81,
-          "accuracy": 76
+          "pace": 92,
+          "strength": 70,
+          "accuracy": 80
         },
         {
           "id": "bra-2018-casemiro",
@@ -5304,8 +5304,8 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 87,
-          "pace": 77,
-          "strength": 85,
+          "pace": 62,
+          "strength": 90,
           "accuracy": 83
         },
         {
@@ -5314,9 +5314,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 83,
-          "pace": 74,
-          "strength": 73,
-          "accuracy": 84
+          "pace": 76,
+          "strength": 66,
+          "accuracy": 86
         },
         {
           "id": "bra-2018-coutinho",
@@ -5324,9 +5324,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 88,
-          "pace": 86,
-          "strength": 74,
-          "accuracy": 93
+          "pace": 84,
+          "strength": 67,
+          "accuracy": 99
         },
         {
           "id": "bra-2018-willian",
@@ -5334,9 +5334,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 86,
-          "strength": 68,
-          "accuracy": 84
+          "pace": 90,
+          "strength": 58,
+          "accuracy": 81
         },
         {
           "id": "bra-2018-neymar",
@@ -5344,8 +5344,8 @@
           "positionRaw": "LW",
           "positionBucket": "ATT",
           "rating": 93,
-          "pace": 92,
-          "strength": 76,
+          "pace": 99,
+          "strength": 60,
           "accuracy": 87
         },
         {
@@ -5354,9 +5354,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 78,
-          "strength": 83,
-          "accuracy": 79
+          "pace": 95,
+          "strength": 67,
+          "accuracy": 67
         }
       ]
     },
@@ -5378,9 +5378,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 80,
-          "strength": 73,
-          "accuracy": 73
+          "pace": 92,
+          "strength": 65,
+          "accuracy": 78
         },
         {
           "id": "bel-2018-alderweireld",
@@ -5388,8 +5388,8 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 86,
-          "pace": 73,
-          "strength": 89,
+          "pace": 60,
+          "strength": 96,
           "accuracy": 77
         },
         {
@@ -5398,8 +5398,8 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 85,
-          "pace": 72,
-          "strength": 88,
+          "pace": 57,
+          "strength": 95,
           "accuracy": 77
         },
         {
@@ -5408,9 +5408,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 86,
-          "pace": 85,
-          "strength": 75,
-          "accuracy": 75
+          "pace": 91,
+          "strength": 70,
+          "accuracy": 72
         },
         {
           "id": "bel-2018-witsel",
@@ -5418,9 +5418,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 78,
-          "strength": 76,
-          "accuracy": 84
+          "pace": 76,
+          "strength": 71,
+          "accuracy": 85
         },
         {
           "id": "bel-2018-de-bruyne",
@@ -5428,9 +5428,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 92,
-          "pace": 86,
-          "strength": 85,
-          "accuracy": 95
+          "pace": 80,
+          "strength": 81,
+          "accuracy": 93
         },
         {
           "id": "bel-2018-chadli",
@@ -5438,9 +5438,9 @@
           "positionRaw": "LM",
           "positionBucket": "MID",
           "rating": 81,
-          "pace": 85,
-          "strength": 66,
-          "accuracy": 76
+          "pace": 89,
+          "strength": 54,
+          "accuracy": 72
         },
         {
           "id": "bel-2018-hazard",
@@ -5448,9 +5448,9 @@
           "positionRaw": "LW",
           "positionBucket": "ATT",
           "rating": 93,
-          "pace": 96,
-          "strength": 72,
-          "accuracy": 88
+          "pace": 98,
+          "strength": 58,
+          "accuracy": 85
         },
         {
           "id": "bel-2018-mertens",
@@ -5458,9 +5458,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 85,
-          "pace": 89,
-          "strength": 67,
-          "accuracy": 84
+          "pace": 99,
+          "strength": 57,
+          "accuracy": 80
         },
         {
           "id": "bel-2018-lukaku",
@@ -5468,9 +5468,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 89,
-          "pace": 87,
-          "strength": 89,
-          "accuracy": 86
+          "pace": 73,
+          "strength": 99,
+          "accuracy": 67
         }
       ]
     },
@@ -5492,9 +5492,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 80,
-          "strength": 75,
-          "accuracy": 73
+          "pace": 81,
+          "strength": 68,
+          "accuracy": 74
         },
         {
           "id": "swe-2018-lindelof",
@@ -5502,9 +5502,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 67,
-          "strength": 85,
-          "accuracy": 73
+          "pace": 65,
+          "strength": 86,
+          "accuracy": 75
         },
         {
           "id": "swe-2018-granqvist",
@@ -5512,9 +5512,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 70,
-          "strength": 84,
-          "accuracy": 72
+          "pace": 62,
+          "strength": 94,
+          "accuracy": 71
         },
         {
           "id": "swe-2018-augustinsson",
@@ -5522,9 +5522,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 78,
-          "strength": 70,
-          "accuracy": 69
+          "pace": 81,
+          "strength": 66,
+          "accuracy": 74
         },
         {
           "id": "swe-2018-larsson",
@@ -5533,8 +5533,8 @@
           "positionBucket": "MID",
           "rating": 80,
           "pace": 71,
-          "strength": 72,
-          "accuracy": 78
+          "strength": 69,
+          "accuracy": 83
         },
         {
           "id": "swe-2018-ekdal",
@@ -5542,9 +5542,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 81,
-          "pace": 73,
-          "strength": 73,
-          "accuracy": 83
+          "pace": 71,
+          "strength": 65,
+          "accuracy": 88
         },
         {
           "id": "swe-2018-forsberg",
@@ -5552,9 +5552,9 @@
           "positionRaw": "LM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 85,
-          "strength": 71,
-          "accuracy": 82
+          "pace": 99,
+          "strength": 59,
+          "accuracy": 76
         },
         {
           "id": "swe-2018-claesson",
@@ -5562,8 +5562,8 @@
           "positionRaw": "RM",
           "positionBucket": "MID",
           "rating": 81,
-          "pace": 81,
-          "strength": 63,
+          "pace": 88,
+          "strength": 53,
           "accuracy": 76
         },
         {
@@ -5572,9 +5572,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 81,
-          "pace": 77,
-          "strength": 77,
-          "accuracy": 79
+          "pace": 92,
+          "strength": 70,
+          "accuracy": 70
         },
         {
           "id": "swe-2018-berg",
@@ -5582,9 +5582,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 82,
-          "pace": 76,
-          "strength": 78,
-          "accuracy": 79
+          "pace": 87,
+          "strength": 73,
+          "accuracy": 65
         }
       ]
     },
@@ -5606,9 +5606,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 83,
-          "strength": 72,
-          "accuracy": 73
+          "pace": 92,
+          "strength": 70,
+          "accuracy": 75
         },
         {
           "id": "eng-2018-stones",
@@ -5616,9 +5616,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 66,
-          "strength": 86,
-          "accuracy": 72
+          "pace": 64,
+          "strength": 91,
+          "accuracy": 67
         },
         {
           "id": "eng-2018-maguire",
@@ -5626,9 +5626,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 85,
-          "pace": 73,
-          "strength": 88,
-          "accuracy": 72
+          "pace": 59,
+          "strength": 87,
+          "accuracy": 74
         },
         {
           "id": "eng-2018-young",
@@ -5636,9 +5636,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 81,
-          "pace": 76,
-          "strength": 72,
-          "accuracy": 70
+          "pace": 84,
+          "strength": 67,
+          "accuracy": 73
         },
         {
           "id": "eng-2018-henderson",
@@ -5646,9 +5646,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 78,
-          "strength": 73,
-          "accuracy": 87
+          "pace": 69,
+          "strength": 66,
+          "accuracy": 91
         },
         {
           "id": "eng-2018-alli",
@@ -5656,9 +5656,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 76,
-          "strength": 73,
-          "accuracy": 86
+          "pace": 72,
+          "strength": 69,
+          "accuracy": 92
         },
         {
           "id": "eng-2018-lingard",
@@ -5666,9 +5666,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 77,
-          "strength": 69,
-          "accuracy": 82
+          "pace": 78,
+          "strength": 53,
+          "accuracy": 85
         },
         {
           "id": "eng-2018-sterling",
@@ -5676,9 +5676,9 @@
           "positionRaw": "LW",
           "positionBucket": "ATT",
           "rating": 87,
-          "pace": 86,
-          "strength": 69,
-          "accuracy": 83
+          "pace": 99,
+          "strength": 60,
+          "accuracy": 81
         },
         {
           "id": "eng-2018-kane",
@@ -5686,9 +5686,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 90,
-          "pace": 85,
-          "strength": 88,
-          "accuracy": 85
+          "pace": 93,
+          "strength": 76,
+          "accuracy": 73
         },
         {
           "id": "eng-2018-rashford",
@@ -5696,9 +5696,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 83,
-          "strength": 69,
-          "accuracy": 84
+          "pace": 91,
+          "strength": 53,
+          "accuracy": 75
         }
       ]
     },
@@ -5720,9 +5720,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 80,
-          "strength": 73,
-          "accuracy": 75
+          "pace": 90,
+          "strength": 65,
+          "accuracy": 77
         },
         {
           "id": "rus-2018-kutepov",
@@ -5730,9 +5730,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 78,
-          "pace": 65,
-          "strength": 82,
-          "accuracy": 71
+          "pace": 55,
+          "strength": 87,
+          "accuracy": 63
         },
         {
           "id": "rus-2018-ignashevich",
@@ -5740,9 +5740,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 68,
-          "strength": 84,
-          "accuracy": 69
+          "pace": 59,
+          "strength": 90,
+          "accuracy": 75
         },
         {
           "id": "rus-2018-zhirkov",
@@ -5750,9 +5750,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 80,
-          "strength": 73,
-          "accuracy": 73
+          "pace": 91,
+          "strength": 68,
+          "accuracy": 69
         },
         {
           "id": "rus-2018-zobnin",
@@ -5760,9 +5760,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 81,
-          "pace": 70,
-          "strength": 70,
-          "accuracy": 79
+          "pace": 73,
+          "strength": 68,
+          "accuracy": 82
         },
         {
           "id": "rus-2018-gazinsky",
@@ -5770,9 +5770,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 79,
-          "pace": 68,
-          "strength": 80,
-          "accuracy": 73
+          "pace": 59,
+          "strength": 79,
+          "accuracy": 71
         },
         {
           "id": "rus-2018-golovin",
@@ -5780,9 +5780,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 84,
-          "pace": 76,
-          "strength": 66,
-          "accuracy": 87
+          "pace": 78,
+          "strength": 58,
+          "accuracy": 91
         },
         {
           "id": "rus-2018-samedov",
@@ -5790,9 +5790,9 @@
           "positionRaw": "RM",
           "positionBucket": "MID",
           "rating": 80,
-          "pace": 83,
-          "strength": 64,
-          "accuracy": 75
+          "pace": 88,
+          "strength": 57,
+          "accuracy": 68
         },
         {
           "id": "rus-2018-cheryshev",
@@ -5800,9 +5800,9 @@
           "positionRaw": "LM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 86,
-          "strength": 63,
-          "accuracy": 79
+          "pace": 90,
+          "strength": 56,
+          "accuracy": 73
         },
         {
           "id": "rus-2018-dzyuba",
@@ -5810,9 +5810,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 79,
-          "strength": 80,
-          "accuracy": 80
+          "pace": 96,
+          "strength": 76,
+          "accuracy": 69
         }
       ]
     },
@@ -5834,9 +5834,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 80,
-          "strength": 73,
-          "accuracy": 77
+          "pace": 85,
+          "strength": 71,
+          "accuracy": 71
         },
         {
           "id": "cro-2018-lovren",
@@ -5844,9 +5844,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 67,
-          "strength": 87,
-          "accuracy": 74
+          "pace": 63,
+          "strength": 88,
+          "accuracy": 67
         },
         {
           "id": "cro-2018-vida",
@@ -5854,9 +5854,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 67,
-          "strength": 87,
-          "accuracy": 75
+          "pace": 56,
+          "strength": 86,
+          "accuracy": 73
         },
         {
           "id": "cro-2018-strinic",
@@ -5864,9 +5864,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 77,
-          "strength": 73,
-          "accuracy": 75
+          "pace": 79,
+          "strength": 64,
+          "accuracy": 67
         },
         {
           "id": "cro-2018-brozovic",
@@ -5874,8 +5874,8 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 78,
-          "strength": 80,
+          "pace": 61,
+          "strength": 83,
           "accuracy": 79
         },
         {
@@ -5884,8 +5884,8 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 94,
-          "pace": 82,
-          "strength": 88,
+          "pace": 78,
+          "strength": 79,
           "accuracy": 97
         },
         {
@@ -5894,9 +5894,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 88,
-          "pace": 77,
-          "strength": 78,
-          "accuracy": 88
+          "pace": 74,
+          "strength": 76,
+          "accuracy": 91
         },
         {
           "id": "cro-2018-perisic",
@@ -5904,9 +5904,9 @@
           "positionRaw": "LM",
           "positionBucket": "MID",
           "rating": 87,
-          "pace": 92,
-          "strength": 72,
-          "accuracy": 87
+          "pace": 97,
+          "strength": 64,
+          "accuracy": 73
         },
         {
           "id": "cro-2018-rebic",
@@ -5914,9 +5914,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 82,
-          "pace": 87,
-          "strength": 64,
-          "accuracy": 80
+          "pace": 93,
+          "strength": 54,
+          "accuracy": 77
         },
         {
           "id": "cro-2018-mandzukic",
@@ -5924,9 +5924,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 87,
-          "pace": 83,
-          "strength": 84,
-          "accuracy": 85
+          "pace": 76,
+          "strength": 95,
+          "accuracy": 72
         }
       ]
     },
@@ -5948,9 +5948,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 82,
-          "strength": 77,
-          "accuracy": 77
+          "pace": 85,
+          "strength": 67,
+          "accuracy": 76
         },
         {
           "id": "ned-2022-timber",
@@ -5958,9 +5958,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 65,
-          "strength": 83,
-          "accuracy": 74
+          "pace": 61,
+          "strength": 93,
+          "accuracy": 68
         },
         {
           "id": "ned-2022-van-dijk",
@@ -5968,9 +5968,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 90,
-          "pace": 75,
-          "strength": 94,
-          "accuracy": 82
+          "pace": 65,
+          "strength": 99,
+          "accuracy": 73
         },
         {
           "id": "ned-2022-ake",
@@ -5978,9 +5978,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 66,
+          "pace": 56,
           "strength": 87,
-          "accuracy": 71
+          "accuracy": 70
         },
         {
           "id": "ned-2022-blind",
@@ -5988,9 +5988,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 77,
-          "strength": 74,
-          "accuracy": 77
+          "pace": 89,
+          "strength": 70,
+          "accuracy": 69
         },
         {
           "id": "ned-2022-de-jong",
@@ -5999,8 +5999,8 @@
           "positionBucket": "MID",
           "rating": 88,
           "pace": 78,
-          "strength": 80,
-          "accuracy": 87
+          "strength": 74,
+          "accuracy": 95
         },
         {
           "id": "ned-2022-de-roon",
@@ -6008,9 +6008,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 81,
-          "pace": 72,
-          "strength": 78,
-          "accuracy": 77
+          "pace": 65,
+          "strength": 85,
+          "accuracy": 76
         },
         {
           "id": "ned-2022-gakpo",
@@ -6018,9 +6018,9 @@
           "positionRaw": "LW",
           "positionBucket": "ATT",
           "rating": 86,
-          "pace": 85,
-          "strength": 67,
-          "accuracy": 82
+          "pace": 99,
+          "strength": 61,
+          "accuracy": 73
         },
         {
           "id": "ned-2022-depay",
@@ -6028,9 +6028,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 85,
-          "pace": 84,
-          "strength": 80,
-          "accuracy": 80
+          "pace": 94,
+          "strength": 71,
+          "accuracy": 72
         },
         {
           "id": "ned-2022-bergwijn",
@@ -6038,9 +6038,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 81,
-          "pace": 80,
-          "strength": 66,
-          "accuracy": 78
+          "pace": 91,
+          "strength": 50,
+          "accuracy": 75
         }
       ]
     },
@@ -6062,9 +6062,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 84,
-          "strength": 76,
-          "accuracy": 76
+          "pace": 85,
+          "strength": 62,
+          "accuracy": 72
         },
         {
           "id": "arg-2022-romero",
@@ -6072,9 +6072,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 87,
-          "pace": 71,
-          "strength": 90,
-          "accuracy": 77
+          "pace": 59,
+          "strength": 92,
+          "accuracy": 69
         },
         {
           "id": "arg-2022-otamendi",
@@ -6082,9 +6082,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 85,
-          "pace": 67,
-          "strength": 86,
-          "accuracy": 74
+          "pace": 61,
+          "strength": 95,
+          "accuracy": 69
         },
         {
           "id": "arg-2022-tagliafico",
@@ -6092,9 +6092,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 82,
-          "strength": 73,
-          "accuracy": 78
+          "pace": 92,
+          "strength": 70,
+          "accuracy": 73
         },
         {
           "id": "arg-2022-de-paul",
@@ -6102,9 +6102,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 78,
-          "strength": 75,
-          "accuracy": 85
+          "pace": 77,
+          "strength": 68,
+          "accuracy": 89
         },
         {
           "id": "arg-2022-enzo",
@@ -6113,8 +6113,8 @@
           "positionBucket": "MID",
           "rating": 86,
           "pace": 76,
-          "strength": 76,
-          "accuracy": 86
+          "strength": 70,
+          "accuracy": 90
         },
         {
           "id": "arg-2022-mac-allister",
@@ -6122,9 +6122,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 76,
-          "strength": 77,
-          "accuracy": 85
+          "pace": 74,
+          "strength": 69,
+          "accuracy": 84
         },
         {
           "id": "arg-2022-di-maria",
@@ -6132,9 +6132,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 88,
-          "pace": 91,
-          "strength": 72,
-          "accuracy": 82
+          "pace": 96,
+          "strength": 57,
+          "accuracy": 79
         },
         {
           "id": "arg-2022-messi",
@@ -6143,7 +6143,7 @@
           "positionBucket": "MID",
           "rating": 97,
           "pace": 90,
-          "strength": 81,
+          "strength": 65,
           "accuracy": 99
         },
         {
@@ -6152,9 +6152,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 85,
-          "pace": 83,
-          "strength": 82,
-          "accuracy": 82
+          "pace": 93,
+          "strength": 76,
+          "accuracy": 67
         }
       ]
     },
@@ -6176,9 +6176,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 81,
-          "pace": 82,
-          "strength": 74,
-          "accuracy": 75
+          "pace": 81,
+          "strength": 69,
+          "accuracy": 68
         },
         {
           "id": "cro-2022-lovren",
@@ -6186,9 +6186,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 65,
-          "strength": 84,
-          "accuracy": 74
+          "pace": 62,
+          "strength": 88,
+          "accuracy": 70
         },
         {
           "id": "cro-2022-gvardiol",
@@ -6196,9 +6196,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 87,
-          "pace": 69,
-          "strength": 89,
-          "accuracy": 75
+          "pace": 67,
+          "strength": 91,
+          "accuracy": 69
         },
         {
           "id": "cro-2022-sosa",
@@ -6206,9 +6206,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 81,
-          "pace": 82,
-          "strength": 75,
-          "accuracy": 70
+          "pace": 84,
+          "strength": 63,
+          "accuracy": 71
         },
         {
           "id": "cro-2022-brozovic",
@@ -6216,9 +6216,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 86,
-          "pace": 74,
-          "strength": 83,
-          "accuracy": 82
+          "pace": 63,
+          "strength": 90,
+          "accuracy": 79
         },
         {
           "id": "cro-2022-modric",
@@ -6226,8 +6226,8 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 91,
-          "pace": 83,
-          "strength": 84,
+          "pace": 79,
+          "strength": 73,
           "accuracy": 97
         },
         {
@@ -6236,9 +6236,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 86,
-          "pace": 78,
-          "strength": 78,
-          "accuracy": 83
+          "pace": 73,
+          "strength": 75,
+          "accuracy": 95
         },
         {
           "id": "cro-2022-perisic",
@@ -6246,9 +6246,9 @@
           "positionRaw": "LM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 87,
-          "strength": 67,
-          "accuracy": 84
+          "pace": 90,
+          "strength": 60,
+          "accuracy": 79
         },
         {
           "id": "cro-2022-kramaric",
@@ -6256,9 +6256,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 84,
-          "strength": 82,
-          "accuracy": 81
+          "pace": 87,
+          "strength": 67,
+          "accuracy": 63
         },
         {
           "id": "cro-2022-pasalic",
@@ -6266,9 +6266,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 80,
-          "strength": 64,
-          "accuracy": 85
+          "pace": 79,
+          "strength": 55,
+          "accuracy": 92
         }
       ]
     },
@@ -6290,9 +6290,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 82,
-          "strength": 75,
-          "accuracy": 72
+          "pace": 89,
+          "strength": 71,
+          "accuracy": 74
         },
         {
           "id": "bra-2022-silva",
@@ -6300,9 +6300,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 87,
-          "pace": 69,
-          "strength": 90,
-          "accuracy": 74
+          "pace": 66,
+          "strength": 93,
+          "accuracy": 77
         },
         {
           "id": "bra-2022-marquinhos",
@@ -6310,9 +6310,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 88,
-          "pace": 71,
-          "strength": 88,
-          "accuracy": 77
+          "pace": 64,
+          "strength": 98,
+          "accuracy": 74
         },
         {
           "id": "bra-2022-sandro",
@@ -6320,9 +6320,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 82,
-          "strength": 76,
-          "accuracy": 78
+          "pace": 90,
+          "strength": 70,
+          "accuracy": 70
         },
         {
           "id": "bra-2022-casemiro",
@@ -6330,8 +6330,8 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 88,
-          "pace": 80,
-          "strength": 83,
+          "pace": 68,
+          "strength": 89,
           "accuracy": 87
         },
         {
@@ -6340,9 +6340,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 78,
-          "strength": 79,
-          "accuracy": 88
+          "pace": 70,
+          "strength": 68,
+          "accuracy": 92
         },
         {
           "id": "bra-2022-neymar",
@@ -6350,9 +6350,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 92,
-          "pace": 88,
-          "strength": 73,
-          "accuracy": 94
+          "pace": 84,
+          "strength": 59,
+          "accuracy": 99
         },
         {
           "id": "bra-2022-raphinha",
@@ -6360,9 +6360,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 85,
-          "pace": 86,
-          "strength": 68,
-          "accuracy": 82
+          "pace": 96,
+          "strength": 56,
+          "accuracy": 78
         },
         {
           "id": "bra-2022-vinicius",
@@ -6370,9 +6370,9 @@
           "positionRaw": "LW",
           "positionBucket": "ATT",
           "rating": 90,
-          "pace": 92,
-          "strength": 73,
-          "accuracy": 83
+          "pace": 99,
+          "strength": 58,
+          "accuracy": 76
         },
         {
           "id": "bra-2022-richarlison",
@@ -6380,9 +6380,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 85,
-          "pace": 81,
-          "strength": 86,
-          "accuracy": 80
+          "pace": 67,
+          "strength": 89,
+          "accuracy": 66
         }
       ]
     },
@@ -6404,9 +6404,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 86,
-          "pace": 82,
-          "strength": 75,
-          "accuracy": 76
+          "pace": 91,
+          "strength": 69,
+          "accuracy": 74
         },
         {
           "id": "eng-2022-stones",
@@ -6414,8 +6414,8 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 86,
-          "pace": 68,
-          "strength": 88,
+          "pace": 60,
+          "strength": 91,
           "accuracy": 78
         },
         {
@@ -6424,9 +6424,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 83,
-          "pace": 69,
-          "strength": 88,
-          "accuracy": 70
+          "pace": 62,
+          "strength": 91,
+          "accuracy": 73
         },
         {
           "id": "eng-2022-shaw",
@@ -6434,9 +6434,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 84,
-          "strength": 77,
-          "accuracy": 73
+          "pace": 92,
+          "strength": 67,
+          "accuracy": 76
         },
         {
           "id": "eng-2022-rice",
@@ -6444,9 +6444,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 87,
-          "pace": 79,
-          "strength": 87,
-          "accuracy": 84
+          "pace": 70,
+          "strength": 88,
+          "accuracy": 86
         },
         {
           "id": "eng-2022-bellingham",
@@ -6454,9 +6454,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 87,
-          "pace": 80,
+          "pace": 78,
           "strength": 78,
-          "accuracy": 87
+          "accuracy": 95
         },
         {
           "id": "eng-2022-saka",
@@ -6464,9 +6464,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 87,
-          "pace": 87,
-          "strength": 68,
-          "accuracy": 82
+          "pace": 95,
+          "strength": 60,
+          "accuracy": 73
         },
         {
           "id": "eng-2022-foden",
@@ -6475,7 +6475,7 @@
           "positionBucket": "MID",
           "rating": 86,
           "pace": 82,
-          "strength": 73,
+          "strength": 57,
           "accuracy": 88
         },
         {
@@ -6484,9 +6484,9 @@
           "positionRaw": "LW",
           "positionBucket": "ATT",
           "rating": 85,
-          "pace": 84,
-          "strength": 71,
-          "accuracy": 85
+          "pace": 92,
+          "strength": 54,
+          "accuracy": 82
         },
         {
           "id": "eng-2022-kane",
@@ -6494,9 +6494,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 90,
-          "pace": 84,
-          "strength": 88,
-          "accuracy": 82
+          "pace": 75,
+          "strength": 99,
+          "accuracy": 75
         }
       ]
     },
@@ -6518,9 +6518,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 85,
-          "pace": 81,
-          "strength": 80,
-          "accuracy": 77
+          "pace": 90,
+          "strength": 67,
+          "accuracy": 75
         },
         {
           "id": "fra-2022-varane",
@@ -6528,9 +6528,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 87,
-          "pace": 71,
-          "strength": 90,
-          "accuracy": 78
+          "pace": 59,
+          "strength": 95,
+          "accuracy": 77
         },
         {
           "id": "fra-2022-upamecano",
@@ -6538,9 +6538,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 85,
-          "pace": 67,
-          "strength": 86,
-          "accuracy": 78
+          "pace": 60,
+          "strength": 95,
+          "accuracy": 68
         },
         {
           "id": "fra-2022-theo",
@@ -6548,9 +6548,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 87,
-          "pace": 86,
-          "strength": 81,
-          "accuracy": 80
+          "pace": 88,
+          "strength": 65,
+          "accuracy": 76
         },
         {
           "id": "fra-2022-tchouameni",
@@ -6558,9 +6558,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 86,
-          "pace": 75,
-          "strength": 87,
-          "accuracy": 83
+          "pace": 60,
+          "strength": 86,
+          "accuracy": 77
         },
         {
           "id": "fra-2022-rabiot",
@@ -6568,8 +6568,8 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 85,
-          "pace": 77,
-          "strength": 75,
+          "pace": 73,
+          "strength": 69,
           "accuracy": 88
         },
         {
@@ -6578,9 +6578,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 89,
-          "pace": 86,
-          "strength": 72,
-          "accuracy": 90
+          "pace": 76,
+          "strength": 61,
+          "accuracy": 99
         },
         {
           "id": "fra-2022-dembele",
@@ -6588,9 +6588,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 86,
-          "pace": 91,
-          "strength": 67,
-          "accuracy": 80
+          "pace": 95,
+          "strength": 63,
+          "accuracy": 73
         },
         {
           "id": "fra-2022-mbappe",
@@ -6599,8 +6599,8 @@
           "positionBucket": "ATT",
           "rating": 96,
           "pace": 99,
-          "strength": 74,
-          "accuracy": 93
+          "strength": 64,
+          "accuracy": 84
         },
         {
           "id": "fra-2022-giroud",
@@ -6608,9 +6608,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 85,
-          "pace": 80,
-          "strength": 85,
-          "accuracy": 82
+          "pace": 69,
+          "strength": 88,
+          "accuracy": 69
         }
       ]
     },
@@ -6632,9 +6632,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 88,
-          "pace": 88,
-          "strength": 79,
-          "accuracy": 79
+          "pace": 91,
+          "strength": 65,
+          "accuracy": 78
         },
         {
           "id": "mar-2022-saiss",
@@ -6642,9 +6642,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 66,
-          "strength": 84,
-          "accuracy": 71
+          "pace": 62,
+          "strength": 95,
+          "accuracy": 72
         },
         {
           "id": "mar-2022-aguerd",
@@ -6652,9 +6652,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 71,
-          "strength": 86,
-          "accuracy": 75
+          "pace": 59,
+          "strength": 95,
+          "accuracy": 73
         },
         {
           "id": "mar-2022-attiyat-allah",
@@ -6662,9 +6662,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 80,
-          "pace": 75,
-          "strength": 71,
-          "accuracy": 69
+          "pace": 79,
+          "strength": 64,
+          "accuracy": 66
         },
         {
           "id": "mar-2022-amrabat",
@@ -6672,9 +6672,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 86,
-          "pace": 78,
-          "strength": 83,
-          "accuracy": 82
+          "pace": 63,
+          "strength": 93,
+          "accuracy": 84
         },
         {
           "id": "mar-2022-ounahi",
@@ -6682,9 +6682,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 83,
-          "pace": 72,
-          "strength": 74,
-          "accuracy": 84
+          "pace": 66,
+          "strength": 76,
+          "accuracy": 88
         },
         {
           "id": "mar-2022-amallah",
@@ -6692,9 +6692,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 80,
-          "pace": 75,
-          "strength": 70,
-          "accuracy": 78
+          "pace": 70,
+          "strength": 66,
+          "accuracy": 86
         },
         {
           "id": "mar-2022-ziyech",
@@ -6702,9 +6702,9 @@
           "positionRaw": "RW",
           "positionBucket": "ATT",
           "rating": 86,
-          "pace": 87,
-          "strength": 69,
-          "accuracy": 84
+          "pace": 92,
+          "strength": 63,
+          "accuracy": 79
         },
         {
           "id": "mar-2022-boufal",
@@ -6712,9 +6712,9 @@
           "positionRaw": "LW",
           "positionBucket": "ATT",
           "rating": 82,
-          "pace": 83,
-          "strength": 64,
-          "accuracy": 80
+          "pace": 89,
+          "strength": 61,
+          "accuracy": 72
         },
         {
           "id": "mar-2022-en-nesyri",
@@ -6722,9 +6722,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 78,
-          "strength": 79,
-          "accuracy": 79
+          "pace": 95,
+          "strength": 76,
+          "accuracy": 66
         }
       ]
     },
@@ -6746,9 +6746,9 @@
           "positionRaw": "RB",
           "positionBucket": "DEF",
           "rating": 82,
-          "pace": 81,
-          "strength": 72,
-          "accuracy": 74
+          "pace": 89,
+          "strength": 69,
+          "accuracy": 68
         },
         {
           "id": "por-2022-pepe",
@@ -6756,8 +6756,8 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 86,
-          "pace": 72,
-          "strength": 89,
+          "pace": 66,
+          "strength": 92,
           "accuracy": 77
         },
         {
@@ -6766,9 +6766,9 @@
           "positionRaw": "CB",
           "positionBucket": "DEF",
           "rating": 88,
-          "pace": 71,
-          "strength": 90,
-          "accuracy": 78
+          "pace": 59,
+          "strength": 94,
+          "accuracy": 75
         },
         {
           "id": "por-2022-guerreiro",
@@ -6776,9 +6776,9 @@
           "positionRaw": "LB",
           "positionBucket": "DEF",
           "rating": 84,
-          "pace": 84,
-          "strength": 75,
-          "accuracy": 78
+          "pace": 86,
+          "strength": 65,
+          "accuracy": 74
         },
         {
           "id": "por-2022-carvalho",
@@ -6786,9 +6786,9 @@
           "positionRaw": "DM",
           "positionBucket": "MID",
           "rating": 82,
-          "pace": 70,
-          "strength": 79,
-          "accuracy": 81
+          "pace": 59,
+          "strength": 85,
+          "accuracy": 80
         },
         {
           "id": "por-2022-fernandes",
@@ -6796,9 +6796,9 @@
           "positionRaw": "CM",
           "positionBucket": "MID",
           "rating": 88,
-          "pace": 82,
-          "strength": 76,
-          "accuracy": 88
+          "pace": 73,
+          "strength": 78,
+          "accuracy": 93
         },
         {
           "id": "por-2022-silva",
@@ -6806,9 +6806,9 @@
           "positionRaw": "AM",
           "positionBucket": "MID",
           "rating": 90,
-          "pace": 83,
-          "strength": 76,
-          "accuracy": 95
+          "pace": 79,
+          "strength": 61,
+          "accuracy": 98
         },
         {
           "id": "por-2022-felix",
@@ -6816,9 +6816,9 @@
           "positionRaw": "LW",
           "positionBucket": "ATT",
           "rating": 84,
-          "pace": 88,
-          "strength": 70,
-          "accuracy": 83
+          "pace": 89,
+          "strength": 58,
+          "accuracy": 79
         },
         {
           "id": "por-2022-ronaldo",
@@ -6826,9 +6826,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 88,
-          "pace": 85,
-          "strength": 86,
-          "accuracy": 80
+          "pace": 99,
+          "strength": 80,
+          "accuracy": 72
         },
         {
           "id": "por-2022-ramos",
@@ -6836,9 +6836,9 @@
           "positionRaw": "ST",
           "positionBucket": "ATT",
           "rating": 83,
-          "pace": 83,
-          "strength": 78,
-          "accuracy": 77
+          "pace": 68,
+          "strength": 89,
+          "accuracy": 68
         }
       ]
     }
