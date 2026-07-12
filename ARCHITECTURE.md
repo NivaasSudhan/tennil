@@ -67,7 +67,10 @@ function loadGameData(raw: {
 }): GameData;                       // throws DataValidationError with a human-readable list of every problem
 
 // src/domain/draft/session.ts   (all pure; return NEW session; throw IllegalActionError)
-function startDraft(data: GameData, rng: Rng, formationId?: string): DraftSession; // ADR-017
+function startDraft(data: GameData, rng: Rng, formationId?: string, options?: StartDraftOptions): DraftSession; // ADR-017, ADR-014-lite
+// StartDraftOptions = { seed?: number; mode?: 'daily' | 'free' } — recorded on the returned
+// session (DraftSession.seed/.mode) for attribution/replay; does NOT construct rng itself —
+// caller (App) derives `rng` from the same `seed` via mulberry32/seededRng and passes both.
 function pick(session: DraftSession, data: GameData, playerId: string, rng: Rng): DraftSession;
 function skip(session: DraftSession, data: GameData, rng: Rng): DraftSession;
 function getFinalXI(session: DraftSession): FinalXI;   // throws unless phase === 'COMPLETE'
@@ -92,13 +95,13 @@ UI rule (ADR-002): components may **read** `DraftSession` to render/disable cont
 ## 4. Draft state machine (ADR-003) — pseudocode
 
 ```
-startDraft(data, rng, formationId?):
+startDraft(data, rng, formationId?, options?):
   id = formationId ?? data.thresholds.referenceFormation
   require id in data.thresholds.formations              else throw IllegalActionError (ADR-017)
   reveal = selectSquad(data.squads, seen=[], excluded=[], excludeId=null, rng)
   return { phase:'AWAIT_PICK', picks:[], skipRemaining:1, roundsPlayed:1,
            seenSquadIds:[reveal.id], excludedSquadIds:[], currentReveal:reveal, breachLog,
-           formationId:id }
+           formationId:id, seed: options?.seed ?? 0, mode: options?.mode ?? 'free' }  # ADR-014-lite
 
 selectSquad(all, seen, excluded, excludeId, rng):
   notExcluded = id not in excluded and id != excludeId

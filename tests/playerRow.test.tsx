@@ -93,6 +93,8 @@ function makeSession(): DraftSession {
     breachLog: [],
     formationId: 'x',
     revealLog: [],
+    seed: 0,
+    mode: 'free',
   };
 }
 

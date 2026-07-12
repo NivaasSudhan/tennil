@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import type { DraftSession, GameData } from '../domain/types';
+import { useRef, useState } from 'react';
+import type { DraftSession, GameData, Rng } from '../domain/types';
 import { IllegalActionError } from '../domain/types';
 import { pick as domainPick, skip as domainSkip, startDraft } from '../domain/draft/session';
-import { systemRng } from '../lib/rng';
+import { dailySeed, mulberry32 } from '../lib/rng';
+import { matchdayNumber } from '../lib/daily';
 import DraftScreen from './DraftScreen';
 import ResultScreen from './ResultScreen';
 import StartScreen from './StartScreen';
@@ -13,12 +14,22 @@ export default function App({ data }: { data: GameData }) {
   const [actionError, setActionError] = useState<string | null>(null);
   const [gate, setGate] = useState<'landing' | 'formation'>('landing');
   const [lastFormationId, setLastFormationId] = useState(data.thresholds.referenceFormation);
+  const [lastMode, setLastMode] = useState<'daily' | 'free'>('daily');
+  // ADR-014-lite: one rng instance per session, threaded through its whole
+  // lifetime (startDraft + every pick/skip), constructed from the recorded
+  // seed at handleStart time. A ref (not state) because it's mutated in place
+  // by mulberry32's internal closure, not by React.
+  const rngRef = useRef<Rng | null>(null);
 
-  function handleStart(formationId: string) {
+  function handleStart(formationId: string, mode: 'daily' | 'free') {
     setActionError(null);
     try {
-      setSession(startDraft(data, systemRng(), formationId));
+      const seed = mode === 'daily' ? dailySeed(new Date()) : Math.floor(Math.random() * 2 ** 31);
+      const rng = mulberry32(seed);
+      rngRef.current = rng;
+      setSession(startDraft(data, rng, formationId, { seed, mode }));
       setLastFormationId(formationId);
+      setLastMode(mode);
     } catch (err) {
       if (err instanceof IllegalActionError) {
         setActionError(err.message);
@@ -32,7 +43,7 @@ export default function App({ data }: { data: GameData }) {
     setActionError(null);
     try {
       setSession((current) =>
-        current === null ? current : domainPick(current, data, playerId, systemRng()),
+        current === null ? current : domainPick(current, data, playerId, rngRef.current ?? mulberry32(0)),
       );
     } catch (err) {
       if (err instanceof IllegalActionError) {
@@ -47,7 +58,7 @@ export default function App({ data }: { data: GameData }) {
     setActionError(null);
     try {
       setSession((current) =>
-        current === null ? current : domainSkip(current, data, systemRng()),
+        current === null ? current : domainSkip(current, data, rngRef.current ?? mulberry32(0)),
       );
     } catch (err) {
       if (err instanceof IllegalActionError) {
@@ -62,12 +73,14 @@ export default function App({ data }: { data: GameData }) {
     setActionError(null);
     const lid = session?.formationId ?? data.thresholds.referenceFormation;
     setLastFormationId(lid);
+    if (session) setLastMode(session.mode);
     setSession(null);
     setGate('formation');
   }
 
   const showFormationGate = session === null && gate === 'formation';
   const showLanding = session === null && gate === 'landing';
+  const todayMatchday = matchdayNumber(new Date());
 
   return (
     <div className="app-shell">
@@ -76,6 +89,7 @@ export default function App({ data }: { data: GameData }) {
           formations={data.thresholds.formations}
           defaultFormationId={data.thresholds.referenceFormation}
           variant="landing"
+          matchdayNumber={todayMatchday}
           onStart={handleStart}
         />
       ) : showFormationGate ? (
@@ -83,6 +97,8 @@ export default function App({ data }: { data: GameData }) {
           formations={data.thresholds.formations}
           defaultFormationId={lastFormationId}
           variant="formation-only"
+          mode={lastMode}
+          matchdayNumber={todayMatchday}
           onStart={handleStart}
         />
       ) : session === null ? null : session.phase === 'COMPLETE' ? (

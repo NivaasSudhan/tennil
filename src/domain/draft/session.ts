@@ -13,6 +13,7 @@ import type {
   GameData,
   Rng,
   Squad,
+  StartDraftOptions,
 } from '../types';
 import { IllegalActionError } from '../types';
 import { isPersonTaken } from './person';
@@ -62,7 +63,12 @@ function selectSquad(
   return { reveal: pool[idx], breached };
 }
 
-export function startDraft(data: GameData, rng: Rng, formationId?: string): DraftSession {
+export function startDraft(
+  data: GameData,
+  rng: Rng,
+  formationId?: string,
+  options?: StartDraftOptions,
+): DraftSession {
   const id = formationId ?? data.thresholds.referenceFormation;
   const formation = data.thresholds.formations.find((f) => f.id === id);
   if (!formation) {
@@ -86,6 +92,8 @@ export function startDraft(data: GameData, rng: Rng, formationId?: string): Draf
     breachLog,
     formationId: id,
     revealLog: [reveal.id],
+    seed: options?.seed ?? 0,
+    mode: options?.mode ?? 'free',
   };
 }
 

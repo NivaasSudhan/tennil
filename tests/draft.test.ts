@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { mulberry32 } from '../src/lib/rng';
+import { dailySeed, mulberry32 } from '../src/lib/rng';
 import {
   startDraft,
   pick,
@@ -419,6 +419,63 @@ describe('formationId', () => {
   it('startDraft with invalid formationId throws IllegalActionError', () => {
     const data = corpus(7);
     expect(() => startDraft(data, mulberry32(1), 'nonexistent')).toThrow(IllegalActionError);
+  });
+});
+
+describe('seed + mode (ADR-014-lite)', () => {
+  it('startDraft with no options defaults seed to 0 and mode to free', () => {
+    const data = corpus(7);
+    const session = startDraft(data, mulberry32(1));
+    expect(session.seed).toBe(0);
+    expect(session.mode).toBe('free');
+  });
+
+  it('startDraft records the given seed and mode on the session', () => {
+    const data = corpus(7);
+    const session = startDraft(data, mulberry32(2026), 'draft-test', { seed: 2026, mode: 'daily' });
+    expect(session.seed).toBe(2026);
+    expect(session.mode).toBe('daily');
+  });
+
+  it('free mode is recorded when explicitly given', () => {
+    const data = corpus(7);
+    const session = startDraft(data, mulberry32(99), 'draft-test', { seed: 99, mode: 'free' });
+    expect(session.seed).toBe(99);
+    expect(session.mode).toBe('free');
+  });
+
+  it('seed and mode survive pick/skip transitions unchanged', () => {
+    const data = corpus(7);
+    const seed = 4242;
+    const rng = mulberry32(seed);
+    let session = startDraft(data, rng, 'draft-test', { seed, mode: 'daily' });
+    session = pick(session, data, firstPickable(session), rng);
+    session = skip(session, data, rng);
+    expect(session.seed).toBe(seed);
+    expect(session.mode).toBe('daily');
+  });
+
+  it('two sessions built from the same daily seed produce identical revealLogs (replay determinism)', () => {
+    const data = corpus(7);
+    const fixedDate = new Date(Date.UTC(2026, 6, 12));
+    const seed = dailySeed(fixedDate);
+
+    function driveFullDraft(): DraftSession {
+      const rng = mulberry32(seed);
+      let session = startDraft(data, rng, 'draft-test', { seed, mode: 'daily' });
+      // Skip the very first reveal, then pick through to completion.
+      session = skip(session, data, rng);
+      while (session.phase !== 'COMPLETE') {
+        session = pick(session, data, firstPickable(session), rng);
+      }
+      return session;
+    }
+
+    const s1 = driveFullDraft();
+    const s2 = driveFullDraft();
+    expect(s1.revealLog).toEqual(s2.revealLog);
+    expect(s1.seed).toBe(s2.seed);
+    expect(s1.mode).toBe(s2.mode);
   });
 });
 

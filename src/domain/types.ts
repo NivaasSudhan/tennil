@@ -49,6 +49,16 @@ export interface DraftSession {
   revealLog: string[];         // ADR-019: ordered squad id per reveal round (skipped round
                                 // included); canonical truth for computeSessionCeiling.
                                 // revealLog.length === roundsPlayed, always.
+  readonly seed: number;       // ADR-014-lite: seed the session's rng was constructed from
+  readonly mode: 'daily' | 'free'; // ADR-014-lite: daily = shared seed, free = per-session random seed
+}
+
+/** startDraft options (ADR-014-lite): seed/mode are recorded on the session for
+ * attribution/replay; they do NOT construct the rng themselves — the caller
+ * (App) constructs `rng` from the same `seed` and passes both through. */
+export interface StartDraftOptions {
+  seed?: number;
+  mode?: 'daily' | 'free';
 }
 
 /** Injectable randomness (ADR-008). NEVER imported by scoring/ or commentary/. */

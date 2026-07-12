@@ -5,11 +5,26 @@ interface StartScreenProps {
   formations: Formation[];
   defaultFormationId: string;
   variant: 'landing' | 'formation-only';
-  onStart: (formationId: string) => void;
+  /** formation-only only: the mode being repeated (Draft Again keeps the same mode). */
+  mode?: 'daily' | 'free';
+  /** Today's matchday number (ADR-014-lite); shown when daily mode is active. */
+  matchdayNumber?: number;
+  onStart: (formationId: string, mode: 'daily' | 'free') => void;
 }
 
-export default function StartScreen({ formations, defaultFormationId, variant, onStart }: StartScreenProps) {
+export default function StartScreen({
+  formations,
+  defaultFormationId,
+  variant,
+  mode,
+  matchdayNumber,
+  onStart,
+}: StartScreenProps) {
   const [selectedId, setSelectedId] = useState(defaultFormationId);
+  // Landing chooses mode via toggle (defaults to daily — the primary CTA).
+  // formation-only (Draft Again) repeats whatever mode the finished session used.
+  const [selectedMode, setSelectedMode] = useState<'daily' | 'free'>(mode ?? 'daily');
+  const activeMode = variant === 'formation-only' ? mode ?? 'free' : selectedMode;
   const selected = formations.find((f) => f.id === selectedId);
 
   return (
@@ -28,6 +43,28 @@ export default function StartScreen({ formations, defaultFormationId, variant, o
             <li>One skip token: pass on a squad, once per draft. It costs a round.</li>
             <li>Your final XI decides the result. No dice — squad quality is destiny.</li>
           </ul>
+
+          <div className="mode-picker" role="group" aria-label="Choose your mode">
+            <button
+              type="button"
+              className={`mode-option${selectedMode === 'daily' ? ' mode-option--selected' : ''}`}
+              onClick={() => setSelectedMode('daily')}
+              aria-pressed={selectedMode === 'daily'}
+            >
+              Today&rsquo;s Matchday
+            </button>
+            <button
+              type="button"
+              className={`mode-option${selectedMode === 'free' ? ' mode-option--selected' : ''}`}
+              onClick={() => setSelectedMode('free')}
+              aria-pressed={selectedMode === 'free'}
+            >
+              Free Draft
+            </button>
+          </div>
+          {selectedMode === 'daily' && matchdayNumber !== undefined && (
+            <p className="matchday-badge">MATCHDAY #{matchdayNumber}</p>
+          )}
         </>
       )}
 
@@ -66,9 +103,13 @@ export default function StartScreen({ formations, defaultFormationId, variant, o
       <button
         type="button"
         className="stadium-button"
-        onClick={() => onStart(selectedId)}
+        onClick={() => onStart(selectedId, activeMode)}
       >
-        {variant === 'landing' ? 'Kick off' : 'Confirm Draft'}
+        {variant === 'landing'
+          ? 'Kick off'
+          : activeMode === 'daily'
+            ? "Replay Today's Draw"
+            : 'Confirm Draft'}
       </button>
     </div>
   );
