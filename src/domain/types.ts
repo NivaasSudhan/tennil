@@ -88,6 +88,13 @@ export interface ScoreInput {
   bucketCounts: Record<PositionBucket, number>;
   weakLink: number; // min individual rating in the FinalXI
   ceiling: CeilingResult; // ADR-019: session-relative denominator for efficiency predicates
+  /** ADR-020: integer 0-100, computeProfileFit(xi, positionMap, profile, opposition.weightMods).
+   * Defaults to 0 at computeScoreInput call sites that don't pass it explicitly (pre-Wave-C
+   * synthetic fixtures) — 0 is inert against `minFit` gates staged at 0 (Wave A placeholder). */
+  fit: number;
+  /** ADR-020: id of the ThresholdConfig.oppositions entry whose weightMods produced `fit`
+   * (e.g. 'neutral' when no real opposition selection ran). */
+  oppositionId: string;
 }
 
 export interface BandDef {

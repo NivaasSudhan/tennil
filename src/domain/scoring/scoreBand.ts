@@ -20,16 +20,30 @@ import type {
 const BUCKETS: PositionBucket[] = ['GK', 'DEF', 'MID', 'ATT'];
 
 /**
- * computeScoreInput (ADR-004; ceiling param added ADR-019).
+ * computeScoreInput (ADR-004; ceiling param added ADR-019; fit/oppositionId
+ * params added ADR-020 Wave C).
  * Bucket for each player = `positionMap[player.positionRaw]` — the map is the
  * source of truth, never the player's own (denormalized) `positionBucket` field.
  * `ceiling` is the session-relative denominator (computeSessionCeiling) that
  * powers the minEfficiency/minBucketEfficiency predicates below.
+ *
+ * `fit`/`oppositionId` are OPTIONAL, computed-elsewhere values (ADR-020): the
+ * real call sites (ResultScreen, scripts/simulate.ts) compute `fit` via
+ * `computeProfileFit` and `oppositionId` via `selectOpposition` BEFORE calling
+ * this function, then pass them through — this function never computes fit
+ * itself (it has no FormationProfile/OppositionDef in scope, keeping this
+ * module's signature stable for every pre-Wave-C caller). Callers that don't
+ * pass them (every synthetic scoring/draft fixture predating Wave C) get the
+ * inert defaults `fit: 0, oppositionId: 'neutral'` — harmless because every
+ * real `minFit` gate shipped so far is staged at 0 (Wave A placeholder; any
+ * `fit >= 0` passes) until Wave D tunes real numbers.
  */
 export function computeScoreInput(
   xi: FinalXI,
   positionMap: PositionMap,
   ceiling: CeilingResult,
+  fit = 0,
+  oppositionId = 'neutral',
 ): ScoreInput {
   const bucketSums: Record<PositionBucket, number> = { GK: 0, DEF: 0, MID: 0, ATT: 0 };
   const bucketCounts: Record<PositionBucket, number> = { GK: 0, DEF: 0, MID: 0, ATT: 0 };
@@ -45,7 +59,7 @@ export function computeScoreInput(
 
   if (xi.length === 0) weakLink = 0;
 
-  return { bucketSums, bucketCounts, weakLink, ceiling };
+  return { bucketSums, bucketCounts, weakLink, ceiling, fit, oppositionId };
 }
 
 /** Integer percentage points, ADR-019 convention: 0 ceiling => 100 (perfect). */
@@ -59,8 +73,8 @@ function efficiencyPct(userValue: number, ceilingValue: number): number {
  * evaluated — consumed by scoreBand (conjunction), explainScoreBand
  * (structured margins), and the simulator's near-miss diagnostics.
  * Fixed emission order (nonEmpty -> minCounts -> minBucketSums -> minWeakLink
- * -> minEfficiency -> minBucketEfficiency, buckets in GK/DEF/MID/ATT order)
- * so output is deterministic.
+ * -> minEfficiency -> minBucketEfficiency -> minFit, buckets in GK/DEF/MID/ATT
+ * order) so output is deterministic.
  * A fallback band configures no predicates: returns [].
  */
 export function evaluateBandPredicates(
@@ -145,6 +159,17 @@ export function evaluateBandPredicates(
         });
       }
     }
+  }
+
+  // ADR-020: minFit predicate — emitted ONLY when band.minFit is a positive integer
+  // (band.minFit === 0, the Wave A placeholder, emits nothing; addendum exact rule).
+  if (band.minFit !== undefined && band.minFit > 0) {
+    results.push({
+      name: 'minFit',
+      required: band.minFit,
+      actual: input.fit,
+      passed: input.fit >= band.minFit,
+    });
   }
 
   return results;

@@ -226,7 +226,7 @@ describe('loadGameData — failure modes (ARCHITECTURE.md §6)', () => {
     const raw = validRaw();
     (raw.squads as { version: number }).version = 3;
     expectRejects(raw, (problems) => {
-      expect(problems.some((p) => p === 'squads: version must be 1 or 2 (got 3)')).toBe(true);
+      expect(problems.some((p) => p === 'squads: version must be 2 (got 3)')).toBe(true);
     });
   });
 
@@ -255,13 +255,14 @@ describe('loadGameData — failure modes (ARCHITECTURE.md §6)', () => {
 });
 
 // ---------------------------------------------------------------------------
-// ADR-020: attrs (squads v1|v2) + profile fit / opposition (thresholds v4).
-// Real squads.json stays v1 this wave — dual-accept must hold — so the accept
-// direction for squads v2 is a small synthetic bundle built here.
+// ADR-020: attrs (squads v2, Wave C dropped v1 acceptance) + profile fit /
+// opposition (thresholds v4). Real squads.json is v2 (Wave B landed real
+// attrs); `validV1Raw` below exists only to prove v1 is now flatly rejected.
 // ---------------------------------------------------------------------------
 
-/** Minimal valid synthetic v1 squad bundle: one squad, 1 GK + 10 outfield
- * players (NO attrs), reusing the REAL thresholds/commentary/positionMap. */
+/** Minimal synthetic v1-shaped squad bundle: one squad, 1 GK + 10 outfield
+ * players (NO attrs) — used only to prove `loadGameData` now rejects squads
+ * version 1 outright (Wave C dropped dual-accept). */
 function validV1Raw(): RawBundle {
   const base = validRaw();
   const outfieldRaw: [string, string][] = [
@@ -313,7 +314,7 @@ function validV2Raw(): RawBundle {
   };
 }
 
-describe('loadGameData — ADR-020 squads v2 attrs (both directions)', () => {
+describe('loadGameData — ADR-020 squads v2 attrs (Wave C: v1 acceptance dropped)', () => {
   it('accepts a well-formed squads v2 bundle: outfield attrs 1-99, GK carries none', () => {
     const data = loadGameData(validV2Raw());
     const squad = data.squads.find((s) => s.id === 'v2sq')!;
@@ -329,13 +330,10 @@ describe('loadGameData — ADR-020 squads v2 attrs (both directions)', () => {
     }
   });
 
-  it('rejects squads v1 carrying attrs (attrs are forbidden pre-v2)', () => {
+  it('rejects squads version 1 outright, regardless of attrs (Wave C dropped v1 acceptance — corpus is v2 now)', () => {
     const raw = validV1Raw();
-    const squads = (raw.squads as { squads: { players: Record<string, unknown>[] }[] }).squads;
-    const player = squads[0].players.find((p) => p.positionBucket !== 'GK')!;
-    (player as Record<string, unknown>).pace = 80;
     expectRejects(raw, (problems) => {
-      expect(problems.some((p) => p.includes('squads v1 must not carry pace/strength/accuracy'))).toBe(true);
+      expect(problems.some((p) => p === 'squads: version must be 2 (got 1)')).toBe(true);
     });
   });
 
@@ -433,6 +431,39 @@ describe('loadGameData — ADR-020 thresholds v4 profiles/oppositions/minFit', (
       expect(problems.some((p) => p.includes('thresholds.profiles.4-3-3.MID.targets.accuracy') && p.includes('[1,99]'))).toBe(
         true,
       );
+    });
+  });
+
+  it('rejects a profile bucket whose weights all sum to 0 (Wave C addendum: Σ weights > 0)', () => {
+    const raw = validRaw();
+    const thresholds = raw.thresholds as {
+      profiles: Record<string, Record<string, { weights: Record<string, number> }>>;
+    };
+    thresholds.profiles['4-3-3'].DEF.weights = { pace: 0, strength: 0, accuracy: 0 };
+    expectRejects(raw, (problems) => {
+      expect(
+        problems.some((p) => p.includes('thresholds.profiles.4-3-3.DEF.weights') && p.includes('sum of pace+strength+accuracy must be > 0')),
+      ).toBe(true);
+    });
+  });
+
+  it('rejects an opposition weightMod below 0.5 (Wave C addendum: weightMods in [0.5,2.0])', () => {
+    const raw = validRaw();
+    const thresholds = raw.thresholds as { oppositions: { id: string; weightMods: Record<string, number> }[] };
+    const opp = thresholds.oppositions.find((o) => o.id !== 'neutral')!;
+    opp.weightMods[Object.keys(opp.weightMods)[0]] = 0.3;
+    expectRejects(raw, (problems) => {
+      expect(problems.some((p) => p.includes('weightMods') && p.includes('[0.5,2.0]'))).toBe(true);
+    });
+  });
+
+  it('rejects an opposition weightMod above 2.0 (Wave C addendum: weightMods in [0.5,2.0])', () => {
+    const raw = validRaw();
+    const thresholds = raw.thresholds as { oppositions: { id: string; weightMods: Record<string, number> }[] };
+    const opp = thresholds.oppositions.find((o) => o.id !== 'neutral')!;
+    opp.weightMods[Object.keys(opp.weightMods)[0]] = 3.0;
+    expectRejects(raw, (problems) => {
+      expect(problems.some((p) => p.includes('weightMods') && p.includes('[0.5,2.0]'))).toBe(true);
     });
   });
 

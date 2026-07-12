@@ -1,11 +1,11 @@
 /**
  * profileFit.ts — ADR-020 attribute profile fit.
  *
- * Wave A: TYPES ONLY. `computeProfileFit` and `selectOpposition` land in Wave C.
- * PURE module (no RNG, no react, no src/app imports) — this file only ever
- * grows pure functions/types, per the layering rule (ADR-002).
+ * Wave C: `computeProfileFit` and `selectOpposition` land here (types were
+ * Wave A). PURE module (no RNG, no react, no src/app imports) — this file only
+ * ever grows pure functions/types, per the layering rule (ADR-002).
  */
-import type { PositionBucket } from '../types';
+import type { FinalXI, PositionBucket, PositionMap, ThresholdConfig } from '../types';
 
 /** The three attribute axes authored on outfield players (ADR-020 spec §2). */
 export type AttrName = 'pace' | 'strength' | 'accuracy';
@@ -39,4 +39,120 @@ export interface OppositionDef {
   label: string;
   tagline: string;
   weightMods: Partial<Attrs>;
+}
+
+// ---------------------------------------------------------------------------
+// Wave C — computeProfileFit / selectOpposition (plan.md "Wave C/D algorithm
+// addendum", BINDING exact-math steps 1-7). PURE, deterministic, no rounding
+// until the final step.
+// ---------------------------------------------------------------------------
+
+const FIT_BUCKET_ORDER: AttrBucket[] = ['DEF', 'MID', 'ATT']; // step 1: fixed order
+const FIT_ATTR_ORDER: AttrName[] = ['pace', 'strength', 'accuracy']; // step 1: fixed order
+
+/**
+ * computeProfileFit — integer 0-100. See plan.md addendum steps 1-7:
+ * 1. Buckets [DEF,MID,ATT], attrs [pace,strength,accuracy] — fixed order (determinism).
+ * 2. Empty bucket (no XI players in it) is EXCLUDED entirely, not penalized
+ *    (double-punishing a structural failure violates the Reveal-Luck Law).
+ *    All three empty (no outfield players at all) => fit = 0.
+ * 3. mean_B[a] = arithmetic mean of attr a over bucket B's players (no rounding yet).
+ *    An outfield player missing an attr is a defensive invariant violation (loadData
+ *    v2 guarantees presence) — throws.
+ * 4. w_B[a] = profile[B].weights[a] * (weightMods[a] ?? 1).
+ * 5. shortfall_B[a] = max(0, targets[B][a] - mean_B[a]) / targets[B][a] — overshoot free.
+ * 6. penalty_B = (Σ_a w_B[a]*shortfall_B[a]) / (Σ_a w_B[a]) — weight-normalized.
+ * 7. fit = round(100 * (1 - mean(penalty_B over PRESENT buckets))), clamped [0,100].
+ *
+ * GK never participates (no attrs) — `positionMap[p.positionRaw] === 'GK'` players are
+ * skipped entirely, so GK presence/rating never affects fit (test: GK invariance).
+ */
+export function computeProfileFit(
+  xi: FinalXI,
+  positionMap: PositionMap,
+  profile: FormationProfile,
+  weightMods: Partial<Attrs>,
+): number {
+  const playersByBucket: Record<AttrBucket, { id: string; pace?: number; strength?: number; accuracy?: number }[]> = {
+    DEF: [],
+    MID: [],
+    ATT: [],
+  };
+
+  for (const player of xi) {
+    const bucket = positionMap[player.positionRaw];
+    if (bucket === 'GK' || bucket === undefined) continue; // GK excluded (step: GK never participates)
+    playersByBucket[bucket].push(player);
+  }
+
+  const penalties: number[] = [];
+
+  for (const bucket of FIT_BUCKET_ORDER) {
+    const players = playersByBucket[bucket];
+    if (players.length === 0) continue; // step 2: empty bucket excluded entirely
+
+    const means: Attrs = { pace: 0, strength: 0, accuracy: 0 };
+    for (const attr of FIT_ATTR_ORDER) {
+      let sum = 0;
+      for (const p of players) {
+        const v = p[attr];
+        if (v === undefined) {
+          throw new Error(
+            `computeProfileFit: outfield player '${p.id}' in bucket ${bucket} is missing attr '${attr}' — invalid squads v2 data (defensive invariant, ADR-020)`,
+          );
+        }
+        sum += v;
+      }
+      means[attr] = sum / players.length; // step 3: mean, no rounding
+    }
+
+    const bucketProfile = profile[bucket];
+    let weightedShortfallSum = 0;
+    let weightSum = 0;
+    for (const attr of FIT_ATTR_ORDER) {
+      const w = bucketProfile.weights[attr] * (weightMods[attr] ?? 1); // step 4
+      const target = bucketProfile.targets[attr];
+      const shortfall = Math.max(0, target - means[attr]) / target; // step 5: overshoot free
+      weightedShortfallSum += w * shortfall;
+      weightSum += w;
+    }
+    const penalty = weightSum > 0 ? weightedShortfallSum / weightSum : 0; // step 6
+    penalties.push(penalty);
+  }
+
+  if (penalties.length === 0) return 0; // step 2: all buckets empty => fit = 0
+
+  const meanPenalty = penalties.reduce((sum, p) => sum + p, 0) / penalties.length;
+  const fit = Math.round(100 * (1 - meanPenalty)); // step 7
+  return Math.max(0, Math.min(100, fit));
+}
+
+/**
+ * selectOpposition — SPEC DELTA (2026-07-12, ADR-014-lite amendment): free play
+ * no longer exists, so the mode parameter is dropped entirely. Every draft is
+ * matchday-framed: candidates = non-neutral oppositions sorted by id (stability
+ * under JSON reordering — the sort guard), pick `candidates[seed % candidates.length]`.
+ * Pure; no Date access (caller passes a seed, e.g. `dailySeed(new Date())`).
+ * `neutral` stays in the catalog (validation requires it) for synthetic tests
+ * and as the sim default when no `--opposition` flag is passed — but `selectOpposition`
+ * itself NEVER returns it (it is excluded from the candidate pool by construction).
+ * Defensive fallback: if the catalog somehow has zero non-neutral entries, returns
+ * `neutral` itself rather than throwing (never crash the result screen over a
+ * catalog authoring gap) — real configs always ship >=1 non-neutral opposition.
+ */
+export function selectOpposition(config: ThresholdConfig, seed: number): OppositionDef {
+  const candidates = config.oppositions
+    .filter((o) => o.id !== 'neutral')
+    .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+
+  if (candidates.length === 0) {
+    const neutral = config.oppositions.find((o) => o.id === 'neutral');
+    if (!neutral) {
+      throw new Error('selectOpposition: no oppositions configured at all — invalid ThresholdConfig');
+    }
+    return neutral;
+  }
+
+  const idx = ((seed % candidates.length) + candidates.length) % candidates.length; // never negative
+  return candidates[idx];
 }

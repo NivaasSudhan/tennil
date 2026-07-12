@@ -44,26 +44,28 @@ function validRaw() {
       scripts: { fb: { beats: [{ minute: 1, type: 'kickoff', text: 'go' }] } },
     },
     squads: {
-      version: 1,
+      version: 2,
       squads: [squadRaw('sa', 2000), squadRaw('sb', 2001)],
     },
   };
 }
 
-/** A well-formed squad: 11 players, exactly 1 GK, mapped buckets. */
+/** A well-formed squad: 11 players, exactly 1 GK, mapped buckets. ADR-020 Wave C:
+ * squads are v2-only now — every outfield player carries pace/strength/accuracy
+ * (1-99), the GK carries none. */
 function squadRaw(id: string, year: number) {
   const players = [
     { id: `${id}-gk`, name: 'Keeper', positionRaw: 'GK', positionBucket: 'GK', rating: 80 },
-    { id: `${id}-d0`, name: 'D0', positionRaw: 'CB', positionBucket: 'DEF', rating: 75 },
-    { id: `${id}-d1`, name: 'D1', positionRaw: 'CB', positionBucket: 'DEF', rating: 75 },
-    { id: `${id}-d2`, name: 'D2', positionRaw: 'CB', positionBucket: 'DEF', rating: 75 },
-    { id: `${id}-d3`, name: 'D3', positionRaw: 'CB', positionBucket: 'DEF', rating: 75 },
-    { id: `${id}-m0`, name: 'M0', positionRaw: 'CM', positionBucket: 'MID', rating: 78 },
-    { id: `${id}-m1`, name: 'M1', positionRaw: 'CM', positionBucket: 'MID', rating: 78 },
-    { id: `${id}-m2`, name: 'M2', positionRaw: 'CM', positionBucket: 'MID', rating: 78 },
-    { id: `${id}-a0`, name: 'A0', positionRaw: 'ST', positionBucket: 'ATT', rating: 82 },
-    { id: `${id}-a1`, name: 'A1', positionRaw: 'ST', positionBucket: 'ATT', rating: 82 },
-    { id: `${id}-a2`, name: 'A2', positionRaw: 'ST', positionBucket: 'ATT', rating: 82 },
+    { id: `${id}-d0`, name: 'D0', positionRaw: 'CB', positionBucket: 'DEF', rating: 75, pace: 70, strength: 80, accuracy: 72 },
+    { id: `${id}-d1`, name: 'D1', positionRaw: 'CB', positionBucket: 'DEF', rating: 75, pace: 70, strength: 80, accuracy: 72 },
+    { id: `${id}-d2`, name: 'D2', positionRaw: 'CB', positionBucket: 'DEF', rating: 75, pace: 70, strength: 80, accuracy: 72 },
+    { id: `${id}-d3`, name: 'D3', positionRaw: 'CB', positionBucket: 'DEF', rating: 75, pace: 70, strength: 80, accuracy: 72 },
+    { id: `${id}-m0`, name: 'M0', positionRaw: 'CM', positionBucket: 'MID', rating: 78, pace: 75, strength: 74, accuracy: 80 },
+    { id: `${id}-m1`, name: 'M1', positionRaw: 'CM', positionBucket: 'MID', rating: 78, pace: 75, strength: 74, accuracy: 80 },
+    { id: `${id}-m2`, name: 'M2', positionRaw: 'CM', positionBucket: 'MID', rating: 78, pace: 75, strength: 74, accuracy: 80 },
+    { id: `${id}-a0`, name: 'A0', positionRaw: 'ST', positionBucket: 'ATT', rating: 82, pace: 85, strength: 73, accuracy: 78 },
+    { id: `${id}-a1`, name: 'A1', positionRaw: 'ST', positionBucket: 'ATT', rating: 82, pace: 85, strength: 73, accuracy: 78 },
+    { id: `${id}-a2`, name: 'A2', positionRaw: 'ST', positionBucket: 'ATT', rating: 82, pace: 85, strength: 73, accuracy: 78 },
   ];
   return { id, country: id.toUpperCase(), year, players };
 }

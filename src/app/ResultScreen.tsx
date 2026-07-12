@@ -9,8 +9,10 @@ import { computeSessionCeiling } from '../domain/scoring/sessionCeiling';
 import { explainScoreBand } from '../domain/scoring/explainScoreBand';
 import { withFormationMinCounts } from '../domain/scoring/withFormation';
 import { detectFormationFit, scoreUnderFormation } from '../domain/scoring/formationFit';
+import { computeProfileFit, selectOpposition } from '../domain/scoring/profileFit';
 import { buildCommentary } from '../domain/commentary/build';
 import { matchdayNumber } from '../lib/daily';
+import { dailySeed } from '../lib/rng';
 import { progressScoreline } from './scorelineProgress';
 import { buildCardData } from './matchdayCard';
 import { formatNearMiss } from './nearMiss';
@@ -37,7 +39,7 @@ interface ResultScreenProps {
  */
 export default function ResultScreen({ session, data, onRestart }: ResultScreenProps) {
   // -- Compute-once: band + commentary + explanation, before any timer. --
-  const { band, groups, commentary, explanation, goalBeatIndices, totalBeats, fitInsight } = useMemo(() => {
+  const { band, groups, commentary, explanation, goalBeatIndices, totalBeats, fitInsight, opposition } = useMemo(() => {
     const xi: FinalXI = getFinalXI(session);
     const config = withFormationMinCounts(data.thresholds, session.formationId);
     const squadsById = Object.fromEntries(data.squads.map((s) => [s.id, s]));
@@ -48,7 +50,13 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       data.positionMap,
       personKey,
     );
-    const scoreInput = computeScoreInput(xi, data.positionMap, ceiling);
+    // ADR-020: today's opposition is seed-selected ONCE here (dailySeed(new Date()) —
+    // SPEC DELTA, plan.md: reveals are always random now, every draft is
+    // matchday-framed, so opposition selection no longer branches on a mode param).
+    const todaysOpposition = selectOpposition(config, dailySeed(new Date()));
+    const profile = config.profiles[session.formationId];
+    const profileFit = computeProfileFit(xi, data.positionMap, profile, todaysOpposition.weightMods);
+    const scoreInput = computeScoreInput(xi, data.positionMap, ceiling, profileFit, todaysOpposition.id);
     const scored = scoreBand(scoreInput, config);
     const expl = explainScoreBand(scoreInput, config);
     const script = buildCommentary(scored, xi, data.commentary);
@@ -83,6 +91,7 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       goalBeatIndices: goalIndices,
       totalBeats: script.beats.length,
       fitInsight: fit,
+      opposition: todaysOpposition,
     };
   }, [session, data]);
 
@@ -96,7 +105,7 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       MID: groups.MID.map((p) => ({ name: p.name, rating: p.rating })),
       ATT: groups.ATT.map((p) => ({ name: p.name, rating: p.rating })),
     };
-    const nearMissText = formatNearMiss(explanation as ScoreExplanation).text;
+    const nearMissText = formatNearMiss(explanation as ScoreExplanation, opposition).text;
     const matchday = session.mode === 'daily' ? matchdayNumber(new Date()) : undefined;
     return buildCardData({
       mode: session.mode,
@@ -108,7 +117,7 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       nearMissText,
       groups: cardGroups,
     });
-  }, [band, groups, explanation, session, data]);
+  }, [band, groups, explanation, opposition, session, data]);
 
   const { visibleBeatCount, showScoreline, speed, setSpeed, skipToResult } =
     usePlaythrough(totalBeats);
@@ -213,7 +222,12 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       <section id="playthrough" className="ticker-stage" aria-label="Match commentary">
         <Ticker beats={visibleBeats} />
         {showScoreline && (
-          <BandSlam bandId={band.bandId} label={band.label} explanation={explanation as ScoreExplanation} />
+          <BandSlam
+            bandId={band.bandId}
+            label={band.label}
+            explanation={explanation as ScoreExplanation}
+            opposition={opposition}
+          />
         )}
         {showScoreline && fitInsight && (
           <p className="fit-insight">

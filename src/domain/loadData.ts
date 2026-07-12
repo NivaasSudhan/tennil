@@ -337,6 +337,13 @@ function validateThresholds(raw: unknown, problems: string[]): ThresholdConfig {
 
         const weights = validateAttrs(bucketRaw.weights, `${entity}.weights`, problems, 0, 1, false);
         const targets = validateAttrs(bucketRaw.targets, `${entity}.targets`, problems, 1, 99, true);
+        // ADR-020 Wave C addendum: per bucket, Σ weights > 0 (a bucket where every
+        // weight is 0 would make computeProfileFit's weight-normalized penalty divide
+        // by zero — caught here at load time, never at scoring time).
+        const weightSum = ATTR_NAMES.reduce((sum, attr) => sum + weights[attr], 0);
+        if (weightSum <= 0) {
+          problems.push(`${entity}.weights: sum of pace+strength+accuracy must be > 0 (got ${weightSum})`);
+        }
         profile[bucket] = { weights, targets };
       }
 
@@ -391,6 +398,10 @@ function validateThresholds(raw: unknown, problems: string[]): ThresholdConfig {
             problems.push(`${entity}: weightMods key '${k}' is not a valid attr name (pace/strength/accuracy)`);
           } else if (typeof v !== 'number' || !Number.isFinite(v)) {
             problems.push(`${entity}: weightMods.${k} must be a finite number (got ${JSON.stringify(v)})`);
+          } else if (v < 0.5 || v > 2.0) {
+            // ADR-020 Wave C addendum: weightMods values restricted to [0.5, 2.0] —
+            // keeps opposition modifiers a "premium," never a shape-erasing multiplier.
+            problems.push(`${entity}: weightMods.${k} must be in [0.5,2.0] (got ${JSON.stringify(v)})`);
           } else {
             weightMods[k as AttrName] = v;
           }
@@ -457,13 +468,13 @@ function validateSquads(raw: unknown, positionMap: PositionMap, thresholds: Thre
     return [];
   }
 
-  if (raw.version !== 1 && raw.version !== 2) {
-    problems.push(`squads: version must be 1 or 2 (got ${JSON.stringify(raw.version)})`);
+  if (raw.version !== 2) {
+    problems.push(`squads: version must be 2 (got ${JSON.stringify(raw.version)})`);
   }
-  // ADR-020: v1 = pre-attrs (no pace/strength/accuracy anywhere); v2 = every outfield
-  // player carries all three attrs, GK carries none. Dual-accepted this wave — the
-  // real corpus ships v2 data in Wave B; until then it stays v1.
-  const squadsVersion = raw.version === 2 ? 2 : 1;
+  // ADR-020 Wave C: v1 (pre-attrs) acceptance dropped — the corpus is v2 for real
+  // (Wave B landed attrs on all 660 outfield players). Every outfield player must
+  // carry pace/strength/accuracy; GK must carry none, checked unconditionally below
+  // (no more version branch — there is only one valid version now).
 
   if (!Array.isArray(raw.squads) || raw.squads.length === 0) {
     problems.push('squads.squads: expected a non-empty array of squads');
@@ -571,19 +582,13 @@ function validateSquads(raw: unknown, positionMap: PositionMap, thresholds: Thre
 
       if (positionBucket === 'GK') gkCount += 1;
 
-      // ---------- ADR-020: attrs (squads v1|v2, both directions) ----------
+      // ---------- ADR-020: attrs (squads v2 only, Wave C dropped v1) ----------
       const attrsPresent = ATTR_NAMES.some((attr) => playerRaw[attr] !== undefined);
       let pace: number | undefined;
       let strength: number | undefined;
       let accuracy: number | undefined;
 
-      if (squadsVersion === 1) {
-        if (attrsPresent) {
-          problems.push(
-            `player ${playerLabel}: squads v1 must not carry pace/strength/accuracy (ADR-020 — bump squads to version 2 first)`,
-          );
-        }
-      } else if (positionBucket !== undefined) {
+      if (positionBucket !== undefined) {
         // Only checked when positionBucket itself validated cleanly, so a broken
         // record doesn't also cascade a spurious attrs complaint on top.
         if (positionBucket === 'GK') {

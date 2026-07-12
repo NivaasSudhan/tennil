@@ -30,6 +30,7 @@ import { isPersonTaken, personKey } from '../src/domain/draft/person';
 import { computeScoreInput, scoreBand } from '../src/domain/scoring/scoreBand';
 import { computeSessionCeiling } from '../src/domain/scoring/sessionCeiling';
 import { explainScoreBand } from '../src/domain/scoring/explainScoreBand';
+import { computeProfileFit } from '../src/domain/scoring/profileFit';
 import { mulberry32 } from '../src/lib/rng';
 import type {
   DraftSession,
@@ -76,10 +77,17 @@ export interface SimArgs {
   skipThreshold: number;
   nearMissDelta?: number; // default 3
   report?: string;        // path for sim-report.json; omit = no file
+  /** ADR-020 Wave C: opposition id to score every draft against (looked up in
+   * ThresholdConfig.oppositions by id — NOT selectOpposition, which is seed-based
+   * daily selection; the sim wants an explicit, repeatable archetype per run).
+   * Optional — every pre-Wave-C call site (existing tests constructing SimArgs
+   * literals) omits it; default 'neutral' (spec delta: sim default when no flag
+   * is passed) is applied at runSingleDraft. */
+  opposition?: string;
 }
 
 export function parseArgs(argv: string[]): SimArgs {
-  const args: SimArgs = { n: 500, seed: 42, bot: 'greedy', skipThreshold: 84 };
+  const args: SimArgs = { n: 500, seed: 42, bot: 'greedy', skipThreshold: 84, opposition: 'neutral' };
 
   for (let i = 0; i < argv.length; i++) {
     const flag = argv[i];
@@ -111,6 +119,11 @@ export function parseArgs(argv: string[]): SimArgs {
         break;
       case '--report':
         args.report = value;
+        i++;
+        break;
+      case '--opposition':
+        if (!value) throw new Error('--opposition requires a value');
+        args.opposition = value;
         i++;
         break;
       default:
@@ -240,6 +253,7 @@ export function runSingleDraft(
   seed: number,
   botType: 'greedy' | 'random',
   skipThreshold: number,
+  oppositionId: string = 'neutral',
 ): DraftResult {
   const rng = mulberry32(seed);
   // ADR-017 C6: sim drives the default (reference) formation only.
@@ -277,7 +291,17 @@ export function runSingleDraft(
     data.positionMap,
     personKey,
   );
-  const scoreInput = computeScoreInput(finalXI, data.positionMap, ceiling);
+  // ADR-020 Wave C: --opposition looked up directly by id (not selectOpposition —
+  // that's seed-based daily selection; the sim wants an explicit, repeatable
+  // archetype). Sim drives the default (reference) formation only (ADR-017 C6),
+  // so the reference formation's profile is always the right one here.
+  const oppositionDef = data.thresholds.oppositions.find((o) => o.id === oppositionId);
+  if (!oppositionDef) {
+    throw new Error(`runSingleDraft: unknown --opposition id '${oppositionId}' (not in thresholds.oppositions)`);
+  }
+  const profile = data.thresholds.profiles[data.thresholds.referenceFormation];
+  const fit = computeProfileFit(finalXI, data.positionMap, profile, oppositionDef.weightMods);
+  const scoreInput = computeScoreInput(finalXI, data.positionMap, ceiling, fit, oppositionDef.id);
   const { bandId } = scoreBand(scoreInput, data.thresholds);
 
   return { bandId, finalXI, scoreInput };
@@ -299,7 +323,7 @@ export interface SimResult {
 export function runSimulation(data: GameData, args: SimArgs): SimResult {
   const results: DraftResult[] = [];
   for (let i = 0; i < args.n; i++) {
-    results.push(runSingleDraft(data, args.seed + i, args.bot, args.skipThreshold));
+    results.push(runSingleDraft(data, args.seed + i, args.bot, args.skipThreshold, args.opposition));
   }
 
   const bandsByPriorityDesc = [...data.thresholds.bands].sort((a, b) => b.priority - a.priority);
@@ -458,7 +482,9 @@ function formatXI(data: GameData, result: DraftResult): string {
 export function formatReport(data: GameData, sim: SimResult): string {
   const lines: string[] = [];
   lines.push('=== TenNil rarity simulation (T-014) ===');
-  lines.push(`n=${sim.args.n} seed=${sim.args.seed} bot=${sim.args.bot} skipThreshold=${sim.args.skipThreshold}`);
+  lines.push(
+    `n=${sim.args.n} seed=${sim.args.seed} bot=${sim.args.bot} skipThreshold=${sim.args.skipThreshold} opposition=${sim.args.opposition}`,
+  );
   lines.push('');
   lines.push('Band histogram (sorted by priority desc):');
   for (const row of sim.histogram) {

@@ -261,6 +261,22 @@ describe('scoreBand', () => {
     expect(input.bucketCounts).toEqual({ GK: 1, DEF: 4, MID: 3, ATT: 3 });
   });
 
+  // ---------- ADR-020: fit/oppositionId params ----------
+
+  it('computeScoreInput defaults fit=0, oppositionId="neutral" when omitted (pre-Wave-C call sites)', () => {
+    const xi = buildXI({ GK: [90], DEF: [80], MID: [70], ATT: [60] });
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
+    expect(input.fit).toBe(0);
+    expect(input.oppositionId).toBe('neutral');
+  });
+
+  it('computeScoreInput carries an explicitly passed fit/oppositionId through untouched', () => {
+    const xi = buildXI({ GK: [90], DEF: [80], MID: [70], ATT: [60] });
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING, 73, 'pressing-machine');
+    expect(input.fit).toBe(73);
+    expect(input.oppositionId).toBe('pressing-machine');
+  });
+
   // ---------- 8. determinism ----------
 
   it('8. same input twice produces deep-equal output for both functions', () => {

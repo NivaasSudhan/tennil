@@ -10,17 +10,20 @@
  */
 import { useEffect, useState } from 'react';
 import type { ScoreExplanation } from '../domain/types';
+import type { OppositionDef } from '../domain/scoring/profileFit';
 import { formatNearMiss } from './nearMiss';
 
 export interface BandSlamProps {
   bandId: string;
   label: string;
   explanation: ScoreExplanation;
+  /** ADR-020: today's opposition — selects the minFit near-miss template's copy. */
+  opposition?: OppositionDef;
 }
 
-export default function BandSlam({ bandId, label, explanation }: BandSlamProps) {
+export default function BandSlam({ bandId, label, explanation, opposition }: BandSlamProps) {
   const isTopBand = explanation.nextBetter === null;
-  const { text: nearMissText } = formatNearMiss(explanation);
+  const { text: nearMissText } = formatNearMiss(explanation, opposition);
   const typed = useTypewriter(nearMissText ?? '');
 
   return (

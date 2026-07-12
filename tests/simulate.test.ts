@@ -12,8 +12,10 @@ import { describe, expect, it } from 'vitest';
 import {
   buildSimReport,
   loadGameDataFromDisk,
+  parseArgs,
   percentile,
   runSimulation,
+  runSingleDraft,
   summarizeDistribution,
 } from '../scripts/simulate';
 
@@ -98,5 +100,46 @@ describe('sim diagnostics (Sprint-1 T6)', () => {
     expect(report.schema).toBe(1);
     expect(report.histogram.length).toBe(data.thresholds.bands.length);
     expect(report.diagnostics.weakLink.p50).toBeTypeOf('number');
+  });
+});
+
+describe('ADR-020 Wave C: --opposition flag', () => {
+  it('parseArgs defaults opposition to "neutral" when --opposition is omitted', () => {
+    const args = parseArgs(['--n', '10', '--seed', '1', '--bot', 'greedy']);
+    expect(args.opposition).toBe('neutral');
+  });
+
+  it('parseArgs reads --opposition <id>', () => {
+    const args = parseArgs(['--opposition', 'pressing-machine']);
+    expect(args.opposition).toBe('pressing-machine');
+  });
+
+  it('runSingleDraft scores every real opposition archetype without throwing, still on a valid band', () => {
+    const data = loadGameDataFromDisk();
+    const validBandIds = new Set(data.thresholds.bands.map((b) => b.id));
+    for (const opp of data.thresholds.oppositions) {
+      const result = runSingleDraft(data, 42, 'greedy', 84, opp.id);
+      expect(validBandIds.has(result.bandId)).toBe(true);
+      expect(result.scoreInput.oppositionId).toBe(opp.id);
+      expect(Number.isInteger(result.scoreInput.fit)).toBe(true);
+      expect(result.scoreInput.fit).toBeGreaterThanOrEqual(0);
+      expect(result.scoreInput.fit).toBeLessThanOrEqual(100);
+    }
+  });
+
+  it('runSingleDraft throws on an unknown --opposition id', () => {
+    const data = loadGameDataFromDisk();
+    expect(() => runSingleDraft(data, 42, 'greedy', 84, 'not-a-real-opposition')).toThrow(
+      /unknown --opposition id/,
+    );
+  });
+
+  it('runSimulation with --opposition set still yields minFit=0-inert histograms identical to neutral (Wave A placeholder unchanged)', () => {
+    const data = loadGameDataFromDisk();
+    const neutral = runSimulation(data, { n: 30, seed: 42, bot: 'greedy', skipThreshold: 84, opposition: 'neutral' });
+    const pressing = runSimulation(data, { n: 30, seed: 42, bot: 'greedy', skipThreshold: 84, opposition: 'pressing-machine' });
+    // Every minFit gate ships at 0 this wave (Wave D tunes it) — fit >= 0 always passes,
+    // so the histogram is unaffected by which archetype scored the draft.
+    expect(pressing.histogram).toEqual(neutral.histogram);
   });
 });
