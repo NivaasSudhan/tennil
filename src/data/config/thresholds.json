@@ -1,6 +1,6 @@
 {
   "version": 4,
-  "_comment": "ADR-019 relative session scoring + ADR-020 profile fit/opposition (schema v4). Band evaluation: priority descending, first band whose predicates ALL pass; exactly one fallback. minEfficiency/minBucketEfficiency are authored as fractions in [0,1] (loadData converts to integer percentage points: userTotal/ceilingTotal from computeSessionCeiling). W3 retune (sim n=500 seed=42 greedy+random): greedy total-eff compressed 96-100 (p50 99), so per-bucket efficiency (MID/ATT cascade 99->98->97->none) is the primary discriminator within the eff=98-99 majority. 10-0 requires near-perfect MID+ATT (99) AND WL>=86 — efficiency alone cannot let a star-XI-with-one-62 through. 7-1 shares WL>=86 with 10-0 but drops per-bucket (great total, strong floor, imperfect somewhere). 1-2 drops requireAllBucketsNonEmpty to catch structurally-broken-but-decent-eff drafts (empty GK, strong outfield). Six-gate protocol: greedy 10-0 6%, no band >40%, random top-3 0%, all bands >=1%, near-miss-10-0 11%, WL floor has teeth. ADR-020: `profiles` gives per-formation attr weights/targets for DEF/MID/ATT buckets (GK excluded — no attrs); `oppositions` is the rotating daily-opponent catalog (weightMods multiply profile weights before fit is computed). `minFit` is staged at 0 on the top three bands this wave (Wave A) — Wave D tunes the real numbers from sim data, per the Reveal-Luck Law (fit gates stay small, ~one rung, never match-deciding).",
+  "_comment": "ADR-019 relative session scoring + ADR-020 profile fit/opposition (schema v4). Band evaluation: priority descending, first band whose predicates ALL pass; exactly one fallback. minEfficiency/minBucketEfficiency are authored as fractions in [0,1] (loadData converts to integer percentage points: userTotal/ceilingTotal from computeSessionCeiling). W3 retune (sim n=500 seed=42 greedy+random): greedy total-eff compressed 96-100 (p50 99), so per-bucket efficiency (MID/ATT cascade 99->98->97->none) is the primary discriminator within the eff=98-99 majority. 10-0 requires near-perfect MID+ATT (99) AND WL>=86 — efficiency alone cannot let a star-XI-with-one-62 through. 7-1 shares WL>=86 with 10-0 but drops per-bucket (great total, strong floor, imperfect somewhere). 1-2 drops requireAllBucketsNonEmpty to catch structurally-broken-but-decent-eff drafts (empty GK, strong outfield). Six-gate protocol: greedy 10-0 6%, no band >40%, random top-3 0%, all bands >=1%, near-miss-10-0 11%, WL floor has teeth. ADR-020: `profiles` gives per-formation attr weights/targets for DEF/MID/ATT buckets (GK excluded — no attrs); `oppositions` is the rotating daily-opponent catalog (weightMods multiply profile weights before fit is computed). `minFit` is tuned by D4 on the top three bands (92/90/88 ladder) from sim data — attr-blind greedy 10-0 falls to 3.6% (fit gate bites blind play), fit-aware holds 6.0% at seed 42, per the Reveal-Luck Law (fit gates stay small, ~one rung, never match-deciding). Cross-seed fitaware stability is structurally bounded — see RISKS R-13 D4 experiment log.",
   "referenceFormation": "4-3-3",
   "minCounts": { "GK": 1, "DEF": 4, "MID": 3, "ATT": 3 },
   "formations": [
@@ -12,10 +12,10 @@
   "ratingScale": { "min": 1, "max": 100 },
   "profiles": {
     "4-3-3": {
-      "_comment": "wing-pace / mid-accuracy — ATT bucket carries the wingers, so pace leads there; MID is the passing engine.",
-      "DEF": { "weights": { "pace": 0.40, "strength": 0.70, "accuracy": 0.35 }, "targets": { "pace": 75, "strength": 85, "accuracy": 72 } },
-      "MID": { "weights": { "pace": 0.45, "strength": 0.40, "accuracy": 0.75 }, "targets": { "pace": 76, "strength": 74, "accuracy": 88 } },
-      "ATT": { "weights": { "pace": 0.75, "strength": 0.30, "accuracy": 0.55 }, "targets": { "pace": 88, "strength": 72, "accuracy": 80 } }
+      "_comment": "D4 final (R-13 bite-point) — binding attrs high-weighted so attr-aware picks separate from attr-blind: DEF pace + accuracy (RB/LB specialists), MID strength (DM enforcers), ATT accuracy (winger craft). Targets raised on binding axes to the bite point (greedy 10-0 fit drops below fitaware's), minFit 92/90/88 ladder on top-3 bands cuts attr-blind greedy (3.7%) while fit-aware holds (6.0%). Overshooting attrs low-weighted (no fit value to optimize).",
+      "DEF": { "weights": { "pace": 0.70, "strength": 0.20, "accuracy": 0.55 }, "targets": { "pace": 86, "strength": 85, "accuracy": 72 } },
+      "MID": { "weights": { "pace": 0.20, "strength": 0.85, "accuracy": 0.40 }, "targets": { "pace": 76, "strength": 83, "accuracy": 88 } },
+      "ATT": { "weights": { "pace": 0.50, "strength": 0.20, "accuracy": 0.85 }, "targets": { "pace": 88, "strength": 72, "accuracy": 87 } }
     },
     "4-4-2": {
       "_comment": "balanced — no bucket leans hard on one axis.",
@@ -54,7 +54,7 @@
       "minEfficiency": 0.99,
       "minWeakLink": 86,
       "minBucketEfficiency": { "MID": 0.99, "ATT": 0.99 },
-      "minFit": 0
+      "minFit": 92
     },
     {
       "id": "7-1",
@@ -64,7 +64,7 @@
       "requireMinCounts": true,
       "minEfficiency": 0.985,
       "minWeakLink": 86,
-      "minFit": 0
+      "minFit": 90
     },
     {
       "id": "5-0",
@@ -75,7 +75,7 @@
       "minEfficiency": 0.98,
       "minWeakLink": 84,
       "minBucketEfficiency": { "MID": 0.99, "ATT": 0.99 },
-      "minFit": 0
+      "minFit": 88
     },
     {
       "id": "4-1",

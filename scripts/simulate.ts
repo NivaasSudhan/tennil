@@ -222,22 +222,25 @@ function greedyBot(
 }
 
 /**
- * FITAWARE BOT — ADR-020 Wave D (plan.md "Wave D estimation guidance + Law
- * gate": the second skill axis). Greedy on OVR with near-tie swaps (ΔOVR ≤ 2)
- * toward today's weighted attributes; existing greedy stays the attr-blind
- * baseline, random stays the floor.
+ * FITAWARE BOT — ADR-020 Wave D + R-13 revision (plan.md "Wave D estimation
+ * guidance + Law gate" + SPECIALIZATION table): the second skill axis. Greedy
+ * on OVR with attr-tie-break-first near-tie swaps (ΔOVR ≤ 1) toward today's
+ * weighted attributes; existing greedy stays the attr-blind baseline, random
+ * stays the floor.
  *
- * Exact rule (plan addendum, BINDING): among need-fillers within ΔOVR ≤ 2 of
- * the OVR-best need-filler, maximize Σ_a w[a]·attr[a] under today's bucket
- * weights × opposition mods; ties ⇒ ascending id. GK candidates fall back to
- * the OVR rule (no attrs — their score is their rating, never an attr sum).
+ * Exact rule (R-13 revision, BINDING — tighter than Wave D's original ΔOVR ≤ 2
+ * so attrs win without sacrificing OVR ceiling under the decoupled SPECIALIZATION
+ * corpus): take the OVR-best need-filler UNLESS a candidate within ΔOVR ≤ 1 of
+ * it has strictly higher Σ_a w[a]·attr[a] under today's bucket weights ×
+ * opposition mods; ties ⇒ ascending id. GK candidates fall back to the OVR rule
+ * (no attrs — their score is their rating, never an attr sum).
  *
- * The ΔOVR ≤ 2 pool bounds the OVR sacrifice to at most 2 points: a fit-good
- * outfielder within 2 of a higher-rated GK/peer can win the slot, but a
- * far-lower-rated player never does. Once every bucket has met its minimum,
- * picks the highest-rated pickable player overall (OVR-only, like greedy — the
- * attr axis only breaks near-ties while needs are unmet). Skip policy matches
- * greedy: spend the one skip iff the OVR-best need-filler is weak
+ * The ΔOVR ≤ 1 pool bounds the OVR sacrifice to at most 1 point: a fit-good
+ * outfielder within 1 of a higher-rated GK/peer can win the slot, but a
+ * lower-rated player never does. Once every bucket has met its minimum, picks
+ * the highest-rated pickable player overall (OVR-only, like greedy — the attr
+ * axis only breaks near-ties while needs are unmet). Skip policy matches greedy:
+ * spend the one skip iff the OVR-best need-filler is weak
  * (rating < skipThreshold) while needs are still unmet.
  */
 const FITAWARE_ATTR_ORDER: AttrName[] = ['pace', 'strength', 'accuracy'];
@@ -305,10 +308,11 @@ function fitawareBot(
     if (session.skipRemaining === 1 && ovrBest.rating < skipThreshold) {
       return { action: 'skip' };
     }
-    // Near-tie pool: need-fillers within ΔOVR ≤ 2 of the OVR-best. The OVR
-    // primary axis is preserved (pool is bounded by rating); attrs only pick
-    // the winner among near-OVR-equivalent candidates.
-    const pool = needFillers.filter((p) => p.rating >= ovrBest.rating - 2);
+    // Near-tie pool: need-fillers within ΔOVR ≤ 1 of the OVR-best (R-13
+    // revision — tighter than Wave D's original ΔOVR ≤ 2). The OVR primary axis
+    // is preserved (pool is bounded by rating); attrs only pick the winner
+    // among near-OVR-equivalent candidates (attr-tie-break-first).
+    const pool = needFillers.filter((p) => p.rating >= ovrBest.rating - 1);
     const effW = effectiveWeights(profile, oppMods);
     // Deterministic selection: max fitAwareScore; ties ⇒ ascending id.
     const pick = pool.reduce((best, p) => {
