@@ -21,9 +21,9 @@ export default function StartScreen({
   onStart,
 }: StartScreenProps) {
   const [selectedId, setSelectedId] = useState(defaultFormationId);
-  // Landing chooses mode via toggle (defaults to daily — the primary CTA).
+  // Landing chooses mode via toggle (defaults to free draft — the primary CTA).
   // formation-only (Draft Again) repeats whatever mode the finished session used.
-  const [selectedMode, setSelectedMode] = useState<'daily' | 'free'>(mode ?? 'daily');
+  const [selectedMode, setSelectedMode] = useState<'daily' | 'free'>(mode ?? 'free');
   const [aboutOpen, setAboutOpen] = useState(false);
   const activeMode = variant === 'formation-only' ? mode ?? 'free' : selectedMode;
   const selected = formations.find((f) => f.id === selectedId);
@@ -52,7 +52,7 @@ export default function StartScreen({
               onClick={() => setSelectedMode('daily')}
               aria-pressed={selectedMode === 'daily'}
             >
-              Today&rsquo;s Matchday
+              MATCHDAY #{matchdayNumber ?? '?'}
             </button>
             <button
               type="button"
@@ -64,7 +64,7 @@ export default function StartScreen({
             </button>
           </div>
           {selectedMode === 'daily' && matchdayNumber !== undefined && (
-            <p className="matchday-badge">MATCHDAY #{matchdayNumber}</p>
+            <p className="matchday-subline">One shared draw today &mdash; same reveals for everyone. Compare your verdict.</p>
           )}
         </>
       )}
@@ -132,14 +132,19 @@ export default function StartScreen({
 
       <button
         type="button"
-        className="stadium-button"
+        className={`stadium-button${variant === 'formation-only' && activeMode === 'daily' ? ' stadium-button--with-sub' : ''}`}
         onClick={() => onStart(selectedId, activeMode)}
       >
-        {variant === 'landing'
-          ? 'Kick off'
-          : activeMode === 'daily'
-            ? "Replay Today's Draw"
-            : 'Confirm Draft'}
+        <span className="stadium-button__text">
+          {variant === 'landing'
+            ? 'Kick off'
+            : activeMode === 'daily'
+              ? "Replay Today's Draw"
+              : 'Confirm Draft'}
+        </span>
+        {variant === 'formation-only' && activeMode === 'daily' && (
+          <span className="stadium-button__sub">Same draw by design. Free Draft for variety.</span>
+        )}
       </button>
     </div>
   );

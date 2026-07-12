@@ -43,7 +43,7 @@ describe('StartScreen', () => {
     expect(screen.getByRole('button', { name: /confirm draft/i })).toBeTruthy();
   });
 
-  it('invokes onStart with the selected formation id and default (daily) mode', () => {
+  it('invokes onStart with the selected formation id and default (free) mode', () => {
     const onStart = vi.fn();
     render(
       <StartScreen
@@ -55,7 +55,7 @@ describe('StartScreen', () => {
     );
     fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
     expect(onStart).toHaveBeenCalledTimes(1);
-    expect(onStart).toHaveBeenCalledWith('4-3-3', 'daily');
+    expect(onStart).toHaveBeenCalledWith('4-3-3', 'free');
   });
 
   it('clicking a different formation then start passes the new formation id', () => {
@@ -78,7 +78,7 @@ describe('StartScreen', () => {
 });
 
 describe('StartScreen — mode picker (ADR-014-lite)', () => {
-  it('landing shows a mode toggle defaulting to daily, with a MATCHDAY badge', () => {
+  it('landing shows a mode toggle defaulting to free, with MATCHDAY option', () => {
     render(
       <StartScreen
         formations={FORMATIONS}
@@ -88,12 +88,14 @@ describe('StartScreen — mode picker (ADR-014-lite)', () => {
         onStart={() => {}}
       />,
     );
-    expect(screen.getByRole('button', { name: /today.?s matchday/i })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /matchday #7/i })).toBeTruthy();
     expect(screen.getByRole('button', { name: /free draft/i })).toBeTruthy();
-    expect(screen.getByText(/MATCHDAY #7/)).toBeTruthy();
+    expect(screen.queryByText(/One shared draw today/)).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: /matchday #7/i }));
+    expect(screen.getByText(/One shared draw today/)).toBeTruthy();
   });
 
-  it('selecting Free Draft hides the matchday badge and passes free mode', () => {
+  it('selecting Free Draft (default) passes free mode on Kick off', () => {
     const onStart = vi.fn();
     render(
       <StartScreen
@@ -104,8 +106,7 @@ describe('StartScreen — mode picker (ADR-014-lite)', () => {
         onStart={onStart}
       />,
     );
-    fireEvent.click(screen.getByRole('button', { name: /free draft/i }));
-    expect(screen.queryByText(/MATCHDAY #7/)).toBeNull();
+    expect(screen.queryByText(/One shared draw today/)).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
     expect(onStart).toHaveBeenCalledWith('4-3-3', 'free');
   });
@@ -121,9 +122,10 @@ describe('StartScreen — mode picker (ADR-014-lite)', () => {
         onStart={onStart}
       />,
     );
-    expect(screen.queryByRole('button', { name: /today.?s matchday/i })).toBeNull();
+    expect(screen.queryByRole('button', { name: /matchday #7/i })).toBeNull();
     const cta = screen.getByRole('button', { name: /replay today.?s draw/i });
     expect(cta).toBeTruthy();
+    expect(screen.getByText(/Same draw by design/)).toBeTruthy();
     fireEvent.click(cta);
     expect(onStart).toHaveBeenCalledWith('4-3-3', 'daily');
   });

@@ -27,24 +27,27 @@ describe('App landing gate', () => {
 });
 
 describe('App daily/free mode (ADR-014-lite)', () => {
-  it('landing defaults to daily mode and shows a MATCHDAY # badge', () => {
+  it('landing defaults to free draft; daily option shows MATCHDAY label + sub-line', () => {
     render(<App data={loadGameDataFromDisk()} />);
-    expect(screen.getByText(/MATCHDAY #-?\d+/)).toBeTruthy();
-    expect(screen.getByRole('button', { name: /today.?s matchday/i })).toBeTruthy();
     expect(screen.getByRole('button', { name: /free draft/i })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /matchday #\d+/i })).toBeTruthy();
+    // Sub-line hidden by default (free is active)
+    expect(screen.queryByText(/One shared draw today/)).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: /matchday #\d+/i }));
+    expect(screen.getByText(/One shared draw today/)).toBeTruthy();
   });
 
-  it('selecting Free Draft then Kick off still begins a draft', () => {
+  it('selecting Free Draft (default) then Kick off still begins a draft', () => {
     render(<App data={loadGameDataFromDisk()} />);
-    fireEvent.click(screen.getByRole('button', { name: /free draft/i }));
-    expect(screen.queryByText(/MATCHDAY #-?\d+/)).toBeNull();
+    expect(screen.queryByText(/One shared draw today/)).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
     expect(screen.getByText(/now revealing/i)).toBeTruthy();
   });
 
   it('Draft Again after a daily draft offers "Replay Today\'s Draw" (same mode repeats)', () => {
     render(<App data={loadGameDataFromDisk()} />);
-    // Default mode is daily; kick off straight away.
+    // Select daily mode before kicking off.
+    fireEvent.click(screen.getByRole('button', { name: /matchday #\d+/i }));
     fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
     // Drive the draft to completion by always picking the first pickable player.
     let guard = 0;

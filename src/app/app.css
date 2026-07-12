@@ -320,6 +320,16 @@ button {
   color: var(--gold);
 }
 
+.matchday-subline {
+  margin: 0;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.72rem;
+  color: oklch(0.92 0.02 140);
+  line-height: 1.4;
+  max-width: min(26rem, 92vw);
+  text-align: center;
+}
+
 /* ---------- Formation picker — paper-world typed options, circled selection ---------- */
 .formation-picker {
   position: relative;
@@ -524,6 +534,21 @@ button {
 .stadium-button--ghost:disabled {
   border-color: oklch(0.6 0.02 140 / 0.3);
   color: oklch(0.6 0.02 140 / 0.5);
+}
+
+.stadium-button--with-sub {
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.5rem 2rem;
+}
+
+.stadium-button__sub {
+  font-family: 'Courier Prime', monospace;
+  font-weight: 400;
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: oklch(0.92 0.02 140 / 0.8);
 }
 
 /* =====================================================================
