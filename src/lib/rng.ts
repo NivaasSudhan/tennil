@@ -40,6 +40,10 @@ export function seededRng(seed: number): Rng {
  * seeds. Derivation: `year*10000 + month*100 + day` spread through one
  * mulberry32 mixing step (same mixing as `mulberry32(seed).next()`, minus
  * the final division to [0, 1)) so nearby dates don't produce nearby seeds.
+ *
+ * ADR-014-lite amendment (2026-07-12): dailySeed no longer seeds reveals —
+ * reveals are always fresh-random. dailySeed reserved for v2 Daily
+ * Opposition selection; matchdayNumber drives the badge + share text.
  */
 export function dailySeed(date: Date): number {
   const year = date.getUTCFullYear();

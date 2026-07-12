@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import type { DraftSession, GameData, Rng } from '../domain/types';
 import { IllegalActionError } from '../domain/types';
 import { pick as domainPick, skip as domainSkip, startDraft } from '../domain/draft/session';
-import { dailySeed, mulberry32 } from '../lib/rng';
+import { mulberry32 } from '../lib/rng';
 import { matchdayNumber } from '../lib/daily';
 import DraftScreen from './DraftScreen';
 import ResultScreen from './ResultScreen';
@@ -14,22 +14,20 @@ export default function App({ data }: { data: GameData }) {
   const [actionError, setActionError] = useState<string | null>(null);
   const [gate, setGate] = useState<'landing' | 'formation'>('landing');
   const [lastFormationId, setLastFormationId] = useState(data.thresholds.referenceFormation);
-  const [lastMode, setLastMode] = useState<'daily' | 'free'>('daily');
   // ADR-014-lite: one rng instance per session, threaded through its whole
   // lifetime (startDraft + every pick/skip), constructed from the recorded
   // seed at handleStart time. A ref (not state) because it's mutated in place
   // by mulberry32's internal closure, not by React.
   const rngRef = useRef<Rng | null>(null);
 
-  function handleStart(formationId: string, mode: 'daily' | 'free') {
+  function handleStart(formationId: string) {
     setActionError(null);
     try {
-      const seed = mode === 'daily' ? dailySeed(new Date()) : Math.floor(Math.random() * 2 ** 31);
+      const seed = Math.floor(Math.random() * 2 ** 31);
       const rng = mulberry32(seed);
       rngRef.current = rng;
-      setSession(startDraft(data, rng, formationId, { seed, mode }));
+      setSession(startDraft(data, rng, formationId, { seed, mode: 'daily' }));
       setLastFormationId(formationId);
-      setLastMode(mode);
     } catch (err) {
       if (err instanceof IllegalActionError) {
         setActionError(err.message);
@@ -73,7 +71,6 @@ export default function App({ data }: { data: GameData }) {
     setActionError(null);
     const lid = session?.formationId ?? data.thresholds.referenceFormation;
     setLastFormationId(lid);
-    if (session) setLastMode(session.mode);
     setSession(null);
     setGate('formation');
   }
@@ -97,7 +94,6 @@ export default function App({ data }: { data: GameData }) {
           formations={data.thresholds.formations}
           defaultFormationId={lastFormationId}
           variant="formation-only"
-          mode={lastMode}
           matchdayNumber={todayMatchday}
           onStart={handleStart}
         />

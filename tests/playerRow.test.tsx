@@ -94,7 +94,7 @@ function makeSession(): DraftSession {
     formationId: 'x',
     revealLog: [],
     seed: 0,
-    mode: 'free',
+    mode: 'daily',
   };
 }
 

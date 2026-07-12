@@ -26,30 +26,22 @@ describe('App landing gate', () => {
   });
 });
 
-describe('App daily/free mode (ADR-014-lite)', () => {
-  it('landing defaults to free draft; daily option shows MATCHDAY label + sub-line', () => {
+describe('App MATCHDAY badge always visible (ADR-014-lite amend)', () => {
+  it('landing shows MATCHDAY badge number on the start screen', () => {
     render(<App data={loadGameDataFromDisk()} />);
-    expect(screen.getByRole('button', { name: /free draft/i })).toBeTruthy();
-    expect(screen.getByRole('button', { name: /matchday #\d+/i })).toBeTruthy();
-    // Sub-line hidden by default (free is active)
-    expect(screen.queryByText(/One shared draw today/)).toBeNull();
-    fireEvent.click(screen.getByRole('button', { name: /matchday #\d+/i }));
-    expect(screen.getByText(/One shared draw today/)).toBeTruthy();
+    expect(screen.getByText(/MATCHDAY #\d+/i)).toBeTruthy();
   });
 
-  it('selecting Free Draft (default) then Kick off still begins a draft', () => {
+  it('Kick off always begins a draft (no mode toggle)', () => {
     render(<App data={loadGameDataFromDisk()} />);
-    expect(screen.queryByText(/One shared draw today/)).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
     expect(screen.getByText(/now revealing/i)).toBeTruthy();
   });
 
-  it('Draft Again after a daily draft offers "Replay Today\'s Draw" (same mode repeats)', () => {
+  it('Draft Again after completing a draft shows Confirm Draft (no mode labels)', () => {
     render(<App data={loadGameDataFromDisk()} />);
-    // Select daily mode before kicking off.
-    fireEvent.click(screen.getByRole('button', { name: /matchday #\d+/i }));
     fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
-    // Drive the draft to completion by always picking the first pickable player.
+    // Drive draft to completion.
     let guard = 0;
     while (screen.queryByText(/now revealing/i) && guard < 50) {
       const pickButtons = screen
@@ -62,13 +54,10 @@ describe('App daily/free mode (ADR-014-lite)', () => {
       }
       guard++;
     }
-    // Whether or not the draft fully completed within the guard, this test's
-    // only concern is mode wiring on Draft Again — skip if we never reached
-    // the result screen (formation/positions vary by fixture, not this ADR).
     const draftAgain = screen.queryByRole('button', { name: /draft again/i });
     if (draftAgain) {
       fireEvent.click(draftAgain);
-      expect(screen.getByRole('button', { name: /replay today.?s draw/i })).toBeTruthy();
+      expect(screen.getByRole('button', { name: /confirm draft/i })).toBeTruthy();
     }
   });
 });
