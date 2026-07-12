@@ -1,8 +1,13 @@
 /**
  * Canonical domain types — World Cup Draft-XI Game.
- * Source of truth for names/shapes: ARCHITECTURE.md §3/§5, DECISIONS.md ADR-002..005.
+ * Source of truth for names/shapes: ARCHITECTURE.md §3/§5, DECISIONS.md ADR-002..005, ADR-020.
  * This file has NO imports from react, src/app, or src/lib/rng (except the Rng type seam below).
+ * `FormationProfile`/`OppositionDef` are imported type-only from scoring/profileFit.ts
+ * (ADR-020) — a type-only circular reference (that file imports `PositionBucket` back
+ * from here), erased at compile time, never a runtime dependency.
  */
+
+import type { FormationProfile, OppositionDef } from './scoring/profileFit';
 
 export type PositionBucket = 'GK' | 'DEF' | 'MID' | 'ATT';
 
@@ -12,6 +17,10 @@ export interface Player {
   positionRaw: string;   // must exist as a key in position-map.json
   positionBucket: PositionBucket;
   rating: number;        // integer 1..100
+  /** ADR-020: outfield-only attrs (squads v2). GK players must never carry these. */
+  pace?: number;         // integer 1..99
+  strength?: number;     // integer 1..99
+  accuracy?: number;     // integer 1..99
 }
 
 export interface Squad {
@@ -93,6 +102,8 @@ export interface BandDef {
   minEfficiency?: number;
   /** ADR-019: per-bucket variant, same integer-% convention. */
   minBucketEfficiency?: Partial<Record<PositionBucket, number>>;
+  /** ADR-020: integer 0-100, top-three-bands-only gate on the session's effectiveFit. */
+  minFit?: number;
   fallback?: boolean;         // exactly one band; matches unconditionally
 }
 
@@ -110,6 +121,10 @@ export interface ThresholdConfig {
   formations: Formation[];    // NEW required after schema v2
   ratingScale: { min: number; max: number };
   bands: BandDef[];
+  /** ADR-020 (schema v4): per-formation attr targets, keyed by Formation.id. */
+  profiles: Record<string, FormationProfile>;
+  /** ADR-020 (schema v4): rotating daily opponent catalog; must include id 'neutral'. */
+  oppositions: OppositionDef[];
 }
 
 export interface ScoreBand {
@@ -125,7 +140,8 @@ export type PredicateName =
   | 'minBucketSum'
   | 'minWeakLink'
   | 'minEfficiency'
-  | 'minBucketEfficiency';
+  | 'minBucketEfficiency'
+  | 'minFit';
 
 /** One structured check result. passed === (actual >= required), always. */
 export interface PredicateResult {

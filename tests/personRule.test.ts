@@ -57,6 +57,8 @@ function makeData(squads: Squad[]): GameData {
       ],
       ratingScale: { min: 1, max: 100 },
       bands: [{ id: 'fallback', priority: 0, label: 'MATCH', fallback: true }],
+      profiles: {}, // ADR-020: unused by this synthetic draft fixture
+      oppositions: [],
     },
     commentary: { version: 1, scripts: { fallback: { beats: [] } } },
   };

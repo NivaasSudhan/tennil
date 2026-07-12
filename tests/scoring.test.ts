@@ -73,6 +73,8 @@ function makeConfig(bands: BandDef[]): ThresholdConfig {
     ],
     ratingScale: { min: 1, max: 100 },
     bands,
+    profiles: {}, // ADR-020: unused by this synthetic scoring fixture (fit lands Wave C)
+    oppositions: [],
   };
 }
 

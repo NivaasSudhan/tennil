@@ -104,6 +104,8 @@ const BASE_CONFIG: ThresholdConfig = {
   formations: FORMATIONS,
   ratingScale: { min: 1, max: 100 },
   bands: [TOP, MID_BAND, LOW, FALLBACK],
+  profiles: {}, // ADR-020: unused by this synthetic scoring fixture (fit lands Wave C)
+  oppositions: [],
 };
 
 // Offered pool, one candidate per reveal round:

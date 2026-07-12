@@ -1,6 +1,6 @@
 {
-  "version": 3,
-  "_comment": "ADR-019 relative session scoring. Band evaluation: priority descending, first band whose predicates ALL pass; exactly one fallback. minEfficiency/minBucketEfficiency are authored as fractions in [0,1] (loadData converts to integer percentage points: userTotal/ceilingTotal from computeSessionCeiling). W3 retune (sim n=500 seed=42 greedy+random): greedy total-eff compressed 96-100 (p50 99), so per-bucket efficiency (MID/ATT cascade 99->98->97->none) is the primary discriminator within the eff=98-99 majority. 10-0 requires near-perfect MID+ATT (99) AND WL>=86 — efficiency alone cannot let a star-XI-with-one-62 through. 7-1 shares WL>=86 with 10-0 but drops per-bucket (great total, strong floor, imperfect somewhere). 1-2 drops requireAllBucketsNonEmpty to catch structurally-broken-but-decent-eff drafts (empty GK, strong outfield). Six-gate protocol: greedy 10-0 6%, no band >40%, random top-3 0%, all bands >=1%, near-miss-10-0 11%, WL floor has teeth.",
+  "version": 4,
+  "_comment": "ADR-019 relative session scoring + ADR-020 profile fit/opposition (schema v4). Band evaluation: priority descending, first band whose predicates ALL pass; exactly one fallback. minEfficiency/minBucketEfficiency are authored as fractions in [0,1] (loadData converts to integer percentage points: userTotal/ceilingTotal from computeSessionCeiling). W3 retune (sim n=500 seed=42 greedy+random): greedy total-eff compressed 96-100 (p50 99), so per-bucket efficiency (MID/ATT cascade 99->98->97->none) is the primary discriminator within the eff=98-99 majority. 10-0 requires near-perfect MID+ATT (99) AND WL>=86 — efficiency alone cannot let a star-XI-with-one-62 through. 7-1 shares WL>=86 with 10-0 but drops per-bucket (great total, strong floor, imperfect somewhere). 1-2 drops requireAllBucketsNonEmpty to catch structurally-broken-but-decent-eff drafts (empty GK, strong outfield). Six-gate protocol: greedy 10-0 6%, no band >40%, random top-3 0%, all bands >=1%, near-miss-10-0 11%, WL floor has teeth. ADR-020: `profiles` gives per-formation attr weights/targets for DEF/MID/ATT buckets (GK excluded — no attrs); `oppositions` is the rotating daily-opponent catalog (weightMods multiply profile weights before fit is computed). `minFit` is staged at 0 on the top three bands this wave (Wave A) — Wave D tunes the real numbers from sim data, per the Reveal-Luck Law (fit gates stay small, ~one rung, never match-deciding).",
   "referenceFormation": "4-3-3",
   "minCounts": { "GK": 1, "DEF": 4, "MID": 3, "ATT": 3 },
   "formations": [
@@ -10,6 +10,40 @@
     { "id": "5-3-2", "label": "5-3-2", "description": "Defensive solidity — five defenders, counter-attacking outlets", "minCounts": { "GK": 1, "DEF": 5, "MID": 3, "ATT": 2 } }
   ],
   "ratingScale": { "min": 1, "max": 100 },
+  "profiles": {
+    "4-3-3": {
+      "_comment": "wing-pace / mid-accuracy — ATT bucket carries the wingers, so pace leads there; MID is the passing engine.",
+      "DEF": { "weights": { "pace": 0.40, "strength": 0.70, "accuracy": 0.35 }, "targets": { "pace": 75, "strength": 85, "accuracy": 72 } },
+      "MID": { "weights": { "pace": 0.45, "strength": 0.40, "accuracy": 0.75 }, "targets": { "pace": 76, "strength": 74, "accuracy": 88 } },
+      "ATT": { "weights": { "pace": 0.75, "strength": 0.30, "accuracy": 0.55 }, "targets": { "pace": 88, "strength": 72, "accuracy": 80 } }
+    },
+    "4-4-2": {
+      "_comment": "balanced — no bucket leans hard on one axis.",
+      "DEF": { "weights": { "pace": 0.45, "strength": 0.55, "accuracy": 0.45 }, "targets": { "pace": 75, "strength": 78, "accuracy": 75 } },
+      "MID": { "weights": { "pace": 0.50, "strength": 0.50, "accuracy": 0.55 }, "targets": { "pace": 77, "strength": 76, "accuracy": 78 } },
+      "ATT": { "weights": { "pace": 0.55, "strength": 0.45, "accuracy": 0.55 }, "targets": { "pace": 78, "strength": 75, "accuracy": 78 } }
+    },
+    "3-5-2": {
+      "_comment": "mid-accuracy-heavy — five in the middle, so MID accuracy dominates the shape.",
+      "DEF": { "weights": { "pace": 0.55, "strength": 0.50, "accuracy": 0.40 }, "targets": { "pace": 78, "strength": 76, "accuracy": 73 } },
+      "MID": { "weights": { "pace": 0.45, "strength": 0.35, "accuracy": 0.85 }, "targets": { "pace": 76, "strength": 73, "accuracy": 90 } },
+      "ATT": { "weights": { "pace": 0.60, "strength": 0.40, "accuracy": 0.55 }, "targets": { "pace": 80, "strength": 74, "accuracy": 78 } }
+    },
+    "5-3-2": {
+      "_comment": "DEF-strength / ST-pace — five at the back need bulk, the two forwards live off the counter.",
+      "DEF": { "weights": { "pace": 0.40, "strength": 0.80, "accuracy": 0.35 }, "targets": { "pace": 74, "strength": 90, "accuracy": 71 } },
+      "MID": { "weights": { "pace": 0.50, "strength": 0.55, "accuracy": 0.60 }, "targets": { "pace": 77, "strength": 77, "accuracy": 79 } },
+      "ATT": { "weights": { "pace": 0.80, "strength": 0.40, "accuracy": 0.50 }, "targets": { "pace": 90, "strength": 73, "accuracy": 76 } }
+    }
+  },
+  "oppositions": [
+    { "id": "pressing-machine", "label": "THE PRESSING MACHINE", "tagline": "Full-throttle press for ninety minutes — pace is at a premium today.", "weightMods": { "pace": 1.25 } },
+    { "id": "low-block", "label": "THE LOW BLOCK", "tagline": "Ten behind the ball, daring you to pick the lock — accuracy is at a premium today.", "weightMods": { "accuracy": 1.25 } },
+    { "id": "aerial-bombardment", "label": "AERIAL BOMBARDMENT", "tagline": "Long balls and a giant at both boxes — strength is at a premium today.", "weightMods": { "strength": 1.25 } },
+    { "id": "counter-kings", "label": "COUNTER KINGS", "tagline": "Sit deep, break at speed, finish with a shoulder — pace and strength share the premium today.", "weightMods": { "pace": 1.15, "strength": 1.15 } },
+    { "id": "possession-cult", "label": "THE POSSESSION CULT", "tagline": "A thousand passes before they even think about goal — accuracy is at a serious premium today.", "weightMods": { "accuracy": 1.35 } },
+    { "id": "neutral", "label": "NEUTRAL", "tagline": "No particular gameplan to read into — a fair fight today.", "weightMods": {} }
+  ],
   "bands": [
     {
       "id": "10-0",
@@ -19,7 +53,8 @@
       "requireMinCounts": true,
       "minEfficiency": 0.99,
       "minWeakLink": 86,
-      "minBucketEfficiency": { "MID": 0.99, "ATT": 0.99 }
+      "minBucketEfficiency": { "MID": 0.99, "ATT": 0.99 },
+      "minFit": 0
     },
     {
       "id": "7-1",
@@ -28,7 +63,8 @@
       "requireAllBucketsNonEmpty": true,
       "requireMinCounts": true,
       "minEfficiency": 0.985,
-      "minWeakLink": 86
+      "minWeakLink": 86,
+      "minFit": 0
     },
     {
       "id": "5-0",
@@ -38,7 +74,8 @@
       "requireMinCounts": true,
       "minEfficiency": 0.98,
       "minWeakLink": 84,
-      "minBucketEfficiency": { "MID": 0.99, "ATT": 0.99 }
+      "minBucketEfficiency": { "MID": 0.99, "ATT": 0.99 },
+      "minFit": 0
     },
     {
       "id": "4-1",

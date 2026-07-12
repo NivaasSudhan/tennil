@@ -64,5 +64,51 @@ Overrides seeded (canon, never regenerated over): maradona-86 acc 99; messi-2014
 **Files:** Create `src/app/RulesProgramme.tsx` (+config copy block `src/app/rulesCopy.ts`), Modify topline/landing/chrome for the RULES mark, `app.css`. Native `<dialog>`, programme-spread styling per spec §6, copy dictated at dispatch from spec §6 page list, focus-trap/Esc/outside-click, DraftSession untouched (test: open+close mid-draft, session identical), reduced-motion.
 **Canary (orchestrator ops, not agent):** create `tennil-beta` repo, push branch with base override `/tennil-beta/` (env-driven base in vite.config: `base: process.env.TENNIL_BASE ?? '/tennil/'` — added this wave), workflow deploys beta from `v2/attrs`. Hand URL to user for A/B; merge gate = user sign-off (spec §9).
 
+## Wave C/D algorithm addendum (BINDING — paste verbatim into those dispatches)
+
+### computeProfileFit — exact math
+
+Inputs: `xi: FinalXI`, `positionMap`, `profile: FormationProfile` (DEF/MID/ATT only — GK never participates), `weightMods: Partial<Attrs>` (from opposition; absent attr ⇒ 1). Output: **integer 0-100**.
+
+1. Buckets iterate in fixed order `[DEF, MID, ATT]`; attrs in fixed order `[pace, strength, accuracy]` (determinism).
+2. `players_B` = XI players with `positionMap[positionRaw] === B`. **Empty bucket ⇒ bucket excluded from fit entirely** (count predicates own structural failure; double-punishing violates the Reveal-Luck Law). All three empty (no outfield) ⇒ fit = 0.
+3. `mean_B[a]` = arithmetic mean of attr `a` over `players_B` (float, no rounding yet). Missing attr on an outfield player ⇒ throw domain error (loadData v2 guarantees presence; this is a defensive invariant, tested).
+4. `w_B[a] = profile[B].weights[a] × (weightMods[a] ?? 1)`.
+5. `shortfall_B[a] = max(0, targets[B][a] − mean_B[a]) / targets[B][a]` — overshoot is free.
+6. `penalty_B = Σ_a w_B[a]·shortfall_B[a] / Σ_a w_B[a]` (weight-normalized ⇒ scale-invariant).
+7. `fit = round(100 × (1 − mean(penalty_B over PRESENT buckets)))`, clamped [0,100].
+
+Validation added in Wave C (loadData): per bucket `Σ weights > 0`, every `target > 0`, `weightMods` values ∈ [0.5, 2.0], oppositions must include id `neutral`.
+
+### selectOpposition — exact rule
+
+`selectOpposition(config, mode, seed)`: mode `'free'` ⇒ the `neutral` entry, always. Mode `'daily'` ⇒ candidates = all non-neutral oppositions **sorted by id** (stability under JSON reordering), pick `candidates[seed % candidates.length]`. Pure; no Date access (caller passes seed).
+
+### minFit predicate — exact rule
+
+Emitted by `evaluateBandPredicates` only when `band.minFit !== undefined && band.minFit > 0`. `required = band.minFit`, `actual = input.fit`, `passed = actual >= required`. Margins are integer points (near-miss copy per Wave C card).
+
+### Wave C required test battery (all must exist; add cases, never remove)
+
+1. Determinism: identical inputs twice ⇒ deep-equal output.
+2. Bounds: fit is an integer in [0,100] across a randomized-fixture sweep (seeded fixture generation, deterministic).
+3. Perfect XI (all bucket means ≥ targets) ⇒ exactly 100.
+4. Overshoot-free: raising any attr already ≥ target changes nothing.
+5. Weak monotonicity: raising a below-target attr never lowers fit.
+6. Weight sensitivity: equal shortfalls, heavier-weighted attr hurts more (constructed pair, strict inequality).
+7. Opposition direction: pace-deficient XI scores strictly lower under a pace↑ archetype than under neutral; pace-rich XI scores ≥ its neutral fit.
+8. Empty-bucket exclusion: XI without ATT ⇒ fit equals hand-computed DEF/MID-only value (exact integer).
+9. GK invariance: changing/removing the GK never changes fit.
+10. Scale invariance: all weights ×k ⇒ identical fit.
+11. One fully hand-computed exact fixture (show the arithmetic in a comment).
+12. selectOpposition: free ⇒ neutral always; daily never neutral; deterministic per seed; JSON-reordered config yields identical selection (sort guard); seed sweep hits every archetype.
+13. minFit emission rule (absent / 0 / >0) + integer margins.
+14. Boundary flip: fit = required−1 / required / required+1 flips the band exactly at the gate; `explainScoreBand ≡ scoreBand` property retained across the sweep.
+15. Defensive throw: outfield player missing an attr.
+
+### Wave D estimation guidance + Law gate
+
+Expected: attrs ≈ OVR×mult (0.80-1.02) ⇒ bucket means ~65-90 vs targets 70-90 ⇒ fit compressed (~80-95) like efficiency was — set gates from measured percentiles, 2-3 significant digits. Method: measure fit p10-p90 per bot per archetype; top-band `minFit` ≈ fitaware p60-p70; verify joint gates land fitaware 10-0 6-7% and attr-blind 3-4%. Fitaware bot exact rule: among need-fillers within ΔOVR ≤ 2 of the OVR-best, maximize `Σ_a w[a]·attr[a]` under today's bucket weights×mods; ties ⇒ ascending id. **Law gate (hard):** `--opposition cycle` at n=500: 10-0 count > 0 for EVERY archetype with the fitaware bot; if any archetype zeroes out, lower minFit, never raise targets.
+
 ## Self-review
 Spec coverage: §2→A/B, §3→A/C, §4→D, §5→E, §6→F, §7 fenced out, §8→branch+F-ops, §9 gates distributed. No placeholders (minFit "0 this wave" is an explicit staged value, tuned in D by design). Type names consistent: `Attrs`, `FormationProfile`, `OppositionDef`, `computeProfileFit`, `selectOpposition`, `minFit`, ScoreInput `fit`/`oppositionId`.

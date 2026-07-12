@@ -30,6 +30,14 @@ function validRaw() {
       ],
       ratingScale: { min: 1, max: 100 },
       bands: [{ id: 'fb', priority: 0, label: 'FALL', fallback: true }],
+      profiles: {
+        'test-form': {
+          DEF: { weights: { pace: 0.5, strength: 0.5, accuracy: 0.5 }, targets: { pace: 75, strength: 75, accuracy: 75 } },
+          MID: { weights: { pace: 0.5, strength: 0.5, accuracy: 0.5 }, targets: { pace: 75, strength: 75, accuracy: 75 } },
+          ATT: { weights: { pace: 0.5, strength: 0.5, accuracy: 0.5 }, targets: { pace: 75, strength: 75, accuracy: 75 } },
+        },
+      },
+      oppositions: [{ id: 'neutral', label: 'NEUTRAL', tagline: 'test', weightMods: {} }],
     },
     commentary: {
       version: 1,

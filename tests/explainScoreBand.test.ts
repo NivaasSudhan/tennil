@@ -37,6 +37,8 @@ const CONFIG: ThresholdConfig = {
   ],
   ratingScale: { min: 1, max: 100 },
   bands: [TOP_BAND, MID_BAND, LOW_BAND, FALLBACK_BAND],
+  profiles: {}, // ADR-020: unused by this synthetic scoring fixture (fit lands Wave C)
+  oppositions: [],
 };
 
 const RAW_FOR_BUCKET: Record<PositionBucket, string> = { GK: 'GK', DEF: 'CB', MID: 'CM', ATT: 'ST' };

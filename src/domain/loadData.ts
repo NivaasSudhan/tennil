@@ -23,11 +23,19 @@ import type {
   ThresholdConfig,
 } from './types';
 import { DataValidationError } from './types';
+import type { AttrBucket, AttrName, FormationProfile, OppositionDef } from './scoring/profileFit';
 
 const BUCKETS: PositionBucket[] = ['GK', 'DEF', 'MID', 'ATT'];
 const BUCKET_SET = new Set<string>(BUCKETS);
 const BEAT_TYPES = new Set(['kickoff', 'goal', 'chance', 'halftime', 'drama', 'fulltime']);
 const SLOT_NAMES = new Set(['captain', 'topAtt', 'topMid', 'topDef', 'gk', 'weakest']);
+
+// ---------- ADR-020: attrs / profile fit ----------
+const ATTR_NAMES: AttrName[] = ['pace', 'strength', 'accuracy'];
+const ATTR_NAME_SET = new Set<string>(ATTR_NAMES);
+const ATTR_BUCKETS: AttrBucket[] = ['DEF', 'MID', 'ATT']; // GK excluded — no attrs (spec §2/§3)
+const ATTR_BUCKET_SET = new Set<string>(ATTR_BUCKETS);
+const MAX_MIN_FIT_BANDS = 3; // minFit is staged onto the top three bands only (ADR-020 spec §3)
 
 function isPlainObject(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null && !Array.isArray(v);
@@ -62,6 +70,8 @@ function validateThresholds(raw: unknown, problems: string[]): ThresholdConfig {
     formations: [],
     ratingScale: { min: 1, max: 100 },
     bands: [],
+    profiles: {},
+    oppositions: [],
   };
 
   if (!isPlainObject(raw)) {
@@ -69,8 +79,8 @@ function validateThresholds(raw: unknown, problems: string[]): ThresholdConfig {
     return fallback;
   }
 
-  if (raw.version !== 1 && raw.version !== 2 && raw.version !== 3) {
-    problems.push(`thresholds: version must be 1, 2, or 3 (got ${JSON.stringify(raw.version)})`);
+  if (raw.version !== 1 && raw.version !== 2 && raw.version !== 3 && raw.version !== 4) {
+    problems.push(`thresholds: version must be 1, 2, 3, or 4 (got ${JSON.stringify(raw.version)})`);
   }
 
   const minCounts: Record<PositionBucket, number> = { GK: 0, DEF: 0, MID: 0, ATT: 0 };
@@ -101,6 +111,7 @@ function validateThresholds(raw: unknown, problems: string[]): ThresholdConfig {
   } else {
     const seenIds = new Set<string>();
     let fallbackCount = 0;
+    let minFitBandCount = 0; // ADR-020: minFit allowed on at most MAX_MIN_FIT_BANDS bands
 
     raw.bands.forEach((bandRaw: unknown, i: number) => {
       if (!isPlainObject(bandRaw)) {
@@ -177,6 +188,17 @@ function validateThresholds(raw: unknown, problems: string[]): ThresholdConfig {
           }
         }
       }
+      // ADR-020: integer 0-100, staged on the top three bands only.
+      let minFit: number | undefined;
+      if (bandRaw.minFit !== undefined) {
+        if (typeof bandRaw.minFit !== 'number' || !Number.isInteger(bandRaw.minFit) || bandRaw.minFit < 0 || bandRaw.minFit > 100) {
+          problems.push(`${entity}: minFit must be an integer in [0,100] (got ${JSON.stringify(bandRaw.minFit)})`);
+        } else {
+          minFit = bandRaw.minFit;
+        }
+        minFitBandCount += 1;
+      }
+
       if (bandRaw.requireAllBucketsNonEmpty !== undefined && typeof bandRaw.requireAllBucketsNonEmpty !== 'boolean') {
         problems.push(`${entity}: requireAllBucketsNonEmpty must be a boolean`);
       }
@@ -188,13 +210,19 @@ function validateThresholds(raw: unknown, problems: string[]): ThresholdConfig {
       }
       if (bandRaw.fallback === true) fallbackCount += 1;
 
-      bands.push({ ...(bandRaw as unknown as BandDef), minEfficiency, minBucketEfficiency });
+      bands.push({ ...(bandRaw as unknown as BandDef), minEfficiency, minBucketEfficiency, minFit });
     });
 
     if (fallbackCount === 0) {
       problems.push('thresholds.bands: no band has fallback:true — exactly one fallback band is required');
     } else if (fallbackCount > 1) {
       problems.push(`thresholds.bands: ${fallbackCount} bands have fallback:true — exactly one fallback band is required`);
+    }
+
+    if (minFitBandCount > MAX_MIN_FIT_BANDS) {
+      problems.push(
+        `thresholds.bands: minFit configured on ${minFitBandCount} bands — at most ${MAX_MIN_FIT_BANDS} allowed (ADR-020, top bands only)`,
+      );
     }
   }
 
@@ -269,6 +297,119 @@ function validateThresholds(raw: unknown, problems: string[]): ThresholdConfig {
     }
   }
 
+  // ---------- profiles (ADR-020) ----------
+  const profiles: Record<string, FormationProfile> = {};
+  if (!isPlainObject(raw.profiles)) {
+    problems.push('thresholds.profiles: expected an object keyed by formation id');
+  } else {
+    const knownFormationIds = new Set(formations.map((f) => f.id));
+    const seenProfileIds = new Set<string>();
+
+    for (const [formationId, profileRaw] of Object.entries(raw.profiles)) {
+      if (formationId.startsWith('_')) continue;
+      seenProfileIds.add(formationId);
+
+      if (!knownFormationIds.has(formationId)) {
+        problems.push(`thresholds.profiles.${formationId}: not a known formation id`);
+      }
+
+      if (!isPlainObject(profileRaw)) {
+        problems.push(`thresholds.profiles.${formationId}: expected an object keyed by bucket (DEF/MID/ATT)`);
+        continue;
+      }
+
+      const profileKeys = Object.keys(profileRaw).filter((k) => !k.startsWith('_'));
+      for (const key of profileKeys) {
+        if (!ATTR_BUCKET_SET.has(key)) {
+          problems.push(`thresholds.profiles.${formationId}: bucket '${key}' is not a valid attr bucket (DEF/MID/ATT — GK has no attrs)`);
+        }
+      }
+
+      const profile = {} as FormationProfile;
+      for (const bucket of ATTR_BUCKETS) {
+        const bucketRaw = (profileRaw as Record<string, unknown>)[bucket];
+        const entity = `thresholds.profiles.${formationId}.${bucket}`;
+        if (!isPlainObject(bucketRaw)) {
+          problems.push(`${entity}: expected an object with 'weights' and 'targets'`);
+          profile[bucket] = { weights: { pace: 0, strength: 0, accuracy: 0 }, targets: { pace: 0, strength: 0, accuracy: 0 } };
+          continue;
+        }
+
+        const weights = validateAttrs(bucketRaw.weights, `${entity}.weights`, problems, 0, 1, false);
+        const targets = validateAttrs(bucketRaw.targets, `${entity}.targets`, problems, 1, 99, true);
+        profile[bucket] = { weights, targets };
+      }
+
+      profiles[formationId] = profile;
+    }
+
+    for (const f of formations) {
+      if (!seenProfileIds.has(f.id)) {
+        problems.push(`thresholds.profiles: missing a profile for formation '${f.id}'`);
+      }
+    }
+  }
+
+  // ---------- oppositions (ADR-020) ----------
+  const oppositions: OppositionDef[] = [];
+  if (!Array.isArray(raw.oppositions) || raw.oppositions.length === 0) {
+    problems.push('thresholds.oppositions: expected a non-empty array of opposition definitions');
+  } else {
+    const seenOppIds = new Set<string>();
+    raw.oppositions.forEach((oppRaw: unknown, i: number) => {
+      if (!isPlainObject(oppRaw)) {
+        problems.push(`thresholds.oppositions[${i}]: expected an object`);
+        return;
+      }
+
+      const hasId = typeof oppRaw.id === 'string' && oppRaw.id.length > 0;
+      const entity = hasId ? `opposition ${oppRaw.id as string}` : `thresholds.oppositions[${i}]`;
+
+      if (!hasId) {
+        problems.push(`${entity}: missing or invalid 'id'`);
+      } else {
+        const id = oppRaw.id as string;
+        if (seenOppIds.has(id)) {
+          problems.push(`opposition ${id}: duplicate opposition id`);
+        }
+        seenOppIds.add(id);
+      }
+
+      if (typeof oppRaw.label !== 'string' || oppRaw.label.length === 0) {
+        problems.push(`${entity}: missing or invalid 'label'`);
+      }
+      if (typeof oppRaw.tagline !== 'string' || oppRaw.tagline.length === 0) {
+        problems.push(`${entity}: missing or invalid 'tagline'`);
+      }
+
+      const weightMods: Partial<Record<AttrName, number>> = {};
+      if (!isPlainObject(oppRaw.weightMods)) {
+        problems.push(`${entity}: weightMods must be an object`);
+      } else {
+        for (const [k, v] of Object.entries(oppRaw.weightMods)) {
+          if (!ATTR_NAME_SET.has(k)) {
+            problems.push(`${entity}: weightMods key '${k}' is not a valid attr name (pace/strength/accuracy)`);
+          } else if (typeof v !== 'number' || !Number.isFinite(v)) {
+            problems.push(`${entity}: weightMods.${k} must be a finite number (got ${JSON.stringify(v)})`);
+          } else {
+            weightMods[k as AttrName] = v;
+          }
+        }
+      }
+
+      oppositions.push({
+        id: hasId ? (oppRaw.id as string) : entity,
+        label: typeof oppRaw.label === 'string' ? oppRaw.label : '',
+        tagline: typeof oppRaw.tagline === 'string' ? oppRaw.tagline : '',
+        weightMods,
+      });
+    });
+
+    if (oppositions.length > 0 && !oppositions.some((o) => o.id === 'neutral')) {
+      problems.push("thresholds.oppositions: catalog must include an opposition with id 'neutral' (used for free play)");
+    }
+  }
+
   return {
     version: typeof raw.version === 'number' ? raw.version : 1,
     referenceFormation: typeof raw.referenceFormation === 'string' ? raw.referenceFormation : '',
@@ -276,7 +417,36 @@ function validateThresholds(raw: unknown, problems: string[]): ThresholdConfig {
     formations,
     ratingScale,
     bands,
+    profiles,
+    oppositions,
   };
+}
+
+/** ADR-020: validates a {pace,strength,accuracy} object; returns a best-effort Attrs
+ * (0-filled on failure) so callers can keep building a full ThresholdConfig even
+ * when validation fails — problems are collected, never thrown mid-parse. */
+function validateAttrs(
+  raw: unknown,
+  entity: string,
+  problems: string[],
+  min: number,
+  max: number,
+  requireInteger: boolean,
+): { pace: number; strength: number; accuracy: number } {
+  const result = { pace: 0, strength: 0, accuracy: 0 };
+  if (!isPlainObject(raw)) {
+    problems.push(`${entity}: expected an object with pace/strength/accuracy`);
+    return result;
+  }
+  for (const attr of ATTR_NAMES) {
+    const v = (raw as Record<string, unknown>)[attr];
+    if (typeof v !== 'number' || (requireInteger && !Number.isInteger(v)) || v < min || v > max) {
+      problems.push(`${entity}.${attr}: expected a${requireInteger ? 'n integer' : ' number'} in [${min},${max}] (got ${JSON.stringify(v)})`);
+    } else {
+      result[attr] = v;
+    }
+  }
+  return result;
 }
 
 // ---------- squads ----------
@@ -287,9 +457,13 @@ function validateSquads(raw: unknown, positionMap: PositionMap, thresholds: Thre
     return [];
   }
 
-  if (raw.version !== 1) {
-    problems.push(`squads: version must be 1 (got ${JSON.stringify(raw.version)})`);
+  if (raw.version !== 1 && raw.version !== 2) {
+    problems.push(`squads: version must be 1 or 2 (got ${JSON.stringify(raw.version)})`);
   }
+  // ADR-020: v1 = pre-attrs (no pace/strength/accuracy anywhere); v2 = every outfield
+  // player carries all three attrs, GK carries none. Dual-accepted this wave — the
+  // real corpus ships v2 data in Wave B; until then it stays v1.
+  const squadsVersion = raw.version === 2 ? 2 : 1;
 
   if (!Array.isArray(raw.squads) || raw.squads.length === 0) {
     problems.push('squads.squads: expected a non-empty array of squads');
@@ -397,12 +571,50 @@ function validateSquads(raw: unknown, positionMap: PositionMap, thresholds: Thre
 
       if (positionBucket === 'GK') gkCount += 1;
 
+      // ---------- ADR-020: attrs (squads v1|v2, both directions) ----------
+      const attrsPresent = ATTR_NAMES.some((attr) => playerRaw[attr] !== undefined);
+      let pace: number | undefined;
+      let strength: number | undefined;
+      let accuracy: number | undefined;
+
+      if (squadsVersion === 1) {
+        if (attrsPresent) {
+          problems.push(
+            `player ${playerLabel}: squads v1 must not carry pace/strength/accuracy (ADR-020 — bump squads to version 2 first)`,
+          );
+        }
+      } else if (positionBucket !== undefined) {
+        // Only checked when positionBucket itself validated cleanly, so a broken
+        // record doesn't also cascade a spurious attrs complaint on top.
+        if (positionBucket === 'GK') {
+          if (attrsPresent) {
+            problems.push(`player ${playerLabel}: GK players must not have pace/strength/accuracy (ADR-020)`);
+          }
+        } else {
+          for (const attr of ATTR_NAMES) {
+            const v = playerRaw[attr];
+            if (typeof v !== 'number' || !Number.isInteger(v) || v < 1 || v > 99) {
+              problems.push(`player ${playerLabel}: ${attr} must be an integer 1-99 (got ${JSON.stringify(v)})`);
+            } else if (attr === 'pace') {
+              pace = v;
+            } else if (attr === 'strength') {
+              strength = v;
+            } else {
+              accuracy = v;
+            }
+          }
+        }
+      }
+
       players.push({
         id: hasPlayerId ? (playerRaw.id as string) : playerLabel,
         name: typeof playerRaw.name === 'string' ? playerRaw.name : '',
         positionRaw: positionRaw ?? '',
         positionBucket: positionBucket ?? 'GK',
         rating: rating ?? 0,
+        pace,
+        strength,
+        accuracy,
       });
     });
 
