@@ -348,6 +348,8 @@ P-014r2 status: succeeded (U1-DONE; 169 tests green; paper world complete — Te
 ## P-033 — V4b Matchday share card [QUEUED after V4a]
 - target: opencode-go/glm-5.2 --variant high
 - task: hand-drawn <canvas> team-sheet card (paper texture, XI, band, near-miss line, 'Matchday #N' when daily) → PNG download; navigator.share + X/WhatsApp intents + clipboard; share row on ResultScreen (post-match, no global header per taste ruling).
+
+FEEDBACK-ROUND CLOSEOUT (2026-07-12): P-029/030/031/032/033 all succeeded and committed (b80b456 pushed). Browser-verified: MATCHDAY #32 badge, About + tennil/issues links, daily draft → 2-1 HARD-FOUGHT WIN, X-intent text exact template w/ /tennil/ URL, WhatsApp + download present, fit-insight null-case correct. Stale agent worktree (.claude/worktrees/nifty-murdock) was double-globbing vitest (49 files/567) — removed; true suite 25 files/289 tests. NOTE: agents in Claude-Code worktree isolation can leave worktrees behind — check `git worktree list` when test counts look inflated.
 - task: Tune 9 efficiency gates inside the compressed window (random p50=94, greedy p50=99, p90=100); consider enabling minBucketEfficiency if total-efficiency alone can't discriminate; six-gate protocol; RISKS log + sim-report.
 - task: PlayerRow mine-variant never renders taken state (bug: YOUR XI shows mangled overlapping Taken graphics); reveal rows disabled when id-taken OR isPersonTaken (call domain helper — zero rules logic in components); clean taken treatment: single strikethrough + small red TAKEN tag right-aligned, leader hidden, no overlap with POS chip/rating circle; RTL tests for both variants.
 
