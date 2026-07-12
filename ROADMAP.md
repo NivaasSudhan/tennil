@@ -52,6 +52,7 @@ Product-taste commitments, not architecture invariants. They shape *what* gets b
 5. **The daily seed is the shareability feature.** Same seed for everyone, compare results — Wordle mechanics, nearly free on this architecture (seed + action log, ADR-014). Everything else in Phase 3 spectacle is polish; this is the growth loop. Do not ship a generic "share my result" before shared-seed comparison exists.
 6. **The top band should get rarer as the corpus grows.** ~5% (1 in 20 skilled drafts) was forced by 7-squad lumpiness, not chosen. As distributions smooth, retune toward **2-3%** so 10-0 feels legendary. A player's first 10-0 should be a screenshot moment.
 7. **Anti-roadmap (will not build):** meta-progression, unlock trees, login/accounts, energy or daily-limit mechanics, currencies. One draft is a complete, self-contained 3-minute artifact. Retention comes from depth, near-misses, and the daily seed — never from withholding the game.
+8. **Reveal-luck is bounded.** No scoring gate that the session's reveals can lock a player out of may decide victory on its own — it must be either relative (like ADR-019's efficiency-vs-ceiling) or small (~1–2 band-percentage impact). Players must always be able to win the session they were dealt. New scoring dimensions are budgeted against this law before tuning begins.
 
 ---
 

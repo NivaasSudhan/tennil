@@ -30,6 +30,7 @@ A single-player World Cup Draft-XI game: draft one player per revealed historica
 3. **Physical verbs.** Picks stamp, sheets clip and whip away, scoreboards flip, floodlights flare. No abstract fades where a physical action reads better.
 4. **Margins over mystery.** The result screen leads with how close you were ("2 points from a 5-0"), never a bare verdict. Deterministic and proud of it.
 5. **Dopamine peaks are earned and never block input.** Full-screen goal moments and full-time slams — but skip/speed controls stay live through all of it.
+6. **Reveal-luck bounded.** No scoring gate the session's reveals can lock a player out of may decide the outcome alone — it must be relative (per ADR-019) or small garnish. Players always win the session they were dealt. New scoring dimensions budget against this law before tuning.
 
 ## Accessibility & Inclusion
 

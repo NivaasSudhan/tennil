@@ -66,3 +66,4 @@ BLOCKED/DEVIATIONS: <anything needing an ADR or human decision>
 
 ## Balance/tuning rule of thumb
 Game feels wrong (too easy/hard, dead bands)? Edit `thresholds.json` numbers and rerun the simulation. Editing engine code for balance is a bug, not a fix.
+New gates obey the Reveal-Luck Law (ROADMAP §3.8).

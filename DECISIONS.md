@@ -262,6 +262,8 @@ Changing anything marked **Invariant** in PROJECT.md requires a new ADR here fir
 - **Risks**: A DP bug could silently under- or over-state the ceiling, breaking the "10-0 always reachable" promise even though the code runs without error. Mitigation: property tests assert the ceiling is a genuine upper bound against 25 real seeded greedy drafts, that efficiency 1.0 is attainable by explicit construction, and that the person rule and skip-round-contributes-nothing hold (`tests/sessionCeiling.test.ts`). Placeholder efficiency numbers may produce a temporarily lopsided W1 histogram (some new bands rare/dead) — expected and owned by the W3 gate, not silently shipped as final tuning.
 - **Revisit when**: W3 retunes the efficiency gates from corpus-60 sim data (six-gate protocol); if that retune shows the bitmask-conflict approach in `sessionCeiling.ts` scales poorly as corpus grows past the 68-squad target (ADR-011 amendment), reconsider the person-tracking strategy then.
 
+**Amendment (2026-07-12): Reveal-Luck Law** — Future scoring dimensions (chemistry links, attributes, spine/profile fit) are governed by the Reveal-Luck Law: any outcome-determining gate that the session's reveals can lock a player out of must be either RELATIVE to what the reveals offered (efficiency-vs-ceiling, as in ADR-019) or SMALL (~1–2 band-percentage impact, never the difference between winning and losing). Players must always be able to win the session they were dealt.
+
 ---
 
 ## ADR-014-lite — Daily seed + seed capture (Wordle mechanics, no persistence)
