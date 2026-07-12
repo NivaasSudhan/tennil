@@ -30,7 +30,13 @@ import { isPersonTaken, personKey } from '../src/domain/draft/person';
 import { computeScoreInput, scoreBand } from '../src/domain/scoring/scoreBand';
 import { computeSessionCeiling } from '../src/domain/scoring/sessionCeiling';
 import { explainScoreBand } from '../src/domain/scoring/explainScoreBand';
-import { computeProfileFit } from '../src/domain/scoring/profileFit';
+import {
+  computeProfileFit,
+  type AttrBucket,
+  type AttrName,
+  type Attrs,
+  type FormationProfile,
+} from '../src/domain/scoring/profileFit';
 import { mulberry32 } from '../src/lib/rng';
 import type {
   DraftSession,
@@ -73,7 +79,7 @@ export function loadGameDataFromDisk(): GameData {
 export interface SimArgs {
   n: number;
   seed: number;
-  bot: 'greedy' | 'random';
+  bot: 'greedy' | 'random' | 'fitaware';
   skipThreshold: number;
   nearMissDelta?: number; // default 3
   report?: string;        // path for sim-report.json; omit = no file
@@ -82,7 +88,11 @@ export interface SimArgs {
    * daily selection; the sim wants an explicit, repeatable archetype per run).
    * Optional — every pre-Wave-C call site (existing tests constructing SimArgs
    * literals) omits it; default 'neutral' (spec delta: sim default when no flag
-   * is passed) is applied at runSingleDraft. */
+   * is passed) is applied at runSingleDraft.
+   *
+   * Wave D: the special value 'cycle' runs the full `n` for EVERY non-neutral
+   * archetype and prints a per-archetype 10-0 count table (the Reveal-Luck Law
+   * gate — 10-0 must be > 0% under every archetype with the fitaware bot). */
   opposition?: string;
 }
 
@@ -103,8 +113,8 @@ export function parseArgs(argv: string[]): SimArgs {
         i++;
         break;
       case '--bot':
-        if (value !== 'greedy' && value !== 'random') {
-          throw new Error(`--bot must be "greedy" or "random" (got ${JSON.stringify(value)})`);
+        if (value !== 'greedy' && value !== 'random' && value !== 'fitaware') {
+          throw new Error(`--bot must be "greedy", "random", or "fitaware" (got ${JSON.stringify(value)})`);
         }
         args.bot = value;
         i++;
@@ -212,6 +222,115 @@ function greedyBot(
 }
 
 /**
+ * FITAWARE BOT — ADR-020 Wave D (plan.md "Wave D estimation guidance + Law
+ * gate": the second skill axis). Greedy on OVR with near-tie swaps (ΔOVR ≤ 2)
+ * toward today's weighted attributes; existing greedy stays the attr-blind
+ * baseline, random stays the floor.
+ *
+ * Exact rule (plan addendum, BINDING): among need-fillers within ΔOVR ≤ 2 of
+ * the OVR-best need-filler, maximize Σ_a w[a]·attr[a] under today's bucket
+ * weights × opposition mods; ties ⇒ ascending id. GK candidates fall back to
+ * the OVR rule (no attrs — their score is their rating, never an attr sum).
+ *
+ * The ΔOVR ≤ 2 pool bounds the OVR sacrifice to at most 2 points: a fit-good
+ * outfielder within 2 of a higher-rated GK/peer can win the slot, but a
+ * far-lower-rated player never does. Once every bucket has met its minimum,
+ * picks the highest-rated pickable player overall (OVR-only, like greedy — the
+ * attr axis only breaks near-ties while needs are unmet). Skip policy matches
+ * greedy: spend the one skip iff the OVR-best need-filler is weak
+ * (rating < skipThreshold) while needs are still unmet.
+ */
+const FITAWARE_ATTR_ORDER: AttrName[] = ['pace', 'strength', 'accuracy'];
+
+/** Per-bucket effective weights = profile weights × opposition mods (absent ⇒ 1). */
+function effectiveWeights(
+  profile: FormationProfile,
+  mods: Partial<Attrs>,
+): Record<AttrBucket, Attrs> {
+  const out = {} as Record<AttrBucket, Attrs>;
+  for (const bucket of ['DEF', 'MID', 'ATT'] as AttrBucket[]) {
+    const w = profile[bucket].weights;
+    out[bucket] = {
+      pace: w.pace * (mods.pace ?? 1),
+      strength: w.strength * (mods.strength ?? 1),
+      accuracy: w.accuracy * (mods.accuracy ?? 1),
+    };
+  }
+  return out;
+}
+
+/** Σ_a effW[bucket][a] · player.attrs[a]. Outfield only (GK has no attrs). */
+function fitAwareAttrScore(player: Player, bucket: PositionBucket, effW: Record<AttrBucket, Attrs>): number {
+  const w = effW[bucket as AttrBucket];
+  let sum = 0;
+  for (const attr of FITAWARE_ATTR_ORDER) {
+    const v = player[attr];
+    // loadData v2 guarantees outfield attrs are present; defensive invariant
+    // (matches computeProfileFit's throw) — a missing attr is a data bug.
+    if (v === undefined) {
+      throw new Error(
+        `fitAwareAttrScore: outfield player '${player.id}' missing attr '${attr}' — invalid squads v2 data`,
+      );
+    }
+    sum += w[attr] * v;
+  }
+  return sum;
+}
+
+/** fitaware selection score: GK ⇒ rating (OVR rule, no attrs); outfield ⇒ Σ w·attr. */
+function fitAwareScore(player: Player, bucket: PositionBucket, effW: Record<AttrBucket, Attrs>): number {
+  return bucket === 'GK' ? player.rating : fitAwareAttrScore(player, bucket, effW);
+}
+
+function fitawareBot(
+  session: DraftSession,
+  pickable: Player[],
+  data: GameData,
+  skipThreshold: number,
+  profile: FormationProfile,
+  oppMods: Partial<Attrs>,
+): BotDecision {
+  const minCounts = data.thresholds.minCounts;
+  const counts = bucketCounts(session.picks, data.positionMap);
+  const unmet = new Set<PositionBucket>(
+    (['GK', 'DEF', 'MID', 'ATT'] as PositionBucket[]).filter((b) => counts[b] < minCounts[b]),
+  );
+
+  const needFillers = pickable
+    .filter((p) => unmet.has(data.positionMap[p.positionRaw]))
+    .sort(byRatingDescThenId);
+
+  if (needFillers.length > 0) {
+    const ovrBest = needFillers[0];
+    if (session.skipRemaining === 1 && ovrBest.rating < skipThreshold) {
+      return { action: 'skip' };
+    }
+    // Near-tie pool: need-fillers within ΔOVR ≤ 2 of the OVR-best. The OVR
+    // primary axis is preserved (pool is bounded by rating); attrs only pick
+    // the winner among near-OVR-equivalent candidates.
+    const pool = needFillers.filter((p) => p.rating >= ovrBest.rating - 2);
+    const effW = effectiveWeights(profile, oppMods);
+    // Deterministic selection: max fitAwareScore; ties ⇒ ascending id.
+    const pick = pool.reduce((best, p) => {
+      const sp = fitAwareScore(p, data.positionMap[p.positionRaw], effW);
+      const sb = fitAwareScore(best, data.positionMap[best.positionRaw], effW);
+      if (sp > sb) return p;
+      if (sp < sb) return best;
+      return p.id < best.id ? p : best;
+    }, pool[0]);
+    return { action: 'pick', playerId: pick.id };
+  }
+
+  // No pickable need-filler (all needs met, or this reveal has none for the
+  // short buckets) — take the highest-rated pickable player (OVR-only, greedy).
+  if (pickable.length === 0) {
+    throw new Error('fitawareBot: no pickable players in reveal — draft-session invariant violated');
+  }
+  const best = [...pickable].sort(byRatingDescThenId)[0];
+  return { action: 'pick', playerId: best.id };
+}
+
+/**
  * RANDOM BOT — the floor. Picks uniformly at random among pickable players
  * every round and NEVER skips (documented choice: a "random" player has no
  * strategic reason to burn the skip token, so it is left unused — this keeps
@@ -251,11 +370,20 @@ function squadsById(data: GameData): Record<string, Squad> {
 export function runSingleDraft(
   data: GameData,
   seed: number,
-  botType: 'greedy' | 'random',
+  botType: 'greedy' | 'random' | 'fitaware',
   skipThreshold: number,
   oppositionId: string = 'neutral',
 ): DraftResult {
   const rng = mulberry32(seed);
+  // ADR-020 Wave C: opposition + profile looked up ONCE up front (the fitaware
+  // bot needs effective weights DURING the draft loop; the fit score is
+  // recomputed on the final XI after). Sim drives the reference formation only
+  // (ADR-017 C6), so the reference formation's profile is always the right one.
+  const oppositionDef = data.thresholds.oppositions.find((o) => o.id === oppositionId);
+  if (!oppositionDef) {
+    throw new Error(`runSingleDraft: unknown --opposition id '${oppositionId}' (not in thresholds.oppositions)`);
+  }
+  const profile = data.thresholds.profiles[data.thresholds.referenceFormation];
   // ADR-017 C6: sim drives the default (reference) formation only.
   let session = startDraft(data, rng);
 
@@ -270,10 +398,14 @@ export function runSingleDraft(
       (p) => !pickedIds.has(p.id) && !isPersonTaken(session, p),
     );
 
-    const decision: BotDecision =
-      botType === 'greedy'
-        ? greedyBot(session, pickable, data, skipThreshold)
-        : randomBot(pickable, rng);
+    let decision: BotDecision;
+    if (botType === 'random') {
+      decision = randomBot(pickable, rng);
+    } else if (botType === 'fitaware') {
+      decision = fitawareBot(session, pickable, data, skipThreshold, profile, oppositionDef.weightMods);
+    } else {
+      decision = greedyBot(session, pickable, data, skipThreshold);
+    }
 
     if (decision.action === 'skip' && session.skipRemaining === 1) {
       session = skip(session, data, rng);
@@ -291,15 +423,6 @@ export function runSingleDraft(
     data.positionMap,
     personKey,
   );
-  // ADR-020 Wave C: --opposition looked up directly by id (not selectOpposition —
-  // that's seed-based daily selection; the sim wants an explicit, repeatable
-  // archetype). Sim drives the default (reference) formation only (ADR-017 C6),
-  // so the reference formation's profile is always the right one here.
-  const oppositionDef = data.thresholds.oppositions.find((o) => o.id === oppositionId);
-  if (!oppositionDef) {
-    throw new Error(`runSingleDraft: unknown --opposition id '${oppositionId}' (not in thresholds.oppositions)`);
-  }
-  const profile = data.thresholds.profiles[data.thresholds.referenceFormation];
   const fit = computeProfileFit(finalXI, data.positionMap, profile, oppositionDef.weightMods);
   const scoreInput = computeScoreInput(finalXI, data.positionMap, ceiling, fit, oppositionDef.id);
   const { bandId } = scoreBand(scoreInput, data.thresholds);
@@ -364,6 +487,10 @@ export interface SimDiagnostics {
   bucketSums: Record<PositionBucket, DistributionSummary>;
   weakLink: DistributionSummary;
   efficiency: DistributionSummary; // ADR-019: integer % points, userTotal/ceilingTotal
+  /** ADR-020 Wave D: per-draft profile-fit distribution (integer 0-100) — the
+   * second skill axis. p10-p90 per bot per archetype drives minFit tuning per
+   * the plan addendum ("top-band minFit ≈ fitaware p60-p70"). */
+  fit: DistributionSummary;
   seedQuartiles: { drafts: string; bands: Record<string, number> }[];
   nearMisses: { missedBandId: string; count: number; percent: number }[];
   nearMissDelta: number;
@@ -395,12 +522,15 @@ export function summarizeDistribution(values: number[]): DistributionSummary {
 
 // ADR-019: minBucketSum retired from real thresholds (efficiency replaces it) but kept
 // here for synthetic/legacy configs; minEfficiency/minBucketEfficiency are the new
-// numeric gates near-miss diagnostics care about.
+// numeric gates near-miss diagnostics care about. ADR-020 Wave D: minFit joins the
+// numeric set so near-miss counts fit-margin shortfalls (≤ delta) on the top bands —
+// the top-band near-miss gate (12-20%) is "efficiency OR fit margin within 3".
 const NUMERIC_PREDICATES: ReadonlySet<PredicateName> = new Set([
   'minBucketSum',
   'minWeakLink',
   'minEfficiency',
   'minBucketEfficiency',
+  'minFit',
 ]);
 
 export function computeDiagnostics(
@@ -422,6 +552,7 @@ export function computeDiagnostics(
       return ceilingTotal === 0 ? 100 : Math.round((100 * userTotal) / ceilingTotal);
     }),
   );
+  const fit = summarizeDistribution(results.map((r) => r.scoreInput.fit));
 
   // Contiguous quartiles over the seed range: detects drift across seeds
   // (should be roughly flat when n is large enough to trust the histogram).
@@ -454,7 +585,7 @@ export function computeDiagnostics(
       percent: (nearMissCounts.get(id)! / results.length) * 100,
     }));
 
-  return { bucketSums, weakLink, efficiency, seedQuartiles, nearMisses, nearMissDelta };
+  return { bucketSums, weakLink, efficiency, fit, seedQuartiles, nearMisses, nearMissDelta };
 }
 
 // ---------------------------------------------------------------------------
@@ -517,6 +648,7 @@ export function formatReport(data: GameData, sim: SimResult): string {
   }
   lines.push(`  weakLink ${fmt(sim.diagnostics.weakLink)}`);
   lines.push(`  efficiency% ${fmt(sim.diagnostics.efficiency)}`);
+  lines.push(`  fit      ${fmt(sim.diagnostics.fit)}`);
   if (sim.diagnostics.nearMisses.length > 0) {
     for (const nm of sim.diagnostics.nearMisses) {
       lines.push(`  near-miss ${nm.missedBandId}: ${nm.count} drafts (${nm.percent.toFixed(2)}%) within ${sim.diagnostics.nearMissDelta} pts`);
@@ -542,6 +674,90 @@ export function buildSimReport(sim: SimResult): object {
 }
 
 // ---------------------------------------------------------------------------
+// ADR-020 Wave D — opposition cycle (Reveal-Luck Law gate)
+// ---------------------------------------------------------------------------
+
+/**
+ * Per-archetype summary from a cycle run. The Law gate (plan addendum): with
+ * the fitaware bot, 10-0 count must be > 0 for EVERY non-neutral archetype at
+ * n=500 — if any archetype zeroes out, lower minFit (never raise targets).
+ */
+export interface CycleArchetypeResult {
+  oppositionId: string;
+  oppositionLabel: string;
+  tenZeroCount: number;
+  tenZeroPercent: number;
+  fit: DistributionSummary;
+  histogram: SimResult['histogram'];
+}
+
+export interface CycleResult {
+  args: SimArgs;
+  perArchetype: CycleArchetypeResult[];
+  /** true iff every archetype has tenZeroCount > 0 (the Law gate). */
+  lawGatePass: boolean;
+}
+
+/**
+ * Runs the full `n` drafts for EVERY non-neutral opposition archetype (sorted
+ * by id for determinism) and collects each one's 10-0 count + fit distribution.
+ * The Law gate is `lawGatePass` — every archetype must let 10-0 stay attainable.
+ */
+export function runOppositionCycle(data: GameData, args: SimArgs): CycleResult {
+  const nonNeutral = [...data.thresholds.oppositions]
+    .filter((o) => o.id !== 'neutral')
+    .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+
+  const perArchetype: CycleArchetypeResult[] = [];
+  for (const opp of nonNeutral) {
+    const sim = runSimulation(data, { ...args, opposition: opp.id });
+    const tenZero = sim.histogram.find((h) => h.bandId === '10-0');
+    perArchetype.push({
+      oppositionId: opp.id,
+      oppositionLabel: opp.label,
+      tenZeroCount: tenZero?.count ?? 0,
+      tenZeroPercent: tenZero?.percent ?? 0,
+      fit: sim.diagnostics.fit,
+      histogram: sim.histogram,
+    });
+  }
+
+  const lawGatePass = perArchetype.every((r) => r.tenZeroCount > 0);
+  return { args, perArchetype, lawGatePass };
+}
+
+export function formatCycleReport(cycle: CycleResult): string {
+  const lines: string[] = [];
+  lines.push('=== TenNil opposition cycle — Reveal-Luck Law gate (ADR-020 Wave D) ===');
+  lines.push(
+    `n=${cycle.args.n} seed=${cycle.args.seed} bot=${cycle.args.bot} skipThreshold=${cycle.args.skipThreshold}`,
+  );
+  lines.push('');
+  lines.push('Per-archetype 10-0 attainment (Law: every archetype > 0%):');
+  lines.push(`  ${'archetype'.padEnd(20)} ${'10-0 count'.padStart(10)} ${'10-0 %'.padStart(9)}   fit p10/p50/p90`);
+  for (const r of cycle.perArchetype) {
+    const mark = r.tenZeroCount > 0 ? 'OK ' : 'ZERO';
+    lines.push(
+      `  ${r.oppositionId.padEnd(20)} ${String(r.tenZeroCount).padStart(10)} ${r.tenZeroPercent.toFixed(2).padStart(8)}%   ` +
+        `p10 ${r.fit.p10.toFixed(0)} / p50 ${r.fit.p50.toFixed(0)} / p90 ${r.fit.p90.toFixed(0)}  [${mark}]`,
+    );
+  }
+  lines.push('');
+  lines.push(`Law gate: ${cycle.lawGatePass ? 'PASS (10-0 attainable under every archetype)' : 'FAIL (some archetype blocks 10-0 — lower minFit, never raise targets)'}`);
+  return lines.join('\n');
+}
+
+export function buildCycleReport(cycle: CycleResult): object {
+  return {
+    schema: 2,
+    kind: 'opposition-cycle',
+    args: cycle.args,
+    lawGatePass: cycle.lawGatePass,
+    perArchetype: cycle.perArchetype,
+  };
+}
+
+// ---------------------------------------------------------------------------
 // CLI entry point
 // ---------------------------------------------------------------------------
 
@@ -554,10 +770,26 @@ function isMainModule(): boolean {
 if (isMainModule()) {
   const args = parseArgs(process.argv.slice(2));
   const data = loadGameDataFromDisk();
-  const sim = runSimulation(data, args);
-  console.log(formatReport(data, sim));
-  if (args.report) {
-    fs.writeFileSync(args.report, JSON.stringify(buildSimReport(sim), null, 2) + '\n');
-    console.log(`\nreport written: ${args.report}`);
+
+  if (args.opposition === 'cycle') {
+    // Law gate: run the full n for every non-neutral archetype, print the
+    // per-archetype 10-0 table. Exit non-zero iff the fitaware bot fails the
+    // Law (some archetype zeroes 10-0) — the gate the addendum binds.
+    const cycle = runOppositionCycle(data, args);
+    console.log(formatCycleReport(cycle));
+    if (args.report) {
+      fs.writeFileSync(args.report, JSON.stringify(buildCycleReport(cycle), null, 2) + '\n');
+      console.log(`\nreport written: ${args.report}`);
+    }
+    if (!cycle.lawGatePass && args.bot === 'fitaware') {
+      process.exitCode = 2;
+    }
+  } else {
+    const sim = runSimulation(data, args);
+    console.log(formatReport(data, sim));
+    if (args.report) {
+      fs.writeFileSync(args.report, JSON.stringify(buildSimReport(sim), null, 2) + '\n');
+      console.log(`\nreport written: ${args.report}`);
+    }
   }
 }

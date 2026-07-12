@@ -33,6 +33,7 @@ Cross-corpus **best-possible XI** (top GK + top 4 DEF + top 3 MID + top 3 ATT): 
 | R-10 | Config schema drift between docs, JSON, and validator | Medium | Medium | `loadData.ts` is single validation truth; version fields; loadData tests per failure mode. |
 | R-11 | Top band trivially reachable (or unreachable) at ship | ~~Medium~~ RESOLVED (T-015) | High (core promise) | Tuned against sim: greedy 10-0 = 5.0% (skip84), 4.4/3.8% at skip70/90, 0% for random; stable across seeds 42/7/1337. Gate, not vibes — see Experiment log 2026-07-09. |
 | R-12 | Position map disputes (AM=MID) skew bucket sums | Low | Medium | Locked in ADR-006; tune thresholds, not the map. |
+| R-13 | **Wave D fit-aware bot cannot beat attr-blind greedy on 10-0** — fitaware sacrifices ≤2 OVR for attrs ⇒ OVR-gate ceiling ~1.7% (n=300) / 1.8% (n=500) vs greedy 6.3%; attrs ≈ OVR×mult+jitter (Wave B) ⇒ fitaware fit ≤ greedy fit ⇒ every minFit cuts fitaware ≥ greedy. Separation fitaware−greedy = −4.7 to −5.0pp across 4 iterations, never positive. Acceptance (fitaware 6-7% > greedy 3-4%) structurally unreachable. | High (certain) | High (Wave D goal blocked) | **WAVED-STRUCTURAL** — orchestrator decides. Candidate fixes (out of Wave D scope): (a) decorrelate attrs from OVR in the Wave B generator (independent variance per axis); (b) redesign fitaware bot to not sacrifice OVR (attrs break exact ties only, ΔOVR=0); (c) widen Wave D scope to permit OVR-efficiency gate retuning so fitaware's ceiling can rise; (d) redefine acceptance (drop the fitaware>greedy inversion). Widening the swap rule (ΔOVR>2) makes it WORSE (more OVR sacrifice). See Experiment log 2026-07-12. |
 
 ## Edge cases (must stay covered by tests)
 
@@ -238,6 +239,86 @@ Stability (greedy, default skip 84): seed 42 → 10-0 6.0 / 7-1 11.4 / 5-0 22.0
   eff=99 majority (53.8%). 1-2 drops allBucketsNonEmpty → catches
   structurally-broken decent-eff. Near-miss(3pts): 10-0 10.80%. Random
   top-3: 0.00%. WL floor 86 has teeth. Deviations from 5-7% window: none.
+
+### 2026-07-12 — Wave D fit-aware bot + minFit tuning (ADR-020; WAVED-STRUCTURAL)
+
+**Goal.** ADR-020 Wave D: add a `fitaware` bot (greedy on OVR with ΔOVR≤2
+swaps toward weighted attrs), tune `minFit` on the top 3 bands so fit-aware
+10-0 = 6-7% neutral and attr-blind greedy = 3-4% (the second skill axis).
+
+**Step zero (n=300, seed=42, neutral, minFit=0 — all top-3 bands):**
+
+| bot | 10-0 | 7-1 | 5-0 | 4-1 | 3-1 | 2-1 | fit p10/p50/p90 |
+|-----|------|-----|-----|-----|-----|-----|------------------|
+| greedy | 6.33 | 11.00 | 20.33 | 20.67 | 20.33 | 21.33 | 99/100/100 |
+| fitaware | 1.67 | 3.33 | 12.67 | 18.00 | 21.67 | 42.67 | 99/100/100 |
+| random | 0 | 0 | 0 | 0 | 0 | 40.67 | 96/97/99 |
+
+**Contradiction resolved.** Prior attempts reported conflicting greedy-vs-fitaware
+10-0 order. Clean runs show definitively: **greedy 6.33% > fitaware 1.67%** —
+backwards from the design (fitaware should beat greedy). Cause: the fitaware
+bot sacrifices ≤2 OVR for weighted attrs ⇒ lower efficiency/weakLink ⇒ clears
+the OVR gates for 10-0 LESS often than attr-blind greedy. The fit axis
+(minFit=0) is inactive; fit is saturated at p50=100 for BOTH skilled bots
+(Wave-B targets too low ⇒ attrs abundant).
+
+**Iteration 1 (minFit=100 on 10-0, targets unchanged):** greedy 10-0 = 6.33%
+(unchanged), fitaware = 1.67% (unchanged). Every OVR-clearing 10-0 candidate
+already has fit=100 ⇒ **minFit is impotent at authored targets** (no value
+0-100 moves 10-0). Proves levers 1a (minFit placement) and 2 (profile weights,
+scale-invariant + zero-shortfall) are structurally powerless while fit is
+saturated.
+
+**Iteration 2 (raise 4-3-3 targets above top-XI attr means: DEF 84/90/84,
+MID 89/84/93, ATT 93/88/90; minFit=0):** fit unsaturated — greedy fit 94/95/96,
+fitaware fit 94/95/96. **fitaware fit ≈ greedy fit (greedy slightly HIGHER:
+p75 96 vs 95, min 93 vs 92).** Raising targets created shortfall but did NOT
+separate the bots: attrs ≈ OVR×mult+jitter (Wave B generator) ⇒ attrs ~95%
+correlated with OVR ⇒ the ΔOVR≤2 swap gains negligible fit vs greedy's
+pure-OVR picks (which get high attrs on ALL axes from high OVR). 10-0
+unchanged (6.33/1.67) — band still OVR-gated; targets only move the fit scale.
+
+**Iteration 3 (minFit=95 on top-3, raised targets):** greedy 10-0 = 6.33%
+(unchanged — all 19 candidates fit≥95), fitaware = 1.33% (−0.34pp — one
+candidate cut). **minFit cuts fitaware, NOT greedy.** Separation −4.67 → −5.0pp
+(worse). Confirms: fitaware fit ≤ greedy fit ⇒ every minFit cuts fitaware ≥
+greedy ⇒ separation can never invert.
+
+**Iteration 4 (minFit=96 on top-3, raised targets):** greedy 10-0 = 5.67%
+(−0.66pp, first cuts), fitaware = 1.00% (−0.67pp, 40% vs 10% proportional).
+Separation = −4.67pp. Even where greedy finally drops, fitaware drops faster.
+
+**Structural conclusion (3 independent proofs).**
+1. **OVR-ceiling.** fitaware 10-0 ≤ ~1.7% (n=300) / 1.8% (n=500) — the OVR
+   sacrifice caps how often it clears the fixed efficiency/WL/bucket-eff
+   gates. minFit can only REDUCE 10-0, never raise the ceiling. For
+   separation ≥2pp need fitaware ≥ greedy+2; with fitaware ≤1.8%, need
+   greedy ≤ −0.2% ⇒ impossible. Holds for ALL minFit/targets/weights.
+2. **Fit non-separation.** attrs ≈ OVR×mult+jitter ⇒ fitaware fit ≤ greedy
+   fit ⇒ every minFit cuts fitaware ≥ greedy ⇒ separation ≤ 0 always.
+3. **Empirical.** 4 iterations, separation −4.7 to −5.0pp, never positive,
+   never near +2pp.
+
+**Law cycle (n=300, fitaware, minFit=96, raised targets):** every archetype
+>0% (aerial 1.67 / counter 0.67 / low-block 0.67 / possession 0.67 / pressing
+0.33) — Law gate PASSES, but at trivially low rates (~1%) confirming the
+OVR-ceiling dominates; weightMods barely move fit (attrs abundant/correlated).
+
+**Decision. WAVED-STRUCTURAL.** thresholds.json reverted to HEAD (minFit=0,
+authored targets) — shipping a gate that cuts the WRONG bot is worse than no
+gate. What lands: the `fitaware` bot, `--opposition cycle`, and fit
+diagnostics in `scripts/simulate.ts` (verified against the plan addendum's
+exact rule — no drift). Orchestrator decides on the candidate fixes in R-13
+before Wave D tuning can resume; the tooling is ready to re-run the moment the
+structural blocker is lifted. `docs/sim/sim-report.json` = fitaware/neutral/
+n=500/seed=42 baseline (10-0 = 1.80%, fit p50=100).
+
+- **2026-07-12 (Wave D, ADR-020):** WAVED-STRUCTURAL. fitaware 10-0 ceiling
+  1.80% (n=500) vs greedy 6.33% (n=300); minFit impotent (fit saturated) then
+  cuts fitaware ≥ greedy (attrs ≈ OVR×mult ⇒ no fit separation). Separation
+  −4.7 to −5.0pp across 4 iterations, never ≥2pp. Law cycle PASS (all
+  archetypes >0%, rates ~1%). thresholds.json reverted; simulate.ts tooling
+  lands. See R-13 for the orchestrator's fix decision.
 
 ## Open questions (answer before or during the named task)
 
