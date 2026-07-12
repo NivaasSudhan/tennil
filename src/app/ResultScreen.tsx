@@ -8,6 +8,7 @@ import { computeScoreInput, scoreBand } from '../domain/scoring/scoreBand';
 import { computeSessionCeiling } from '../domain/scoring/sessionCeiling';
 import { explainScoreBand } from '../domain/scoring/explainScoreBand';
 import { withFormationMinCounts } from '../domain/scoring/withFormation';
+import { detectFormationFit, scoreUnderFormation } from '../domain/scoring/formationFit';
 import { buildCommentary } from '../domain/commentary/build';
 import { progressScoreline } from './scorelineProgress';
 import Scoreboard from './Scoreboard';
@@ -32,7 +33,7 @@ interface ResultScreenProps {
  */
 export default function ResultScreen({ session, data, onRestart }: ResultScreenProps) {
   // -- Compute-once: band + commentary + explanation, before any timer. --
-  const { band, groups, commentary, explanation, goalBeatIndices, totalBeats } = useMemo(() => {
+  const { band, groups, commentary, explanation, goalBeatIndices, totalBeats, fitInsight } = useMemo(() => {
     const xi: FinalXI = getFinalXI(session);
     const config = withFormationMinCounts(data.thresholds, session.formationId);
     const squadsById = Object.fromEntries(data.squads.map((s) => [s.id, s]));
@@ -51,6 +52,25 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
     script.beats.forEach((b, i) => {
       if (b.type === 'goal') goalIndices.push(i);
     });
+
+    // -- Formation fit-insight (2026-07-12): display-only "what if" trivia.
+    // Never feeds `scored` above — the awarded band always comes from the
+    // declared formation's config/ceiling computed a few lines up.
+    const fittedFormationId = detectFormationFit(scoreInput.bucketCounts, data.thresholds.formations);
+    let fit: { formationId: string; bandId: string; label: string } | null = null;
+    if (fittedFormationId && fittedFormationId !== session.formationId) {
+      const fittedBand = scoreUnderFormation(
+        xi,
+        session.revealLog,
+        squadsById,
+        data.positionMap,
+        personKey,
+        data.thresholds,
+        fittedFormationId,
+      );
+      fit = { formationId: fittedFormationId, bandId: fittedBand.bandId, label: fittedBand.label };
+    }
+
     return {
       band: scored,
       groups: groupByBucket(xi, data.positionMap),
@@ -58,6 +78,7 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       explanation: expl,
       goalBeatIndices: goalIndices,
       totalBeats: script.beats.length,
+      fitInsight: fit,
     };
   }, [session, data]);
 
@@ -165,6 +186,11 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
         <Ticker beats={visibleBeats} />
         {showScoreline && (
           <BandSlam bandId={band.bandId} label={band.label} explanation={explanation as ScoreExplanation} />
+        )}
+        {showScoreline && fitInsight && (
+          <p className="fit-insight">
+            {`YOUR SHAPE WAS ${fitInsight.formationId} — UNDER IT: ${fitInsight.bandId}`.toUpperCase()}
+          </p>
         )}
       </section>
 
