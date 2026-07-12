@@ -43,7 +43,7 @@ describe('StartScreen', () => {
     expect(screen.getByRole('button', { name: /confirm draft/i })).toBeTruthy();
   });
 
-  it('invokes onStart with the selected formation id and default (daily) mode', () => {
+  it('invokes onStart with the selected formation id', () => {
     const onStart = vi.fn();
     render(
       <StartScreen
@@ -55,7 +55,7 @@ describe('StartScreen', () => {
     );
     fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
     expect(onStart).toHaveBeenCalledTimes(1);
-    expect(onStart).toHaveBeenCalledWith('4-3-3', 'daily');
+    expect(onStart).toHaveBeenCalledWith('4-3-3');
   });
 
   it('clicking a different formation then start passes the new formation id', () => {
@@ -73,12 +73,12 @@ describe('StartScreen', () => {
     expect(formationBtn).toBeTruthy();
     if (formationBtn) fireEvent.click(formationBtn);
     fireEvent.click(screen.getByRole('button', { name: /confirm draft/i }));
-    expect(onStart).toHaveBeenCalledWith('4-4-2', 'free');
+    expect(onStart).toHaveBeenCalledWith('4-4-2');
   });
 });
 
-describe('StartScreen — mode picker (ADR-014-lite)', () => {
-  it('landing shows a mode toggle defaulting to daily, with a MATCHDAY badge', () => {
+describe('StartScreen — MATCHDAY badge always visible (ADR-014-lite amend)', () => {
+  it('landing shows MATCHDAY badge number', () => {
     render(
       <StartScreen
         formations={FORMATIONS}
@@ -88,43 +88,22 @@ describe('StartScreen — mode picker (ADR-014-lite)', () => {
         onStart={() => {}}
       />,
     );
-    expect(screen.getByRole('button', { name: /today.?s matchday/i })).toBeTruthy();
-    expect(screen.getByRole('button', { name: /free draft/i })).toBeTruthy();
-    expect(screen.getByText(/MATCHDAY #7/)).toBeTruthy();
+    expect(screen.getByText(/MATCHDAY #7/i)).toBeTruthy();
   });
 
-  it('selecting Free Draft hides the matchday badge and passes free mode', () => {
-    const onStart = vi.fn();
-    render(
-      <StartScreen
-        formations={FORMATIONS}
-        defaultFormationId="4-3-3"
-        variant="landing"
-        matchdayNumber={7}
-        onStart={onStart}
-      />,
-    );
-    fireEvent.click(screen.getByRole('button', { name: /free draft/i }));
-    expect(screen.queryByText(/MATCHDAY #7/)).toBeNull();
-    fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
-    expect(onStart).toHaveBeenCalledWith('4-3-3', 'free');
-  });
-
-  it('formation-only variant does not render the mode toggle and labels the CTA by the passed-in mode', () => {
+  it('formation-only does not show MATCHDAY badge, labels CTA Confirm Draft', () => {
     const onStart = vi.fn();
     render(
       <StartScreen
         formations={FORMATIONS}
         defaultFormationId="4-3-3"
         variant="formation-only"
-        mode="daily"
         onStart={onStart}
       />,
     );
-    expect(screen.queryByRole('button', { name: /today.?s matchday/i })).toBeNull();
-    const cta = screen.getByRole('button', { name: /replay today.?s draw/i });
-    expect(cta).toBeTruthy();
-    fireEvent.click(cta);
-    expect(onStart).toHaveBeenCalledWith('4-3-3', 'daily');
+    expect(screen.queryByText(/MATCHDAY/i)).toBeNull();
+    expect(screen.getByRole('button', { name: /confirm draft/i })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: /confirm draft/i }));
+    expect(onStart).toHaveBeenCalledWith('4-3-3');
   });
 });

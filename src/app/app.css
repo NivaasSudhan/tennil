@@ -276,41 +276,6 @@ button {
   margin-right: 0.3rem;
 }
 
-/* ---------- Mode picker (ADR-014-lite) — daily vs free draft ---------- */
-.mode-picker {
-  display: flex;
-  gap: 0.5rem;
-  width: 100%;
-  max-width: min(26rem, 92vw);
-}
-
-.mode-option {
-  flex: 1;
-  padding: 0.4rem 0.6rem;
-  background: transparent;
-  border: 1.5px solid oklch(0.92 0.02 140 / 0.4);
-  border-radius: 4px;
-  cursor: pointer;
-  font-family: 'Courier Prime', monospace;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: oklch(0.92 0.02 140);
-  transition: border-color 180ms var(--ease-out-quart),
-              background 180ms var(--ease-out-quart);
-}
-
-.mode-option:hover {
-  border-color: oklch(0.92 0.02 140 / 0.8);
-}
-
-.mode-option--selected {
-  border-color: var(--gold);
-  background: oklch(0.7 0.15 85 / 0.12);
-  color: var(--gold);
-}
-
 .matchday-badge {
   margin: 0;
   font-family: 'Courier Prime', monospace;
@@ -525,6 +490,8 @@ button {
   border-color: oklch(0.6 0.02 140 / 0.3);
   color: oklch(0.6 0.02 140 / 0.5);
 }
+
+
 
 /* =====================================================================
    DRAFT SCREEN — paper world (team sheets)
