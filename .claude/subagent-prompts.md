@@ -1,5 +1,21 @@
 # Subagent prompt cache
 
+## DESIGN-BRIEF-v1 (paste VERBATIM into every UI-touching dispatch; orchestrator taste, binding)
+```
+MATCHDAY DESIGN BRIEF (binding; deviations need orchestrator sign-off):
+- Two material worlds, never mixed on one surface: PAPER (draft/landing: team-sheet stock, typed Courier Prime, ink, stamps) and BROADCAST (finals: dark chrome, Archivo, gold). Anton = mastheads ONLY.
+- Colors: existing CSS vars only (--pitch/--paper/--ink/--ink-faded/--stamp/--gold/--broadcast-bg/--broadcast-text). No new colors, no new fonts, no new npm deps, no router, no persistent global header.
+- Physical verbs for motion: stamp, clip-on, whip-off, flip, flare. ease-out-quart/quint only, no bounce. EVERY animation gets a prefers-reduced-motion fallback. Content visible by default — never opacity:0 in a base state (animate FROM in keyframes only).
+- Voice: dry pundit sarcasm; margins over mystery. Engine jargon (efficiency, ceiling, predicate, config) NEVER appears in player-facing copy.
+- Hard bans: side-stripe accent borders >1px, gradient text, glassmorphism, identical card grids, uppercase eyebrow above every section.
+- Legibility: digits ≥0.8rem, reading text contrast ≥4.5:1, player rows ≤2.8rem tall, sheets fit the viewport (internal scroll only <640px tall).
+- Layout budgets enforced: overlays/effects NEVER cover playback/skip controls; canvas card respects the y-budget (verdict ends ≤y1270, footer y1310).
+- Result surfaces lead with the nearest miss; verdict is a slam, not a table.
+```
+
+Post-UI-wave check (standing): orchestrator runs ONE consolidated browser pass per UI wave against this brief (2-3 screenshots max), fixes dispatched with cached prompts. No separate design-review agents (token rule).
+
+
 Guardrail: EVERY prompt dispatched to a subagent (Claude Code Agent tool, opencode, any external model) is recorded here verbatim BEFORE/AT dispatch. On retry or re-dispatch, reuse the cached prompt verbatim — never regenerate it. Update `status` after the run; append lessons under the entry instead of rewriting the prompt (rewrites get a new id with a `supersedes:` note).
 
 Entry format:
