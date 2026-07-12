@@ -33,7 +33,7 @@ Cross-corpus **best-possible XI** (top GK + top 4 DEF + top 3 MID + top 3 ATT): 
 | R-10 | Config schema drift between docs, JSON, and validator | Medium | Medium | `loadData.ts` is single validation truth; version fields; loadData tests per failure mode. |
 | R-11 | Top band trivially reachable (or unreachable) at ship | ~~Medium~~ RESOLVED (T-015) | High (core promise) | Tuned against sim: greedy 10-0 = 5.0% (skip84), 4.4/3.8% at skip70/90, 0% for random; stable across seeds 42/7/1337. Gate, not vibes — see Experiment log 2026-07-09. |
 | R-12 | Position map disputes (AM=MID) skew bucket sums | Low | Medium | Locked in ADR-006; tune thresholds, not the map. |
-| R-13 | **Wave D fit-aware bot cannot beat attr-blind greedy on 10-0** — fitaware sacrifices ≤2 OVR for attrs ⇒ OVR-gate ceiling ~1.7% (n=300) / 1.8% (n=500) vs greedy 6.3%; attrs ≈ OVR×mult+jitter (Wave B) ⇒ fitaware fit ≤ greedy fit ⇒ every minFit cuts fitaware ≥ greedy. Separation fitaware−greedy = −4.7 to −5.0pp across 4 iterations, never positive. Acceptance (fitaware 6-7% > greedy 3-4%) structurally unreachable under flat multipliers. | ~~High (certain)~~ **PARTIAL (2026-07-12 D4)** | High (Wave D goal blocked) | **Wave B-PRIME** SPECIALIZATION table (0.68–1.10, ±5 jitter) decoupled attrs from OVR (r=0.26/0.12/0.50). **D4** retuned bot to ΔOVR ≤ 1 attr-tie-break-first + reweighted 4-3-3 profile to the bite point (binding attrs high-weighted, targets raised) + minFit 92/90/88. Seed-42 (report): greedy 3.6% / fitaware 6.0% / separation +2.4pp / Law PASS / near-miss 12% — core reframing achieved. **Cross-seed fitaware 5.5-7 still structurally bounded** (6.0/3.4/2.8% seeds 42/1000/5000 — the ΔOVR ≤ 1 swap costs the eff-99% gate where attr-specialists are positionally rare in reveals; no-gate ceiling <5.5 at 2/3 seeds). See D4 experiment log. |
+| R-13 | **Wave D fit-aware bot cannot beat attr-blind greedy on 10-0** — fitaware sacrifices ≤2 OVR for attrs ⇒ OVR-gate ceiling ~1.7% (n=300) / 1.8% (n=500) vs greedy 6.3%; attrs ≈ OVR×mult+jitter (Wave B) ⇒ fitaware fit ≤ greedy fit ⇒ every minFit cuts fitaware ≥ greedy. Separation fitaware−greedy = −4.7 to −5.0pp across 4 iterations, never positive. Acceptance (fitaware 6-7% > greedy 3-4%) structurally unreachable under flat multipliers. | ~~High (certain)~~ ~~PARTIAL (D4)~~ **SHIPPED INFO-ONLY (D5, 2026-07-12)** | High (Wave D goal blocked) | **Wave B-PRIME** SPECIALIZATION table (0.68–1.10, ±5 jitter) decoupled attrs from OVR (r=0.26/0.12/0.50). **D4** retuned bot to ΔOVR ≤ 1 attr-tie-break-first + reweighted 4-3-3 profile to the bite point (binding attrs high-weighted, targets raised) + minFit 92/90/88. Seed-42 (report): greedy 3.6% / fitaware 6.0% / separation +2.4pp / Law PASS / near-miss 12% — core reframing achieved. **Cross-seed fitaware 5.5-7 still structurally bounded** (6.0/3.4/2.8% seeds 42/1000/5000 — the ΔOVR ≤ 1 swap costs the eff-99% gate where attr-specialists are positionally rare in reveals; no-gate ceiling <5.5 at 2/3 seeds). **D5** (4-iteration budget, config-only): none of minFit 92-94 × minBucketEff 0.980-0.9875 × minEff 0.975-0.985 landed both bots in their target windows at all 3 seeds with fitaware >= greedy held everywhere; confirmed the no-gate ceiling itself (6.2/5.0/3.2% seeds 42/1000/5000 fitaware vs 6.0/6.2/4.4% greedy) already fails the invariant at 2/3 seeds — this is a bot-behavior gap (ΔOVR≤1 swap cost), not a gate-tuning problem. **Decision: minFit → 0 on all three bands (info-only), profile weights/targets unchanged.** Fix requires a corpus or bot change (ADR-worthy), out of config-only scope. See D5 experiment log. |
 
 ## Edge cases (must stay covered by tests)
 
@@ -375,6 +375,65 @@ n=500/seed=42 baseline (10-0 = 1.80%, fit p50=100).
   or a bot that foresees the eff gate). Documented here for the orchestrator.
   `docs/sim/sim-report.json` = fitaware/neutral/n=500/seed=42 (10-0=6.00%,
   fit p50=93). thresholds.json ships minFit 92/90/88 + bite-point profile.
+
+- **2026-07-12 (Wave D5, finishing the interrupted D5 run):** picked up the
+  dead agent's uncommitted mid-tune (working tree had 10-0 minEfficiency 0.98,
+  minBucketEfficiency MID/ATT 0.985, minFit 93, missing the DEF key). Completed
+  Iteration A (added `DEF: 0.985`) then ran the prescribed n=300 screening
+  sweep (seeds 42/1000/5000, greedy+fitaware) across the sweep space (minFit
+  92-94, minBucketEfficiency 0.980-0.9875, minEfficiency 0.975-0.985), 4
+  iterations total:
+  - **A** (minEff 0.98, minBucketEff DEF/MID/ATT 0.985, minFit 93): fitaware
+    3.33/3.00/2.33%, greedy 1.33/2.00/2.00% (seeds 42/1000/5000). Hard
+    constraint held (fitaware ≥ greedy all 3 seeds) but both bots far below
+    target windows.
+  - **B** (minFit 92, same bucket/eff): fitaware 5.33/3.67/3.00%, greedy
+    3.67/3.33/2.67%. Greedy now inside 2.5-4.5% at all 3 seeds; fitaware still
+    short of 4.5% at seeds 1000/5000.
+  - **C** (minFit 92, minBucketEff loosened to 0.9825): fitaware
+    9.33/8.67/8.00%, greedy 7.67/9.00/6.00%. Both overshot their windows AND
+    the hard constraint broke at seed 1000 (greedy 9.00 > fitaware 8.67) —
+    confirms the bucket-efficiency axis is the steep one (0.985→0.9825 is a
+    huge jump, not a fine one).
+  - **D** (minFit 93, minBucketEff 0.9825 — tight fit + loose bucket-eff, to
+    use the fit gate's greedy-biased cut to counteract the bucket-eff
+    overshoot): fitaware 5.67/6.67/6.67% — all inside 4.5-7.5%. Greedy
+    3.67/**6.33**/4.33% — seed 1000 breaks the 2.5-4.5% window (6.33%), though
+    the hard constraint (fitaware ≥ greedy) still barely held (6.67 ≥ 6.33).
+    Closest of the 4, but does not meet acceptance at all 3 seeds.
+
+  **4-iteration budget exhausted without an acceptance-passing config.**
+  Executed the fallback exactly as dictated: `git checkout --
+  src/data/config/thresholds.json` (back to D4's committed 92/90/88 +
+  minEfficiency 0.99/minBucketEfficiency MID/ATT 0.99), then set minFit to 0
+  on 10-0/7-1/5-0 only (profile weights/targets untouched). Measured n=500,
+  seeds 42/1000/5000, greedy+fitaware, **with minFit=0 (no gate at all)**:
+  fitaware 10-0 = 6.20/5.00/3.20%, greedy 10-0 = 6.00/6.20/4.40%. Hard
+  constraint (fitaware ≥ greedy) holds only at seed 42 (6.20≥6.00); **fails at
+  seed 1000 (5.00<6.20) and seed 5000 (3.20<4.40) even with zero gate** —
+  matching D4's own no-gate-ceiling measurement (6.2/5.0/3.2% seeds
+  42/1000/5000, documented above) exactly. This confirms the D4 diagnosis:
+  the shortfall is intrinsic to the ΔOVR≤1 fitaware bot's behavior (it costs
+  the eff-99% 10-0 ceiling at seeds where attr-specialists are positionally
+  rare in the reveal order), not an artifact of any gate — no threshold
+  combination can fix it because the ungated baseline already fails the
+  invariant at 2/3 seeds.
+
+  **Decision: ship D5-FALLBACK as specified.** `minFit` = 0 on 10-0/7-1/5-0
+  (predicate not emitted per the exact rule — fit is informational only,
+  surfaced to the player but never decides a band). All other D4 gates
+  (minEfficiency, minBucketEfficiency, minWeakLink) and the 4-3-3 profile
+  weights/targets are unchanged. Law gate re-verified with this config:
+  `--opposition cycle` n=500 seed=42 fitaware — PASS, every archetype 10-0 > 0%
+  (aerial 5.00 / counter 5.80 / low-block 6.20 / possession 6.20 / pressing
+  7.60). `docs/sim/sim-report.json` refreshed = fitaware/neutral/n=500/seed=42
+  (10-0=6.20%, fit p50=93 — fit distribution itself is healthy and
+  well-separated from greedy's p50=92; it is the *band gate use* of fit that
+  is unshippable at this bot/corpus, not the fit measure). **Open for the
+  orchestrator:** closing this gap needs either a corpus change (more
+  attr-specialists at high OVR, reducing positional scarcity in early
+  reveals) or a smarter fitaware bot (one that anticipates the eff-99% cost
+  before swapping) — both out of config-only scope, would need a new ADR.
 
 ## Open questions (answer before or during the named task)
 
