@@ -1,4 +1,4 @@
-# fifaTenZero — Product & Architecture Roadmap (MVP → Full Product)
+# TenNil — Product & Architecture Roadmap (MVP → Full Product)
 
 **Status:** planning artifact for Fable/subagent orchestration; subject to Phase 0 refinement before execution.
 **Basis:** grounded in the shipped MVP source (`src/domain/**`, `src/app/**`, `scripts/simulate.ts`, config JSON) plus the locked handoff docs (PROJECT / ARCHITECTURE / DECISIONS / TASKS / RISKS).
@@ -8,7 +8,7 @@
 
 ## 1. Executive summary
 
-fifaTenZero shipped a complete MVP: a single-player World Cup Draft-XI game where the user drafts one player per round from randomly revealed real finals XIs, locks an 11-player squad, and receives a **deterministic score band** (10-0 … 0-4) that drives scripted, presentation-only commentary. The architecture is deliberately strong and should be protected: pure domain modules (`draft`, `scoring`, `commentary`) with zero React imports, RNG injected and confined to squad reveal (`src/domain/draft/session.ts`), a config-driven band engine (`scoreBand.ts` reads `BandDef` fields generically — no hardcoded band ids), fail-closed data validation at boot (`loadData.ts`), and a reproducible rarity simulator (`scripts/simulate.ts`) that tuned the top band to ~5% (1/20) via config numbers only. 54 unit tests green; static GitHub Pages deploy.
+TenNil shipped a complete MVP: a single-player World Cup Draft-XI game where the user drafts one player per round from randomly revealed real finals XIs, locks an 11-player squad, and receives a **deterministic score band** (10-0 … 0-4) that drives scripted, presentation-only commentary. The architecture is deliberately strong and should be protected: pure domain modules (`draft`, `scoring`, `commentary`) with zero React imports, RNG injected and confined to squad reveal (`src/domain/draft/session.ts`), a config-driven band engine (`scoreBand.ts` reads `BandDef` fields generically — no hardcoded band ids), fail-closed data validation at boot (`loadData.ts`), and a reproducible rarity simulator (`scripts/simulate.ts`) that tuned the top band to ~5% (1/20) via config numbers only. 54 unit tests green; static GitHub Pages deploy.
 
 The roadmap is staged deliberately because the single biggest lever — corpus size — is also the biggest balance risk. Every squad added shifts the "best-possible XI" ceiling and the shape of the reveal distribution, which invalidates the current threshold tune. So the plan grows content in **validated increments** (7 → 24-32 → 60-80 → 140), each gated by a re-simulation and a config-only retune, and it front-loads two force multipliers before spectacle: **score explainability** (so results feel earned, not opaque) and a **data + balance pipeline** (so corpus growth is cheap and safe). Landing screen and result-playback controls are small, high-visibility UX wins folded into the first sprint.
 

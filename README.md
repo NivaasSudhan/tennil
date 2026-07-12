@@ -1,4 +1,4 @@
-# fifaTenZero — World Cup Draft-XI Game
+# TenNil — World Cup Draft-XI Game
 
 Build a Dream XI from iconic World Cup squads. Your final XI maps to a deterministic score band (e.g. `10-0`, `5-0`, `2-2`) with scripted commentary. Sessions are <5 min, no account or backend.
 

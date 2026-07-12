@@ -457,7 +457,7 @@ function formatXI(data: GameData, result: DraftResult): string {
 
 export function formatReport(data: GameData, sim: SimResult): string {
   const lines: string[] = [];
-  lines.push('=== fifaTenZero rarity simulation (T-014) ===');
+  lines.push('=== TenNil rarity simulation (T-014) ===');
   lines.push(`n=${sim.args.n} seed=${sim.args.seed} bot=${sim.args.bot} skipThreshold=${sim.args.skipThreshold}`);
   lines.push('');
   lines.push('Band histogram (sorted by priority desc):');

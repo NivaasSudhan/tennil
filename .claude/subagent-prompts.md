@@ -319,6 +319,35 @@ P-014r2 status: succeeded (U1-DONE; 169 tests green; paper world complete — Te
 - target: opencode-go/glm-5.2 --variant high
 - status: dispatched
 - task: nearMiss.ts + BandSlam copy → efficiency-points margins ("2 EFFICIENCY POINTS FROM A 5-0" / bucket callout "LEFT N POINTS IN MID"); handle minEfficiency/minBucketEfficiency predicate names; tests updated.
+- status: succeeded, committed, pushed (aa0a3e0).
+
+---
+
+## USER FEEDBACK ROUND (2026-07-12) — decisions: formation = keep pre-draft + post-match fit-insight; FULL rename TenNil (orchestrator runs gh repo rename); daily seed + share card together (ADR-014-lite); mock tone = dry pundit sarcasm. Model tiers updated (see memory): Deepseek free/max = menial+planned; Luna high / Sonnet 4.6 = medium; Opus 4.8 / Grok / GLM / Terra medium = hardest sparingly; Fable 5 / Sonnet 5 / Sol BANNED as subagents.
+
+## P-029 — V1 quick wins (skip topline, jargon purge, marginalia)
+- date: 2026-07-12
+- target: opencode/deepseek-v4-flash-free --variant max
+- status: dispatched
+- task: Skip button → draft topline; near-miss templates → football voice (dictated copy: 'N SHY OF A {BAND} SQUAD', 'PASSENGER AT {actual}…', structural mocks 'NO KEEPER. BOLD. WRONG.' etc. — structural REPLACES the line); YOUR-XI marginalia after pick 6 for zero-buckets (dry sarcasm, GK>DEF>ATT>MID priority, one note).
+
+## P-030 — V2 TenNil rebrand (pre-repo-rename)
+- date: 2026-07-12
+- target: opencode/deepseek-v4-flash-free --variant max
+- status: dispatched
+- task: base '/tennil/', title/masthead/BootError → TenNil, favicon SVG (pitch green, '10–0'), docs headers, package name, full grep sweep excluding historical logs. Orchestrator then: gh repo rename tennil → remote update → push → verify Pages at /tennil/.
+
+## P-031 — V3 formation fit-insight [QUEUED after V1]
+- target: Claude Code Agent, sonnet (4.6 tier)
+- task: pure detectFormationFit(xi bucket counts vs formations); when fitted ≠ declared, ResultScreen insight line 'YOUR SHAPE WAS {F} — UNDER IT: {BAND}' via re-score (withFormationMinCounts + ceiling recomputed under fitted formation); tests incl. exploit-check (insight never改变 awarded band).
+
+## P-032 — V4a daily seed + ADR-014-lite [QUEUED after V2]
+- target: Claude Code Agent, sonnet high
+- task: seeded daily mode (date-derived seed via mulberry32 through existing Rng seam), free-play records its random seed; session carries seed + mode; ADR-014-lite in DECISIONS.md; replay determinism test (seed+actions → identical band).
+
+## P-033 — V4b Matchday share card [QUEUED after V4a]
+- target: opencode-go/glm-5.2 --variant high
+- task: hand-drawn <canvas> team-sheet card (paper texture, XI, band, near-miss line, 'Matchday #N' when daily) → PNG download; navigator.share + X/WhatsApp intents + clipboard; share row on ResultScreen (post-match, no global header per taste ruling).
 - task: Tune 9 efficiency gates inside the compressed window (random p50=94, greedy p50=99, p90=100); consider enabling minBucketEfficiency if total-efficiency alone can't discriminate; six-gate protocol; RISKS log + sim-report.
 - task: PlayerRow mine-variant never renders taken state (bug: YOUR XI shows mangled overlapping Taken graphics); reveal rows disabled when id-taken OR isPersonTaken (call domain helper — zero rules logic in components); clean taken treatment: single strikethrough + small red TAKEN tag right-aligned, leader hidden, no overlap with POS chip/rating circle; RTL tests for both variants.
 

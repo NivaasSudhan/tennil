@@ -172,7 +172,7 @@ Changing anything marked **Invariant** in PROJECT.md requires a new ADR here fir
 
 ## ADR-009 — Deploy: GitHub Pages via Actions
 
-- **Decision**: Static deploy to GitHub Pages. `vite build` → `dist/`, published by the standard `actions/deploy-pages` workflow on push to `main`. `vite.config.ts` sets `base: '/fifaTenZero/'` (project pages path).
+- **Decision**: Static deploy to GitHub Pages. `vite build` → `dist/`, published by the standard `actions/deploy-pages` workflow on push to `main`. `vite.config.ts` sets `base: '/tennil/'` (project pages path).
 - **Rationale**: Repo is already on GitHub (single origin, zero cost, no new accounts). App is a pure SPA with vendored data — no server logic anywhere.
 - **Alternatives**: Netlify/Cloudflare Pages (fine, but extra account/setup); manual `gh-pages` branch pushes (rejected: manual steps rot).
 - **Tradeoffs**: `base` path must match repo name; a renamed repo breaks asset URLs (documented in CLAUDE.md verify section).

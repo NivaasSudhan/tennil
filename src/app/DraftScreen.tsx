@@ -70,6 +70,21 @@ export default function DraftScreen({
     return f?.minCounts as Record<PositionBucket, number> | undefined;
   })();
 
+  // Bucket counts for marginalia — pure display read, no rules logic
+  const bucketCounts: Record<PositionBucket, number> = { GK: 0, DEF: 0, MID: 0, ATT: 0 };
+  for (const p of session.picks) {
+    bucketCounts[p.positionBucket]++;
+  }
+
+  const marginaliaText: string | null = (() => {
+    if (session.picks.length < 6) return null;
+    if (bucketCounts.GK === 0) return 'no keeper?? bold.';
+    if (bucketCounts.DEF === 0) return "who's minding the shop?";
+    if (bucketCounts.ATT === 0) return 'planning to bore them to death?';
+    if (bucketCounts.MID === 0) return 'midfield optional, apparently.';
+    return null;
+  })();
+
   function handlePick(playerId: string) {
     setLastPickId(playerId);
     onPick(playerId);
@@ -82,6 +97,13 @@ export default function DraftScreen({
         <span className="draft-screen__round">
           Round {session.roundsPlayed} / {totalRounds}
         </span>
+        <StadiumButton
+          variant="ghost"
+          onClick={onSkip}
+          disabled={session.skipRemaining === 0}
+        >
+          Skip squad — once per draft
+        </StadiumButton>
       </div>
 
       {error && (
@@ -97,22 +119,17 @@ export default function DraftScreen({
           takenIds={takenIds}
           onPick={handlePick}
         />
-        <TeamSheet
-          variant="mine"
-          picks={session.picks}
-          lastPickId={stampPickId}
-          bucketCaps={bucketCaps}
-        />
-      </div>
-
-      <div className="draft-actions">
-        <StadiumButton
-          variant="ghost"
-          onClick={onSkip}
-          disabled={session.skipRemaining === 0}
-        >
-          Skip squad — once per draft
-        </StadiumButton>
+        <div>
+          <TeamSheet
+            variant="mine"
+            picks={session.picks}
+            lastPickId={stampPickId}
+            bucketCaps={bucketCaps}
+          />
+          {marginaliaText && (
+            <p className="sheet__marginalia">{marginaliaText}</p>
+          )}
+        </div>
       </div>
     </div>
   );

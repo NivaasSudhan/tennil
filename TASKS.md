@@ -11,7 +11,7 @@ Definition of Done (applies to EVERY task, in addition to per-task criteria):
 - **Why**: everything depends on a building skeleton (ADR-001).
 - **Dependencies**: none.
 - **Difficulty**: S
-- **Steps**: `npm create vite@latest . -- --template react-ts` (repo already has files — scaffold in place, don't overwrite the seven docs or `src/domain/types.ts`). Add vitest: `npm i -D vitest`. Add scripts: `"test": "vitest run"`, `"preview": "vite preview"`. Set `base: '/fifaTenZero/'` in `vite.config.ts` (ADR-009). Enable `"strict": true` in tsconfig.
+- **Steps**: `npm create vite@latest . -- --template react-ts` (repo already has files — scaffold in place, don't overwrite the seven docs or `src/domain/types.ts`). Add vitest: `npm i -D vitest`. Add scripts: `"test": "vitest run"`, `"preview": "vite preview"`. Set `base: '/tennil/'` in `vite.config.ts` (ADR-009). Enable `"strict": true` in tsconfig.
 - **Acceptance**: `npm run dev` serves default page; `npm test` runs (a trivial passing test); `npm run build` emits `dist/`.
 - **Tests**: one smoke test asserting `1 + 1 === 2` to prove the runner.
 - **Rollback**: delete generated files; docs and types.ts are untouched.

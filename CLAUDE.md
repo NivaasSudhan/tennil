@@ -52,7 +52,7 @@ npx tsx scripts/simulate.ts --n 500 --seed 42 --bot greedy   # Day-7 rarity hist
 grep -rn "Math.random\|rng" src/domain/scoring src/domain/commentary
 grep -rn "from 'react'\|from \"react\"" src/domain src/lib
 ```
-Deploy (after T-016): push to `main` → GitHub Actions → Pages. `vite.config.ts` `base` must stay `'/fifaTenZero/'` unless the repo is renamed. Live URL: _record here after T-016_.
+Deploy (after T-016): push to `main` → GitHub Actions → Pages. `vite.config.ts` `base` is `'/tennil/'` (repo renamed to tennil). Live URL: _record here after T-016_.
 
 ## Progress reporting format (end of each working session)
 ```

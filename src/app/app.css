@@ -540,12 +540,6 @@ button {
   font-size: 0.88rem;
 }
 
-.draft-actions {
-  display: flex;
-  justify-content: center;
-  margin: 1.8rem 0 0;
-}
-
 /* Floodlight flare — fires once on draft entrance. Content stays visible. */
 .draft-screen .flood-flare {
   position: fixed;
@@ -669,6 +663,16 @@ button {
   color: var(--ink-faded);
   padding: 0.4rem 0;
   font-style: italic;
+}
+
+.sheet__marginalia {
+  font-family: 'Courier Prime', monospace;
+  font-style: italic;
+  font-size: 0.75rem;
+  color: var(--ink-faded);
+  transform: rotate(-1.2deg);
+  margin: 0.5rem 0 0 2rem;
+  line-height: 1.3;
 }
 
 /* ---------- PlayerRow — one typed line (D2 fix) ----------

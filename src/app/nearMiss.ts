@@ -11,29 +11,16 @@
  * in BandSlam-typewriter style — uppercase, terse, one line, roughly ≤60 chars
  * so the per-character typewriter does not run too long.
  *
- *   minEfficiency        -> "N EFFICIENCY PTS FROM A 7-1"
- *   minBucketEfficiency  -> "LEFT N PTS IN MID — 7-1 WANTED MORE"
- *   minWeakLink          -> "WEAK LINK 74 — 10-0 DEMANDS 86"
- *   shape (counts/empty) -> "SHAPE BROKE THE CEILING — …"
+ * Structural failures (minCounts / allBucketsNonEmpty) REPLACE the whole
+ * near-miss line — the mock IS the message.
  *
  * If nextBetter is null (awarded the top band), there is no near-miss line.
  */
-import type { PredicateResult, ScoreExplanation } from '../domain/types';
+import type { PositionBucket, PredicateResult, ScoreExplanation } from '../domain/types';
 
 export interface NearMissLine {
   /** null when the awarded band is the top band (no near-miss to show). */
   text: string | null;
-}
-
-const BUCKET_LABEL: Record<string, string> = {
-  GK: 'GK',
-  DEF: 'DEF',
-  MID: 'MID',
-  ATT: 'ATT',
-};
-
-function pt(n: number): string {
-  return n === 1 ? 'PT' : 'PTS';
 }
 
 interface Candidate {
@@ -41,58 +28,54 @@ interface Candidate {
   text: string;
 }
 
-function shapeLine(p: PredicateResult, bandId: string): string {
-  const bucket = p.bucket ? (BUCKET_LABEL[p.bucket] ?? p.bucket) : 'SHAPE';
-  if (p.name === 'allBucketsNonEmpty') {
-    return `SHAPE BROKE THE CEILING — EMPTY ${bucket} FOR ${bandId}`;
-  }
-  const gap = p.required - p.actual;
-  return `SHAPE BROKE THE CEILING — ${gap} ${pt(gap)} MORE ${bucket} FOR ${bandId}`;
-}
-
 function efficiencyLine(p: PredicateResult, bandId: string): string {
   const gap = p.required - p.actual;
-  return `${gap} EFFICIENCY ${pt(gap)} FROM A ${bandId}`;
+  return `${gap} SHY OF A ${bandId} SQUAD`;
 }
 
 function bucketEffLine(p: PredicateResult, bandId: string): string {
-  const gap = p.required - p.actual;
-  const bucket = p.bucket ? (BUCKET_LABEL[p.bucket] ?? p.bucket) : '';
-  return `LEFT ${gap} ${pt(gap)}${bucket ? ` IN ${bucket}` : ''} — ${bandId} WANTED MORE`;
+  const bucket = p.bucket ?? '';
+  const lines: Record<string, string> = {
+    MID: `MIDFIELD LEFT GOALS OUT THERE — ${bandId} NEEDED MORE`,
+    DEF: `BACK LINE A YARD SHORT OF A ${bandId}`,
+    ATT: `ATTACK TOO BLUNT FOR A ${bandId}`,
+    GK: `KEEPER SHORT OF A ${bandId} DAY`,
+  };
+  return lines[bucket] ?? '';
 }
 
 function weakLinkLine(p: PredicateResult, bandId: string): string {
-  return `WEAK LINK ${p.actual} — ${bandId} DEMANDS ${p.required}`;
+  return `PASSENGER AT ${p.actual} — A ${bandId} XI CARRIES NO ONE`;
 }
+
+const STRUCTURAL_MESSAGES: Record<PositionBucket, string> = {
+  GK: 'NO KEEPER. BOLD. WRONG.',
+  DEF: 'ELEVEN ARTISTS, NOBODY ON THE DOOR.',
+  ATT: 'ALL DEFENCE, NO IDEAS.',
+  MID: 'MIDFIELD MISSING IN ACTION.',
+};
+
+const BUCKET_PRIORITY: PositionBucket[] = ['GK', 'DEF', 'ATT', 'MID'];
 
 export function formatNearMiss(explanation: ScoreExplanation): NearMissLine {
   const next = explanation.nextBetter;
   if (!next || next.failing.length === 0) return { text: null };
 
-  const bandId = next.bandId;
   const shape = next.failing.filter(
     (p) => p.name === 'minCounts' || p.name === 'allBucketsNonEmpty',
   );
-  const rest = next.failing.filter(
-    (p) => p.name !== 'minCounts' && p.name !== 'allBucketsNonEmpty',
-  );
-
-  const candidates: Candidate[] = [];
-
   if (shape.length > 0) {
-    // One structural verdict for the whole shape group; emit the most-binding
-    // shape failure (smallest gap, empty-bucket first on ties).
-    const ordered = [...shape].sort((a, b) => {
-      const ga = a.required - a.actual;
-      const gb = b.required - b.actual;
-      if (ga !== gb) return ga - gb;
-      return a.name === 'allBucketsNonEmpty' ? -1 : 1;
-    });
-    const top = ordered[0];
-    candidates.push({ gap: top.required - top.actual, text: shapeLine(top, bandId) });
+    for (const bucket of BUCKET_PRIORITY) {
+      if (shape.some((p) => p.bucket === bucket)) {
+        return { text: STRUCTURAL_MESSAGES[bucket] };
+      }
+    }
   }
 
-  for (const p of rest) {
+  const bandId = next.bandId;
+  const candidates: Candidate[] = [];
+
+  for (const p of next.failing) {
     if (p.name === 'minEfficiency') {
       candidates.push({ gap: p.required - p.actual, text: efficiencyLine(p, bandId) });
     } else if (p.name === 'minBucketEfficiency') {
@@ -101,11 +84,10 @@ export function formatNearMiss(explanation: ScoreExplanation): NearMissLine {
       candidates.push({ gap: p.required - p.actual, text: weakLinkLine(p, bandId) });
     } else {
       const gap = p.required - p.actual;
-      candidates.push({ gap, text: `${gap} ${pt(gap)} TO ${bandId}` });
+      candidates.push({ gap, text: `${gap} TO ${bandId}` });
     }
   }
 
-  // Two most binding = smallest shortfall first; one line when only one.
   candidates.sort((a, b) => a.gap - b.gap);
   const top = candidates.slice(0, Math.min(2, candidates.length));
   return { text: top.map((c) => c.text).join(' · ') };
