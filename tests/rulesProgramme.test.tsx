@@ -63,6 +63,15 @@ describe('RulesProgramme — packaged copy (rulesCopy.ts)', () => {
     }
   });
 
+  it('glossary renders on your-target page — PAC pace and REF reflexes both present', () => {
+    const pages = getRulesPages(PRESSING);
+    const targetPage = pages.find((p) => p.id === 'your-target');
+    expect(targetPage).toBeTruthy();
+    const text = targetPage!.paragraphs.join(' ');
+    expect(text).toContain('PAC pace');
+    expect(text).toContain('REF reflexes');
+  });
+
   it('opponent page includes the opposition label', () => {
     const pages = getRulesPages(PRESSING);
     const oppPage = pages.find((p) => p.id === 'today-opponent');
@@ -124,7 +133,7 @@ describe('RulesProgramme — StartScreen mount', () => {
 
     fireEvent.click(screen.getByText('RULES'));
     await waitFor(() => {
-      expect(screen.getByText(/Today[’']s opponent/i)).toBeTruthy();
+      expect(screen.getByRole('heading', { name: /Today[’']s opponent/i })).toBeTruthy();
       expect(screen.getByText(/THE PRESSING MACHINE/i)).toBeTruthy();
     });
   });
@@ -141,7 +150,7 @@ describe('RulesProgramme — StartScreen mount', () => {
 
     fireEvent.click(screen.getByText('RULES'));
     await waitFor(() => {
-      expect(screen.queryByText(/Today[’']s opponent/i)).toBeNull();
+      expect(screen.queryByRole('heading', { name: /Today[’']s opponent/i })).toBeNull();
     });
   });
 });
@@ -201,7 +210,7 @@ describe('RulesProgramme — DraftScreen mount', () => {
       expect(dialog.open).toBe(true);
     });
     // DraftScreen mount: no opposition → 3 pages
-    expect(screen.queryByText(/Today[’']s opponent/i)).toBeNull();
+    expect(screen.queryByRole('heading', { name: /Today[’']s opponent/i })).toBeNull();
 
     fireEvent.click(screen.getByLabelText('Close programme'));
     await waitFor(() => {
@@ -324,7 +333,7 @@ describe('RulesProgramme — ResultScreen mount', () => {
       expect(dialog.open).toBe(true);
     });
     // ResultScreen has opposition → opponent page should render
-    expect(screen.getByText(/Today[’']s opponent/i)).toBeTruthy();
+    expect(screen.getByRole('heading', { name: /Today[’']s opponent/i })).toBeTruthy();
 
     fireEvent.click(screen.getByLabelText('Close programme'));
     await waitFor(() => {
