@@ -113,10 +113,21 @@
 
 * { box-sizing: border-box; }
 
-html,
-body,
-#root {
+/* ONE scroller = the window (DESIGN.md Layout). html anchors the viewport
+   reference for the fixed pitch layers; body + #root GROW with content
+   (min-height, never a pinned height:100%). A pinned height:100% made #root a
+   fixed viewport-tall box that taller content (result stack: scoreboard + mini
+   sheet + ticker + BandSlam + StatsScreen + ShareRow) overflowed — a split
+   model where the root box ended at one viewport while the scrollable content
+   ran far past it, so layout coordinates and the fixed pitch paint disagreed
+   below the first screen (phantom-height / dead-scroll). Growing the chain
+   keeps a single coherent window scroller for BOTH draft and result. */
+html {
   height: 100%;
+}
+
+#root {
+  min-height: 100vh;
 }
 
 body {
@@ -698,7 +709,8 @@ button {
   align-items: baseline;
   gap: 0.4rem;
   width: 100%;
-  padding: 0.22rem 0.5rem 0.22rem;
+  /* 2.4rem rating circle + 0.2rem×2 = 2.8rem exactly (row height budget). */
+  padding: 0.2rem 0.5rem;
   text-align: left;
   background: transparent;
   border: none;
