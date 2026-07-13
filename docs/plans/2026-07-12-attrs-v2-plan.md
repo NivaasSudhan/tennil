@@ -141,3 +141,14 @@ The tooling (`generate.ts`, squads.json v2) lands here. D4 can re-open Wave D by
 
 ## Self-review
 Spec coverage: §2→A/B, §3→A/C, §4→D, §5→E, §6→F, §7 fenced out, §8→branch+F-ops, §9 gates distributed. No placeholders (minFit "0 this wave" is an explicit staged value, tuned in D by design). Type names consistent: `Attrs`, `FormationProfile`, `OppositionDef`, `computeProfileFit`, `selectOpposition`, `minFit`, ScoreInput `fit`/`oppositionId`.
+
+## Wave G — attr labels + GK display attrs (UI-only, post-canary follow-up)
+
+**Trigger:** canary feedback — unlabeled `88·64·78` trio is illegible; ragged GK column. User decision 2026-07-13: label each digit; give GK display-only attrs (never scored).
+
+- **Helper** `src/app/attrDisplay.ts` (new, pure, imports only the `Player` type from domain): `displayAttrs(player): {key,label,value}[]` — outfield → PAC/STR/ACC from player fields; GK → REF/HAN/DIS derived from `rating` via inline fnv1a tilt (NO Math.random): `REF=clamp(1,99, r+1+t('ref'))`, `HAN=clamp(1,99, r-1+t('han'))`, `DIS=clamp(1,99, r-3+t('dis'))`, `t(axis)=(fnv1a(id+axis)%5)-2`. `dominantDisplayAttr(player)` extends the old `dominantAttr` to cover GK (highest value, tie order as listed).
+- **PlayerRow.tsx**: render each attr as `tag + value` (tag `.row__attr-tag`, uppercase, ≥0.7rem, --ink-faded); digits stay ≥0.8rem; dominant at full --ink. aria-label from the same list (keeper axes named). Replaces the old outfield-only attr block; GK rows now render three cells.
+- **app.css**: `.row__attr-tag` styling; row stays ≤2.8rem tall; narrow (<480px) fallback (single-letter tags or tightened gaps) — no overflow at 360px.
+- **GK attrs are DISPLAY-ONLY**: helper lives in src/app, never enters `src/domain`; `computeProfileFit` already excludes GK; zero schema/loadData/generator/thresholds change; Reveal-Luck Law untouched.
+- **Tests**: displayAttrs outfield labels+values; GK labels REF/HAN/DIS, values [1,99], deterministic (same id→same, no Math.random); dominantDisplayAttr both cases; PlayerRow renders tags for outfield + GK; determinism.
+- **Model**: Deepseek free (cap-proof), fully-specified prompt + DESIGN-BRIEF-v1; orchestrator browser check after (draft-sheet top is visible at scroll 0 — directly verifiable).
