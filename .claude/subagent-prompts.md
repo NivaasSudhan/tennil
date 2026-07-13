@@ -456,3 +456,9 @@ METHOD: use the T6 diagnostics (npx tsx scripts/simulate.ts --n 500 --seed 42 --
 
 FINISH: write final docs/sim/sim-report.json via --report on the last greedy run; append the RISKS_AND_UNKNOWNS.md experiment-log entry per the plan's template (include the human-playtest motivation); npm test must be green. Print as final output: TASK9-DONE, both final histograms (greedy + random), near-miss lines, the final gate numbers per band, and one paragraph explaining the tuning rationale.
 ```
+
+## P-038 — Wave G: attr digit labels + GK display attrs (UI-only)
+- date: 2026-07-13
+- target: opencode/deepseek-v4-flash-free --variant max
+- status: dispatched
+- task: Per-digit PAC/STR/ACC (outfield) + REF/HAN/DIS (GK, display-only derived) labels on PlayerRow; new pure src/app/attrDisplay.ts; no domain touch. Full spec in docs/plans/2026-07-12-attrs-v2-plan.md Wave G. DESIGN-BRIEF-v1 embedded.
