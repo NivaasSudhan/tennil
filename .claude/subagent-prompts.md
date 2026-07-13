@@ -462,3 +462,11 @@ FINISH: write final docs/sim/sim-report.json via --report on the last greedy run
 - target: opencode/deepseek-v4-flash-free --variant max
 - status: dispatched
 - task: Per-digit PAC/STR/ACC (outfield) + REF/HAN/DIS (GK, display-only derived) labels on PlayerRow; new pure src/app/attrDisplay.ts; no domain touch. Full spec in docs/plans/2026-07-12-attrs-v2-plan.md Wave G. DESIGN-BRIEF-v1 embedded.
+
+## P-039 — Rules glossary: attr abbreviation full-forms [QUEUED after P-038 Wave G commits]
+- date: 2026-07-13
+- target: opencode/deepseek-v4-flash-free --variant max
+- status: queued (fire AFTER Wave G commits — avoid concurrent-commit index.lock race)
+- task: Add attr abbreviation glossary to Rules Programme 'Your target' page (src/app/rulesCopy.ts only). Dictated copy, dry-pundit voice:
+  "Every player carries three marks. Outfield: PAC pace, STR strength, ACC accuracy. Keepers read differently — REF reflexes, HAN handling, DIS distribution. The dominant mark sits in bold ink. Today's opponent prizes one of them — draft to match."
+  Append as a new short paragraph on the existing 'Your target' page (keep the page's existing formation paragraph). Update tests/rulesProgramme.test.tsx: assert the glossary text (PAC/STR/ACC + REF/HAN/DIS full forms) renders; keep jargon-ban test green. Touch ONLY src/app/rulesCopy.ts + tests/rulesProgramme.test.tsx. npm test + build green; commit terse on v2/attrs; no push.
