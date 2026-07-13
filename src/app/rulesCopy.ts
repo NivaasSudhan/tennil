@@ -10,7 +10,7 @@ const PAGE_HOW_IT_WORKS: RulesPage = {
   id: 'how-it-works',
   title: 'How it works',
   paragraphs: [
-    'Eleven rounds, eleven reveals. Each round another World Cup squad walks into the floodlights — you take one player or you pass. One skip token, one draft: use it on a squad that does not fit your plan. Skip costs you a round — eleven picks become ten, every slot still counts.',
+    'Eleven rounds, eleven reveals. Each round another World Cup squad walks into the floodlights — you take one player or you pass. One skip token, one draft: use it on a squad that does not fit your plan. Skip costs you a round — eleven rounds become twelve, and you still make every one of your eleven picks.',
     'No one plays twice. The same face across different eras? The rules remember. Once a player is in your XI, every version of them vanishes from the rest of the draft.',
   ],
 };
