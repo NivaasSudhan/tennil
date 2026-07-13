@@ -7,6 +7,10 @@ interface StartScreenProps {
   variant: 'landing' | 'formation-only';
   /** Today's matchday number (ADR-014-lite); date framing, always shown on landing. */
   matchdayNumber?: number;
+  /** Today's opponent label (ADR-020) — the daily opposition banner, landing only. */
+  opponentLabel?: string;
+  /** Today's opponent tagline — the "…is at a premium today" read under the banner. */
+  opponentTagline?: string;
   onStart: (formationId: string) => void;
 }
 
@@ -15,6 +19,8 @@ export default function StartScreen({
   defaultFormationId,
   variant,
   matchdayNumber,
+  opponentLabel,
+  opponentTagline,
   onStart,
 }: StartScreenProps) {
   const [selectedId, setSelectedId] = useState(defaultFormationId);
@@ -39,6 +45,14 @@ export default function StartScreen({
           </ul>
 
           <p className="matchday-badge">MATCHDAY #{matchdayNumber ?? '?'}</p>
+          {opponentLabel && (
+            <p className="matchday-opponent">
+              <span className="matchday-opponent__vs">vs {opponentLabel}</span>
+              {opponentTagline && (
+                <span className="matchday-opponent__tag">{opponentTagline}</span>
+              )}
+            </p>
+          )}
         </>
       )}
 

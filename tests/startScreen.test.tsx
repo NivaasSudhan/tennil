@@ -77,6 +77,49 @@ describe('StartScreen', () => {
   });
 });
 
+describe('StartScreen — opposition banner (ADR-020 Wave E)', () => {
+  it('landing shows the vs-opponent line + tagline under the Matchday badge', () => {
+    render(
+      <StartScreen
+        formations={FORMATIONS}
+        defaultFormationId="4-3-3"
+        variant="landing"
+        matchdayNumber={7}
+        opponentLabel="THE PRESSING MACHINE"
+        opponentTagline="Full-throttle press for ninety minutes — pace is at a premium today."
+        onStart={() => {}}
+      />,
+    );
+    expect(screen.getByText(/vs THE PRESSING MACHINE/i)).toBeTruthy();
+    expect(screen.getByText(/pace is at a premium today/i)).toBeTruthy();
+  });
+
+  it('landing without an opponent renders no banner; formation-only never shows it', () => {
+    render(
+      <StartScreen
+        formations={FORMATIONS}
+        defaultFormationId="4-3-3"
+        variant="landing"
+        matchdayNumber={7}
+        onStart={() => {}}
+      />,
+    );
+    expect(screen.queryByText(/^vs /i)).toBeNull();
+    cleanup();
+    render(
+      <StartScreen
+        formations={FORMATIONS}
+        defaultFormationId="4-3-3"
+        variant="formation-only"
+        opponentLabel="THE PRESSING MACHINE"
+        opponentTagline="Full-throttle press."
+        onStart={() => {}}
+      />,
+    );
+    expect(screen.queryByText(/vs THE PRESSING MACHINE/i)).toBeNull();
+  });
+});
+
 describe('StartScreen — MATCHDAY badge always visible (ADR-014-lite amend)', () => {
   it('landing shows MATCHDAY badge number', () => {
     render(

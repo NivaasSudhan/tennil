@@ -49,6 +49,8 @@ export interface MatchdayCardData {
   nearMissText: string | null;
   groups: CardGroups;
   topPlayerName: string;
+  /** ADR-020 Wave E: today's opposition label ('THE PRESSING MACHINE'), if known. */
+  opponentLabel: string | undefined;
   eyebrow: string;
   shareText: string;
   shareUrl: string;
@@ -63,6 +65,8 @@ export interface BuildCardDataInput {
   bandLabel: string;
   nearMissText: string | null;
   groups: CardGroups;
+  /** ADR-020 Wave E: today's opposition label — flows into share text + card eyebrow. */
+  opponentLabel?: string;
 }
 
 /** Resolve the best-rated pick across the XI; ties → first in GK>DEF>MID>ATT. */
@@ -76,9 +80,17 @@ function resolveTopPlayer(groups: CardGroups): string {
   return best?.name ?? 'XI';
 }
 
-/** Daily: 'TenNil Matchday #N: BAND LABEL. Draft your XI: URL' (exact). */
-function dailyShareText(matchdayNumber: number, bandId: string, bandLabel: string): string {
-  return `TenNil Matchday #${matchdayNumber}: ${bandId} ${bandLabel}. Draft your XI: ${SHARE_URL}`;
+/** Daily: 'TenNil Matchday #N vs OPPONENT: BAND LABEL. Draft your XI: URL' (exact).
+ * Opponent segment (' vs THE PRESSING MACHINE') only when a label is known —
+ * ADR-020 Wave E; template without it is the pre-v2 shape, kept for safety. */
+function dailyShareText(
+  matchdayNumber: number,
+  bandId: string,
+  bandLabel: string,
+  opponentLabel?: string,
+): string {
+  const vs = opponentLabel ? ` vs ${opponentLabel}` : '';
+  return `TenNil Matchday #${matchdayNumber}${vs}: ${bandId} ${bandLabel}. Draft your XI: ${SHARE_URL}`;
 }
 
 /** Free: 'TenNil: I drafted {top} and it ended BANDID. URL' (exact). */
@@ -91,11 +103,15 @@ export function buildCardData(input: BuildCardDataInput): MatchdayCardData {
   const topPlayerName = resolveTopPlayer(input.groups);
   const isDaily = input.mode === 'daily';
   const matchdayNumber = isDaily ? input.matchdayNumber : undefined;
+  // Wave E: opponent joins the EYEBROW LINE ONLY — nothing is added to the
+  // verdict block, so the P-034 y-budget (verdict ends <=1270, footer 1310)
+  // is untouched by this feature.
+  const vsEyebrow = input.opponentLabel ? ` · vs ${input.opponentLabel}` : '';
   const eyebrow = isDaily
-    ? `MATCHDAY #${matchdayNumber ?? ''}`
-    : 'FREE DRAFT';
+    ? `MATCHDAY #${matchdayNumber ?? ''}${vsEyebrow}`
+    : `FREE DRAFT${vsEyebrow}`;
   const shareText = isDaily
-    ? dailyShareText(matchdayNumber ?? 0, input.bandId, input.bandLabel)
+    ? dailyShareText(matchdayNumber ?? 0, input.bandId, input.bandLabel, input.opponentLabel)
     : freeShareText(topPlayerName, input.bandId);
   return {
     mode: input.mode,
@@ -107,6 +123,7 @@ export function buildCardData(input: BuildCardDataInput): MatchdayCardData {
     nearMissText: input.nearMissText,
     groups: input.groups,
     topPlayerName,
+    opponentLabel: input.opponentLabel,
     eyebrow,
     shareText,
     shareUrl: SHARE_URL,
@@ -190,7 +207,14 @@ export function renderMatchdayCard(canvas: HTMLCanvasElement, data: MatchdayCard
   ctx.font = mastheadFont(120);
   ctx.fillText('TENNIL', CARD_W / 2, 155);
 
-  ctx.font = uiFont(36, '600');
+  // Eyebrow now carries the opponent (Wave E) — auto-shrink so long labels
+  // ('MATCHDAY #33 · vs THE PRESSING MACHINE') never overflow the margins.
+  let eyebrowSize = 36;
+  ctx.font = uiFont(eyebrowSize, '600');
+  while (eyebrowSize > 22 && ctx.measureText(data.eyebrow).width > CARD_W - 2 * MARGIN) {
+    eyebrowSize -= 2;
+    ctx.font = uiFont(eyebrowSize, '600');
+  }
   ctx.fillStyle = INK_FADED;
   ctx.fillText(data.eyebrow, CARD_W / 2, 215);
 

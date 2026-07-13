@@ -1854,3 +1854,210 @@ button {
 @media (max-width: 720px) {
   .share-row__btn { font-size: 0.66rem; padding: 0.3rem 0.5rem; }
 }
+
+/* =====================================================================
+   WAVE E (ADR-020) — attr micro-digits, opposition banners, stats screen.
+   Paper world: row attr digits + landing opponent line (typed, Courier).
+   Broadcast world: chrome vs-line + StatsScreen bars (Archivo, gold).
+   ===================================================================== */
+
+/* --- P·S·A micro-attrs on player rows (paper). >=0.8rem digits (legibility
+   gate); tinted --ink-faded with the DOMINANT axis at full --ink weight so
+   the specialization is scannable. GK rows render no .row__attrs at all. --- */
+.row__attrs {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: baseline;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.8rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-faded);
+  letter-spacing: 0.02em;
+}
+
+.row__attr-sep {
+  opacity: 0.55;
+  padding: 0 0.12rem;
+}
+
+.row__attr--dom {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* Taken rows fade the digits with the rest of the line (inherit the strike
+   treatment's reduced emphasis; keep them readable, no line-through). */
+.player-row[data-state='taken'] .row__attrs,
+.player-row[data-state='taken'] .row__attr--dom {
+  color: var(--ink-faded);
+  font-weight: 400;
+}
+
+/* At narrow widths the dotted leader gives way first (it is flex 1 1); attr
+   digits stay >=0.8rem — never shrink type below the legibility gate. */
+@media (max-width: 400px) {
+  .player-row { gap: 0.3rem; }
+  .row__leader { flex-basis: 0.4rem; }
+}
+
+/* --- Landing opposition banner — typed paper line under the Matchday badge:
+   'vs THE PRESSING MACHINE' + tagline. Paper world: Courier, ink on paper. --- */
+.matchday-opponent {
+  margin: 0.15rem 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  font-family: 'Courier Prime', monospace;
+  text-align: center;
+}
+
+.matchday-opponent__vs {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: oklch(0.93 0.02 140);
+}
+
+.matchday-opponent__tag {
+  font-size: 0.75rem;
+  color: oklch(0.88 0.02 140);
+  max-width: 30rem;
+  line-height: 1.35;
+}
+
+/* --- Broadcast chrome vs-line — sits beside FULL TIME / LIVE, dimmer than
+   the gold status word so the status stays the headline. --- */
+.broadcast-chrome__vs {
+  color: var(--ink-dim);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* --- StatsScreen — broadcast world, below the BandSlam. Same panel family
+   as .bandslam (dark chrome, gold accents), Archivo digits. --- */
+.stats-screen {
+  margin-top: 1rem;
+  padding: 1rem 1.1rem 1.15rem;
+  background: oklch(0.18 0.03 260 / 0.65);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  font-family: 'Archivo', sans-serif;
+  color: var(--broadcast-text);
+  animation: beat-in 300ms var(--ease-out-quart);
+}
+
+.stats-screen__fit {
+  margin: 0;
+  font-size: clamp(1rem, 3.4vw, 1.3rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--broadcast-text);
+}
+
+.stats-screen__fit-number {
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+}
+
+.stats-screen__insight {
+  margin: 0.45rem 0 0.8rem;
+  font-family: 'Courier Prime', monospace;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: clamp(0.78rem, 2.6vw, 0.9rem);
+  text-align: center;
+  color: oklch(0.9 0.02 95);
+}
+
+.stats-screen__buckets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0.8rem 1.2rem;
+}
+
+.stats-screen__bucket-name {
+  margin: 0 0 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  border: none;
+  padding: 0;
+}
+
+.stats-bar {
+  display: grid;
+  grid-template-columns: 2.4rem 1fr 2rem;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.3rem;
+}
+
+.stats-bar__label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+}
+
+.stats-bar--emph .stats-bar__label,
+.stats-bar--emph .stats-bar__value {
+  color: var(--gold);
+  font-weight: 800;
+}
+
+.stats-bar__track {
+  position: relative;
+  display: block;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: oklch(0.30 0.03 260 / 0.8);
+  overflow: visible;
+}
+
+.stats-bar__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 999px;
+  background: oklch(0.72 0.02 260);
+  transform-origin: left center;
+  animation: stats-bar-grow 420ms var(--ease-out-quart);
+}
+
+.stats-bar--emph .stats-bar__fill {
+  background: var(--gold);
+}
+
+@keyframes stats-bar-grow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* Formation target tick — a chalk line the bar is measured against. */
+.stats-bar__target {
+  position: absolute;
+  top: -0.2rem;
+  bottom: -0.2rem;
+  width: 2px;
+  background: var(--broadcast-text);
+  opacity: 0.75;
+}
+
+.stats-bar__value {
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--broadcast-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stats-screen { animation: none !important; }
+  .stats-bar__fill { animation: none !important; transform: none !important; }
+}

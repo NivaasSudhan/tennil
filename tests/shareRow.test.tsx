@@ -39,7 +39,29 @@ function groups(): Record<PositionBucket, { name: string; rating: number }[]> {
 afterEach(cleanup);
 
 describe('buildCardData — share text templates (pure)', () => {
-  it('daily mode: exact share text + MATCHDAY eyebrow', () => {
+  it('daily mode with opponent (ADR-020 Wave E): exact share text + eyebrow carry the opponent', () => {
+    const data = buildCardData({
+      mode: 'daily',
+      matchdayNumber: 7,
+      formationId: '4-3-3',
+      formationLabel: '4-3-3',
+      bandId: '7-1',
+      bandLabel: 'CLASSY WIN',
+      nearMissText: '2 SHY OF A 9-0 SQUAD',
+      groups: groups(),
+      opponentLabel: 'THE PRESSING MACHINE',
+    });
+    expect(data.mode).toBe('daily');
+    expect(data.matchdayNumber).toBe(7);
+    expect(data.opponentLabel).toBe('THE PRESSING MACHINE');
+    expect(data.eyebrow).toBe('MATCHDAY #7 · vs THE PRESSING MACHINE');
+    expect(data.shareUrl).toBe(SHARE_URL);
+    expect(data.shareText).toBe(
+      'TenNil Matchday #7 vs THE PRESSING MACHINE: 7-1 CLASSY WIN. Draft your XI: https://nivaassudhan.github.io/tennil/',
+    );
+  });
+
+  it('daily mode without opponent: pre-v2 template unchanged (safety fallback)', () => {
     const data = buildCardData({
       mode: 'daily',
       matchdayNumber: 7,
@@ -50,10 +72,7 @@ describe('buildCardData — share text templates (pure)', () => {
       nearMissText: '2 SHY OF A 9-0 SQUAD',
       groups: groups(),
     });
-    expect(data.mode).toBe('daily');
-    expect(data.matchdayNumber).toBe(7);
     expect(data.eyebrow).toBe('MATCHDAY #7');
-    expect(data.shareUrl).toBe(SHARE_URL);
     expect(data.shareText).toBe(
       'TenNil Matchday #7: 7-1 CLASSY WIN. Draft your XI: https://nivaassudhan.github.io/tennil/',
     );

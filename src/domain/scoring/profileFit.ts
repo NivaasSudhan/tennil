@@ -128,6 +128,54 @@ export function computeProfileFit(
 }
 
 /**
+ * computeBucketAttrMeans — per-bucket arithmetic attr means for the stats screen
+ * (Wave E, info-only display). PURE, no rounding. Mirrors computeProfileFit's
+ * bucketing exactly (GK excluded, fixed order) but returns the raw means rather
+ * than a fit score, so the broadcast stats bars can plot means vs targets.
+ * Empty outfield bucket => `null` (nothing to plot, never zero-plotted). A
+ * missing attr on an outfield player is the same defensive invariant violation
+ * computeProfileFit guards against (loadData v2 guarantees presence) — throws.
+ */
+export function computeBucketAttrMeans(
+  xi: FinalXI,
+  positionMap: PositionMap,
+): Record<AttrBucket, Attrs | null> {
+  const playersByBucket: Record<AttrBucket, { id: string; pace?: number; strength?: number; accuracy?: number }[]> = {
+    DEF: [],
+    MID: [],
+    ATT: [],
+  };
+
+  for (const player of xi) {
+    const bucket = positionMap[player.positionRaw];
+    if (bucket === 'GK' || bucket === undefined) continue; // GK excluded (no attrs)
+    playersByBucket[bucket].push(player);
+  }
+
+  const out: Record<AttrBucket, Attrs | null> = { DEF: null, MID: null, ATT: null };
+  for (const bucket of FIT_BUCKET_ORDER) {
+    const players = playersByBucket[bucket];
+    if (players.length === 0) continue; // empty bucket => null (excluded, like fit)
+    const means: Attrs = { pace: 0, strength: 0, accuracy: 0 };
+    for (const attr of FIT_ATTR_ORDER) {
+      let sum = 0;
+      for (const p of players) {
+        const v = p[attr];
+        if (v === undefined) {
+          throw new Error(
+            `computeBucketAttrMeans: outfield player '${p.id}' in bucket ${bucket} is missing attr '${attr}' — invalid squads v2 data (defensive invariant, ADR-020)`,
+          );
+        }
+        sum += v;
+      }
+      means[attr] = sum / players.length;
+    }
+    out[bucket] = means;
+  }
+  return out;
+}
+
+/**
  * selectOpposition — SPEC DELTA (2026-07-12, ADR-014-lite amendment): free play
  * no longer exists, so the mode parameter is dropped entirely. Every draft is
  * matchday-framed: candidates = non-neutral oppositions sorted by id (stability

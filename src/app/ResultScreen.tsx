@@ -9,7 +9,7 @@ import { computeSessionCeiling } from '../domain/scoring/sessionCeiling';
 import { explainScoreBand } from '../domain/scoring/explainScoreBand';
 import { withFormationMinCounts } from '../domain/scoring/withFormation';
 import { detectFormationFit, scoreUnderFormation } from '../domain/scoring/formationFit';
-import { computeProfileFit, selectOpposition } from '../domain/scoring/profileFit';
+import { computeBucketAttrMeans, computeProfileFit, selectOpposition } from '../domain/scoring/profileFit';
 import { buildCommentary } from '../domain/commentary/build';
 import { matchdayNumber } from '../lib/daily';
 import { dailySeed } from '../lib/rng';
@@ -20,6 +20,7 @@ import Scoreboard from './Scoreboard';
 import Ticker from './Ticker';
 import BandSlam from './BandSlam';
 import ShareRow from './ShareRow';
+import StatsScreen from './StatsScreen';
 
 const BUCKET_ORDER: PositionBucket[] = ['GK', 'DEF', 'MID', 'ATT'];
 
@@ -39,7 +40,10 @@ interface ResultScreenProps {
  */
 export default function ResultScreen({ session, data, onRestart }: ResultScreenProps) {
   // -- Compute-once: band + commentary + explanation, before any timer. --
-  const { band, groups, commentary, explanation, goalBeatIndices, totalBeats, fitInsight, opposition } = useMemo(() => {
+  const {
+    band, groups, commentary, explanation, goalBeatIndices, totalBeats, fitInsight, opposition,
+    profileFit, bucketMeans, profile,
+  } = useMemo(() => {
     const xi: FinalXI = getFinalXI(session);
     const config = withFormationMinCounts(data.thresholds, session.formationId);
     const squadsById = Object.fromEntries(data.squads.map((s) => [s.id, s]));
@@ -54,9 +58,13 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
     // SPEC DELTA, plan.md: reveals are always random now, every draft is
     // matchday-framed, so opposition selection no longer branches on a mode param).
     const todaysOpposition = selectOpposition(config, dailySeed(new Date()));
-    const profile = config.profiles[session.formationId];
-    const profileFit = computeProfileFit(xi, data.positionMap, profile, todaysOpposition.weightMods);
-    const scoreInput = computeScoreInput(xi, data.positionMap, ceiling, profileFit, todaysOpposition.id);
+    const formationProfile = config.profiles[session.formationId];
+    const fitScore = computeProfileFit(xi, data.positionMap, formationProfile, todaysOpposition.weightMods);
+    // Wave E stats screen: per-bucket attr means, computed ONCE here alongside
+    // fit (same bucketing, same GK exclusion) — StatsScreen only ever renders
+    // these already-computed numbers.
+    const means = computeBucketAttrMeans(xi, data.positionMap);
+    const scoreInput = computeScoreInput(xi, data.positionMap, ceiling, fitScore, todaysOpposition.id);
     const scored = scoreBand(scoreInput, config);
     const expl = explainScoreBand(scoreInput, config);
     const script = buildCommentary(scored, xi, data.commentary);
@@ -92,6 +100,9 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       totalBeats: script.beats.length,
       fitInsight: fit,
       opposition: todaysOpposition,
+      profileFit: fitScore,
+      bucketMeans: means,
+      profile: formationProfile,
     };
   }, [session, data]);
 
@@ -116,6 +127,7 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       bandLabel: band.label,
       nearMissText,
       groups: cardGroups,
+      opponentLabel: opposition.label,
     });
   }, [band, groups, explanation, opposition, session, data]);
 
@@ -179,6 +191,7 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       <div className="broadcast-chrome">
         <span className="broadcast-chrome__eyebrow eyebrow">
           {showScoreline ? 'Full time' : visibleBeatCount === 0 ? 'Kickoff' : 'Live'}
+          <span className="broadcast-chrome__vs"> vs {opposition.label}</span>
         </span>
         <Scoreboard home={home} away={away} />
         <button
@@ -233,6 +246,14 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
           <p className="fit-insight">
             {`YOUR SHAPE WAS ${fitInsight.formationId} — UNDER IT: ${fitInsight.bandId}`.toUpperCase()}
           </p>
+        )}
+        {showScoreline && (
+          <StatsScreen
+            means={bucketMeans}
+            profile={profile}
+            opposition={opposition}
+            fit={profileFit}
+          />
         )}
         {showScoreline && <ShareRow cardData={cardData} />}
       </section>

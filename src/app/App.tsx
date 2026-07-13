@@ -2,8 +2,9 @@ import { useRef, useState } from 'react';
 import type { DraftSession, GameData, Rng } from '../domain/types';
 import { IllegalActionError } from '../domain/types';
 import { pick as domainPick, skip as domainSkip, startDraft } from '../domain/draft/session';
-import { mulberry32 } from '../lib/rng';
+import { mulberry32, dailySeed } from '../lib/rng';
 import { matchdayNumber } from '../lib/daily';
+import { selectOpposition } from '../domain/scoring/profileFit';
 import DraftScreen from './DraftScreen';
 import ResultScreen from './ResultScreen';
 import StartScreen from './StartScreen';
@@ -78,6 +79,10 @@ export default function App({ data }: { data: GameData }) {
   const showFormationGate = session === null && gate === 'formation';
   const showLanding = session === null && gate === 'landing';
   const todayMatchday = matchdayNumber(new Date());
+  // ADR-020: today's opponent, seed-selected ONCE (same seed the ResultScreen
+  // uses, so the landing banner and the finals chrome agree). Pure fn — the
+  // only opposition logic in the app layer is this single call.
+  const todayOpposition = selectOpposition(data.thresholds, dailySeed(new Date()));
 
   return (
     <div className="app-shell">
@@ -87,6 +92,8 @@ export default function App({ data }: { data: GameData }) {
           defaultFormationId={data.thresholds.referenceFormation}
           variant="landing"
           matchdayNumber={todayMatchday}
+          opponentLabel={todayOpposition.label}
+          opponentTagline={todayOpposition.tagline}
           onStart={handleStart}
         />
       ) : showFormationGate ? (

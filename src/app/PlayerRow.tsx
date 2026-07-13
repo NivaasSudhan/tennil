@@ -17,6 +17,26 @@ function ratingTier(rating: number): 'icon' | 'strong' | 'solid' {
   return 'solid';
 }
 
+type AttrKey = 'pace' | 'strength' | 'accuracy';
+const ATTR_ORDER: AttrKey[] = ['pace', 'strength', 'accuracy'];
+
+/**
+ * The dominant (highest) attr of an outfield player — rendered at full --ink
+ * weight so the specialization is scannable at a glance (Wave E). Ties resolve
+ * pace > strength > accuracy (fixed order). Returns null when any attr is
+ * missing (GK, or non-v2 data) — such rows show no attr digits.
+ */
+function dominantAttr(player: Player): AttrKey | null {
+  const { pace, strength, accuracy } = player;
+  if (pace === undefined || strength === undefined || accuracy === undefined) return null;
+  const vals: Record<AttrKey, number> = { pace, strength, accuracy };
+  let best: AttrKey = 'pace';
+  for (const a of ATTR_ORDER) {
+    if (vals[a] > vals[best]) best = a;
+  }
+  return best;
+}
+
 /**
  * PlayerRow (DESIGN.md Components). One typed line on a paper team sheet:
  * `NAME ······ POS · ⬤RATING`. Rating is an inked circle badge colored by
@@ -33,6 +53,7 @@ function ratingTier(rating: number): 'icon' | 'strong' | 'solid' {
 export default function PlayerRow({ player, state, onPick, as, showStamp }: PlayerRowProps) {
   const tier = ratingTier(player.rating);
   const interactive = as === 'button' && state === 'pickable';
+  const dominant = dominantAttr(player);
 
   const inner = (
     <>
@@ -50,6 +71,28 @@ export default function PlayerRow({ player, state, onPick, as, showStamp }: Play
         ·
       </span>
       <span className={`row__rating row__rating--${tier}`}>{player.rating}</span>
+      {/* P·S·A micro-attrs (Wave E): outfield only; GK rows carry no attrs, so
+          `dominant` is null and nothing renders. Dominant axis at full ink so
+          the specialization reads at a glance; the rest carbon-copy faded. */}
+      {dominant && (
+        <span
+          className="row__attrs"
+          aria-label={`pace ${player.pace}, strength ${player.strength}, accuracy ${player.accuracy}`}
+        >
+          {ATTR_ORDER.map((a, i) => (
+            <span key={a}>
+              {i > 0 && (
+                <span className="row__attr-sep" aria-hidden="true">
+                  ·
+                </span>
+              )}
+              <span className={`row__attr${dominant === a ? ' row__attr--dom' : ''}`}>
+                {player[a]}
+              </span>
+            </span>
+          ))}
+        </span>
+      )}
       {showStamp && state === 'picked' && (
         <span className="row__stamp" aria-hidden="true">
           Selected

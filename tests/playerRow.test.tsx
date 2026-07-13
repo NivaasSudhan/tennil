@@ -30,6 +30,65 @@ const REVEAL_PLAYER: Player = {
   rating: 88,
 };
 
+// ---------------------------------------------------------------------------
+// ADR-020 Wave E — P·S·A micro-attr digits after the rating circle.
+// Outfield rows show all three digits with the dominant axis at full ink
+// (.row__attr--dom); GK rows (no attrs authored) render no digits at all.
+// ---------------------------------------------------------------------------
+
+const OUTFIELD_WITH_ATTRS: Player = {
+  id: 'attr-1',
+  name: 'Roberto Carlos',
+  positionRaw: 'LB',
+  positionBucket: 'DEF',
+  rating: 90,
+  pace: 94,
+  strength: 78,
+  accuracy: 82,
+};
+
+const GK_PLAYER: Player = {
+  id: 'gk-1',
+  name: 'Oliver Kahn',
+  positionRaw: 'GK',
+  positionBucket: 'GK',
+  rating: 93,
+};
+
+describe('PlayerRow — attr micro-digits (ADR-020 Wave E)', () => {
+  it('outfield row renders P·S·A digits with dominant attr at full ink', () => {
+    const { container } = render(
+      <PlayerRow player={OUTFIELD_WITH_ATTRS} state="pickable" as="button" />,
+    );
+    const attrs = container.querySelector('.row__attrs') as HTMLElement;
+    expect(attrs).toBeTruthy();
+    expect(attrs.textContent).toContain('94');
+    expect(attrs.textContent).toContain('78');
+    expect(attrs.textContent).toContain('82');
+    const dom = attrs.querySelector('.row__attr--dom') as HTMLElement;
+    expect(dom).toBeTruthy();
+    expect(dom.textContent).toBe('94'); // pace is this player's dominant axis
+    expect(attrs.querySelectorAll('.row__attr--dom').length).toBe(1);
+  });
+
+  it('attr digits also appear on mine-sheet (line) rows', () => {
+    const { container } = render(
+      <PlayerRow player={OUTFIELD_WITH_ATTRS} state="owned" as="line" />,
+    );
+    expect(container.querySelector('.row__attrs')).toBeTruthy();
+  });
+
+  it('GK row renders NO attr digits', () => {
+    const { container } = render(<PlayerRow player={GK_PLAYER} state="pickable" as="button" />);
+    expect(container.querySelector('.row__attrs')).toBeNull();
+  });
+
+  it('outfield row without authored attrs (legacy fixture) renders no digits', () => {
+    const { container } = render(<PlayerRow player={REVEAL_PLAYER} state="pickable" as="button" />);
+    expect(container.querySelector('.row__attrs')).toBeNull();
+  });
+});
+
 describe('PlayerRow — mine sheet never shows taken (Bug 1)', () => {
   it('mine-variant row for a picked player never shows TAKEN text or line-through state', () => {
     render(<PlayerRow player={OWNED_PLAYER} state="owned" as="line" />);
