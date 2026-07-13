@@ -2,8 +2,9 @@
 
 You are continuing a planned 1-week MVP. All judgment lives in the docs, not in any prior chat.
 
-## NEXT: Verify/commit UI wave U3 (P-018 in .claude/subagent-prompts.md — 4 visual defect fixes; agent may have finished unobserved: check `git status`, run npm test + npm run build, eyeball via `npm run dev` per the defect list, commit terse). Then: re-drive full loop in browser (draft → skip → finals broadcast → goal/band-slam), fix-dispatch any remaining visual defects to opencode-go/glm-5.2 (NOT Grok — cost ceiling; see memory), THEN push main to deploy. State: corpus 60 (2026's 8 QF slots pending research), thresholds retuned for 60 (greedy 10-0 6.4%), 197 tests green, skip-exclude + formation (ADR-017) + progressive live score + Matchday UI (paper+broadcast) all committed on main, NOT pushed since f2e367f.
-Orchestration rules: Fable never writes code — dispatch opencode per docs/OPENCODE_ORCHESTRATION.md + prompt cache .claude/subagent-prompts.md (P-001..P-018; reuse on retry). Grok sparingly/hardest-only; Deepseek max for easy+moderate w/ detailed prompts; GLM (go) for UI/volume. Commits ≤2 lines.
+## NEXT: v2 CANARY LIVE at https://nivaassudhan.github.io/tennil-beta/ (branch v2/attrs, 382 tests). User playtests; merge v2->main ONLY on user sign-off. Parked decisions: fit-gate teeth (info-only now — decide from canary human data, RISKS R-13); optional first-axis rarity nudge (minEfficiency 0.99->0.992); player-row baseline-vs-center alignment (scroll-fix agent flag); 2026's 8 QF squads pending research drop into squads/. Redeploy beta: TENNIL_BASE=/tennil-beta/ npm run build, push dist to NivaasSudhan/tennil-beta main.
+Orchestration: prompts cached .claude/subagent-prompts.md (P-001..P-037+); routing memory = UI->Opus medium, small->Deepseek free (cap-proof) else Haiku babysat, medium->Sonnet ONLY if harness pins 4.6 (bare alias resolves Sonnet 5 = banned); DESIGN-BRIEF-v1 in every UI prompt; one browser design-check per UI wave (pane ghosts scrolled captures — verify scroll UX in a real browser).
+
 
 ## Read order (do this before any work)
 1. PROJECT.md — goals, non-goals, invariants, assumptions
