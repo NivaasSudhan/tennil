@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import type { Formation } from '../domain/types';
+import type { OppositionDef } from '../domain/scoring/profileFit';
+import RulesProgramme from './RulesProgramme';
 
 interface StartScreenProps {
   formations: Formation[];
@@ -11,6 +13,8 @@ interface StartScreenProps {
   opponentLabel?: string;
   /** Today's opponent tagline — the "…is at a premium today" read under the banner. */
   opponentTagline?: string;
+  /** Full opposition object for the Rules Programme opponent page. */
+  opposition?: OppositionDef;
   onStart: (formationId: string) => void;
 }
 
@@ -21,10 +25,12 @@ export default function StartScreen({
   matchdayNumber,
   opponentLabel,
   opponentTagline,
+  opposition,
   onStart,
 }: StartScreenProps) {
   const [selectedId, setSelectedId] = useState(defaultFormationId);
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [rulesOpen, setRulesOpen] = useState(false);
   const selected = formations.find((f) => f.id === selectedId);
 
   return (
@@ -66,6 +72,13 @@ export default function StartScreen({
             onClick={() => setAboutOpen((v) => !v)}
           >
             About
+          </button>
+          <button
+            type="button"
+            className="start-marginalia__link"
+            onClick={() => setRulesOpen(true)}
+          >
+            RULES
           </button>
           {aboutOpen && (
             <p id="tennil-about-fold" className="start-marginalia__about">
@@ -126,6 +139,12 @@ export default function StartScreen({
           {variant === 'landing' ? 'Kick off' : 'Confirm Draft'}
         </span>
       </button>
+
+      <RulesProgramme
+        open={rulesOpen}
+        onClose={() => setRulesOpen(false)}
+        opposition={opposition}
+      />
     </div>
   );
 }

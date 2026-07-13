@@ -94,6 +94,7 @@ export default function App({ data }: { data: GameData }) {
           matchdayNumber={todayMatchday}
           opponentLabel={todayOpposition.label}
           opponentTagline={todayOpposition.tagline}
+          opposition={todayOpposition}
           onStart={handleStart}
         />
       ) : showFormationGate ? (

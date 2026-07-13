@@ -16,6 +16,7 @@ import { dailySeed } from '../lib/rng';
 import { progressScoreline } from './scorelineProgress';
 import { buildCardData } from './matchdayCard';
 import { formatNearMiss } from './nearMiss';
+import RulesProgramme from './RulesProgramme';
 import Scoreboard from './Scoreboard';
 import Ticker from './Ticker';
 import BandSlam from './BandSlam';
@@ -135,6 +136,7 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
     usePlaythrough(totalBeats);
 
   const audio = useAudio();
+  const [rulesOpen, setRulesOpen] = useState(false);
 
   // -- Progressive score purely from already-computed data (pure presentation). --
   const totalGoalBeats = goalBeatIndices.length;
@@ -202,6 +204,13 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
           aria-label={audio.muted ? 'Unmute match audio' : 'Mute match audio'}
         >
           {audio.muted ? '♪ off' : '♪ on'}
+        </button>
+        <button
+          type="button"
+          className="broadcast-rules-btn"
+          onClick={() => setRulesOpen(true)}
+        >
+          RULES
         </button>
       </div>
 
@@ -278,6 +287,12 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
           Draft again
         </button>
       </div>
+
+      <RulesProgramme
+        open={rulesOpen}
+        onClose={() => setRulesOpen(false)}
+        opposition={opposition}
+      />
     </div>
   );
 }

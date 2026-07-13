@@ -4,6 +4,7 @@ import { isPersonTaken } from '../domain/draft/person';
 import { invariant } from '../lib/assert';
 import StadiumButton from './StadiumButton';
 import TeamSheet from './TeamSheet';
+import RulesProgramme from './RulesProgramme';
 
 interface DraftScreenProps {
   session: DraftSession;
@@ -37,6 +38,7 @@ export default function DraftScreen({
   const reveal = session.currentReveal;
 
   const [lastPickId, setLastPickId] = useState<string | null>(null);
+  const [rulesOpen, setRulesOpen] = useState(false);
   const prevRevealId = useRef<string>(reveal.id);
 
   useEffect(() => {
@@ -104,6 +106,9 @@ export default function DraftScreen({
         >
           Skip squad — once per draft
         </StadiumButton>
+        <StadiumButton variant="ghost" onClick={() => setRulesOpen(true)}>
+          RULES
+        </StadiumButton>
       </div>
 
       {error && (
@@ -131,6 +136,11 @@ export default function DraftScreen({
           )}
         </div>
       </div>
+
+      <RulesProgramme
+        open={rulesOpen}
+        onClose={() => setRulesOpen(false)}
+      />
     </div>
   );
 }
