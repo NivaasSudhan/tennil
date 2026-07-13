@@ -1197,7 +1197,9 @@ button {
   .app-shell { padding: 1rem 0.7rem 3rem; }
   .team-sheet { padding: 1.1rem 1.1rem 1.3rem; }
   .row__leader { display: none; }
-  .player-row { gap: 0.6rem; }
+  .player-row { gap: 0.4rem; }
+  .row__attr-tag { letter-spacing: 0; margin-right: 0.08rem; }
+  .row__attr-sep { padding: 0 0.06rem; }
 }
 
 /* =====================================================================
@@ -1873,9 +1875,8 @@ button {
    Broadcast world: chrome vs-line + StatsScreen bars (Archivo, gold).
    ===================================================================== */
 
-/* --- P·S·A micro-attrs on player rows (paper). >=0.8rem digits (legibility
-   gate); tinted --ink-faded with the DOMINANT axis at full --ink weight so
-   the specialization is scannable. GK rows render no .row__attrs at all. --- */
+/* --- Labeled attrs on player rows (paper). tag + digit for every row
+   (GK included). >=0.8rem digits, tags at 0.7rem --ink-faded. --- */
 .row__attrs {
   flex: 0 0 auto;
   display: inline-flex;
@@ -1888,6 +1889,15 @@ button {
   letter-spacing: 0.02em;
 }
 
+.row__attr-tag {
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  color: var(--ink-faded);
+  letter-spacing: 0.02em;
+  margin-right: 0.15rem;
+  font-family: inherit;
+}
+
 .row__attr-sep {
   opacity: 0.55;
   padding: 0 0.12rem;
@@ -1898,19 +1908,21 @@ button {
   font-weight: 700;
 }
 
-/* Taken rows fade the digits with the rest of the line (inherit the strike
-   treatment's reduced emphasis; keep them readable, no line-through). */
+/* Taken rows fade the tags and digits with the rest of the line. */
 .player-row[data-state='taken'] .row__attrs,
 .player-row[data-state='taken'] .row__attr--dom {
   color: var(--ink-faded);
   font-weight: 400;
 }
 
-/* At narrow widths the dotted leader gives way first (it is flex 1 1); attr
-   digits stay >=0.8rem — never shrink type below the legibility gate. */
+/* At narrow widths the dotted leader gives way first (it is flex 1 1);
+   attr digits stay >=0.8rem — never shrink type below the legibility gate.
+   Tags tighten spacing to prevent overflow at 360px. */
 @media (max-width: 400px) {
   .player-row { gap: 0.3rem; }
   .row__leader { flex-basis: 0.4rem; }
+  .row__attr-tag { font-size: 0.6rem; letter-spacing: 0; margin-right: 0.05rem; }
+  .row__attr-sep { padding: 0 0.04rem; }
 }
 
 /* --- Landing opposition banner — typed paper line under the Matchday badge:

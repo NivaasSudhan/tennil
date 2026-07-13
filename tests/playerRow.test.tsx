@@ -78,14 +78,41 @@ describe('PlayerRow — attr micro-digits (ADR-020 Wave E)', () => {
     expect(container.querySelector('.row__attrs')).toBeTruthy();
   });
 
-  it('GK row renders NO attr digits', () => {
+  it('GK row renders attr digits with labels (REF·HAN·DIS)', () => {
     const { container } = render(<PlayerRow player={GK_PLAYER} state="pickable" as="button" />);
-    expect(container.querySelector('.row__attrs')).toBeNull();
+    const attrs = container.querySelector('.row__attrs') as HTMLElement;
+    expect(attrs).toBeTruthy();
+    const tags = attrs.querySelectorAll('.row__attr-tag');
+    expect(tags.length).toBe(3);
+    expect(tags[0].textContent).toBe('REF');
+    expect(tags[1].textContent).toBe('HAN');
+    expect(tags[2].textContent).toBe('DIS');
+    expect(attrs.textContent).toContain('96');
+    expect(attrs.textContent).toContain('91');
+    expect(attrs.textContent).toContain('92');
   });
 
-  it('outfield row without authored attrs (legacy fixture) renders no digits', () => {
+  it('legacy fixture without authored attrs renders GK-like derived digits', () => {
     const { container } = render(<PlayerRow player={REVEAL_PLAYER} state="pickable" as="button" />);
-    expect(container.querySelector('.row__attrs')).toBeNull();
+    const attrs = container.querySelector('.row__attrs') as HTMLElement;
+    expect(attrs).toBeTruthy();
+    expect(attrs.querySelectorAll('.row__attr-tag').length).toBe(3);
+    expect(attrs.textContent).toContain('REF');
+    expect(attrs.textContent).toContain('HAN');
+    expect(attrs.textContent).toContain('DIS');
+  });
+
+  it('outfield row renders PAC/STR/ACC label tags', () => {
+    const { container } = render(
+      <PlayerRow player={OUTFIELD_WITH_ATTRS} state="pickable" as="button" />,
+    );
+    const attrs = container.querySelector('.row__attrs') as HTMLElement;
+    expect(attrs).toBeTruthy();
+    const tags = attrs.querySelectorAll('.row__attr-tag');
+    expect(tags.length).toBe(3);
+    expect(tags[0].textContent).toBe('PAC');
+    expect(tags[1].textContent).toBe('STR');
+    expect(tags[2].textContent).toBe('ACC');
   });
 });
 
