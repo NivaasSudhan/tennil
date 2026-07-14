@@ -33,13 +33,21 @@ describe('App kick-off (ADR-021 — matchday badge retired; M2 owns mode toggle 
     expect(screen.queryByText(/MATCHDAY #\d+/i)).toBeNull();
   });
 
-  it('Kick off always begins a draft (no mode toggle yet — M2)', () => {
+  it('Kick off in NORMAL (default) begins a draft', () => {
     render(<App data={loadGameDataFromDisk()} />);
     fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
     expect(screen.getByText(/now revealing/i)).toBeTruthy();
   });
 
-  it('Draft Again after completing a draft shows Confirm Draft (no mode labels)', () => {
+  it('selecting HARD then Kick off begins a draft', () => {
+    render(<App data={loadGameDataFromDisk()} />);
+    const hardBtn = screen.getByRole('button', { name: /^HARD\b/ });
+    fireEvent.click(hardBtn);
+    fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
+    expect(screen.getByText(/now revealing/i)).toBeTruthy();
+  });
+
+  it('Draft Again after completing a draft shows Confirm Draft and preserves difficulty', () => {
     render(<App data={loadGameDataFromDisk()} />);
     fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
     // Drive draft to completion.

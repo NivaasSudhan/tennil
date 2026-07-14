@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Formation } from '../domain/types';
+import type { Difficulty, Formation } from '../domain/types';
 import type { OppositionDef } from '../domain/scoring/profileFit';
 import RulesProgramme from './RulesProgramme';
 
@@ -15,6 +15,8 @@ interface StartScreenProps {
   opponentTagline?: string;
   /** Full opposition object for the Rules Programme opponent page. */
   opposition?: OppositionDef;
+  difficulty?: Difficulty;
+  onDifficultyChange?: (d: Difficulty) => void;
   onStart: (formationId: string) => void;
 }
 
@@ -26,6 +28,8 @@ export default function StartScreen({
   opponentLabel,
   opponentTagline,
   opposition,
+  difficulty = 'normal',
+  onDifficultyChange = () => {},
   onStart,
 }: StartScreenProps) {
   const [selectedId, setSelectedId] = useState(defaultFormationId);
@@ -39,6 +43,7 @@ export default function StartScreen({
         <>
           <span className="start-screen__eyebrow">World Cup Draft-XI</span>
           <h1 className="start-screen__masthead">TenNil</h1>
+          <p className="start-taunt">Can you score 10-0?</p>
           <p className="start-screen__blurb">
             Legendary World Cup squads, revealed one at a time under the lights.
             Take one player from each reveal, lock an XI, and see what scoreline
@@ -59,6 +64,27 @@ export default function StartScreen({
               )}
             </p>
           )}
+
+          <div className="difficulty-toggle" role="radiogroup" aria-label="Game difficulty">
+            <button
+              type="button"
+              className={`difficulty-option${difficulty === 'normal' ? ' difficulty-option--selected' : ''}`}
+              aria-pressed={difficulty === 'normal'}
+              onClick={() => onDifficultyChange('normal')}
+            >
+              <span className="difficulty-option__label">NORMAL</span>
+              <span className="difficulty-option__desc">— pick the best XI. That is the whole job.</span>
+            </button>
+            <button
+              type="button"
+              className={`difficulty-option${difficulty === 'hard' ? ' difficulty-option--selected' : ''}`}
+              aria-pressed={difficulty === 'hard'}
+              onClick={() => onDifficultyChange('hard')}
+            >
+              <span className="difficulty-option__label">HARD</span>
+              <span className="difficulty-option__desc">— an opponent awaits. Read them or suffer.</span>
+            </button>
+          </div>
         </>
       )}
 
@@ -93,7 +119,7 @@ export default function StartScreen({
             target="_blank"
             rel="noopener noreferrer"
           >
-            Report a fault in the programme
+            Report a bug
           </a>
         </div>
       )}

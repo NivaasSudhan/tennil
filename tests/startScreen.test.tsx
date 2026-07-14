@@ -150,3 +150,67 @@ describe('StartScreen — MATCHDAY badge always visible (ADR-014-lite amend)', (
     expect(onStart).toHaveBeenCalledWith('4-3-3');
   });
 });
+
+describe('StartScreen — M2a difficulty toggle, taunt, bug link', () => {
+  it('renders taunt line under the masthead', () => {
+    render(
+      <StartScreen
+        formations={FORMATIONS}
+        defaultFormationId="4-3-3"
+        variant="landing"
+        difficulty="normal"
+        onDifficultyChange={() => {}}
+        onStart={() => {}}
+      />,
+    );
+    expect(screen.getByText('Can you score 10-0?')).toBeTruthy();
+  });
+
+  it('shows Report a bug link and no longer shows old text', () => {
+    render(
+      <StartScreen
+        formations={FORMATIONS}
+        defaultFormationId="4-3-3"
+        variant="landing"
+        difficulty="normal"
+        onDifficultyChange={() => {}}
+        onStart={() => {}}
+      />,
+    );
+    expect(screen.getByText(/Report a bug/i)).toBeTruthy();
+    expect(screen.queryByText(/Report a fault/i)).toBeNull();
+  });
+
+  it('difficulty toggle renders both options with NORMAL pre-selected', () => {
+    render(
+      <StartScreen
+        formations={FORMATIONS}
+        defaultFormationId="4-3-3"
+        variant="landing"
+        difficulty="normal"
+        onDifficultyChange={() => {}}
+        onStart={() => {}}
+      />,
+    );
+    expect(screen.getByText('NORMAL')).toBeTruthy();
+    expect(screen.getByText('HARD')).toBeTruthy();
+    const normalBtn = screen.getByRole('button', { name: /^NORMAL\b/ });
+    expect(normalBtn.getAttribute('aria-pressed')).toBe('true');
+  });
+
+  it('selecting HARD calls onDifficultyChange with hard', () => {
+    const onDifficultyChange = vi.fn();
+    render(
+      <StartScreen
+        formations={FORMATIONS}
+        defaultFormationId="4-3-3"
+        variant="landing"
+        difficulty="normal"
+        onDifficultyChange={onDifficultyChange}
+        onStart={() => {}}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /^HARD\b/ }));
+    expect(onDifficultyChange).toHaveBeenCalledWith('hard');
+  });
+});

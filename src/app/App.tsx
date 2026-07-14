@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import type { DraftSession, GameData, Rng } from '../domain/types';
+import type { Difficulty, DraftSession, GameData, Rng } from '../domain/types';
 import { IllegalActionError } from '../domain/types';
 import { pick as domainPick, skip as domainSkip, startDraft } from '../domain/draft/session';
 import { mulberry32 } from '../lib/rng';
@@ -11,6 +11,7 @@ import './app.css';
 export default function App({ data }: { data: GameData }) {
   const [session, setSession] = useState<DraftSession | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [difficulty, setDifficulty] = useState<Difficulty>('normal');
   const [gate, setGate] = useState<'landing' | 'formation'>('landing');
   const [lastFormationId, setLastFormationId] = useState(data.thresholds.referenceFormation);
   // ADR-014-lite: one rng instance per session, threaded through its whole
@@ -25,9 +26,8 @@ export default function App({ data }: { data: GameData }) {
       const seed = Math.floor(Math.random() * 2 ** 31);
       const rng = mulberry32(seed);
       rngRef.current = rng;
-      // ADR-021: default difficulty is 'hard' (preserves the current v2 canary
-      // experience — attrs/fit/opponent). M2 adds the NORMAL/HARD landing toggle.
-      setSession(startDraft(data, rng, formationId, { seed, difficulty: 'hard' }));
+      // ADR-021 M2a: difficulty from landing toggle state.
+      setSession(startDraft(data, rng, formationId, { seed, difficulty }));
       setLastFormationId(formationId);
     } catch (err) {
       if (err instanceof IllegalActionError) {
@@ -74,6 +74,7 @@ export default function App({ data }: { data: GameData }) {
     setLastFormationId(lid);
     setSession(null);
     setGate('formation');
+    if (session) setDifficulty(session.difficulty);
   }
 
   const showFormationGate = session === null && gate === 'formation';
@@ -89,6 +90,8 @@ export default function App({ data }: { data: GameData }) {
           formations={data.thresholds.formations}
           defaultFormationId={data.thresholds.referenceFormation}
           variant="landing"
+          difficulty={difficulty}
+          onDifficultyChange={setDifficulty}
           onStart={handleStart}
         />
       ) : showFormationGate ? (
@@ -96,6 +99,8 @@ export default function App({ data }: { data: GameData }) {
           formations={data.thresholds.formations}
           defaultFormationId={lastFormationId}
           variant="formation-only"
+          difficulty={difficulty}
+          onDifficultyChange={setDifficulty}
           onStart={handleStart}
         />
       ) : session === null ? null : session.phase === 'COMPLETE' ? (
