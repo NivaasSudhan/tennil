@@ -416,7 +416,8 @@ export function runSingleDraft(
   // draw — so reveal sequences stay identical across --mode; fit is scored
   // against the explicit --opposition regardless of mode (inert vs normal bands).
   const modeConfig = withMode(data.thresholds, mode);
-  const config = formationId ? withFormationMinCounts(modeConfig, formationId) : modeConfig;
+  // Always run formation view: Record minFit resolves only here (ADR-021). Default = referenceFormation.
+  const config = withFormationMinCounts(modeConfig, formationId ?? modeConfig.referenceFormation);
   const effFormationId = config.referenceFormation; // withFormationMinCounts sets this to the target
   const minCounts = config.minCounts;
   const profile = config.profiles[effFormationId];
