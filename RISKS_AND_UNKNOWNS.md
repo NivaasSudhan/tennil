@@ -483,6 +483,19 @@ n=500/seed=42 baseline (10-0 = 1.80%, fit p50=100).
   bot change — those remain the ADR-worthy, out-of-config-scope levers if the
   human data says the gate is mis-set.
 
+  **SHIP DECISION (2026-07-14, user pick — supersedes the first-commit config above):**
+  shipped **FIT-DOMINANT** on 10-0 (minEfficiency **0.99** + minFit **94**) over
+  the perfect-efficiency path (minEff 0.995⇒eff==100 + minFit 92) — fit carries
+  the teeth and avoids perfect-efficiency reveal path-luck; canary calibration.
+  7-1/5-0 unchanged (minFit 89, minEff 0.99/0.985). Re-verified n=500:
+  fitaware-neutral 10-0 = 2.6/1.8/1.6% (seeds 42/1000/5000, seed-42 in the 2-4%
+  window, none 0% or >6%); Law cycle PASS (aerial 2.0 / counter 2.0 / low-block
+  2.8 / possession 2.8 / pressing 4.2, every archetype >0); no dead bands (all
+  nine ≥1% in some bot). Ship note: a human now reaches 10-0 by reading the daily
+  opponent so the shape clears the ~94 fit floor (higher effective bar under a
+  demanding archetype) on top of a near-optimal, not necessarily perfect, XI —
+  `docs/sim/sim-report.json` = fitaware/neutral/n=500/seed=42 (10-0=2.60%).
+
 ## Open questions (answer before or during the named task)
 
 1. Should skip replacement exclude only the skipped squad or all seen? **Answered in ADR-003**: excludes skipped squad id; normal seen-preference applies.
