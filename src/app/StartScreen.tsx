@@ -7,8 +7,6 @@ interface StartScreenProps {
   formations: Formation[];
   defaultFormationId: string;
   variant: 'landing' | 'formation-only';
-  /** Today's matchday number (ADR-014-lite); date framing, always shown on landing. */
-  matchdayNumber?: number;
   /** Today's opponent label (ADR-020) — the daily opposition banner, landing only. */
   opponentLabel?: string;
   /** Today's opponent tagline — the "…is at a premium today" read under the banner. */
@@ -24,7 +22,6 @@ export default function StartScreen({
   formations,
   defaultFormationId,
   variant,
-  matchdayNumber,
   opponentLabel,
   opponentTagline,
   opposition,
@@ -55,12 +52,11 @@ export default function StartScreen({
             <li>Your final XI decides the result. No dice — squad quality is destiny.</li>
           </ul>
 
-          <p className="matchday-badge">MATCHDAY #{matchdayNumber ?? '?'}</p>
           {opponentLabel && (
-            <p className="matchday-opponent">
-              <span className="matchday-opponent__vs">vs {opponentLabel}</span>
+            <p className="opponent-banner">
+              <span className="opponent-banner__vs">vs {opponentLabel}</span>
               {opponentTagline && (
-                <span className="matchday-opponent__tag">{opponentTagline}</span>
+                <span className="opponent-banner__tag">{opponentTagline}</span>
               )}
             </p>
           )}

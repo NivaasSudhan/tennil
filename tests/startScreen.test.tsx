@@ -78,13 +78,12 @@ describe('StartScreen', () => {
 });
 
 describe('StartScreen — opposition banner (ADR-020 Wave E)', () => {
-  it('landing shows the vs-opponent line + tagline under the Matchday badge', () => {
+  it('landing shows the vs-opponent line + tagline under the masthead', () => {
     render(
       <StartScreen
         formations={FORMATIONS}
         defaultFormationId="4-3-3"
         variant="landing"
-        matchdayNumber={7}
         opponentLabel="THE PRESSING MACHINE"
         opponentTagline="Full-throttle press for ninety minutes — pace is at a premium today."
         onStart={() => {}}
@@ -100,7 +99,6 @@ describe('StartScreen — opposition banner (ADR-020 Wave E)', () => {
         formations={FORMATIONS}
         defaultFormationId="4-3-3"
         variant="landing"
-        matchdayNumber={7}
         onStart={() => {}}
       />,
     );
@@ -117,37 +115,6 @@ describe('StartScreen — opposition banner (ADR-020 Wave E)', () => {
       />,
     );
     expect(screen.queryByText(/vs THE PRESSING MACHINE/i)).toBeNull();
-  });
-});
-
-describe('StartScreen — MATCHDAY badge always visible (ADR-014-lite amend)', () => {
-  it('landing shows MATCHDAY badge number', () => {
-    render(
-      <StartScreen
-        formations={FORMATIONS}
-        defaultFormationId="4-3-3"
-        variant="landing"
-        matchdayNumber={7}
-        onStart={() => {}}
-      />,
-    );
-    expect(screen.getByText(/MATCHDAY #7/i)).toBeTruthy();
-  });
-
-  it('formation-only does not show MATCHDAY badge, labels CTA Confirm Draft', () => {
-    const onStart = vi.fn();
-    render(
-      <StartScreen
-        formations={FORMATIONS}
-        defaultFormationId="4-3-3"
-        variant="formation-only"
-        onStart={onStart}
-      />,
-    );
-    expect(screen.queryByText(/MATCHDAY/i)).toBeNull();
-    expect(screen.getByRole('button', { name: /confirm draft/i })).toBeTruthy();
-    fireEvent.click(screen.getByRole('button', { name: /confirm draft/i }));
-    expect(onStart).toHaveBeenCalledWith('4-3-3');
   });
 });
 

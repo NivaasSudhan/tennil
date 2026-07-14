@@ -1,8 +1,8 @@
 /**
- * ShareRow — WAVE V4b broadcast-chrome row of share affordances, rendered under
+ * ShareRow — broadcast-chrome row of share affordances, rendered under
  * the BandSlam once the scoreline is revealed. One row, small, never overlays
  * the playback controls. All share-text/url resolution happens upstream in
- * matchdayCard.ts buildCardData (compute-once); this is pure presentation.
+ * matchdayCard.ts (compute-once); this is pure presentation.
  *
  * Affordances: DOWNLOAD CARD (canvas→PNG→<a download>), SHARE (navigator.share
  * when available — otherwise hidden), POST TO X (twitter intent), WHATSAPP
@@ -45,7 +45,7 @@ export default function ShareRow({ cardData }: ShareRowProps) {
   }
 
   return (
-    <div className="share-row" role="group" aria-label="Share this matchday card">
+    <div className="share-row" role="group" aria-label="Share this result card">
       <button
         type="button"
         className="share-row__btn share-row__btn--download"
