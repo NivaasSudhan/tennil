@@ -482,3 +482,9 @@ FINISH: write final docs/sim/sim-report.json via --report on the last greedy run
 - target: opencode/deepseek-v4-flash-free --variant max
 - status: dispatched
 - task: Add --formation to simulate.ts (mirror ResultScreen per-formation scoring exactly + correctness test); MEASURE fitaware 10-0 across all 4 formations on shipped fit-dominant config; report per-formation 10-0 spread + efficiency-vs-fit failure breakdown so orchestrator picks the equalization lever. NO thresholds.json change (diagnosis only). Closes ADR-017 C6 (sim was reference-formation-only).
+
+## P-042 — Modes M1: domain (ADR-021)
+- date: 2026-07-14
+- target: Claude Code Agent, model opus (reasoning-intensive)
+- status: dispatched
+- task: Per docs/plans/2026-07-14-difficulty-modes.md — thresholds v5 dual band sets, withMode view, per-formation minFit resolution, session difficulty + opposition draw (hard only, from injected rng pre-first-reveal), matchday/dailySeed domain removal, sim --mode, ADR-021 + amendments, test migration. M2 (P-043 UI, Deepseek/Haiku) + M3 (P-044 balance, Opus) queued behind it per spec wave table.
