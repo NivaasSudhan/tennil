@@ -724,6 +724,20 @@ button {
   background: oklch(0.22 0.03 260 / 0.5);
 }
 
+.draft-screen__opponent {
+  font-family: 'Courier Prime', monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  color: var(--ink-dim);
+  padding: 0.4rem 0.95rem;
+  border: 1px solid oklch(0.78 0.02 140 / 0.35);
+  border-radius: 999px;
+  background: oklch(0.22 0.03 260 / 0.35);
+  white-space: nowrap;
+}
+
 .draft-screen__round-eyebrow {
   font-family: 'Courier Prime', monospace;
   text-transform: uppercase;

@@ -6,7 +6,7 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
-import App from '../src/app/App';
+import App, { dominantAttrWord } from '../src/app/App';
 import { loadGameDataFromDisk } from '../scripts/simulate';
 
 beforeEach(() => {
@@ -78,6 +78,25 @@ describe('App kick-off (ADR-021 — matchday badge retired; M2 owns mode toggle 
     expect(screen.getByText(/now revealing/i)).toBeTruthy();
   });
 
+  it('HARD draft topline shows opponent chip with archetype label', async () => {
+    render(<App data={loadGameDataFromDisk()} />);
+    fireEvent.click(screen.getByRole('button', { name: /^HARD/ }));
+    fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
+    fireEvent.click(screen.getByRole('button', { name: /choose your shape/i }));
+    fireEvent.click(screen.getByRole('button', { name: /confirm draft/i }));
+    await screen.findByText(/now revealing/i);
+    const chip = screen.getByText(/vs /i);
+    expect(chip).toBeTruthy();
+    expect(chip.textContent).toMatch(/vs (THE |COUNTER |AERIAL |POSSESSION )/i);
+  });
+
+  it('NORMAL draft shows no opponent chip', () => {
+    render(<App data={loadGameDataFromDisk()} />);
+    fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
+    fireEvent.click(screen.getByRole('button', { name: /confirm draft/i }));
+    expect(screen.queryByText(/vs /i)).toBeNull();
+  });
+
   it('Draft Again returns to landing with pre-selected difficulty; switching mode then kick off works', async () => {
     render(<App data={loadGameDataFromDisk()} />);
     fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
@@ -105,5 +124,23 @@ describe('App kick-off (ADR-021 — matchday badge retired; M2 owns mode toggle 
       fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
       expect(await screen.findByText(/your opponent/i)).toBeTruthy();
     }
+  });
+});
+
+describe('dominantAttrWord', () => {
+  it('pressing-machine → pace', () => {
+    expect(dominantAttrWord({ pace: 1.25 })).toBe('pace');
+  });
+  it('low-block → accuracy', () => {
+    expect(dominantAttrWord({ accuracy: 1.25 })).toBe('accuracy');
+  });
+  it('aerial-bombardment → strength', () => {
+    expect(dominantAttrWord({ strength: 1.25 })).toBe('strength');
+  });
+  it('neutral (empty mods) → null', () => {
+    expect(dominantAttrWord({})).toBeNull();
+  });
+  it('counter-kings (tied mods) returns first max', () => {
+    expect(dominantAttrWord({ pace: 1.15, strength: 1.15 })).toBe('pace');
   });
 });

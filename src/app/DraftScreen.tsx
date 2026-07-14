@@ -13,6 +13,8 @@ interface DraftScreenProps {
   onSkip: () => void;
   formations: Formation[];
   formationId: string | null;
+  opponentLabel?: string;
+  dominantAttr?: string | null;
 }
 
 /**
@@ -33,6 +35,8 @@ export default function DraftScreen({
   onSkip,
   formations,
   formationId,
+  opponentLabel,
+  dominantAttr,
 }: DraftScreenProps) {
   invariant(session.currentReveal, 'DraftScreen requires an active reveal (phase !== COMPLETE)');
   const reveal = session.currentReveal;
@@ -99,6 +103,11 @@ export default function DraftScreen({
         <span className="draft-screen__round">
           Round {session.roundsPlayed} / {totalRounds}
         </span>
+        {opponentLabel && (
+          <span className="draft-screen__opponent">
+            vs {opponentLabel}{dominantAttr ? ` · ${dominantAttr} day` : ''}
+          </span>
+        )}
         <StadiumButton
           variant="ghost"
           onClick={onSkip}

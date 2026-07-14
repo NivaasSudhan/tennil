@@ -9,6 +9,15 @@ import ResultScreen from './ResultScreen';
 import StartScreen from './StartScreen';
 import './app.css';
 
+/** ADR-021: pick the weightMod axis with the highest multiplier for the
+ * opponent-chip display word. Returns null when no mods (neutral) — the
+ * chip then renders label-only. */
+export function dominantAttrWord(weightMods: Record<string, number>): string | null {
+  const entries = Object.entries(weightMods);
+  if (entries.length === 0) return null;
+  return entries.reduce((a, b) => (a[1] >= b[1] ? a : b))[0];
+}
+
 export default function App({ data }: { data: GameData }) {
   const [session, setSession] = useState<DraftSession | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
@@ -133,14 +142,27 @@ export default function App({ data }: { data: GameData }) {
       ) : session === null ? null : session.phase === 'COMPLETE' ? (
         <ResultScreen session={session} data={data} onRestart={handleRestart} />
       ) : (
-        <DraftScreen
-          session={session}
-          error={actionError}
-          onPick={handlePick}
-          onSkip={handleSkip}
-          formations={data.thresholds.formations}
-          formationId={session.formationId}
-        />
+        (() => {
+          const chip = session.difficulty === 'hard' && session.oppositionId
+            ? (() => {
+                const def = data.thresholds.oppositions.find((o) => o.id === session.oppositionId);
+                if (!def) return null;
+                return { label: def.label, attrWord: dominantAttrWord(def.weightMods as Record<string, number>) };
+              })()
+            : null;
+          return (
+          <DraftScreen
+            session={session}
+            error={actionError}
+            onPick={handlePick}
+            onSkip={handleSkip}
+            formations={data.thresholds.formations}
+            formationId={session.formationId}
+            opponentLabel={chip?.label}
+            dominantAttr={chip?.attrWord}
+          />
+          );
+        })()
       )}
     </div>
   );
