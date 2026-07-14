@@ -476,3 +476,9 @@ FINISH: write final docs/sim/sim-report.json via --report on the last greedy run
 - target: Claude Code Agent, model opus (balance judgment; opencode paid models cap-blocked)
 - status: dispatched
 - task: Resolve parked R-13 decision — fit gate gets TEETH + minEfficiency nudge on top bands. Config-only thresholds.json. User canary feedback: 10-0 still trivial for a human (best-OVR-per-bucket autopilot; minFit=0 info-only does nothing). Conservative Law proxy (fitaware bot >0% every archetype). Starting calibration; iterate on user's next playtest.
+
+## P-041 — Per-formation sim capability + 10-0 spread diagnosis
+- date: 2026-07-14
+- target: opencode/deepseek-v4-flash-free --variant max
+- status: dispatched
+- task: Add --formation to simulate.ts (mirror ResultScreen per-formation scoring exactly + correctness test); MEASURE fitaware 10-0 across all 4 formations on shipped fit-dominant config; report per-formation 10-0 spread + efficiency-vs-fit failure breakdown so orchestrator picks the equalization lever. NO thresholds.json change (diagnosis only). Closes ADR-017 C6 (sim was reference-formation-only).
