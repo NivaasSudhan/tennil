@@ -2,8 +2,9 @@
 
 You are continuing a planned 1-week MVP. All judgment lives in the docs, not in any prior chat.
 
-## NEXT: MODES BUILD LIVE ON BETA https://nivaassudhan.github.io/tennil-beta/ (v2/attrs @ modes build; 416 tests). Normal = v1 feel (OVR-only, clean rows, no opponent); Hard = opponent card draw -> counter-pick formation -> attrs/fit (per-formation minFit, 20-pair Law matrix green). Matchday/daily fully retired. User playtests BOTH modes -> sign-off gates v2->main merge (then one site serves both; beta = staging). Parked polish: landing formation section redundant in HARD (post-card gate supersedes); 2026 QF squads pending. Redeploy beta: TENNIL_BASE=/tennil-beta/ npm run build; push dist to NivaasSudhan/tennil-beta main.
-Orchestration (current): NO Claude subagents. Grok 4.5 (zen high, prepend CAVEMAN-ULTRA block from prompt cache) = reasoning-heavy chunks; deepseek-v4-flash-free (max, very specific prompts) = everything else; split tasks so most chunks go Deepseek. Reveals stay uniform-random over all 60 (difficulty = thresholds.json only). Prompt cache .claude/subagent-prompts.md P-001..P-045+; check `git worktree list` whenever test counts jump (stale agent worktrees double-count).
+## NEXT: v2 SHIPPED TO MAIN (2026-07-15). Live https://nivaassudhan.github.io/tennil/ serves BOTH modes: Normal (v1 feel, OVR-only) + Hard (attrs, opponent draw → counter-pick formation, per-formation Law-verified fit). 425 tests. beta repo (tennil-beta) = staging only now; future v2+ work still branches + canaries before main. Parked: fit-gate teeth are a STARTING calibration (tune from real human play, RISKS R-13); 2026's 8 QF squads pending research → squads/. Deploy main = push → Actions → Pages (/tennil/); beta = TENNIL_BASE=/tennil-beta/ build → push dist to NivaasSudhan/tennil-beta.
+Orchestration: NO Claude subagents. Grok 4.5 (zen high, prepend CAVEMAN-ULTRA block) = reasoning-heavy; deepseek-v4-flash-free (max, very specific prompts) = rest; split so most chunks go Deepseek. Reveals uniform-random over all 60 (difficulty = thresholds.json only). Prompt cache .claude/subagent-prompts.md P-001..P-050+; check `git worktree list` whenever test counts jump.
+
 
 ## Read order (do this before any work)
 1. PROJECT.md — goals, non-goals, invariants, assumptions
