@@ -83,36 +83,6 @@ export default function StartScreen({
               </button>
             </div>
 
-            {difficulty === 'normal' ? (
-              <div className="formation-section">
-                <div className="formation-picker__options">
-                  {formations.map((f) => (
-                    <button
-                      key={f.id}
-                      type="button"
-                      className={`formation-option${selectedId === f.id ? ' formation-option--selected' : ''}`}
-                      onClick={() => setSelectedId(f.id)}
-                      aria-pressed={selectedId === f.id}
-                    >
-                      <span className="formation-option__label">{f.label}</span>
-                      <span className="formation-option__desc">{f.description}</span>
-                      <span className="formation-option__counts">
-                        {f.minCounts.DEF}-{f.minCounts.MID}-{f.minCounts.ATT}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-                {selected && (
-                  <p className="formation-picker__advisory">
-                    Your shape: {selected.label} &mdash;{' '}
-                    {selected.minCounts.GK} GK, {selected.minCounts.DEF} DEF, {selected.minCounts.MID} MID, {selected.minCounts.ATT} ATT
-                    . Your formation sets the scoring target for the broadcast finale — fill each position bucket to qualify for the highest result bands.
-                  </p>
-                )}
-              </div>
-            ) : (
-              <p className="match-setup-sheet__hard-hint">Your opponent reveals first — you choose your shape after.</p>
-            )}
           </section>
 
           <button

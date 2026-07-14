@@ -12,7 +12,7 @@ const FORMATIONS: Formation[] = [
 afterEach(cleanup);
 
 describe('StartScreen', () => {
-  it('landing variant renders title, rules, formation picker, and Kick off CTA', () => {
+  it('landing variant renders title, rules, difficulty cards, Kick off CTA — no formation grid', () => {
     render(
       <StartScreen
         formations={FORMATIONS}
@@ -24,9 +24,11 @@ describe('StartScreen', () => {
     expect(screen.getByRole('heading', { level: 1 })).toBeTruthy();
     expect(screen.getByText(/11 rounds/i)).toBeTruthy();
     expect(screen.getByText(/one skip/i)).toBeTruthy();
-    expect(screen.getAllByText(/4-3-3/).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText(/4-4-2/).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText('NORMAL')).toBeTruthy();
+    expect(screen.getByText('HARD')).toBeTruthy();
     expect(screen.getByRole('button', { name: /kick off/i })).toBeTruthy();
+    expect(screen.queryAllByText(/4-3-3/).length).toBe(0);
+    expect(screen.queryAllByText(/4-4-2/).length).toBe(0);
   });
 
   it('formation-only variant does NOT render the blurb/rules', () => {
@@ -181,7 +183,7 @@ describe('StartScreen — M2a difficulty toggle, taunt, bug link', () => {
     expect(onDifficultyChange).toHaveBeenCalledWith('hard');
   });
 
-  it('selecting HARD hides formation options, shows reveals-first hint', () => {
+  it('landing never shows formation options regardless of difficulty', () => {
     const { rerender } = render(
       <StartScreen
         formations={FORMATIONS}
@@ -192,7 +194,7 @@ describe('StartScreen — M2a difficulty toggle, taunt, bug link', () => {
         onStart={() => {}}
       />,
     );
-    expect(screen.getAllByText(/4-3-3/).length).toBeGreaterThanOrEqual(1);
+    expect(screen.queryAllByText(/4-3-3/).length).toBe(0);
     expect(screen.queryByText(/opponent reveals first/i)).toBeNull();
 
     rerender(
@@ -206,7 +208,7 @@ describe('StartScreen — M2a difficulty toggle, taunt, bug link', () => {
       />,
     );
     expect(screen.queryAllByText(/4-3-3/).length).toBe(0);
-    expect(screen.getByText(/opponent reveals first/i)).toBeTruthy();
+    expect(screen.queryByText(/opponent reveals first/i)).toBeNull();
   });
 
   it('footer links present: About, Rules, Report a bug', () => {

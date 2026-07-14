@@ -26,13 +26,18 @@ export default function App({ data }: { data: GameData }) {
   function handleStart(formationId: string) {
     setActionError(null);
     try {
-      if (difficulty === 'hard' && gate === 'landing') {
-        const seed = Math.floor(Math.random() * 2 ** 31);
-        const rng = mulberry32(seed);
-        preSeedRef.current = seed;
-        preOppositionIdRef.current = drawOpposition(data.thresholds, rng);
+      if (gate === 'landing') {
+        if (difficulty === 'hard') {
+          const seed = Math.floor(Math.random() * 2 ** 31);
+          const rng = mulberry32(seed);
+          preSeedRef.current = seed;
+          preOppositionIdRef.current = drawOpposition(data.thresholds, rng);
+          setLastFormationId(formationId);
+          setGate('opponent-card');
+          return;
+        }
         setLastFormationId(formationId);
-        setGate('opponent-card');
+        setGate('formation');
         return;
       }
       const seed = preSeedRef.current ?? Math.floor(Math.random() * 2 ** 31);
@@ -83,20 +88,14 @@ export default function App({ data }: { data: GameData }) {
 
   function handleRestart() {
     setActionError(null);
-    const lid = session?.formationId ?? data.thresholds.referenceFormation;
-    setLastFormationId(lid);
     setSession(null);
-    const diff = session?.difficulty ?? difficulty;
-    if (diff === 'hard') {
-      const seed = Math.floor(Math.random() * 2 ** 31);
-      const rng = mulberry32(seed);
-      preSeedRef.current = seed;
-      preOppositionIdRef.current = drawOpposition(data.thresholds, rng);
-      setGate('opponent-card');
-    } else {
-      setGate('formation');
+    setGate('landing');
+    preSeedRef.current = null;
+    preOppositionIdRef.current = null;
+    if (session) {
+      setDifficulty(session.difficulty);
+      setLastFormationId(session.formationId);
     }
-    if (session) setDifficulty(session.difficulty);
   }
 
   const showFormationGate = session === null && gate === 'formation';
@@ -111,7 +110,7 @@ export default function App({ data }: { data: GameData }) {
       {showLanding ? (
         <StartScreen
           formations={data.thresholds.formations}
-          defaultFormationId={data.thresholds.referenceFormation}
+          defaultFormationId={lastFormationId}
           variant="landing"
           difficulty={difficulty}
           onDifficultyChange={setDifficulty}

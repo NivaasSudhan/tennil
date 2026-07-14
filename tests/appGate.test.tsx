@@ -25,11 +25,13 @@ describe('App landing gate', () => {
     expect(screen.queryByText(/now revealing/i)).toBeNull();
   });
 
-  it('clicking Kick off begins a draft (a squad reveal is shown)', () => {
+  it('Kick off shows formation gate, then Confirm Draft begins draft', () => {
     render(<App data={loadGameDataFromDisk()} />);
     fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
+    expect(screen.getByRole('button', { name: /confirm draft/i })).toBeTruthy();
+    expect(screen.queryByText(/now revealing/i)).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: /confirm draft/i }));
     expect(screen.getByText(/now revealing/i)).toBeTruthy();
-    expect(screen.queryByRole('button', { name: /kick off/i })).toBeNull();
   });
 });
 
@@ -40,9 +42,11 @@ describe('App kick-off (ADR-021 — matchday badge retired; M2 owns mode toggle 
     expect(screen.queryByText(/MATCHDAY #\d+/i)).toBeNull();
   });
 
-  it('Kick off in NORMAL (default) begins a draft', () => {
+  it('Kick off in NORMAL (default) shows formation gate then draft', () => {
     render(<App data={loadGameDataFromDisk()} />);
     fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
+    expect(screen.getByRole('button', { name: /confirm draft/i })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: /confirm draft/i }));
     expect(screen.getByText(/now revealing/i)).toBeTruthy();
   });
 
@@ -68,14 +72,16 @@ describe('App kick-off (ADR-021 — matchday badge retired; M2 owns mode toggle 
   it('NORMAL flow never renders the opponent card', () => {
     render(<App data={loadGameDataFromDisk()} />);
     fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
-    // Normal mode goes straight to draft, no card
     expect(screen.queryByText(/your opponent/i)).toBeNull();
+    expect(screen.getByRole('button', { name: /confirm draft/i })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: /confirm draft/i }));
     expect(screen.getByText(/now revealing/i)).toBeTruthy();
   });
 
-  it('Draft Again after completing a draft shows Confirm Draft and preserves difficulty', () => {
+  it('Draft Again returns to landing with pre-selected difficulty; switching mode then kick off works', async () => {
     render(<App data={loadGameDataFromDisk()} />);
     fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
+    fireEvent.click(screen.getByRole('button', { name: /confirm draft/i }));
     // Drive draft to completion.
     let guard = 0;
     while (screen.queryByText(/now revealing/i) && guard < 50) {
@@ -92,7 +98,12 @@ describe('App kick-off (ADR-021 — matchday badge retired; M2 owns mode toggle 
     const draftAgain = screen.queryByRole('button', { name: /draft again/i });
     if (draftAgain) {
       fireEvent.click(draftAgain);
-      expect(screen.getByRole('button', { name: /confirm draft/i })).toBeTruthy();
+      // Landing with pre-selected difficulty
+      expect(screen.getByRole('button', { name: /kick off/i })).toBeTruthy();
+      // Switch to HARD then kick off → opponent card
+      fireEvent.click(screen.getByRole('button', { name: /^HARD/ }));
+      fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
+      expect(await screen.findByText(/your opponent/i)).toBeTruthy();
     }
   });
 });
