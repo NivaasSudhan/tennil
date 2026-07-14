@@ -470,3 +470,9 @@ FINISH: write final docs/sim/sim-report.json via --report on the last greedy run
 - task: Add attr abbreviation glossary to Rules Programme 'Your target' page (src/app/rulesCopy.ts only). Dictated copy, dry-pundit voice:
   "Every player carries three marks. Outfield: PAC pace, STR strength, ACC accuracy. Keepers read differently — REF reflexes, HAN handling, DIS distribution. The dominant mark sits in bold ink. Today's opponent prizes one of them — draft to match."
   Append as a new short paragraph on the existing 'Your target' page (keep the page's existing formation paragraph). Update tests/rulesProgramme.test.tsx: assert the glossary text (PAC/STR/ACC + REF/HAN/DIS full forms) renders; keep jargon-ban test green. Touch ONLY src/app/rulesCopy.ts + tests/rulesProgramme.test.tsx. npm test + build green; commit terse on v2/attrs; no push.
+
+## P-040 — Fit teeth + efficiency tighten (10-0 too easy, canary human data)
+- date: 2026-07-14
+- target: Claude Code Agent, model opus (balance judgment; opencode paid models cap-blocked)
+- status: dispatched
+- task: Resolve parked R-13 decision — fit gate gets TEETH + minEfficiency nudge on top bands. Config-only thresholds.json. User canary feedback: 10-0 still trivial for a human (best-OVR-per-bucket autopilot; minFit=0 info-only does nothing). Conservative Law proxy (fitaware bot >0% every archetype). Starting calibration; iterate on user's next playtest.
