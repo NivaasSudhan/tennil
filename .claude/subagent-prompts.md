@@ -490,3 +490,8 @@ FINISH: write final docs/sim/sim-report.json via --report on the last greedy run
 - task: Per docs/plans/2026-07-14-difficulty-modes.md — thresholds v5 dual band sets, withMode view, per-formation minFit resolution, session difficulty + opposition draw (hard only, from injected rng pre-first-reveal), matchday/dailySeed domain removal, sim --mode, ADR-021 + amendments, test migration. M2 (P-043 UI, Deepseek/Haiku) + M3 (P-044 balance, Opus) queued behind it per spec wave table.
 
 ## P-044 routing note (M3 balance) — user 2026-07-14: try opencode/grok-4.5 --variant high FIRST; ping before dispatch (cap-blocked as of now — $20/mo consumed); fallback Opus 4.8 if still blocked.
+
+## Grok prompt rule (user 2026-07-14): every Grok dispatch prepends explicit CAVEMAN ULTRA output discipline — costs are per-token. Verbatim block for Grok prompts:
+```
+OUTPUT DISCIPLINE — CAVEMAN ULTRA: respond maximally terse. Fragments. No pleasantries, no restating the task, no narration of steps, no hedging. Tables/numbers over prose. Code and exact values stay complete and precise — compress ONLY the words around them. Final reply = data + one-line verdicts.
+```
