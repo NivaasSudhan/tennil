@@ -27,9 +27,10 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { loadGameData } from '../src/domain/loadData';
 import { startDraft, pick, skip, getFinalXI } from '../src/domain/draft/session';
 import { isPersonTaken, personKey } from '../src/domain/draft/person';
-import { computeScoreInput, scoreBand } from '../src/domain/scoring/scoreBand';
+import { computeScoreInput, evaluateBandPredicates, scoreBand } from '../src/domain/scoring/scoreBand';
 import { computeSessionCeiling } from '../src/domain/scoring/sessionCeiling';
 import { explainScoreBand } from '../src/domain/scoring/explainScoreBand';
+import { withFormationMinCounts } from '../src/domain/scoring/withFormation';
 import {
   computeProfileFit,
   type AttrBucket,
@@ -48,6 +49,7 @@ import type {
   Rng,
   ScoreInput,
   Squad,
+  ThresholdConfig,
 } from '../src/domain/types';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -94,6 +96,7 @@ export interface SimArgs {
    * archetype and prints a per-archetype 10-0 count table (the Reveal-Luck Law
    * gate — 10-0 must be > 0% under every archetype with the fitaware bot). */
   opposition?: string;
+  formation?: string;
 }
 
 export function parseArgs(argv: string[]): SimArgs {
@@ -134,6 +137,11 @@ export function parseArgs(argv: string[]): SimArgs {
       case '--opposition':
         if (!value) throw new Error('--opposition requires a value');
         args.opposition = value;
+        i++;
+        break;
+      case '--formation':
+        if (!value) throw new Error('--formation requires a value');
+        args.formation = value;
         i++;
         break;
       default:
@@ -192,8 +200,8 @@ function greedyBot(
   pickable: Player[],
   data: GameData,
   skipThreshold: number,
+  minCounts: Record<PositionBucket, number>,
 ): BotDecision {
-  const minCounts = data.thresholds.minCounts;
   const counts = bucketCounts(session.picks, data.positionMap);
   const unmet = new Set<PositionBucket>(
     (['GK', 'DEF', 'MID', 'ATT'] as PositionBucket[]).filter((b) => counts[b] < minCounts[b]),
@@ -292,8 +300,8 @@ function fitawareBot(
   skipThreshold: number,
   profile: FormationProfile,
   oppMods: Partial<Attrs>,
+  minCounts: Record<PositionBucket, number>,
 ): BotDecision {
-  const minCounts = data.thresholds.minCounts;
   const counts = bucketCounts(session.picks, data.positionMap);
   const unmet = new Set<PositionBucket>(
     (['GK', 'DEF', 'MID', 'ATT'] as PositionBucket[]).filter((b) => counts[b] < minCounts[b]),
@@ -357,6 +365,8 @@ export interface DraftResult {
   bandId: string;
   finalXI: FinalXI;
   scoreInput: ScoreInput;
+  formationId: string;
+  revealLog: string[];
 }
 
 // Cheap memo so repeated sim runs (N drafts, same `data` object) don't rebuild
@@ -377,27 +387,27 @@ export function runSingleDraft(
   botType: 'greedy' | 'random' | 'fitaware',
   skipThreshold: number,
   oppositionId: string = 'neutral',
+  formationId?: string,
 ): DraftResult {
   const rng = mulberry32(seed);
-  // ADR-020 Wave C: opposition + profile looked up ONCE up front (the fitaware
-  // bot needs effective weights DURING the draft loop; the fit score is
-  // recomputed on the final XI after). Sim drives the reference formation only
-  // (ADR-017 C6), so the reference formation's profile is always the right one.
   const oppositionDef = data.thresholds.oppositions.find((o) => o.id === oppositionId);
   if (!oppositionDef) {
     throw new Error(`runSingleDraft: unknown --opposition id '${oppositionId}' (not in thresholds.oppositions)`);
   }
-  const profile = data.thresholds.profiles[data.thresholds.referenceFormation];
-  // ADR-017 C6: sim drives the default (reference) formation only.
-  let session = startDraft(data, rng);
+
+  // Formation-specific config: mirrors ResultScreen's withFormationMinCounts path
+  const config = formationId ? withFormationMinCounts(data.thresholds, formationId) : data.thresholds;
+  const effFormationId = config.referenceFormation; // withFormationMinCounts sets this to the target
+  const minCounts = config.minCounts;
+  const profile = config.profiles[effFormationId];
+
+  let session = startDraft(data, rng, effFormationId);
 
   while (session.phase !== 'COMPLETE') {
     const reveal = session.currentReveal;
     if (!reveal) throw new Error('runSingleDraft: AWAIT_PICK session has no currentReveal');
 
     const pickedIds = new Set(session.picks.map((p) => p.id));
-    // Filter by id AND person (ADR-018) — an era-duplicate of an already-picked
-    // human would make pick() throw if a bot chose it.
     const pickable = reveal.players.filter(
       (p) => !pickedIds.has(p.id) && !isPersonTaken(session, p),
     );
@@ -406,9 +416,9 @@ export function runSingleDraft(
     if (botType === 'random') {
       decision = randomBot(pickable, rng);
     } else if (botType === 'fitaware') {
-      decision = fitawareBot(session, pickable, data, skipThreshold, profile, oppositionDef.weightMods);
+      decision = fitawareBot(session, pickable, data, skipThreshold, profile, oppositionDef.weightMods, minCounts);
     } else {
-      decision = greedyBot(session, pickable, data, skipThreshold);
+      decision = greedyBot(session, pickable, data, skipThreshold, minCounts);
     }
 
     if (decision.action === 'skip' && session.skipRemaining === 1) {
@@ -423,15 +433,15 @@ export function runSingleDraft(
   const ceiling = computeSessionCeiling(
     session.revealLog,
     squadsById(data),
-    data.thresholds.minCounts,
+    minCounts,
     data.positionMap,
     personKey,
   );
   const fit = computeProfileFit(finalXI, data.positionMap, profile, oppositionDef.weightMods);
   const scoreInput = computeScoreInput(finalXI, data.positionMap, ceiling, fit, oppositionDef.id);
-  const { bandId } = scoreBand(scoreInput, data.thresholds);
+  const { bandId } = scoreBand(scoreInput, config);
 
-  return { bandId, finalXI, scoreInput };
+  return { bandId, finalXI, scoreInput, formationId: effFormationId, revealLog: session.revealLog };
 }
 
 // ---------------------------------------------------------------------------
@@ -450,7 +460,7 @@ export interface SimResult {
 export function runSimulation(data: GameData, args: SimArgs): SimResult {
   const results: DraftResult[] = [];
   for (let i = 0; i < args.n; i++) {
-    results.push(runSingleDraft(data, args.seed + i, args.bot, args.skipThreshold, args.opposition));
+    results.push(runSingleDraft(data, args.seed + i, args.bot, args.skipThreshold, args.opposition, args.formation));
   }
 
   const bandsByPriorityDesc = [...data.thresholds.bands].sort((a, b) => b.priority - a.priority);
@@ -762,6 +772,136 @@ export function buildCycleReport(cycle: CycleResult): object {
 }
 
 // ---------------------------------------------------------------------------
+// Per-formation comparison (--formation all)
+// ---------------------------------------------------------------------------
+
+export interface FormationSimResult {
+  formationId: string;
+  label: string;
+  sim: SimResult;
+}
+
+/**
+ * Among non-10-0 drafts, count how many fail each 10-0 predicate type.
+ * Uses evaluateBandPredicates against the 10-0 band with the formation's config.
+ */
+export function computeMissed10Breakdown(
+  results: DraftResult[],
+  config: ThresholdConfig,
+): {
+  total: number; minEfficiency: number; minFit: number; minWeakLink: number;
+  minBucketEfficiencyMID: number; minBucketEfficiencyATT: number;
+} {
+  const tenZeroBand = config.bands.find((b) => b.id === '10-0');
+  if (!tenZeroBand) return { total: 0, minEfficiency: 0, minFit: 0, minWeakLink: 0, minBucketEfficiencyMID: 0, minBucketEfficiencyATT: 0 };
+
+  let total = 0, minEfficiency = 0, minFit = 0, minWeakLink = 0, minBucketEfficiencyMID = 0, minBucketEfficiencyATT = 0;
+
+  for (const r of results) {
+    if (r.bandId === '10-0') continue;
+    // Re-derive the formation config from what was used at scoring time
+    const predicates = evaluateBandPredicates(tenZeroBand, r.scoreInput, config);
+    total++;
+    for (const p of predicates) {
+      if (p.passed) continue;
+      if (p.name === 'minEfficiency') minEfficiency++;
+      else if (p.name === 'minFit') minFit++;
+      else if (p.name === 'minWeakLink') minWeakLink++;
+      else if (p.name === 'minBucketEfficiency' && p.bucket === 'MID') minBucketEfficiencyMID++;
+      else if (p.name === 'minBucketEfficiency' && p.bucket === 'ATT') minBucketEfficiencyATT++;
+    }
+  }
+  return { total, minEfficiency, minFit, minWeakLink, minBucketEfficiencyMID, minBucketEfficiencyATT };
+}
+
+export function runFormationComparison(data: GameData, args: SimArgs): FormationSimResult[] {
+  return data.thresholds.formations.map((f) => ({
+    formationId: f.id,
+    label: f.label,
+    sim: runSimulation(data, { ...args, formation: f.id }),
+  }));
+}
+
+export function formatFormationReport(_data: GameData, fr: FormationSimResult): string {
+  const lines: string[] = [];
+  lines.push(`=== Formation: ${fr.label} (${fr.formationId}) ===`);
+  lines.push(`n=${fr.sim.args.n} seed=${fr.sim.args.seed} bot=${fr.sim.args.bot} opposition=${fr.sim.args.opposition}`);
+  lines.push('');
+  for (const row of fr.sim.histogram) {
+    const pct = row.percent.toFixed(2).padStart(6, ' ');
+    lines.push(`  ${row.bandId.padEnd(6)} ${row.label.padEnd(20)} count=${String(row.count).padStart(4)}  ${pct}%`);
+  }
+  lines.push('');
+  const eff = fr.sim.diagnostics.efficiency;
+  const fit = fr.sim.diagnostics.fit;
+  lines.push(`  efficiency%  p50 ${eff.p50.toFixed(1)}  p90 ${eff.p90.toFixed(1)}`);
+  lines.push(`  fit          p50 ${fit.p50.toFixed(1)}  p90 ${fit.p90.toFixed(1)}`);
+  return lines.join('\n');
+}
+
+export function formatFormationComparison(
+  data: GameData,
+  comparisons: FormationSimResult[],
+  extraSeedResults?: { seed: number; formationId: string; tenZeroCount: number; tenZeroPercent: number }[],
+): string {
+  const lines: string[] = [];
+  lines.push('=== TenNil formation comparison ===');
+  const first = comparisons[0];
+  lines.push(`n=${first.sim.args.n} seed=${first.sim.args.seed} bot=${first.sim.args.bot} opposition=${first.sim.args.opposition}`);
+  lines.push('');
+
+  // Band histogram comparison table
+  const bandIds = data.thresholds.bands.map((b) => b.id);
+  const header = ['Formation', ...bandIds.map((id) => id.padStart(6)), 'eff p50', 'eff p90', 'fit p50', 'fit p90'].join(' ');
+  lines.push(header);
+  for (const c of comparisons) {
+    const histMap = new Map(c.sim.histogram.map((h) => [h.bandId, h.percent.toFixed(2)]));
+    const bands = bandIds.map((id) => (histMap.get(id) ?? '0.00').padStart(6));
+    const eff = c.sim.diagnostics.efficiency;
+    const fit = c.sim.diagnostics.fit;
+    const row = [
+      c.formationId.padEnd(8),
+      ...bands,
+      eff.p50.toFixed(1).padStart(7),
+      eff.p90.toFixed(1).padStart(7),
+      fit.p50.toFixed(1).padStart(7),
+      fit.p90.toFixed(1).padStart(7),
+    ].join(' ');
+    lines.push(row);
+  }
+
+  // Extra seed 10-0 rates
+  if (extraSeedResults && extraSeedResults.length > 0) {
+    lines.push('');
+    lines.push('10-0 rate by seed:');
+    lines.push('  formation     seed=42    seed=1000  seed=5000');
+    for (const c of comparisons) {
+      const s42 = (c.sim.histogram.find((h) => h.bandId === '10-0')?.percent ?? 0).toFixed(2).padStart(8);
+      const s1000 = (extraSeedResults.find((e) => e.formationId === c.formationId && e.seed === 1000)?.tenZeroPercent ?? 0).toFixed(2).padStart(8);
+      const s5000 = (extraSeedResults.find((e) => e.formationId === c.formationId && e.seed === 5000)?.tenZeroPercent ?? 0).toFixed(2).padStart(8);
+      lines.push(`  ${c.formationId.padEnd(12)} ${s42}%  ${s1000}%  ${s5000}%`);
+    }
+  }
+
+  // Missed-10-0 failure-predicate breakdown per formation
+  lines.push('');
+  lines.push('Missed-10-0 failure-predicate breakdown (among non-10-0 drafts, seed=42):');
+  lines.push('  formation      total  eff<99  fit<94  wl<86  bEff-MID  bEff-ATT  any-multi');
+  for (const c of comparisons) {
+    const config = withFormationMinCounts(data.thresholds, c.formationId);
+    const breakdown = computeMissed10Breakdown(c.sim.results, config);
+    const multi = breakdown.total > 0
+      ? (breakdown.minEfficiency + breakdown.minFit + breakdown.minWeakLink + breakdown.minBucketEfficiencyMID + breakdown.minBucketEfficiencyATT - breakdown.total).toFixed(0)
+      : '0';
+    lines.push(
+      `  ${c.formationId.padEnd(12)} ${String(breakdown.total).padStart(5)} ${String(breakdown.minEfficiency).padStart(7)} ${String(breakdown.minFit).padStart(7)} ${String(breakdown.minWeakLink).padStart(6)} ${String(breakdown.minBucketEfficiencyMID).padStart(9)} ${String(breakdown.minBucketEfficiencyATT).padStart(9)} ${multi.padStart(10)}`,
+    );
+  }
+
+  return lines.join('\n');
+}
+
+// ---------------------------------------------------------------------------
 // CLI entry point
 // ---------------------------------------------------------------------------
 
@@ -787,6 +927,43 @@ if (isMainModule()) {
     }
     if (!cycle.lawGatePass && args.bot === 'fitaware') {
       process.exitCode = 2;
+    }
+  } else if (args.formation === 'all') {
+    // Per-formation comparison: run the full n for every cataloged formation
+    // and print a comparison table.
+    const comparisons = runFormationComparison(data, args);
+
+    // Also run extra seeds for 10-0 rate (seed 1000 and 5000)
+    const extraSeedResults: { seed: number; formationId: string; tenZeroCount: number; tenZeroPercent: number }[] = [];
+    for (const extraSeed of [1000, 5000]) {
+      for (const f of data.thresholds.formations) {
+        const s = runSimulation(data, { ...args, seed: extraSeed, formation: f.id });
+        const tenZero = s.histogram.find((h) => h.bandId === '10-0');
+        extraSeedResults.push({
+          seed: extraSeed,
+          formationId: f.id,
+          tenZeroCount: tenZero?.count ?? 0,
+          tenZeroPercent: tenZero?.percent ?? 0,
+        });
+      }
+    }
+
+    console.log(formatFormationComparison(data, comparisons, extraSeedResults));
+
+    // Write detailed per-formation reports
+    fs.mkdirSync('./.simout', { recursive: true });
+    for (const fr of comparisons) {
+      const text = formatFormationReport(data, fr);
+      fs.writeFileSync(`./.simout/${fr.formationId}.txt`, text + '\n');
+    }
+    // Write seed comparison
+    const seedLines = extraSeedResults.map(
+      (e) => `${e.formationId} seed=${e.seed} 10-0=${e.tenZeroCount} (${e.tenZeroPercent.toFixed(2)}%)`,
+    );
+    fs.writeFileSync('./.simout/tenzero_seeds.txt', seedLines.join('\n') + '\n');
+
+    if (args.report) {
+      fs.writeFileSync(args.report, JSON.stringify(comparisons.map((c) => ({ formationId: c.formationId, histogram: c.sim.histogram, diagnostics: c.sim.diagnostics })), null, 2) + '\n');
     }
   } else {
     const sim = runSimulation(data, args);

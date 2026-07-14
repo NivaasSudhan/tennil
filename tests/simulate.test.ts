@@ -9,11 +9,16 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { computeSessionCeiling } from '../src/domain/scoring/sessionCeiling';
+import { scoreBand } from '../src/domain/scoring/scoreBand';
+import { withFormationMinCounts } from '../src/domain/scoring/withFormation';
+import { personKey } from '../src/domain/draft/person';
 import {
   buildSimReport,
   loadGameDataFromDisk,
   parseArgs,
   percentile,
+  runFormationComparison,
   runSimulation,
   runSingleDraft,
   summarizeDistribution,
@@ -141,5 +146,74 @@ describe('ADR-020 Wave C: --opposition flag', () => {
     // Every minFit gate ships at 0 this wave (Wave D tunes it) — fit >= 0 always passes,
     // so the histogram is unaffected by which archetype scored the draft.
     expect(pressing.histogram).toEqual(neutral.histogram);
+  });
+});
+
+describe('--formation flag (per-formation sim)', () => {
+  const data = loadGameDataFromDisk();
+  const validBandIds = new Set(data.thresholds.bands.map((b) => b.id));
+
+  it('parseArgs reads --formation <id>', () => {
+    const args = parseArgs(['--formation', '4-4-2']);
+    expect(args.formation).toBe('4-4-2');
+  });
+
+  it('--formation 4-3-3 produces identical band sequence to default (reference formation)', () => {
+    const a = runSimulation(data, { n: 20, seed: 42, bot: 'greedy', skipThreshold: 84 });
+    const b = runSimulation(data, { n: 20, seed: 42, bot: 'greedy', skipThreshold: 84, formation: '4-3-3' });
+    expect(b.results.map((r) => r.bandId)).toEqual(a.results.map((r) => r.bandId));
+  });
+
+  it('--formation 4-4-2 produces different bucket counts (4 MID, 2 ATT)', () => {
+    const result = runSingleDraft(data, 42, 'greedy', 84, 'neutral', '4-4-2');
+    expect(result.scoreInput.bucketCounts.MID).toBe(4);
+    expect(result.scoreInput.bucketCounts.ATT).toBe(2);
+    expect(result.scoreInput.bucketCounts.DEF).toBe(4);
+    expect(result.scoreInput.bucketCounts.GK).toBe(1);
+  });
+
+  it('every formation produces valid band ids (greedy, fitaware)', () => {
+    for (const bot of ['greedy', 'fitaware'] as const) {
+      for (const f of data.thresholds.formations) {
+        const result = runSingleDraft(data, 42, bot, 84, 'neutral', f.id);
+        expect(validBandIds.has(result.bandId), `${f.id} ${bot}`).toBe(true);
+        expect(result.finalXI).toHaveLength(11);
+      }
+    }
+  });
+
+  it('sim per-formation scoring matches direct domain function path', () => {
+    for (const f of data.thresholds.formations) {
+      const result = runSingleDraft(data, 42, 'greedy', 84, 'neutral', f.id);
+
+      // Independent re-computation using domain functions with the same revealLog + XI
+      const config = withFormationMinCounts(data.thresholds, result.formationId);
+      const squadsById = Object.fromEntries(data.squads.map((s) => [s.id, s]));
+      const ceiling = computeSessionCeiling(
+        result.revealLog,
+        squadsById,
+        config.minCounts,
+        data.positionMap,
+        personKey,
+      );
+
+      // Ceiling must match
+      expect(ceiling).toEqual(result.scoreInput.ceiling);
+
+      // Score with the same config must produce the same band
+      const { bandId } = scoreBand(result.scoreInput, config);
+      expect(bandId).toBe(result.bandId);
+    }
+  });
+
+  it('runFormationComparison runs all formations without throwing', () => {
+    const comparisons = runFormationComparison(data, { n: 5, seed: 42, bot: 'greedy', skipThreshold: 84 });
+    expect(comparisons).toHaveLength(data.thresholds.formations.length);
+    for (const c of comparisons) {
+      expect(c.sim.results).toHaveLength(5);
+      for (const r of c.sim.results) {
+        expect(validBandIds.has(r.bandId)).toBe(true);
+      }
+    }
   });
 });
