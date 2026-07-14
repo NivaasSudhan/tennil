@@ -48,7 +48,7 @@ describe('App kick-off (ADR-021 — matchday badge retired; M2 owns mode toggle 
 
   it('HARD mode shows opponent card before draft (card then formation then draft)', async () => {
     render(<App data={loadGameDataFromDisk()} />);
-    const hardBtn = screen.getByRole('button', { name: /^HARD\b/ });
+    const hardBtn = screen.getByRole('button', { name: /^HARD/ });
     fireEvent.click(hardBtn);
     fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
 

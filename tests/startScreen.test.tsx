@@ -161,7 +161,7 @@ describe('StartScreen — M2a difficulty toggle, taunt, bug link', () => {
     );
     expect(screen.getByText('NORMAL')).toBeTruthy();
     expect(screen.getByText('HARD')).toBeTruthy();
-    const normalBtn = screen.getByRole('button', { name: /^NORMAL\b/ });
+    const normalBtn = screen.getByRole('button', { name: /^NORMAL/ });
     expect(normalBtn.getAttribute('aria-pressed')).toBe('true');
   });
 
@@ -177,7 +177,51 @@ describe('StartScreen — M2a difficulty toggle, taunt, bug link', () => {
         onStart={() => {}}
       />,
     );
-    fireEvent.click(screen.getByRole('button', { name: /^HARD\b/ }));
+    fireEvent.click(screen.getByRole('button', { name: /^HARD/ }));
     expect(onDifficultyChange).toHaveBeenCalledWith('hard');
+  });
+
+  it('selecting HARD hides formation options, shows reveals-first hint', () => {
+    const { rerender } = render(
+      <StartScreen
+        formations={FORMATIONS}
+        defaultFormationId="4-3-3"
+        variant="landing"
+        difficulty="normal"
+        onDifficultyChange={() => {}}
+        onStart={() => {}}
+      />,
+    );
+    expect(screen.getAllByText(/4-3-3/).length).toBeGreaterThanOrEqual(1);
+    expect(screen.queryByText(/opponent reveals first/i)).toBeNull();
+
+    rerender(
+      <StartScreen
+        formations={FORMATIONS}
+        defaultFormationId="4-3-3"
+        variant="landing"
+        difficulty="hard"
+        onDifficultyChange={() => {}}
+        onStart={() => {}}
+      />,
+    );
+    expect(screen.queryAllByText(/4-3-3/).length).toBe(0);
+    expect(screen.getByText(/opponent reveals first/i)).toBeTruthy();
+  });
+
+  it('footer links present: About, Rules, Report a bug', () => {
+    render(
+      <StartScreen
+        formations={FORMATIONS}
+        defaultFormationId="4-3-3"
+        variant="landing"
+        difficulty="normal"
+        onDifficultyChange={() => {}}
+        onStart={() => {}}
+      />,
+    );
+    expect(screen.getByText('About')).toBeTruthy();
+    expect(screen.getByText('RULES')).toBeTruthy();
+    expect(screen.getByText(/Report a bug/i)).toBeTruthy();
   });
 });

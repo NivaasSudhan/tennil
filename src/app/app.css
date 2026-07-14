@@ -267,86 +267,105 @@ button {
   margin: 0;
 }
 
-.difficulty-toggle {
-  display: flex;
-  gap: 0.5rem;
+/* --- Match setup sheet — paper world landing --- */
+.match-setup-sheet {
+  position: relative;
   width: 100%;
   max-width: min(38rem, 92vw);
-}
-
-.difficulty-option {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 0.12rem;
-  padding: 0.55rem 0.7rem;
-  background: transparent;
-  border: 1.5px solid oklch(0.7 0.02 260 / 0.35);
-  border-radius: 4px;
-  cursor: pointer;
-  font-family: 'Courier Prime', monospace;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.85rem 1rem 0.95rem;
+  background: var(--paper);
   color: var(--ink);
-  text-align: left;
-  transition: border-color 180ms var(--ease-out-quart),
-              background 180ms var(--ease-out-quart);
+  border-radius: 4px;
+  transform: rotate(var(--sheet-tilt));
+  box-shadow:
+    0 1px 1px oklch(0.2 0.02 260 / 0.4),
+    0 14px 28px oklch(0.15 0.03 260 / 0.55);
 }
 
-.difficulty-option:hover {
-  background: oklch(0.88 0.01 95 / 0.6);
-  border-color: var(--ink-faded);
+.match-setup-sheet::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.15' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+  mix-blend-mode: multiply;
 }
 
-.difficulty-option--selected {
-  border-color: var(--stamp);
-  background: oklch(0.52 0.19 27 / 0.06);
-  box-shadow: inset 0 0 0 1.5px var(--stamp);
-}
-
-.difficulty-option__label {
+.match-setup-sheet__heading {
+  margin: 0;
+  font-family: 'Courier Prime', monospace;
   font-weight: 700;
-  font-size: 0.95rem;
-  letter-spacing: 0.04em;
   text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.74rem;
+  color: var(--ink);
+  border-bottom: 1.5px solid oklch(0.7 0.02 260 / 0.5);
+  padding-bottom: 0.35rem;
+  width: 100%;
+  text-align: center;
 }
 
-.difficulty-option__desc {
-  font-size: 0.68rem;
-  color: var(--ink-faded);
-  line-height: 1.25;
-}
-
-.difficulty-option--selected .difficulty-option__label {
-  color: var(--stamp);
-}
-
-.start-rules {
+.match-setup-sheet__rules {
   list-style: none;
   margin: 0;
-  padding: 0.3rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.22rem;
-  max-width: min(34rem, 92vw);
+  padding: 0;
+  width: 100%;
   text-align: left;
-  border-top: 1px solid oklch(0.92 0.02 140 / 0.25);
-  border-bottom: 1px solid oklch(0.92 0.02 140 / 0.25);
 }
 
-.start-rules li {
-  font-family: 'Courier Prime', 'Archivo', monospace;
+.match-setup-sheet__rules li {
+  font-family: 'Courier Prime', monospace;
   font-size: clamp(0.76rem, 1.8vw, 0.86rem);
-  color: oklch(0.92 0.02 140);
+  color: var(--ink);
   padding: 0.16rem 0;
   letter-spacing: 0.01em;
   line-height: 1.3;
 }
 
-.start-rules li::before {
+.match-setup-sheet__rules li::before {
   content: '— ';
-  color: var(--gold);
+  color: var(--ink-faded);
   margin-right: 0.3rem;
 }
+
+.match-setup-sheet__difficulty {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+@media (max-width: 520px) {
+  .match-setup-sheet__difficulty {
+    flex-direction: column;
+  }
+}
+
+.match-setup-sheet__hard-hint {
+  margin: 0;
+  font-family: 'Courier Prime', monospace;
+  font-style: italic;
+  font-size: 0.78rem;
+  color: var(--ink-faded);
+  text-align: center;
+  line-height: 1.35;
+}
+
+.formation-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+
 
 /* ---------- Formation picker — paper-world typed options, circled selection ---------- */
 .formation-picker {
@@ -2000,45 +2019,57 @@ button {
 }
 
 .start-marginalia {
-  margin-top: 2.2rem;
-  padding-top: 0.9rem;
-  border-top: 1px dashed oklch(0.92 0.02 140 / 0.35);
-  font-family: 'Courier Prime', 'Courier New', monospace;
-  font-size: 0.72rem;
-  color: var(--pitch-line);
-  text-align: left;
+  margin-top: 1rem;
+  padding-top: 0.6rem;
+  border-top: 1px dotted var(--ink-faded);
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.4rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: min(38rem, 92vw);
+  flex-wrap: wrap;
 }
 
 .start-marginalia__link {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.72rem;
+  color: var(--ink-faded);
   background: none;
   border: none;
   padding: 0;
-  font: inherit;
-  color: var(--pitch-line);
-  text-decoration: underline dotted;
-  text-underline-offset: 2px;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .start-marginalia__link:hover,
 .start-marginalia__link:focus-visible {
-  color: var(--gold);
+  text-decoration: underline;
   outline: none;
 }
 
-.start-marginalia__about {
-  margin: 0.1rem 0 0.2rem;
-  max-width: 34rem;
-  line-height: 1.4;
-  color: oklch(0.88 0.02 140);
+.start-marginalia__link--issue {
+  color: var(--ink-faded);
+  text-decoration: none;
 }
 
-.start-marginalia__link--issue {
-  margin-top: 0.15rem;
+.start-marginalia__link--issue:hover {
+  text-decoration: underline;
+}
+
+.start-marginalia__sep {
+  color: var(--ink-faded);
+  font-size: 0.72rem;
+}
+
+.start-marginalia__about {
+  width: 100%;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.72rem;
+  color: var(--ink-faded);
+  line-height: 1.4;
+  text-align: center;
+  margin: 0.2rem 0 0;
 }
 
 @media (max-width: 720px) {
