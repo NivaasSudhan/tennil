@@ -497,3 +497,14 @@ OUTPUT DISCIPLINE — CAVEMAN ULTRA: respond maximally terse. Fragments. No plea
 ```
 
 ## P-042 addendum: Opus M1 agent KILLED mid-flight per user no-Claude-subagents directive (tree left compiling, 12 files modified uncommitted, tests unverified). → P-042g: Grok takeover to finish+verify+commit the working tree against the spec.
+
+## P-042g status: succeeded (Grok takeover; 401 true tests post-worktree-purge; normal 4% / hard 3% at n=100; ADR-021 shipped). ANOTHER stale agent worktree found+purged (eager-hertz) — ALWAYS check `git worktree list` when counts jump.
+
+## P-043a — M2a: landing toggle + taunt + report-a-bug (Deepseek)
+- status: dispatched — StartScreen/App difficulty toggle (NORMAL default), "Can you score 10-0?" under masthead, "Report a bug" link text; tests.
+## P-043b — M2b: OpponentCard flip (Deepseek) [QUEUED after M2a — App.tsx overlap]
+- status: queued — Hard flow: KICK OFF → opponent card flip (paper, physical verb, reduced-motion) → formation gate; session.oppositionId display source.
+## P-043c — M2c: mode-conditional surfaces (Deepseek)
+- status: dispatched — Normal hides attr digits/banner/StatsScreen; rulesCopy per mode ("Your opponent" not "Today's"); share/card [HARD] vs {OPP} tags + matchday text removal.
+## P-044 — M3: per-formation calibration + Law matrix (Grok, caveman ultra)
+- status: dispatched — hard-mode per-formation minFit Records (~2-4% each vs neutral, fixes 3-5-2 exploit + 5-3-2 floor + 4-3-3 block); archetype×formation Law matrix all >0%; normal verified vs main histogram; RISKS + sim-report.
