@@ -1,0 +1,15 @@
+{
+  "arg-1986-maradona": { "accuracy": 99 },
+  "arg-2014-messi": { "accuracy": 99, "pace": 94 },
+  "arg-2022-messi": { "accuracy": 99, "pace": 90 },
+  "bra-2002-ronaldo": { "pace": 97, "strength": 95 },
+  "fra-2018-mbappe": { "pace": 99 },
+  "fra-2022-mbappe": { "pace": 99 },
+  "ita-2006-cannavaro": { "strength": 96 },
+  "esp-2010-puyol": { "strength": 95 },
+  "fra-1998-zidane": { "accuracy": 99 },
+  "fra-2006-zidane": { "accuracy": 99 },
+  "cro-2018-modric": { "accuracy": 97 },
+  "cro-2022-modric": { "accuracy": 97 },
+  "bra-1994-romario": { "accuracy": 96 }
+}

@@ -8,16 +8,19 @@ import { computeScoreInput, scoreBand } from '../domain/scoring/scoreBand';
 import { computeSessionCeiling } from '../domain/scoring/sessionCeiling';
 import { explainScoreBand } from '../domain/scoring/explainScoreBand';
 import { withFormationMinCounts } from '../domain/scoring/withFormation';
+import { withMode } from '../domain/scoring/withMode';
 import { detectFormationFit, scoreUnderFormation } from '../domain/scoring/formationFit';
+import { computeBucketAttrMeans, computeProfileFit } from '../domain/scoring/profileFit';
 import { buildCommentary } from '../domain/commentary/build';
-import { matchdayNumber } from '../lib/daily';
 import { progressScoreline } from './scorelineProgress';
 import { buildCardData } from './matchdayCard';
 import { formatNearMiss } from './nearMiss';
+import RulesProgramme from './RulesProgramme';
 import Scoreboard from './Scoreboard';
 import Ticker from './Ticker';
 import BandSlam from './BandSlam';
 import ShareRow from './ShareRow';
+import StatsScreen from './StatsScreen';
 
 const BUCKET_ORDER: PositionBucket[] = ['GK', 'DEF', 'MID', 'ATT'];
 
@@ -37,9 +40,14 @@ interface ResultScreenProps {
  */
 export default function ResultScreen({ session, data, onRestart }: ResultScreenProps) {
   // -- Compute-once: band + commentary + explanation, before any timer. --
-  const { band, groups, commentary, explanation, goalBeatIndices, totalBeats, fitInsight } = useMemo(() => {
+  const {
+    band, groups, commentary, explanation, goalBeatIndices, totalBeats, fitInsight, opposition,
+    profileFit, bucketMeans, profile,
+  } = useMemo(() => {
     const xi: FinalXI = getFinalXI(session);
-    const config = withFormationMinCounts(data.thresholds, session.formationId);
+    // ADR-021: select the difficulty band set (withMode) then the formation view.
+    const modeConfig = withMode(data.thresholds, session.difficulty);
+    const config = withFormationMinCounts(modeConfig, session.formationId);
     const squadsById = Object.fromEntries(data.squads.map((s) => [s.id, s]));
     const ceiling = computeSessionCeiling(
       session.revealLog,
@@ -48,7 +56,19 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       data.positionMap,
       personKey,
     );
-    const scoreInput = computeScoreInput(xi, data.positionMap, ceiling);
+    // ADR-021: the opponent was drawn at draft start (HARD only) and stamped on
+    // the session. Normal sessions have no opponent → score fit against 'neutral'.
+    const oppId = session.oppositionId ?? 'neutral';
+    const todaysOpposition =
+      config.oppositions.find((o) => o.id === oppId) ??
+      config.oppositions.find((o) => o.id === 'neutral')!;
+    const formationProfile = config.profiles[session.formationId];
+    const fitScore = computeProfileFit(xi, data.positionMap, formationProfile, todaysOpposition.weightMods);
+    // Wave E stats screen: per-bucket attr means, computed ONCE here alongside
+    // fit (same bucketing, same GK exclusion) — StatsScreen only ever renders
+    // these already-computed numbers.
+    const means = computeBucketAttrMeans(xi, data.positionMap);
+    const scoreInput = computeScoreInput(xi, data.positionMap, ceiling, fitScore, todaysOpposition.id);
     const scored = scoreBand(scoreInput, config);
     const expl = explainScoreBand(scoreInput, config);
     const script = buildCommentary(scored, xi, data.commentary);
@@ -69,7 +89,7 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
         squadsById,
         data.positionMap,
         personKey,
-        data.thresholds,
+        modeConfig,
         fittedFormationId,
       );
       fit = { formationId: fittedFormationId, bandId: fittedBand.bandId, label: fittedBand.label };
@@ -83,6 +103,10 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       goalBeatIndices: goalIndices,
       totalBeats: script.beats.length,
       fitInsight: fit,
+      opposition: todaysOpposition,
+      profileFit: fitScore,
+      bucketMeans: means,
+      profile: formationProfile,
     };
   }, [session, data]);
 
@@ -96,24 +120,24 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       MID: groups.MID.map((p) => ({ name: p.name, rating: p.rating })),
       ATT: groups.ATT.map((p) => ({ name: p.name, rating: p.rating })),
     };
-    const nearMissText = formatNearMiss(explanation as ScoreExplanation).text;
-    const matchday = session.mode === 'daily' ? matchdayNumber(new Date()) : undefined;
+    const nearMissText = formatNearMiss(explanation as ScoreExplanation, opposition).text;
     return buildCardData({
-      mode: session.mode,
-      matchdayNumber: matchday,
+      difficulty: session.difficulty,
       formationId: session.formationId,
       formationLabel,
       bandId: band.bandId,
       bandLabel: band.label,
       nearMissText,
       groups: cardGroups,
+      opponentLabel: opposition.label,
     });
-  }, [band, groups, explanation, session, data]);
+  }, [band, groups, explanation, opposition, session, data]);
 
   const { visibleBeatCount, showScoreline, speed, setSpeed, skipToResult } =
     usePlaythrough(totalBeats);
 
   const audio = useAudio();
+  const [rulesOpen, setRulesOpen] = useState(false);
 
   // -- Progressive score purely from already-computed data (pure presentation). --
   const totalGoalBeats = goalBeatIndices.length;
@@ -170,6 +194,9 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       <div className="broadcast-chrome">
         <span className="broadcast-chrome__eyebrow eyebrow">
           {showScoreline ? 'Full time' : visibleBeatCount === 0 ? 'Kickoff' : 'Live'}
+          {session.difficulty === 'hard' && (
+            <span className="broadcast-chrome__vs"> vs {opposition.label}</span>
+          )}
         </span>
         <Scoreboard home={home} away={away} />
         <button
@@ -180,6 +207,13 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
           aria-label={audio.muted ? 'Unmute match audio' : 'Mute match audio'}
         >
           {audio.muted ? '♪ off' : '♪ on'}
+        </button>
+        <button
+          type="button"
+          className="broadcast-rules-btn"
+          onClick={() => setRulesOpen(true)}
+        >
+          RULES
         </button>
       </div>
 
@@ -213,12 +247,25 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       <section id="playthrough" className="ticker-stage" aria-label="Match commentary">
         <Ticker beats={visibleBeats} />
         {showScoreline && (
-          <BandSlam bandId={band.bandId} label={band.label} explanation={explanation as ScoreExplanation} />
+          <BandSlam
+            bandId={band.bandId}
+            label={band.label}
+            explanation={explanation as ScoreExplanation}
+            opposition={opposition}
+          />
         )}
-        {showScoreline && fitInsight && (
+        {session.difficulty === 'hard' && showScoreline && fitInsight && (
           <p className="fit-insight">
             {`YOUR SHAPE WAS ${fitInsight.formationId} — UNDER IT: ${fitInsight.bandId}`.toUpperCase()}
           </p>
+        )}
+        {session.difficulty === 'hard' && showScoreline && (
+          <StatsScreen
+            means={bucketMeans}
+            profile={profile}
+            opposition={opposition}
+            fit={profileFit}
+          />
         )}
         {showScoreline && <ShareRow cardData={cardData} />}
       </section>
@@ -243,6 +290,13 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
           Draft again
         </button>
       </div>
+
+      <RulesProgramme
+        open={rulesOpen}
+        onClose={() => setRulesOpen(false)}
+        opposition={session.difficulty === 'hard' ? opposition : undefined}
+        difficulty={session.difficulty}
+      />
     </div>
   );
 }

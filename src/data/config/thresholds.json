@@ -1,97 +1,476 @@
 {
-  "version": 3,
-  "_comment": "ADR-019 relative session scoring. Band evaluation: priority descending, first band whose predicates ALL pass; exactly one fallback. minEfficiency/minBucketEfficiency are authored as fractions in [0,1] (loadData converts to integer percentage points: userTotal/ceilingTotal from computeSessionCeiling). W3 retune (sim n=500 seed=42 greedy+random): greedy total-eff compressed 96-100 (p50 99), so per-bucket efficiency (MID/ATT cascade 99->98->97->none) is the primary discriminator within the eff=98-99 majority. 10-0 requires near-perfect MID+ATT (99) AND WL>=86 — efficiency alone cannot let a star-XI-with-one-62 through. 7-1 shares WL>=86 with 10-0 but drops per-bucket (great total, strong floor, imperfect somewhere). 1-2 drops requireAllBucketsNonEmpty to catch structurally-broken-but-decent-eff drafts (empty GK, strong outfield). Six-gate protocol: greedy 10-0 6%, no band >40%, random top-3 0%, all bands >=1%, near-miss-10-0 11%, WL floor has teeth.",
+  "version": 5,
+  "_comment": "ADR-021 difficulty modes (schema v5). `modes.normal.bands` = the v1 OVR/efficiency ladder (main's tuned set VERBATIM \u2014 efficiency/bucketEff/weakLink, NO fit gates); `modes.hard.bands` = the v2 fit-dominant ladder (minFit gates the top three bands alongside a tightened efficiency ladder). Both sets validated with the same generic band rules (exactly one fallback EACH); minFit forbidden in normal bands; hard minFit is `number | Record<formationId, number>` (M3 populates the per-formation map \u2014 M1 keeps scalars 94/89/89). Band evaluation unchanged: priority descending, first band whose predicates ALL pass. minEfficiency/minBucketEfficiency authored as fractions in [0,1] (loadData converts to integer percentage points: userTotal/ceilingTotal from computeSessionCeiling). Shared across modes: formations, profiles, oppositions, minCounts, ratingScale. NORMAL history (main): W3 retune (sim n=500 seed=42 greedy+random): greedy total-eff compressed 96-100 (p50 99), so per-bucket efficiency (MID/ATT cascade 99->98->97->none) is the primary discriminator; 10-0 requires near-perfect MID+ATT (99) AND WL>=86. HARD history: P040 fit-teeth calibration (2026-07-14) \u2014 10-0 FIT-DOMINANT (minEfficiency 0.99 held, minFit=94 carries the teeth), 7-1 0.99/89, 5-0 0.985/89; fitaware-neutral 10-0 ~2.6%, Law cycle PASS, no dead bands. See RISKS R-13. M3: 10-0 minFit Record {4-3-3:94,4-4-2:94,3-5-2:99,5-3-2:94}; 7-1/5-0 scalar 89.",
   "referenceFormation": "4-3-3",
-  "minCounts": { "GK": 1, "DEF": 4, "MID": 3, "ATT": 3 },
+  "minCounts": {
+    "GK": 1,
+    "DEF": 4,
+    "MID": 3,
+    "ATT": 3
+  },
   "formations": [
-    { "id": "4-3-3", "label": "4-3-3", "description": "Balanced classic — four defenders, three midfielders, three forwards", "minCounts": { "GK": 1, "DEF": 4, "MID": 3, "ATT": 3 } },
-    { "id": "4-4-2", "label": "4-4-2", "description": "Traditional English — two strikers, flat four midfield", "minCounts": { "GK": 1, "DEF": 4, "MID": 4, "ATT": 2 } },
-    { "id": "3-5-2", "label": "3-5-2", "description": "Attack-minded — three at the back, packed midfield", "minCounts": { "GK": 1, "DEF": 3, "MID": 5, "ATT": 2 } },
-    { "id": "5-3-2", "label": "5-3-2", "description": "Defensive solidity — five defenders, counter-attacking outlets", "minCounts": { "GK": 1, "DEF": 5, "MID": 3, "ATT": 2 } }
-  ],
-  "ratingScale": { "min": 1, "max": 100 },
-  "bands": [
     {
-      "id": "10-0",
-      "priority": 100,
-      "label": "LEGENDARY ROUT",
-      "requireAllBucketsNonEmpty": true,
-      "requireMinCounts": true,
-      "minEfficiency": 0.99,
-      "minWeakLink": 86,
-      "minBucketEfficiency": { "MID": 0.99, "ATT": 0.99 }
+      "id": "4-3-3",
+      "label": "4-3-3",
+      "description": "Balanced classic \u2014 four defenders, three midfielders, three forwards",
+      "minCounts": {
+        "GK": 1,
+        "DEF": 4,
+        "MID": 3,
+        "ATT": 3
+      }
     },
     {
-      "id": "7-1",
-      "priority": 90,
-      "label": "RUTHLESS DISPLAY",
-      "requireAllBucketsNonEmpty": true,
-      "requireMinCounts": true,
-      "minEfficiency": 0.985,
-      "minWeakLink": 86
+      "id": "4-4-2",
+      "label": "4-4-2",
+      "description": "Traditional English \u2014 two strikers, flat four midfield",
+      "minCounts": {
+        "GK": 1,
+        "DEF": 4,
+        "MID": 4,
+        "ATT": 2
+      }
     },
     {
-      "id": "5-0",
-      "priority": 80,
-      "label": "DOMINANT DISPLAY",
-      "requireAllBucketsNonEmpty": true,
-      "requireMinCounts": true,
-      "minEfficiency": 0.98,
-      "minWeakLink": 84,
-      "minBucketEfficiency": { "MID": 0.99, "ATT": 0.99 }
+      "id": "3-5-2",
+      "label": "3-5-2",
+      "description": "Attack-minded \u2014 three at the back, packed midfield",
+      "minCounts": {
+        "GK": 1,
+        "DEF": 3,
+        "MID": 5,
+        "ATT": 2
+      }
     },
     {
-      "id": "4-1",
-      "priority": 70,
-      "label": "STRONG WIN",
-      "requireAllBucketsNonEmpty": true,
-      "requireMinCounts": true,
-      "minEfficiency": 0.98,
-      "minWeakLink": 82,
-      "minBucketEfficiency": { "MID": 0.98, "ATT": 0.98 }
-    },
-    {
-      "id": "3-1",
-      "priority": 60,
-      "label": "COMFORTABLE WIN",
-      "requireAllBucketsNonEmpty": true,
-      "requireMinCounts": true,
-      "minEfficiency": 0.97,
-      "minWeakLink": 80,
-      "minBucketEfficiency": { "MID": 0.97, "ATT": 0.97 }
-    },
-    {
-      "id": "2-1",
-      "priority": 50,
-      "label": "HARD-FOUGHT WIN",
-      "requireAllBucketsNonEmpty": true,
-      "requireMinCounts": false,
-      "minEfficiency": 0.93,
-      "minWeakLink": 78
-    },
-    {
-      "id": "1-1",
-      "priority": 40,
-      "label": "NERVY DRAW",
-      "requireAllBucketsNonEmpty": true,
-      "requireMinCounts": false,
-      "minEfficiency": 0.90,
-      "minWeakLink": 0
-    },
-    {
-      "id": "1-2",
-      "priority": 20,
-      "label": "UPSET LOSS",
-      "requireAllBucketsNonEmpty": false,
-      "requireMinCounts": false,
-      "minEfficiency": 0.92,
-      "minWeakLink": 0
-    },
-    {
-      "id": "0-4",
-      "priority": 0,
-      "label": "TOTAL COLLAPSE",
-      "fallback": true
+      "id": "5-3-2",
+      "label": "5-3-2",
+      "description": "Defensive solidity \u2014 five defenders, counter-attacking outlets",
+      "minCounts": {
+        "GK": 1,
+        "DEF": 5,
+        "MID": 3,
+        "ATT": 2
+      }
     }
-  ]
+  ],
+  "ratingScale": {
+    "min": 1,
+    "max": 100
+  },
+  "profiles": {
+    "4-3-3": {
+      "_comment": "D4 final (R-13 bite-point) \u2014 binding attrs high-weighted so attr-aware picks separate from attr-blind: DEF pace + accuracy (RB/LB specialists), MID strength (DM enforcers), ATT accuracy (winger craft). Targets raised on binding axes to the bite point. Weights/targets kept as-authored (P040 fit-teeth changed band gate numbers only \u2014 see hard bands and RISKS R-13); fit now gates the top three hard bands (minFit 94/89/89).",
+      "DEF": {
+        "weights": {
+          "pace": 0.7,
+          "strength": 0.2,
+          "accuracy": 0.55
+        },
+        "targets": {
+          "pace": 86,
+          "strength": 85,
+          "accuracy": 72
+        }
+      },
+      "MID": {
+        "weights": {
+          "pace": 0.2,
+          "strength": 0.85,
+          "accuracy": 0.4
+        },
+        "targets": {
+          "pace": 76,
+          "strength": 83,
+          "accuracy": 88
+        }
+      },
+      "ATT": {
+        "weights": {
+          "pace": 0.5,
+          "strength": 0.2,
+          "accuracy": 0.85
+        },
+        "targets": {
+          "pace": 88,
+          "strength": 72,
+          "accuracy": 87
+        }
+      }
+    },
+    "4-4-2": {
+      "_comment": "balanced \u2014 no bucket leans hard on one axis.",
+      "DEF": {
+        "weights": {
+          "pace": 0.45,
+          "strength": 0.55,
+          "accuracy": 0.45
+        },
+        "targets": {
+          "pace": 75,
+          "strength": 78,
+          "accuracy": 75
+        }
+      },
+      "MID": {
+        "weights": {
+          "pace": 0.5,
+          "strength": 0.5,
+          "accuracy": 0.55
+        },
+        "targets": {
+          "pace": 77,
+          "strength": 76,
+          "accuracy": 78
+        }
+      },
+      "ATT": {
+        "weights": {
+          "pace": 0.55,
+          "strength": 0.45,
+          "accuracy": 0.55
+        },
+        "targets": {
+          "pace": 78,
+          "strength": 75,
+          "accuracy": 78
+        }
+      }
+    },
+    "3-5-2": {
+      "_comment": "mid-accuracy-heavy \u2014 five in the middle, so MID accuracy dominates the shape.",
+      "DEF": {
+        "weights": {
+          "pace": 0.55,
+          "strength": 0.5,
+          "accuracy": 0.4
+        },
+        "targets": {
+          "pace": 78,
+          "strength": 76,
+          "accuracy": 73
+        }
+      },
+      "MID": {
+        "weights": {
+          "pace": 0.45,
+          "strength": 0.35,
+          "accuracy": 0.85
+        },
+        "targets": {
+          "pace": 76,
+          "strength": 73,
+          "accuracy": 90
+        }
+      },
+      "ATT": {
+        "weights": {
+          "pace": 0.6,
+          "strength": 0.4,
+          "accuracy": 0.55
+        },
+        "targets": {
+          "pace": 80,
+          "strength": 74,
+          "accuracy": 78
+        }
+      }
+    },
+    "5-3-2": {
+      "_comment": "DEF-strength / ST-pace \u2014 five at the back need bulk, the two forwards live off the counter.",
+      "DEF": {
+        "weights": {
+          "pace": 0.4,
+          "strength": 0.8,
+          "accuracy": 0.35
+        },
+        "targets": {
+          "pace": 74,
+          "strength": 90,
+          "accuracy": 71
+        }
+      },
+      "MID": {
+        "weights": {
+          "pace": 0.5,
+          "strength": 0.55,
+          "accuracy": 0.6
+        },
+        "targets": {
+          "pace": 77,
+          "strength": 77,
+          "accuracy": 79
+        }
+      },
+      "ATT": {
+        "weights": {
+          "pace": 0.8,
+          "strength": 0.4,
+          "accuracy": 0.5
+        },
+        "targets": {
+          "pace": 90,
+          "strength": 73,
+          "accuracy": 76
+        }
+      }
+    }
+  },
+  "oppositions": [
+    {
+      "id": "pressing-machine",
+      "label": "THE PRESSING MACHINE",
+      "tagline": "Full-throttle press for ninety minutes \u2014 pace is at a premium today.",
+      "weightMods": {
+        "pace": 1.25
+      }
+    },
+    {
+      "id": "low-block",
+      "label": "THE LOW BLOCK",
+      "tagline": "Ten behind the ball, daring you to pick the lock \u2014 accuracy is at a premium today.",
+      "weightMods": {
+        "accuracy": 1.25
+      }
+    },
+    {
+      "id": "aerial-bombardment",
+      "label": "AERIAL BOMBARDMENT",
+      "tagline": "Long balls and a giant at both boxes \u2014 strength is at a premium today.",
+      "weightMods": {
+        "strength": 1.25
+      }
+    },
+    {
+      "id": "counter-kings",
+      "label": "COUNTER KINGS",
+      "tagline": "Sit deep, break at speed, finish with a shoulder \u2014 pace and strength share the premium today.",
+      "weightMods": {
+        "pace": 1.15,
+        "strength": 1.15
+      }
+    },
+    {
+      "id": "possession-cult",
+      "label": "THE POSSESSION CULT",
+      "tagline": "A thousand passes before they even think about goal \u2014 accuracy is at a serious premium today.",
+      "weightMods": {
+        "accuracy": 1.35
+      }
+    },
+    {
+      "id": "neutral",
+      "label": "NEUTRAL",
+      "tagline": "No particular gameplan to read into \u2014 a fair fight today.",
+      "weightMods": {}
+    }
+  ],
+  "modes": {
+    "normal": {
+      "_comment": "v1 experience \u2014 OVR/efficiency scoring only, NO fit/attr gates. main's tuned ladder VERBATIM.",
+      "bands": [
+        {
+          "id": "10-0",
+          "priority": 100,
+          "label": "LEGENDARY ROUT",
+          "requireAllBucketsNonEmpty": true,
+          "requireMinCounts": true,
+          "minEfficiency": 0.99,
+          "minWeakLink": 86,
+          "minBucketEfficiency": {
+            "MID": 0.99,
+            "ATT": 0.99
+          }
+        },
+        {
+          "id": "7-1",
+          "priority": 90,
+          "label": "RUTHLESS DISPLAY",
+          "requireAllBucketsNonEmpty": true,
+          "requireMinCounts": true,
+          "minEfficiency": 0.985,
+          "minWeakLink": 86
+        },
+        {
+          "id": "5-0",
+          "priority": 80,
+          "label": "DOMINANT DISPLAY",
+          "requireAllBucketsNonEmpty": true,
+          "requireMinCounts": true,
+          "minEfficiency": 0.98,
+          "minWeakLink": 84,
+          "minBucketEfficiency": {
+            "MID": 0.99,
+            "ATT": 0.99
+          }
+        },
+        {
+          "id": "4-1",
+          "priority": 70,
+          "label": "STRONG WIN",
+          "requireAllBucketsNonEmpty": true,
+          "requireMinCounts": true,
+          "minEfficiency": 0.98,
+          "minWeakLink": 82,
+          "minBucketEfficiency": {
+            "MID": 0.98,
+            "ATT": 0.98
+          }
+        },
+        {
+          "id": "3-1",
+          "priority": 60,
+          "label": "COMFORTABLE WIN",
+          "requireAllBucketsNonEmpty": true,
+          "requireMinCounts": true,
+          "minEfficiency": 0.97,
+          "minWeakLink": 80,
+          "minBucketEfficiency": {
+            "MID": 0.97,
+            "ATT": 0.97
+          }
+        },
+        {
+          "id": "2-1",
+          "priority": 50,
+          "label": "HARD-FOUGHT WIN",
+          "requireAllBucketsNonEmpty": true,
+          "requireMinCounts": false,
+          "minEfficiency": 0.93,
+          "minWeakLink": 78
+        },
+        {
+          "id": "1-1",
+          "priority": 40,
+          "label": "NERVY DRAW",
+          "requireAllBucketsNonEmpty": true,
+          "requireMinCounts": false,
+          "minEfficiency": 0.9,
+          "minWeakLink": 0
+        },
+        {
+          "id": "1-2",
+          "priority": 20,
+          "label": "UPSET LOSS",
+          "requireAllBucketsNonEmpty": false,
+          "requireMinCounts": false,
+          "minEfficiency": 0.92,
+          "minWeakLink": 0
+        },
+        {
+          "id": "0-4",
+          "priority": 0,
+          "label": "TOTAL COLLAPSE",
+          "fallback": true
+        }
+      ]
+    },
+    "hard": {
+      "_comment": "v2 experience \u2014 fit-dominant ladder. M3 (2026-07-14): per-formation minFit on 10-0 equalizes fitaware-neutral ~2-4% (3-5-2 raised 99 to kill exploit; 4-3-3/4-4-2/5-3-2 hold 94 \u2014 5-3-2 structural ~1% floor from WL/eff, minFit inert). 7-1/5-0 stay scalar 89.",
+      "bands": [
+        {
+          "id": "10-0",
+          "priority": 100,
+          "label": "LEGENDARY ROUT",
+          "requireAllBucketsNonEmpty": true,
+          "requireMinCounts": true,
+          "minEfficiency": 0.99,
+          "minWeakLink": 86,
+          "minBucketEfficiency": {
+            "MID": 0.99,
+            "ATT": 0.99
+          },
+          "minFit": {
+            "4-3-3": 94,
+            "4-4-2": 94,
+            "3-5-2": 99,
+            "5-3-2": 94
+          }
+        },
+        {
+          "id": "7-1",
+          "priority": 90,
+          "label": "RUTHLESS DISPLAY",
+          "requireAllBucketsNonEmpty": true,
+          "requireMinCounts": true,
+          "minEfficiency": 0.99,
+          "minWeakLink": 86,
+          "minFit": 89
+        },
+        {
+          "id": "5-0",
+          "priority": 80,
+          "label": "DOMINANT DISPLAY",
+          "requireAllBucketsNonEmpty": true,
+          "requireMinCounts": true,
+          "minEfficiency": 0.985,
+          "minWeakLink": 84,
+          "minBucketEfficiency": {
+            "MID": 0.99,
+            "ATT": 0.99
+          },
+          "minFit": 89
+        },
+        {
+          "id": "4-1",
+          "priority": 70,
+          "label": "STRONG WIN",
+          "requireAllBucketsNonEmpty": true,
+          "requireMinCounts": true,
+          "minEfficiency": 0.98,
+          "minWeakLink": 82,
+          "minBucketEfficiency": {
+            "MID": 0.98,
+            "ATT": 0.98
+          }
+        },
+        {
+          "id": "3-1",
+          "priority": 60,
+          "label": "COMFORTABLE WIN",
+          "requireAllBucketsNonEmpty": true,
+          "requireMinCounts": true,
+          "minEfficiency": 0.97,
+          "minWeakLink": 80,
+          "minBucketEfficiency": {
+            "MID": 0.97,
+            "ATT": 0.97
+          }
+        },
+        {
+          "id": "2-1",
+          "priority": 50,
+          "label": "HARD-FOUGHT WIN",
+          "requireAllBucketsNonEmpty": true,
+          "requireMinCounts": false,
+          "minEfficiency": 0.93,
+          "minWeakLink": 78
+        },
+        {
+          "id": "1-1",
+          "priority": 40,
+          "label": "NERVY DRAW",
+          "requireAllBucketsNonEmpty": true,
+          "requireMinCounts": false,
+          "minEfficiency": 0.9,
+          "minWeakLink": 0
+        },
+        {
+          "id": "1-2",
+          "priority": 20,
+          "label": "UPSET LOSS",
+          "requireAllBucketsNonEmpty": false,
+          "requireMinCounts": false,
+          "minEfficiency": 0.92,
+          "minWeakLink": 0
+        },
+        {
+          "id": "0-4",
+          "priority": 0,
+          "label": "TOTAL COLLAPSE",
+          "fallback": true
+        }
+      ]
+    }
+  }
 }

@@ -40,8 +40,7 @@ export interface CardGroups {
 }
 
 export interface MatchdayCardData {
-  mode: 'daily' | 'free';
-  matchdayNumber: number | undefined;
+  difficulty: 'normal' | 'hard';
   formationId: string;
   formationLabel: string;
   bandId: string;
@@ -49,20 +48,23 @@ export interface MatchdayCardData {
   nearMissText: string | null;
   groups: CardGroups;
   topPlayerName: string;
+  /** ADR-020 Wave E: today's opposition label ('THE PRESSING MACHINE'), if known. */
+  opponentLabel: string | undefined;
   eyebrow: string;
   shareText: string;
   shareUrl: string;
 }
 
 export interface BuildCardDataInput {
-  mode: 'daily' | 'free';
-  matchdayNumber?: number;
+  difficulty: 'normal' | 'hard';
   formationId: string;
   formationLabel: string;
   bandId: string;
   bandLabel: string;
   nearMissText: string | null;
   groups: CardGroups;
+  /** ADR-020 Wave E: today's opposition label — flows into share text + card eyebrow. */
+  opponentLabel?: string;
 }
 
 /** Resolve the best-rated pick across the XI; ties → first in GK>DEF>MID>ATT. */
@@ -76,30 +78,34 @@ function resolveTopPlayer(groups: CardGroups): string {
   return best?.name ?? 'XI';
 }
 
-/** Daily: 'TenNil Matchday #N: BAND LABEL. Draft your XI: URL' (exact). */
-function dailyShareText(matchdayNumber: number, bandId: string, bandLabel: string): string {
-  return `TenNil Matchday #${matchdayNumber}: ${bandId} ${bandLabel}. Draft your XI: ${SHARE_URL}`;
+/** Hard: 'TenNil [HARD] vs THE PRESSING MACHINE: 7-1 CLASSY WIN. Draft your XI: URL' */
+function hardShareText(
+  bandId: string,
+  bandLabel: string,
+  opponentLabel?: string,
+): string {
+  const vs = opponentLabel ? ` vs ${opponentLabel}` : '';
+  return `TenNil [HARD]${vs}: ${bandId} ${bandLabel}. Draft your XI: ${SHARE_URL}`;
 }
 
-/** Free: 'TenNil: I drafted {top} and it ended BANDID. URL' (exact). */
-function freeShareText(topPlayer: string, bandId: string): string {
-  return `TenNil: I drafted ${topPlayer} and it ended ${bandId}. ${SHARE_URL}`;
+/** Normal: 'TenNil: 7-1 CLASSY WIN. Draft your XI: URL' */
+function normalShareText(bandId: string, bandLabel: string): string {
+  return `TenNil: ${bandId} ${bandLabel}. Draft your XI: ${SHARE_URL}`;
 }
 
 /** Pure payload builder — no DOM, no canvas, no RNG. */
 export function buildCardData(input: BuildCardDataInput): MatchdayCardData {
   const topPlayerName = resolveTopPlayer(input.groups);
-  const isDaily = input.mode === 'daily';
-  const matchdayNumber = isDaily ? input.matchdayNumber : undefined;
-  const eyebrow = isDaily
-    ? `MATCHDAY #${matchdayNumber ?? ''}`
-    : 'FREE DRAFT';
-  const shareText = isDaily
-    ? dailyShareText(matchdayNumber ?? 0, input.bandId, input.bandLabel)
-    : freeShareText(topPlayerName, input.bandId);
+  const isHard = input.difficulty === 'hard';
+  const vsEyebrow = isHard && input.opponentLabel ? ` · vs ${input.opponentLabel}` : '';
+  const eyebrow = isHard
+    ? `[HARD]${vsEyebrow}`
+    : '';
+  const shareText = isHard
+    ? hardShareText(input.bandId, input.bandLabel, input.opponentLabel)
+    : normalShareText(input.bandId, input.bandLabel);
   return {
-    mode: input.mode,
-    matchdayNumber,
+    difficulty: input.difficulty,
     formationId: input.formationId,
     formationLabel: input.formationLabel,
     bandId: input.bandId,
@@ -107,6 +113,7 @@ export function buildCardData(input: BuildCardDataInput): MatchdayCardData {
     nearMissText: input.nearMissText,
     groups: input.groups,
     topPlayerName,
+    opponentLabel: input.opponentLabel,
     eyebrow,
     shareText,
     shareUrl: SHARE_URL,
@@ -114,10 +121,8 @@ export function buildCardData(input: BuildCardDataInput): MatchdayCardData {
 }
 
 /** Anchor download filename for the rendered PNG. */
-export function cardFilename(data: MatchdayCardData): string {
-  return data.mode === 'daily'
-    ? `tennil-matchday-${data.matchdayNumber}.png`
-    : `tennil-card-${data.bandId}.png`;
+export function cardFilename(_data: MatchdayCardData): string {
+  return 'tennil-result.png';
 }
 
 /** Twitter / X intent href (URL-encoded share text). */
@@ -190,7 +195,14 @@ export function renderMatchdayCard(canvas: HTMLCanvasElement, data: MatchdayCard
   ctx.font = mastheadFont(120);
   ctx.fillText('TENNIL', CARD_W / 2, 155);
 
-  ctx.font = uiFont(36, '600');
+  // Eyebrow now carries the opponent (Wave E) — auto-shrink so long labels
+  // ('MATCHDAY #33 · vs THE PRESSING MACHINE') never overflow the margins.
+  let eyebrowSize = 36;
+  ctx.font = uiFont(eyebrowSize, '600');
+  while (eyebrowSize > 22 && ctx.measureText(data.eyebrow).width > CARD_W - 2 * MARGIN) {
+    eyebrowSize -= 2;
+    ctx.font = uiFont(eyebrowSize, '600');
+  }
   ctx.fillStyle = INK_FADED;
   ctx.fillText(data.eyebrow, CARD_W / 2, 215);
 

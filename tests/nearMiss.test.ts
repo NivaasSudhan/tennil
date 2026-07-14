@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { formatNearMiss } from '../src/app/nearMiss';
 import type { PredicateResult, ScoreExplanation } from '../src/domain/types';
+import type { OppositionDef } from '../src/domain/scoring/profileFit';
 
 function explain(nextBetter: ScoreExplanation['nextBetter']): ScoreExplanation {
   return {
@@ -171,5 +172,73 @@ describe('formatNearMiss', () => {
       ],
     });
     expect(formatNearMiss(e).text).toBe('ELEVEN ARTISTS, NOBODY ON THE DOOR.');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// ADR-020 Wave C: minFit near-miss templates (plan.md line 48, dictated copy).
+// Template selection keys on the active opposition's DOMINANT weightMod.
+// ---------------------------------------------------------------------------
+describe('formatNearMiss — ADR-020 minFit templates', () => {
+  const STRENGTH_OPP: OppositionDef = {
+    id: 'aerial-bombardment', label: 'AERIAL BOMBARDMENT', tagline: 't', weightMods: { strength: 1.25 },
+  };
+  const ACCURACY_OPP: OppositionDef = {
+    id: 'low-block', label: 'THE LOW BLOCK', tagline: 't', weightMods: { accuracy: 1.25 },
+  };
+  const PACE_OPP: OppositionDef = {
+    id: 'pressing-machine', label: 'THE PRESSING MACHINE', tagline: 't', weightMods: { pace: 1.25 },
+  };
+  const NEUTRAL_OPP: OppositionDef = { id: 'neutral', label: 'NEUTRAL', tagline: 't', weightMods: {} };
+  const MIXED_OPP: OppositionDef = {
+    id: 'counter-kings', label: 'COUNTER KINGS', tagline: 't', weightMods: { pace: 1.15, strength: 1.2 },
+  };
+
+  function minFitExplain(bandId: string): ScoreExplanation {
+    return explain({ bandId, label: 'x', failing: [fail({ name: 'minFit', required: 65, actual: 60 })] });
+  }
+
+  it('strength-dominant opposition -> "TOO SOFT FOR THE PRESS — {BAND} WANTED STEEL"', () => {
+    expect(formatNearMiss(minFitExplain('10-0'), STRENGTH_OPP).text).toBe(
+      'TOO SOFT FOR THE PRESS — 10-0 WANTED STEEL',
+    );
+  });
+
+  it('accuracy-dominant opposition -> "ALL LEGS, NO CRAFT — THE {OPP} HELD" (label\'s leading THE not doubled)', () => {
+    expect(formatNearMiss(minFitExplain('7-1'), ACCURACY_OPP).text).toBe(
+      'ALL LEGS, NO CRAFT — THE LOW BLOCK HELD',
+    );
+  });
+
+  it('pace-dominant opposition -> "CAUGHT FLAT — {BAND} NEEDED LEGS"', () => {
+    expect(formatNearMiss(minFitExplain('5-0'), PACE_OPP).text).toBe('CAUGHT FLAT — 5-0 NEEDED LEGS');
+  });
+
+  it('neutral opposition -> "SHAPE FIT SHORT OF A {BAND}"', () => {
+    expect(formatNearMiss(minFitExplain('10-0'), NEUTRAL_OPP).text).toBe('SHAPE FIT SHORT OF A 10-0');
+  });
+
+  it('opposition omitted entirely -> falls back to the neutral shape-fit line', () => {
+    expect(formatNearMiss(minFitExplain('10-0')).text).toBe('SHAPE FIT SHORT OF A 10-0');
+  });
+
+  it('mixed weightMods pick the strictly higher mod as dominant (strength 1.2 > pace 1.15)', () => {
+    expect(formatNearMiss(minFitExplain('10-0'), MIXED_OPP).text).toBe(
+      'TOO SOFT FOR THE PRESS — 10-0 WANTED STEEL',
+    );
+  });
+
+  it('minFit near-miss joins with a second failing predicate when both present (two most binding)', () => {
+    const e = explain({
+      bandId: '10-0',
+      label: 'x',
+      failing: [
+        fail({ name: 'minFit', required: 65, actual: 63 }),
+        fail({ name: 'minWeakLink', required: 86, actual: 84 }),
+      ],
+    });
+    expect(formatNearMiss(e, PACE_OPP).text).toBe(
+      'CAUGHT FLAT — 10-0 NEEDED LEGS · PASSENGER AT 84 — A 10-0 XI CARRIES NO ONE',
+    );
   });
 });

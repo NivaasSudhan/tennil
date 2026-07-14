@@ -47,6 +47,8 @@ function makeConfig(bands: BandDef[], minCounts = MIN_COUNTS): ThresholdConfig {
       { id: '4-3-3', label: '4-3-3', description: 'test', minCounts: { GK: 1, DEF: 4, MID: 3, ATT: 3 } },
     ],
     ratingScale: { min: 1, max: 100 }, bands,
+    profiles: {}, // ADR-020: unused by this synthetic scoring fixture (fit lands Wave C)
+    oppositions: [],
   };
 }
 const CONFIG = makeConfig([TOP, MID, LOW, FALLBACK]);

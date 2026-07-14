@@ -73,12 +73,18 @@ function makeConfig(bands: BandDef[]): ThresholdConfig {
     ],
     ratingScale: { min: 1, max: 100 },
     bands,
+    profiles: {}, // ADR-020: unused by this synthetic scoring fixture (fit lands Wave C)
+    oppositions: [],
   };
 }
 
 const CONFIG = makeConfig([TOP_BAND, MID_BAND, LOW_BAND, FALLBACK_BAND]);
 
-const REAL_THRESHOLDS = realThresholdsRaw as ThresholdConfig;
+// ADR-021 (schema v5): band sets live under `modes` now. Attach hard as active `bands`.
+const REAL_THRESHOLDS = {
+  ...(realThresholdsRaw as unknown as ThresholdConfig),
+  bands: (realThresholdsRaw as unknown as { modes: { hard: { bands: BandDef[] } } }).modes.hard.bands,
+} as ThresholdConfig;
 
 // ---------- XI builder ----------
 
@@ -257,6 +263,22 @@ describe('scoreBand', () => {
     const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
     expect(input.bucketSums).toEqual({ GK: 90, DEF: 326, MID: 213, ATT: 183 });
     expect(input.bucketCounts).toEqual({ GK: 1, DEF: 4, MID: 3, ATT: 3 });
+  });
+
+  // ---------- ADR-020: fit/oppositionId params ----------
+
+  it('computeScoreInput defaults fit=0, oppositionId="neutral" when omitted (pre-Wave-C call sites)', () => {
+    const xi = buildXI({ GK: [90], DEF: [80], MID: [70], ATT: [60] });
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING);
+    expect(input.fit).toBe(0);
+    expect(input.oppositionId).toBe('neutral');
+  });
+
+  it('computeScoreInput carries an explicitly passed fit/oppositionId through untouched', () => {
+    const xi = buildXI({ GK: [90], DEF: [80], MID: [70], ATT: [60] });
+    const input = computeScoreInput(xi, POSITION_MAP, ZERO_CEILING, 73, 'pressing-machine');
+    expect(input.fit).toBe(73);
+    expect(input.oppositionId).toBe('pressing-machine');
   });
 
   // ---------- 8. determinism ----------

@@ -1,4 +1,5 @@
 import type { Player } from '../domain/types';
+import { displayAttrs, dominantDisplayAttr } from './attrDisplay';
 
 export type RowState = 'pickable' | 'picked' | 'taken' | 'owned';
 
@@ -9,6 +10,8 @@ interface PlayerRowProps {
   /** Reveal/menu rows are interactive <button>s; mine-sheet rows are plain divs. */
   as: 'button' | 'line';
   showStamp?: boolean;
+  /** ADR-021: hard mode shows attr micro-digits; normal mode hides them (v1 clean row). */
+  showAttrs?: boolean;
 }
 
 function ratingTier(rating: number): 'icon' | 'strong' | 'solid' {
@@ -16,6 +19,15 @@ function ratingTier(rating: number): 'icon' | 'strong' | 'solid' {
   if (rating >= 86) return 'strong';
   return 'solid';
 }
+
+const ATTR_LABEL_MAP: Record<string, string> = {
+  pace: 'pace',
+  strength: 'strength',
+  accuracy: 'accuracy',
+  ref: 'reflexes',
+  han: 'handling',
+  dis: 'distribution',
+};
 
 /**
  * PlayerRow (DESIGN.md Components). One typed line on a paper team sheet:
@@ -30,9 +42,11 @@ function ratingTier(rating: number): 'icon' | 'strong' | 'solid' {
  * Presentation only. `state` is derived by the parent from `session.picks`
  * (+ isPersonTaken for reveal rows) — never computed here.
  */
-export default function PlayerRow({ player, state, onPick, as, showStamp }: PlayerRowProps) {
+export default function PlayerRow({ player, state, onPick, as, showStamp, showAttrs = true }: PlayerRowProps) {
   const tier = ratingTier(player.rating);
   const interactive = as === 'button' && state === 'pickable';
+  const dispAttrs = displayAttrs(player);
+  const dominant = dominantDisplayAttr(player);
 
   const inner = (
     <>
@@ -50,6 +64,30 @@ export default function PlayerRow({ player, state, onPick, as, showStamp }: Play
         ·
       </span>
       <span className={`row__rating row__rating--${tier}`}>{player.rating}</span>
+      {showAttrs && (
+        <span
+          className="row__attrs"
+          aria-label={dispAttrs
+            .map((a) => `${ATTR_LABEL_MAP[a.key] ?? a.key} ${a.value}`)
+            .join(', ')}
+        >
+          {dispAttrs.map((a, i) => (
+            <span key={a.key}>
+              {i > 0 && (
+                <span className="row__attr-sep" aria-hidden="true">
+                  ·
+                </span>
+              )}
+              <span className="row__attr-tag" aria-hidden="true">
+                {a.label}
+              </span>
+              <span className={`row__attr${dominant === a.key ? ' row__attr--dom' : ''}`}>
+                {a.value}
+              </span>
+            </span>
+          ))}
+        </span>
+      )}
       {showStamp && state === 'picked' && (
         <span className="row__stamp" aria-hidden="true">
           Selected

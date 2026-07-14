@@ -1,4 +1,5 @@
 import type { BandDef, ThresholdConfig } from '../types';
+import { resolveMinFit } from './withMode';
 
 function scaleBucketSums(
   band: BandDef,
@@ -37,8 +38,10 @@ export function withFormationMinCounts(
     );
   }
 
+  // ADR-021: resolve any per-formation minFit (Record<formationId, number>) to a
+  // scalar for THIS formation at the same view layer, then scale minBucketSums.
   const scaledBands = config.bands.map((band) =>
-    scaleBucketSums(band, refFormation.minCounts, f.minCounts),
+    scaleBucketSums(resolveMinFit(band, f.id), refFormation.minCounts, f.minCounts),
   );
 
   return { ...config, minCounts: f.minCounts, referenceFormation: f.id, bands: scaledBands };

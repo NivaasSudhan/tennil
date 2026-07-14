@@ -4,6 +4,7 @@ import { isPersonTaken } from '../domain/draft/person';
 import { invariant } from '../lib/assert';
 import StadiumButton from './StadiumButton';
 import TeamSheet from './TeamSheet';
+import RulesProgramme from './RulesProgramme';
 
 interface DraftScreenProps {
   session: DraftSession;
@@ -12,6 +13,8 @@ interface DraftScreenProps {
   onSkip: () => void;
   formations: Formation[];
   formationId: string | null;
+  opponentLabel?: string;
+  dominantAttr?: string | null;
 }
 
 /**
@@ -32,11 +35,14 @@ export default function DraftScreen({
   onSkip,
   formations,
   formationId,
+  opponentLabel,
+  dominantAttr,
 }: DraftScreenProps) {
   invariant(session.currentReveal, 'DraftScreen requires an active reveal (phase !== COMPLETE)');
   const reveal = session.currentReveal;
 
   const [lastPickId, setLastPickId] = useState<string | null>(null);
+  const [rulesOpen, setRulesOpen] = useState(false);
   const prevRevealId = useRef<string>(reveal.id);
 
   useEffect(() => {
@@ -97,12 +103,20 @@ export default function DraftScreen({
         <span className="draft-screen__round">
           Round {session.roundsPlayed} / {totalRounds}
         </span>
+        {opponentLabel && (
+          <span className="draft-screen__opponent">
+            vs {opponentLabel}{dominantAttr ? ` · ${dominantAttr} day` : ''}
+          </span>
+        )}
         <StadiumButton
           variant="ghost"
           onClick={onSkip}
           disabled={session.skipRemaining === 0}
         >
           Skip squad — once per draft
+        </StadiumButton>
+        <StadiumButton variant="ghost" onClick={() => setRulesOpen(true)}>
+          RULES
         </StadiumButton>
       </div>
 
@@ -118,6 +132,7 @@ export default function DraftScreen({
           reveal={reveal}
           takenIds={takenIds}
           onPick={handlePick}
+          showAttrs={session.difficulty === 'hard'}
         />
         <div>
           <TeamSheet
@@ -125,12 +140,19 @@ export default function DraftScreen({
             picks={session.picks}
             lastPickId={stampPickId}
             bucketCaps={bucketCaps}
+            showAttrs={session.difficulty === 'hard'}
           />
           {marginaliaText && (
             <p className="sheet__marginalia">{marginaliaText}</p>
           )}
         </div>
       </div>
+
+      <RulesProgramme
+        open={rulesOpen}
+        onClose={() => setRulesOpen(false)}
+        difficulty={session.difficulty}
+      />
     </div>
   );
 }

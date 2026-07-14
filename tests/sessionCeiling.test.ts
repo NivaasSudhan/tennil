@@ -92,6 +92,8 @@ function makeGameData(squads: Squad[]): GameData {
     formations: [{ id: '4-3-3', label: '4-3-3', description: 'test', minCounts: FORMATION_COUNTS }],
     ratingScale: { min: 1, max: 100 },
     bands: [{ id: 'fallback', priority: 0, label: 'FALL', fallback: true }],
+    profiles: {}, // ADR-020: unused by this synthetic scoring fixture (fit lands Wave C)
+    oppositions: [],
   };
   return {
     squads,

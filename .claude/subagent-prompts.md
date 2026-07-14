@@ -1,5 +1,21 @@
 # Subagent prompt cache
 
+## DESIGN-BRIEF-v1 (paste VERBATIM into every UI-touching dispatch; orchestrator taste, binding)
+```
+MATCHDAY DESIGN BRIEF (binding; deviations need orchestrator sign-off):
+- Two material worlds, never mixed on one surface: PAPER (draft/landing: team-sheet stock, typed Courier Prime, ink, stamps) and BROADCAST (finals: dark chrome, Archivo, gold). Anton = mastheads ONLY.
+- Colors: existing CSS vars only (--pitch/--paper/--ink/--ink-faded/--stamp/--gold/--broadcast-bg/--broadcast-text). No new colors, no new fonts, no new npm deps, no router, no persistent global header.
+- Physical verbs for motion: stamp, clip-on, whip-off, flip, flare. ease-out-quart/quint only, no bounce. EVERY animation gets a prefers-reduced-motion fallback. Content visible by default — never opacity:0 in a base state (animate FROM in keyframes only).
+- Voice: dry pundit sarcasm; margins over mystery. Engine jargon (efficiency, ceiling, predicate, config) NEVER appears in player-facing copy.
+- Hard bans: side-stripe accent borders >1px, gradient text, glassmorphism, identical card grids, uppercase eyebrow above every section.
+- Legibility: digits ≥0.8rem, reading text contrast ≥4.5:1, player rows ≤2.8rem tall, sheets fit the viewport (internal scroll only <640px tall).
+- Layout budgets enforced: overlays/effects NEVER cover playback/skip controls; canvas card respects the y-budget (verdict ends ≤y1270, footer y1310).
+- Result surfaces lead with the nearest miss; verdict is a slam, not a table.
+```
+
+Post-UI-wave check (standing): orchestrator runs ONE consolidated browser pass per UI wave against this brief (2-3 screenshots max), fixes dispatched with cached prompts. No separate design-review agents (token rule).
+
+
 Guardrail: EVERY prompt dispatched to a subagent (Claude Code Agent tool, opencode, any external model) is recorded here verbatim BEFORE/AT dispatch. On retry or re-dispatch, reuse the cached prompt verbatim — never regenerate it. Update `status` after the run; append lessons under the entry instead of rewriting the prompt (rewrites get a new id with a `supersedes:` note).
 
 Entry format:
@@ -440,3 +456,55 @@ METHOD: use the T6 diagnostics (npx tsx scripts/simulate.ts --n 500 --seed 42 --
 
 FINISH: write final docs/sim/sim-report.json via --report on the last greedy run; append the RISKS_AND_UNKNOWNS.md experiment-log entry per the plan's template (include the human-playtest motivation); npm test must be green. Print as final output: TASK9-DONE, both final histograms (greedy + random), near-miss lines, the final gate numbers per band, and one paragraph explaining the tuning rationale.
 ```
+
+## P-038 — Wave G: attr digit labels + GK display attrs (UI-only)
+- date: 2026-07-13
+- target: opencode/deepseek-v4-flash-free --variant max
+- status: succeeded (394 tests; labeled PAC/STR/ACC + GK REF/HAN/DIS; browser-verified, 2.8rem held)
+- task: Per-digit PAC/STR/ACC (outfield) + REF/HAN/DIS (GK, display-only derived) labels on PlayerRow; new pure src/app/attrDisplay.ts; no domain touch. Full spec in docs/plans/2026-07-12-attrs-v2-plan.md Wave G. DESIGN-BRIEF-v1 embedded.
+
+## P-039 — Rules glossary: attr abbreviation full-forms [QUEUED after P-038 Wave G commits]
+- date: 2026-07-13
+- target: opencode/deepseek-v4-flash-free --variant max
+- status: succeeded (395 tests; glossary on Your-target page)
+- task: Add attr abbreviation glossary to Rules Programme 'Your target' page (src/app/rulesCopy.ts only). Dictated copy, dry-pundit voice:
+  "Every player carries three marks. Outfield: PAC pace, STR strength, ACC accuracy. Keepers read differently — REF reflexes, HAN handling, DIS distribution. The dominant mark sits in bold ink. Today's opponent prizes one of them — draft to match."
+  Append as a new short paragraph on the existing 'Your target' page (keep the page's existing formation paragraph). Update tests/rulesProgramme.test.tsx: assert the glossary text (PAC/STR/ACC + REF/HAN/DIS full forms) renders; keep jargon-ban test green. Touch ONLY src/app/rulesCopy.ts + tests/rulesProgramme.test.tsx. npm test + build green; commit terse on v2/attrs; no push.
+
+## P-040 — Fit teeth + efficiency tighten (10-0 too easy, canary human data)
+- date: 2026-07-14
+- target: Claude Code Agent, model opus (balance judgment; opencode paid models cap-blocked)
+- status: dispatched
+- task: Resolve parked R-13 decision — fit gate gets TEETH + minEfficiency nudge on top bands. Config-only thresholds.json. User canary feedback: 10-0 still trivial for a human (best-OVR-per-bucket autopilot; minFit=0 info-only does nothing). Conservative Law proxy (fitaware bot >0% every archetype). Starting calibration; iterate on user's next playtest.
+
+## P-041 — Per-formation sim capability + 10-0 spread diagnosis
+- date: 2026-07-14
+- target: opencode/deepseek-v4-flash-free --variant max
+- status: dispatched
+- task: Add --formation to simulate.ts (mirror ResultScreen per-formation scoring exactly + correctness test); MEASURE fitaware 10-0 across all 4 formations on shipped fit-dominant config; report per-formation 10-0 spread + efficiency-vs-fit failure breakdown so orchestrator picks the equalization lever. NO thresholds.json change (diagnosis only). Closes ADR-017 C6 (sim was reference-formation-only).
+
+## P-042 — Modes M1: domain (ADR-021)
+- date: 2026-07-14
+- target: Claude Code Agent, model opus (reasoning-intensive)
+- status: dispatched
+- task: Per docs/plans/2026-07-14-difficulty-modes.md — thresholds v5 dual band sets, withMode view, per-formation minFit resolution, session difficulty + opposition draw (hard only, from injected rng pre-first-reveal), matchday/dailySeed domain removal, sim --mode, ADR-021 + amendments, test migration. M2 (P-043 UI, Deepseek/Haiku) + M3 (P-044 balance, Opus) queued behind it per spec wave table.
+
+## P-044 routing note (M3 balance) — user 2026-07-14: try opencode/grok-4.5 --variant high FIRST; ping before dispatch (cap-blocked as of now — $20/mo consumed); fallback Opus 4.8 if still blocked.
+
+## Grok prompt rule (user 2026-07-14): every Grok dispatch prepends explicit CAVEMAN ULTRA output discipline — costs are per-token. Verbatim block for Grok prompts:
+```
+OUTPUT DISCIPLINE — CAVEMAN ULTRA: respond maximally terse. Fragments. No pleasantries, no restating the task, no narration of steps, no hedging. Tables/numbers over prose. Code and exact values stay complete and precise — compress ONLY the words around them. Final reply = data + one-line verdicts.
+```
+
+## P-042 addendum: Opus M1 agent KILLED mid-flight per user no-Claude-subagents directive (tree left compiling, 12 files modified uncommitted, tests unverified). → P-042g: Grok takeover to finish+verify+commit the working tree against the spec.
+
+## P-042g status: succeeded (Grok takeover; 401 true tests post-worktree-purge; normal 4% / hard 3% at n=100; ADR-021 shipped). ANOTHER stale agent worktree found+purged (eager-hertz) — ALWAYS check `git worktree list` when counts jump.
+
+## P-043a — M2a: landing toggle + taunt + report-a-bug (Deepseek)
+- status: dispatched — StartScreen/App difficulty toggle (NORMAL default), "Can you score 10-0?" under masthead, "Report a bug" link text; tests.
+## P-043b — M2b: OpponentCard flip (Deepseek) [QUEUED after M2a — App.tsx overlap]
+- status: queued — Hard flow: KICK OFF → opponent card flip (paper, physical verb, reduced-motion) → formation gate; session.oppositionId display source.
+## P-043c — M2c: mode-conditional surfaces (Deepseek)
+- status: dispatched — Normal hides attr digits/banner/StatsScreen; rulesCopy per mode ("Your opponent" not "Today's"); share/card [HARD] vs {OPP} tags + matchday text removal.
+## P-044 — M3: per-formation calibration + Law matrix (Grok, caveman ultra)
+- status: dispatched — hard-mode per-formation minFit Records (~2-4% each vs neutral, fixes 3-5-2 exploit + 5-3-2 floor + 4-3-3 block); archetype×formation Law matrix all >0%; normal verified vs main histogram; RISKS + sim-report.

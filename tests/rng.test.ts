@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { dailySeed, mulberry32, seededRng, systemRng } from '../src/lib/rng';
+import { mulberry32, seededRng, systemRng } from '../src/lib/rng';
 
 describe('mulberry32', () => {
   it('same seed produces identical sequences', () => {
@@ -66,33 +66,5 @@ describe('seededRng', () => {
   });
 });
 
-describe('dailySeed', () => {
-  it('same UTC date produces the same seed', () => {
-    const d1 = new Date(Date.UTC(2026, 6, 12, 3, 15));
-    const d2 = new Date(Date.UTC(2026, 6, 12, 23, 59));
-    expect(dailySeed(d1)).toBe(dailySeed(d2));
-  });
-
-  it('different UTC dates produce different seeds', () => {
-    const d1 = new Date(Date.UTC(2026, 6, 12));
-    const d2 = new Date(Date.UTC(2026, 6, 13));
-    const d3 = new Date(Date.UTC(2026, 5, 11));
-    const seeds = new Set([dailySeed(d1), dailySeed(d2), dailySeed(d3)]);
-    expect(seeds.size).toBe(3);
-  });
-
-  it('returns a non-negative integer usable as a mulberry32 seed', () => {
-    const seed = dailySeed(new Date(Date.UTC(2026, 6, 12)));
-    expect(Number.isInteger(seed)).toBe(true);
-    expect(seed).toBeGreaterThanOrEqual(0);
-  });
-
-  it('two rngs seeded from the same date produce identical draw sequences', () => {
-    const date = new Date(Date.UTC(2026, 6, 12));
-    const rngA = mulberry32(dailySeed(date));
-    const rngB = mulberry32(dailySeed(date));
-    for (let i = 0; i < 20; i++) {
-      expect(rngA.next()).toBe(rngB.next());
-    }
-  });
-});
+// ADR-021: dailySeed removed (matchday/daily mechanic retired). The HARD-mode
+// opponent is drawn off the session rng in draft/session.ts, tested in draft.test.ts.

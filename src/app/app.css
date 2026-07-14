@@ -113,10 +113,21 @@
 
 * { box-sizing: border-box; }
 
-html,
-body,
-#root {
+/* ONE scroller = the window (DESIGN.md Layout). html anchors the viewport
+   reference for the fixed pitch layers; body + #root GROW with content
+   (min-height, never a pinned height:100%). A pinned height:100% made #root a
+   fixed viewport-tall box that taller content (result stack: scoreboard + mini
+   sheet + ticker + BandSlam + StatsScreen + ShareRow) overflowed — a split
+   model where the root box ended at one viewport while the scrollable content
+   ran far past it, so layout coordinates and the fixed pitch paint disagreed
+   below the first screen (phantom-height / dead-scroll). Growing the chain
+   keeps a single coherent window scroller for BOTH draft and result. */
+html {
   height: 100%;
+}
+
+#root {
+  min-height: 100vh;
 }
 
 body {
@@ -248,42 +259,113 @@ button {
   opacity: 0.95;
 }
 
-.start-rules {
-  list-style: none;
+.start-taunt {
+  font-family: 'Courier Prime', monospace;
+  font-style: italic;
+  font-size: clamp(0.8rem, 1.6vw, 0.9rem);
+  color: oklch(0.92 0.02 140);
   margin: 0;
-  padding: 0.3rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.22rem;
-  max-width: min(34rem, 92vw);
-  text-align: left;
-  border-top: 1px solid oklch(0.92 0.02 140 / 0.25);
-  border-bottom: 1px solid oklch(0.92 0.02 140 / 0.25);
 }
 
-.start-rules li {
-  font-family: 'Courier Prime', 'Archivo', monospace;
+/* --- Match setup sheet — paper world landing --- */
+.match-setup-sheet {
+  position: relative;
+  width: 100%;
+  max-width: min(38rem, 92vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.85rem 1rem 0.95rem;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 4px;
+  transform: rotate(var(--sheet-tilt));
+  box-shadow:
+    0 1px 1px oklch(0.2 0.02 260 / 0.4),
+    0 14px 28px oklch(0.15 0.03 260 / 0.55);
+}
+
+.match-setup-sheet::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.15' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+  mix-blend-mode: multiply;
+}
+
+.match-setup-sheet__heading {
+  margin: 0;
+  font-family: 'Courier Prime', monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.74rem;
+  color: var(--ink);
+  border-bottom: 1.5px solid oklch(0.7 0.02 260 / 0.5);
+  padding-bottom: 0.35rem;
+  width: 100%;
+  text-align: center;
+}
+
+.match-setup-sheet__rules {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+}
+
+.match-setup-sheet__rules li {
+  font-family: 'Courier Prime', monospace;
   font-size: clamp(0.76rem, 1.8vw, 0.86rem);
-  color: oklch(0.92 0.02 140);
+  color: var(--ink);
   padding: 0.16rem 0;
   letter-spacing: 0.01em;
   line-height: 1.3;
 }
 
-.start-rules li::before {
+.match-setup-sheet__rules li::before {
   content: '— ';
-  color: var(--gold);
+  color: var(--ink-faded);
   margin-right: 0.3rem;
 }
 
-.matchday-badge {
+.match-setup-sheet__difficulty {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+@media (max-width: 520px) {
+  .match-setup-sheet__difficulty {
+    flex-direction: column;
+  }
+}
+
+.match-setup-sheet__hard-hint {
   margin: 0;
   font-family: 'Courier Prime', monospace;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--gold);
+  font-style: italic;
+  font-size: 0.78rem;
+  color: var(--ink-faded);
+  text-align: center;
+  line-height: 1.35;
 }
+
+.formation-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+
 
 /* ---------- Formation picker — paper-world typed options, circled selection ---------- */
 .formation-picker {
@@ -399,6 +481,123 @@ button {
   text-align: center;
   line-height: 1.35;
   max-width: 32rem;
+}
+
+/* ---------- OpponentCard — paper team-sheet stock, flip reveal (M2b) ---------- */
+.opponent-card {
+  perspective: 800px;
+  max-width: min(32rem, 92vw);
+  margin: 2rem auto;
+  display: flex;
+  justify-content: center;
+}
+
+.opponent-card__inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 2rem 2rem 2.5rem;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 4px;
+  text-align: center;
+  width: 100%;
+  box-shadow:
+    0 1px 1px oklch(0.2 0.02 260 / 0.4),
+    0 14px 28px oklch(0.15 0.03 260 / 0.55),
+    0 30px 60px oklch(0.1 0.02 260 / 0.4);
+  animation: card-flip-in 500ms var(--ease-out-quint) both;
+  transform-origin: center center;
+}
+
+.opponent-card__grain {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.15' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+  mix-blend-mode: multiply;
+}
+
+.opponent-card__inner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  border: 1px solid oklch(0.7 0.02 95 / 0.5);
+  box-shadow: inset 0 0 0 1px oklch(0.85 0.01 95 / 0.4);
+}
+
+.opponent-card__eyebrow {
+  font-family: 'Courier Prime', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ink-faded);
+  margin-bottom: 0.2rem;
+}
+
+.opponent-card__label {
+  font-family: 'Courier Prime', monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: clamp(1.3rem, 4vw, 1.8rem);
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+.opponent-card__tagline {
+  margin: 0;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--ink-faded);
+  max-width: 26rem;
+}
+
+.opponent-card__btn {
+  margin-top: 0.4rem;
+  font-family: 'Courier Prime', monospace;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: transparent;
+  border: 1.5px solid var(--ink);
+  border-radius: 4px;
+  padding: 0.6rem 1.6rem;
+  cursor: pointer;
+  transition: background 180ms var(--ease-out-quart),
+              color 180ms var(--ease-out-quart);
+}
+
+.opponent-card__btn:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.opponent-card__btn:focus-visible {
+  outline: 2px solid var(--stamp);
+  outline-offset: 3px;
+}
+
+@keyframes card-flip-in {
+  from {
+    transform: rotateY(90deg) scale(0.92);
+    opacity: 0.3;
+  }
+  to {
+    transform: rotateY(0deg) scale(1);
+    opacity: 1;
+  }
 }
 
 /* ---------- StadiumButton — floodlit signage CTA ---------- */
@@ -523,6 +722,20 @@ button {
   border: 1px solid oklch(0.82 0.14 88 / 0.5);
   border-radius: 999px;
   background: oklch(0.22 0.03 260 / 0.5);
+}
+
+.draft-screen__opponent {
+  font-family: 'Courier Prime', monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  color: var(--ink-dim);
+  padding: 0.4rem 0.95rem;
+  border: 1px solid oklch(0.78 0.02 140 / 0.35);
+  border-radius: 999px;
+  background: oklch(0.22 0.03 260 / 0.35);
+  white-space: nowrap;
 }
 
 .draft-screen__round-eyebrow {
@@ -698,7 +911,8 @@ button {
   align-items: baseline;
   gap: 0.4rem;
   width: 100%;
-  padding: 0.22rem 0.5rem 0.22rem;
+  /* 2.4rem rating circle + 0.2rem×2 = 2.8rem exactly (row height budget). */
+  padding: 0.2rem 0.5rem;
   text-align: left;
   background: transparent;
   border: none;
@@ -1185,7 +1399,9 @@ button {
   .app-shell { padding: 1rem 0.7rem 3rem; }
   .team-sheet { padding: 1.1rem 1.1rem 1.3rem; }
   .row__leader { display: none; }
-  .player-row { gap: 0.6rem; }
+  .player-row { gap: 0.4rem; }
+  .row__attr-tag { letter-spacing: 0; margin-right: 0.08rem; }
+  .row__attr-sep { padding: 0 0.06rem; }
 }
 
 /* =====================================================================
@@ -1263,6 +1479,13 @@ button {
   /* Kill the infinite signage pulse so glow is steady. */
   .stadium-button {
     animation: none;
+  }
+
+  /* Opponent card instant show */
+  .opponent-card__inner {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
   }
 }
 
@@ -1810,47 +2033,446 @@ button {
 }
 
 .start-marginalia {
-  margin-top: 2.2rem;
-  padding-top: 0.9rem;
-  border-top: 1px dashed oklch(0.92 0.02 140 / 0.35);
-  font-family: 'Courier Prime', 'Courier New', monospace;
-  font-size: 0.72rem;
-  color: var(--pitch-line);
-  text-align: left;
+  margin-top: 1rem;
+  padding-top: 0.6rem;
+  border-top: 1px dotted var(--ink-faded);
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.4rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: min(38rem, 92vw);
+  flex-wrap: wrap;
 }
 
 .start-marginalia__link {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.72rem;
+  color: var(--ink-faded);
   background: none;
   border: none;
   padding: 0;
-  font: inherit;
-  color: var(--pitch-line);
-  text-decoration: underline dotted;
-  text-underline-offset: 2px;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .start-marginalia__link:hover,
 .start-marginalia__link:focus-visible {
-  color: var(--gold);
+  text-decoration: underline;
   outline: none;
 }
 
-.start-marginalia__about {
-  margin: 0.1rem 0 0.2rem;
-  max-width: 34rem;
-  line-height: 1.4;
-  color: oklch(0.88 0.02 140);
+.start-marginalia__link--issue {
+  color: var(--ink-faded);
+  text-decoration: none;
 }
 
-.start-marginalia__link--issue {
-  margin-top: 0.15rem;
+.start-marginalia__link--issue:hover {
+  text-decoration: underline;
+}
+
+.start-marginalia__sep {
+  color: var(--ink-faded);
+  font-size: 0.72rem;
+}
+
+.start-marginalia__about {
+  width: 100%;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.72rem;
+  color: var(--ink-faded);
+  line-height: 1.4;
+  text-align: center;
+  margin: 0.2rem 0 0;
 }
 
 @media (max-width: 720px) {
   .share-row__btn { font-size: 0.66rem; padding: 0.3rem 0.5rem; }
+}
+
+/* =====================================================================
+   WAVE E (ADR-020) — attr micro-digits, opposition banners, stats screen.
+   Paper world: row attr digits + landing opponent line (typed, Courier).
+   Broadcast world: chrome vs-line + StatsScreen bars (Archivo, gold).
+   ===================================================================== */
+
+/* --- Labeled attrs on player rows (paper). tag + digit for every row
+   (GK included). >=0.8rem digits, tags at 0.7rem --ink-faded. --- */
+.row__attrs {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: baseline;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.8rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-faded);
+  letter-spacing: 0.02em;
+}
+
+.row__attr-tag {
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  color: var(--ink-faded);
+  letter-spacing: 0.02em;
+  margin-right: 0.15rem;
+  font-family: inherit;
+}
+
+.row__attr-sep {
+  opacity: 0.55;
+  padding: 0 0.12rem;
+}
+
+.row__attr--dom {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* Taken rows fade the tags and digits with the rest of the line. */
+.player-row[data-state='taken'] .row__attrs,
+.player-row[data-state='taken'] .row__attr--dom {
+  color: var(--ink-faded);
+  font-weight: 400;
+}
+
+/* At narrow widths the dotted leader gives way first (it is flex 1 1);
+   attr digits stay >=0.8rem — never shrink type below the legibility gate.
+   Tags tighten spacing to prevent overflow at 360px. */
+@media (max-width: 400px) {
+  .player-row { gap: 0.3rem; }
+  .row__leader { flex-basis: 0.4rem; }
+  .row__attr-tag { font-size: 0.6rem; letter-spacing: 0; margin-right: 0.05rem; }
+  .row__attr-sep { padding: 0 0.04rem; }
+}
+
+/* --- Landing opposition banner — typed paper line under the masthead:
+   'vs THE PRESSING MACHINE' + tagline. Paper world: Courier, ink on paper. --- */
+.opponent-banner {
+  margin: 0.15rem 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  font-family: 'Courier Prime', monospace;
+  text-align: center;
+}
+
+.opponent-banner__vs {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: oklch(0.93 0.02 140);
+}
+
+.opponent-banner__tag {
+  font-size: 0.75rem;
+  color: oklch(0.88 0.02 140);
+  max-width: 30rem;
+  line-height: 1.35;
+}
+
+/* --- Broadcast chrome vs-line — sits beside FULL TIME / LIVE, dimmer than
+   the gold status word so the status stays the headline. --- */
+.broadcast-chrome__vs {
+  color: var(--ink-dim);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* --- StatsScreen — broadcast world, below the BandSlam. Same panel family
+   as .bandslam (dark chrome, gold accents), Archivo digits. --- */
+.stats-screen {
+  margin-top: 1rem;
+  padding: 1rem 1.1rem 1.15rem;
+  background: oklch(0.18 0.03 260 / 0.65);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  font-family: 'Archivo', sans-serif;
+  color: var(--broadcast-text);
+  animation: beat-in 300ms var(--ease-out-quart);
+}
+
+.stats-screen__fit {
+  margin: 0;
+  font-size: clamp(1rem, 3.4vw, 1.3rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--broadcast-text);
+}
+
+.stats-screen__fit-number {
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+}
+
+.stats-screen__insight {
+  margin: 0.45rem 0 0.8rem;
+  font-family: 'Courier Prime', monospace;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: clamp(0.78rem, 2.6vw, 0.9rem);
+  text-align: center;
+  color: oklch(0.9 0.02 95);
+}
+
+.stats-screen__buckets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0.8rem 1.2rem;
+}
+
+.stats-screen__bucket-name {
+  margin: 0 0 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  border: none;
+  padding: 0;
+}
+
+.stats-bar {
+  display: grid;
+  grid-template-columns: 2.4rem 1fr 2rem;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.3rem;
+}
+
+.stats-bar__label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+}
+
+.stats-bar--emph .stats-bar__label,
+.stats-bar--emph .stats-bar__value {
+  color: var(--gold);
+  font-weight: 800;
+}
+
+.stats-bar__track {
+  position: relative;
+  display: block;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: oklch(0.30 0.03 260 / 0.8);
+  overflow: visible;
+}
+
+.stats-bar__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 999px;
+  background: oklch(0.72 0.02 260);
+  transform-origin: left center;
+  animation: stats-bar-grow 420ms var(--ease-out-quart);
+}
+
+.stats-bar--emph .stats-bar__fill {
+  background: var(--gold);
+}
+
+@keyframes stats-bar-grow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* Formation target tick — a chalk line the bar is measured against. */
+.stats-bar__target {
+  position: absolute;
+  top: -0.2rem;
+  bottom: -0.2rem;
+  width: 2px;
+  background: var(--broadcast-text);
+  opacity: 0.75;
+}
+
+.stats-bar__value {
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--broadcast-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stats-screen { animation: none !important; }
+  .stats-bar__fill { animation: none !important; transform: none !important; }
+}
+
+/* =====================================================================
+   WAVE F — Rules Programme dialog (programme spread).
+   Paper world only (Courier Prime body, Anton masthead only, existing
+   CSS vars). Native <dialog> — top-layer, no DraftSession coupling.
+   ===================================================================== */
+
+.rules-programme {
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--ink);
+  max-width: min(56rem, 94vw);
+  max-height: 90vh;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.rules-programme[open] {
+  animation: programme-enter 320ms var(--ease-out-quart) both;
+}
+
+.rules-programme::backdrop {
+  background: oklch(0.12 0.03 260 / 0.82);
+}
+
+/* Paper grain overlay — same as .team-sheet::before. */
+.rules-programme__spread {
+  position: relative;
+  padding: 1.2rem 1.5rem 2rem;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.rules-programme__spread::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.15' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+  mix-blend-mode: multiply;
+}
+
+.rules-programme__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.rules-programme__masthead {
+  margin: 0;
+  font-family: 'Anton', 'Archivo', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: clamp(1.3rem, 3.4vw, 1.9rem);
+  color: var(--ink);
+}
+
+.rules-programme__close {
+  flex-shrink: 0;
+  font-family: 'Courier Prime', monospace;
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faded);
+  background: none;
+  border: 1px solid oklch(0.7 0.02 260 / 0.35);
+  border-radius: 3px;
+  padding: 0.25rem 0.6rem;
+  cursor: pointer;
+  transition: border-color 180ms var(--ease-out-quart),
+              color 180ms var(--ease-out-quart);
+}
+
+.rules-programme__close:hover,
+.rules-programme__close:focus-visible {
+  color: var(--stamp);
+  border-color: var(--stamp);
+  outline: none;
+}
+
+.rules-programme__pages {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 1.8rem;
+  position: relative;
+  z-index: 1;
+}
+
+.rules-programme__page {
+  break-inside: avoid;
+}
+
+.rules-programme__page-title {
+  margin: 0.4rem 0 0.3rem;
+  font-family: 'Courier Prime', monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  color: var(--stamp);
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid oklch(0.7 0.02 260 / 0.3);
+}
+
+.rules-programme__para {
+  margin: 0 0 0.6rem;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.77rem;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+/* --- RULES trigger button in the broadcast chrome (ResultScreen). --- */
+.broadcast-rules-btn {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  background: transparent;
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  transition: color 180ms var(--ease-out-quart),
+              border-color 180ms var(--ease-out-quart);
+}
+
+.broadcast-rules-btn:hover,
+.broadcast-rules-btn:focus-visible {
+  color: var(--gold);
+  border-color: var(--gold);
+  outline: none;
+}
+
+/* Single column < 720px */
+@media (max-width: 720px) {
+  .rules-programme__pages {
+    grid-template-columns: 1fr;
+  }
+  .rules-programme__spread {
+    padding: 1rem 1rem 1.5rem;
+  }
+}
+
+@keyframes programme-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rules-programme[open] {
+    animation: none !important;
+  }
+  .rules-programme::backdrop {
+    opacity: 1;
+  }
 }

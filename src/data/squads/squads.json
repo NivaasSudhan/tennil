@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "_comment": "60-squad corpus (1986-2022; 2026 QF pending = 8 slots → 68 target). SF 1986-2002 (4×5) + QF 2006-2022 (8×5). Each = best starting XI. Ratings ADR-006. See ADR-011 amendment 2026-07-11.",
   "squads": [
     {
@@ -19,70 +19,100 @@
           "name": "José Luis Cuciuffo",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 57,
+          "strength": 90,
+          "accuracy": 75
         },
         {
           "id": "arg-1986-brown",
           "name": "José Luis Brown",
           "positionRaw": "SW",
           "positionBucket": "DEF",
-          "rating": 86
+          "rating": 86,
+          "pace": 62,
+          "strength": 96,
+          "accuracy": 70
         },
         {
           "id": "arg-1986-ruggeri",
           "name": "Oscar Ruggeri",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 88
+          "rating": 88,
+          "pace": 63,
+          "strength": 94,
+          "accuracy": 77
         },
         {
           "id": "arg-1986-olarticoechea",
           "name": "Julio Olarticoechea",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 89,
+          "strength": 70,
+          "accuracy": 78
         },
         {
           "id": "arg-1986-giusti",
           "name": "Ricardo Giusti",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 60,
+          "strength": 82,
+          "accuracy": 78
         },
         {
           "id": "arg-1986-batista",
           "name": "Sergio Batista",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 83
+          "rating": 83,
+          "pace": 59,
+          "strength": 84,
+          "accuracy": 83
         },
         {
           "id": "arg-1986-enrique",
           "name": "Héctor Enrique",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 67,
+          "strength": 72,
+          "accuracy": 84
         },
         {
           "id": "arg-1986-burruchaga",
           "name": "Jorge Burruchaga",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 87
+          "rating": 87,
+          "pace": 74,
+          "strength": 62,
+          "accuracy": 89
         },
         {
           "id": "arg-1986-maradona",
           "name": "Diego Maradona",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 98
+          "rating": 98,
+          "pace": 91,
+          "strength": 69,
+          "accuracy": 99
         },
         {
           "id": "arg-1986-valdano",
           "name": "Jorge Valdano",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 89
+          "rating": 89,
+          "pace": 81,
+          "strength": 95,
+          "accuracy": 72
         }
       ]
     },
@@ -103,70 +133,100 @@
           "name": "Eric Gerets",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 87,
+          "strength": 62,
+          "accuracy": 76
         },
         {
           "id": "bel-1986-grun",
           "name": "Georges Grün",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 62,
+          "strength": 88,
+          "accuracy": 67
         },
         {
           "id": "bel-1986-renquin",
           "name": "Michel Renquin",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 60,
+          "strength": 81,
+          "accuracy": 71
         },
         {
           "id": "bel-1986-de-wolf",
           "name": "Michel de Wolf",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 81
+          "rating": 81,
+          "pace": 85,
+          "strength": 69,
+          "accuracy": 76
         },
         {
           "id": "bel-1986-vercauteren",
           "name": "Franky Vercauteren",
           "positionRaw": "LM",
           "positionBucket": "MID",
-          "rating": 83
+          "rating": 83,
+          "pace": 89,
+          "strength": 58,
+          "accuracy": 73
         },
         {
           "id": "bel-1986-scifo",
           "name": "Enzo Scifo",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 87
+          "rating": 87,
+          "pace": 83,
+          "strength": 58,
+          "accuracy": 92
         },
         {
           "id": "bel-1986-vandereycken",
           "name": "René Vandereycken",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 80
+          "rating": 80,
+          "pace": 73,
+          "strength": 67,
+          "accuracy": 84
         },
         {
           "id": "bel-1986-ceulemans",
           "name": "Jan Ceulemans",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 88
+          "rating": 88,
+          "pace": 79,
+          "strength": 63,
+          "accuracy": 94
         },
         {
           "id": "bel-1986-claesen",
           "name": "Nico Claesen",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 82
+          "rating": 82,
+          "pace": 88,
+          "strength": 73,
+          "accuracy": 69
         },
         {
           "id": "bel-1986-vandenbergh",
           "name": "Erwin Vandenbergh",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 81
+          "rating": 81,
+          "pace": 70,
+          "strength": 86,
+          "accuracy": 65
         }
       ]
     },
@@ -187,70 +247,100 @@
           "name": "Manuel Amoros",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 86
+          "rating": 86,
+          "pace": 88,
+          "strength": 64,
+          "accuracy": 78
         },
         {
           "id": "fra-1986-battiston",
           "name": "Patrick Battiston",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 57,
+          "strength": 88,
+          "accuracy": 69
         },
         {
           "id": "fra-1986-bossis",
           "name": "Maxime Bossis",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 85
+          "rating": 85,
+          "pace": 62,
+          "strength": 94,
+          "accuracy": 70
         },
         {
           "id": "fra-1986-ayache",
           "name": "William Ayache",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 89,
+          "strength": 59,
+          "accuracy": 73
         },
         {
           "id": "fra-1986-fernandez",
           "name": "Luis Fernandez",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 63,
+          "strength": 84,
+          "accuracy": 76
         },
         {
           "id": "fra-1986-tigana",
           "name": "Jean Tigana",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 90
+          "rating": 90,
+          "pace": 74,
+          "strength": 74,
+          "accuracy": 93
         },
         {
           "id": "fra-1986-giresse",
           "name": "Alain Giresse",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 89
+          "rating": 89,
+          "pace": 75,
+          "strength": 72,
+          "accuracy": 98
         },
         {
           "id": "fra-1986-platini",
           "name": "Michel Platini",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 96
+          "rating": 96,
+          "pace": 81,
+          "strength": 72,
+          "accuracy": 99
         },
         {
           "id": "fra-1986-rocheteau",
           "name": "Dominique Rocheteau",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 96,
+          "strength": 53,
+          "accuracy": 74
         },
         {
           "id": "fra-1986-stopyra",
           "name": "Yannick Stopyra",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 83
+          "rating": 83,
+          "pace": 71,
+          "strength": 88,
+          "accuracy": 71
         }
       ]
     },
@@ -271,70 +361,100 @@
           "name": "Thomas Berthold",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 81
+          "rating": 81,
+          "pace": 84,
+          "strength": 62,
+          "accuracy": 73
         },
         {
           "id": "ger-1986-forster",
           "name": "Karlheinz Förster",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 88
+          "rating": 88,
+          "pace": 64,
+          "strength": 99,
+          "accuracy": 78
         },
         {
           "id": "ger-1986-jakobs",
           "name": "Ditmar Jakobs",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 63,
+          "strength": 87,
+          "accuracy": 73
         },
         {
           "id": "ger-1986-briegel",
           "name": "Hans-Peter Briegel",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 92,
+          "strength": 66,
+          "accuracy": 75
         },
         {
           "id": "ger-1986-eder",
           "name": "Norbert Eder",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 80
+          "rating": 80,
+          "pace": 63,
+          "strength": 83,
+          "accuracy": 76
         },
         {
           "id": "ger-1986-matthaus",
           "name": "Lothar Matthäus",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 90
+          "rating": 90,
+          "pace": 74,
+          "strength": 82,
+          "accuracy": 96
         },
         {
           "id": "ger-1986-magath",
           "name": "Felix Magath",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 67,
+          "strength": 75,
+          "accuracy": 86
         },
         {
           "id": "ger-1986-littbarski",
           "name": "Pierre Littbarski",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 87
+          "rating": 87,
+          "pace": 92,
+          "strength": 62,
+          "accuracy": 81
         },
         {
           "id": "ger-1986-rummenigge",
           "name": "Karl-Heinz Rummenigge",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 90
+          "rating": 90,
+          "pace": 99,
+          "strength": 74,
+          "accuracy": 72
         },
         {
           "id": "ger-1986-voller",
           "name": "Rudi Völler",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 86
+          "rating": 86,
+          "pace": 90,
+          "strength": 73,
+          "accuracy": 67
         }
       ]
     },
@@ -355,70 +475,100 @@
           "name": "Néstor Lorenzo",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 78
+          "rating": 78,
+          "pace": 82,
+          "strength": 66,
+          "accuracy": 70
         },
         {
           "id": "arg-1990-ruggeri",
           "name": "Oscar Ruggeri",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 87
+          "rating": 87,
+          "pace": 59,
+          "strength": 99,
+          "accuracy": 70
         },
         {
           "id": "arg-1990-simon",
           "name": "Juan Simón",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 60,
+          "strength": 91,
+          "accuracy": 64
         },
         {
           "id": "arg-1990-olarticoechea",
           "name": "Julio Olarticoechea",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 81
+          "rating": 81,
+          "pace": 90,
+          "strength": 66,
+          "accuracy": 72
         },
         {
           "id": "arg-1990-basualdo",
           "name": "José Basualdo",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 79
+          "rating": 79,
+          "pace": 65,
+          "strength": 64,
+          "accuracy": 88
         },
         {
           "id": "arg-1990-batista",
           "name": "Sergio Batista",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 59,
+          "strength": 85,
+          "accuracy": 79
         },
         {
           "id": "arg-1990-burruchaga",
           "name": "Jorge Burruchaga",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 75,
+          "strength": 62,
+          "accuracy": 92
         },
         {
           "id": "arg-1990-maradona",
           "name": "Diego Maradona",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 95
+          "rating": 95,
+          "pace": 86,
+          "strength": 70,
+          "accuracy": 99
         },
         {
           "id": "arg-1990-caniggia",
           "name": "Claudio Caniggia",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 86
+          "rating": 86,
+          "pace": 93,
+          "strength": 73,
+          "accuracy": 70
         },
         {
           "id": "arg-1990-dezotti",
           "name": "Gustavo Dezotti",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 78
+          "rating": 78,
+          "pace": 82,
+          "strength": 63,
+          "accuracy": 57
         }
       ]
     },
@@ -439,70 +589,100 @@
           "name": "Paul Parker",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 90,
+          "strength": 66,
+          "accuracy": 70
         },
         {
           "id": "eng-1990-wright",
           "name": "Mark Wright",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 55,
+          "strength": 89,
+          "accuracy": 72
         },
         {
           "id": "eng-1990-butcher",
           "name": "Terry Butcher",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 85
+          "rating": 85,
+          "pace": 59,
+          "strength": 88,
+          "accuracy": 77
         },
         {
           "id": "eng-1990-pearce",
           "name": "Stuart Pearce",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 86
+          "rating": 86,
+          "pace": 91,
+          "strength": 70,
+          "accuracy": 79
         },
         {
           "id": "eng-1990-platt",
           "name": "David Platt",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 69,
+          "strength": 74,
+          "accuracy": 86
         },
         {
           "id": "eng-1990-gascoigne",
           "name": "Paul Gascoigne",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 89
+          "rating": 89,
+          "pace": 79,
+          "strength": 71,
+          "accuracy": 91
         },
         {
           "id": "eng-1990-waddle",
           "name": "Chris Waddle",
           "positionRaw": "LM",
           "positionBucket": "MID",
-          "rating": 86
+          "rating": 86,
+          "pace": 91,
+          "strength": 58,
+          "accuracy": 81
         },
         {
           "id": "eng-1990-barnes",
           "name": "John Barnes",
           "positionRaw": "LW",
           "positionBucket": "ATT",
-          "rating": 87
+          "rating": 87,
+          "pace": 99,
+          "strength": 63,
+          "accuracy": 81
         },
         {
           "id": "eng-1990-beardsley",
           "name": "Peter Beardsley",
           "positionRaw": "SS",
           "positionBucket": "ATT",
-          "rating": 85
+          "rating": 85,
+          "pace": 80,
+          "strength": 60,
+          "accuracy": 88
         },
         {
           "id": "eng-1990-lineker",
           "name": "Gary Lineker",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 90
+          "rating": 90,
+          "pace": 77,
+          "strength": 97,
+          "accuracy": 77
         }
       ]
     },
@@ -523,70 +703,100 @@
           "name": "Giuseppe Bergomi",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 85
+          "rating": 85,
+          "pace": 90,
+          "strength": 72,
+          "accuracy": 80
         },
         {
           "id": "ita-1990-baresi",
           "name": "Franco Baresi",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 92
+          "rating": 92,
+          "pace": 67,
+          "strength": 99,
+          "accuracy": 81
         },
         {
           "id": "ita-1990-ferri",
           "name": "Riccardo Ferri",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 63,
+          "strength": 90,
+          "accuracy": 67
         },
         {
           "id": "ita-1990-maldini",
           "name": "Paolo Maldini",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 88
+          "rating": 88,
+          "pace": 91,
+          "strength": 70,
+          "accuracy": 74
         },
         {
           "id": "ita-1990-de-napoli",
           "name": "Fernando De Napoli",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 58,
+          "strength": 88,
+          "accuracy": 83
         },
         {
           "id": "ita-1990-berti",
           "name": "Nicola Berti",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 83
+          "rating": 83,
+          "pace": 72,
+          "strength": 72,
+          "accuracy": 82
         },
         {
           "id": "ita-1990-giannini",
           "name": "Giuseppe Giannini",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 79,
+          "strength": 63,
+          "accuracy": 97
         },
         {
           "id": "ita-1990-donadoni",
           "name": "Roberto Donadoni",
           "positionRaw": "RM",
           "positionBucket": "MID",
-          "rating": 86
+          "rating": 86,
+          "pace": 90,
+          "strength": 63,
+          "accuracy": 80
         },
         {
           "id": "ita-1990-r-baggio",
           "name": "Roberto Baggio",
           "positionRaw": "SS",
           "positionBucket": "ATT",
-          "rating": 91
+          "rating": 91,
+          "pace": 78,
+          "strength": 64,
+          "accuracy": 94
         },
         {
           "id": "ita-1990-schillaci",
           "name": "Salvatore Schillaci",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 88
+          "rating": 88,
+          "pace": 71,
+          "strength": 91,
+          "accuracy": 68
         }
       ]
     },
@@ -607,70 +817,100 @@
           "name": "Thomas Berthold",
           "positionRaw": "RWB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 81,
+          "strength": 61,
+          "accuracy": 71
         },
         {
           "id": "ger-1990-kohler",
           "name": "Jürgen Kohler",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 86
+          "rating": 86,
+          "pace": 57,
+          "strength": 89,
+          "accuracy": 72
         },
         {
           "id": "ger-1990-augenthaler",
           "name": "Klaus Augenthaler",
           "positionRaw": "SW",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 62,
+          "strength": 88,
+          "accuracy": 76
         },
         {
           "id": "ger-1990-buchwald",
           "name": "Guido Buchwald",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 85
+          "rating": 85,
+          "pace": 62,
+          "strength": 90,
+          "accuracy": 77
         },
         {
           "id": "ger-1990-brehme",
           "name": "Andreas Brehme",
           "positionRaw": "LWB",
           "positionBucket": "DEF",
-          "rating": 88
+          "rating": 88,
+          "pace": 95,
+          "strength": 67,
+          "accuracy": 72
         },
         {
           "id": "ger-1990-hassler",
           "name": "Thomas Häßler",
           "positionRaw": "RM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 98,
+          "strength": 59,
+          "accuracy": 80
         },
         {
           "id": "ger-1990-matthaus",
           "name": "Lothar Matthäus",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 93
+          "rating": 93,
+          "pace": 76,
+          "strength": 82,
+          "accuracy": 94
         },
         {
           "id": "ger-1990-littbarski",
           "name": "Pierre Littbarski",
           "positionRaw": "LM",
           "positionBucket": "MID",
-          "rating": 86
+          "rating": 86,
+          "pace": 91,
+          "strength": 62,
+          "accuracy": 79
         },
         {
           "id": "ger-1990-voller",
           "name": "Rudi Völler",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 87
+          "rating": 87,
+          "pace": 69,
+          "strength": 97,
+          "accuracy": 69
         },
         {
           "id": "ger-1990-klinsmann",
           "name": "Jürgen Klinsmann",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 88
+          "rating": 88,
+          "pace": 93,
+          "strength": 80,
+          "accuracy": 67
         }
       ]
     },
@@ -691,70 +931,100 @@
           "name": "Jorginho",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 87,
+          "strength": 69,
+          "accuracy": 73
         },
         {
           "id": "bra-1994-aldair",
           "name": "Aldair",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 86
+          "rating": 86,
+          "pace": 65,
+          "strength": 94,
+          "accuracy": 76
         },
         {
           "id": "bra-1994-marcio-santos",
           "name": "Márcio Santos",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 56,
+          "strength": 86,
+          "accuracy": 75
         },
         {
           "id": "bra-1994-branco",
           "name": "Branco",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 82,
+          "strength": 61,
+          "accuracy": 74
         },
         {
           "id": "bra-1994-silva",
           "name": "Mauro Silva",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 64,
+          "strength": 92,
+          "accuracy": 84
         },
         {
           "id": "bra-1994-dunga",
           "name": "Dunga",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 87
+          "rating": 87,
+          "pace": 64,
+          "strength": 90,
+          "accuracy": 84
         },
         {
           "id": "bra-1994-mazinho",
           "name": "Mazinho",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 67,
+          "strength": 74,
+          "accuracy": 90
         },
         {
           "id": "bra-1994-zinho",
           "name": "Zinho",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 83
+          "rating": 83,
+          "pace": 76,
+          "strength": 60,
+          "accuracy": 93
         },
         {
           "id": "bra-1994-romario",
           "name": "Romário",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 94
+          "rating": 94,
+          "pace": 77,
+          "strength": 99,
+          "accuracy": 96
         },
         {
           "id": "bra-1994-bebeto",
           "name": "Bebeto",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 88
+          "rating": 88,
+          "pace": 72,
+          "strength": 97,
+          "accuracy": 75
         }
       ]
     },
@@ -775,70 +1045,100 @@
           "name": "Emil Kremenliev",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 78
+          "rating": 78,
+          "pace": 87,
+          "strength": 57,
+          "accuracy": 67
         },
         {
           "id": "bul-1994-ivanov",
           "name": "Trifon Ivanov",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 61,
+          "strength": 90,
+          "accuracy": 72
         },
         {
           "id": "bul-1994-hubchev",
           "name": "Petar Hubchev",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 81
+          "rating": 81,
+          "pace": 61,
+          "strength": 84,
+          "accuracy": 67
         },
         {
           "id": "bul-1994-tsvetanov",
           "name": "Tsanko Tsvetanov",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 79
+          "rating": 79,
+          "pace": 83,
+          "strength": 63,
+          "accuracy": 71
         },
         {
           "id": "bul-1994-yankov",
           "name": "Zlatko Yankov",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 80
+          "rating": 80,
+          "pace": 59,
+          "strength": 80,
+          "accuracy": 75
         },
         {
           "id": "bul-1994-balakov",
           "name": "Krasimir Balakov",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 87
+          "rating": 87,
+          "pace": 70,
+          "strength": 71,
+          "accuracy": 88
         },
         {
           "id": "bul-1994-letchkov",
           "name": "Yordan Letchkov",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 72,
+          "strength": 77,
+          "accuracy": 84
         },
         {
           "id": "bul-1994-sirakov",
           "name": "Nasko Sirakov",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 71,
+          "strength": 57,
+          "accuracy": 84
         },
         {
           "id": "bul-1994-stoichkov",
           "name": "Hristo Stoichkov",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 93
+          "rating": 93,
+          "pace": 99,
+          "strength": 76,
+          "accuracy": 79
         },
         {
           "id": "bul-1994-kostadinov",
           "name": "Emil Kostadinov",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 86
+          "rating": 86,
+          "pace": 97,
+          "strength": 72,
+          "accuracy": 68
         }
       ]
     },
@@ -859,70 +1159,100 @@
           "name": "Roberto Mussi",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 89,
+          "strength": 66,
+          "accuracy": 67
         },
         {
           "id": "ita-1994-costacurta",
           "name": "Alessandro Costacurta",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 86
+          "rating": 86,
+          "pace": 62,
+          "strength": 89,
+          "accuracy": 73
         },
         {
           "id": "ita-1994-baresi",
           "name": "Franco Baresi",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 91
+          "rating": 91,
+          "pace": 67,
+          "strength": 94,
+          "accuracy": 77
         },
         {
           "id": "ita-1994-maldini",
           "name": "Paolo Maldini",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 92
+          "rating": 92,
+          "pace": 98,
+          "strength": 70,
+          "accuracy": 81
         },
         {
           "id": "ita-1994-d-baggio",
           "name": "Dino Baggio",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 83
+          "rating": 83,
+          "pace": 59,
+          "strength": 87,
+          "accuracy": 77
         },
         {
           "id": "ita-1994-albertini",
           "name": "Demetrio Albertini",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 72,
+          "strength": 71,
+          "accuracy": 89
         },
         {
           "id": "ita-1994-berti",
           "name": "Nicola Berti",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 65,
+          "strength": 72,
+          "accuracy": 81
         },
         {
           "id": "ita-1994-donadoni",
           "name": "Roberto Donadoni",
           "positionRaw": "RM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 87,
+          "strength": 55,
+          "accuracy": 81
         },
         {
           "id": "ita-1994-r-baggio",
           "name": "Roberto Baggio",
           "positionRaw": "SS",
           "positionBucket": "ATT",
-          "rating": 94
+          "rating": 94,
+          "pace": 82,
+          "strength": 69,
+          "accuracy": 99
         },
         {
           "id": "ita-1994-massaro",
           "name": "Daniele Massaro",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 82
+          "rating": 82,
+          "pace": 74,
+          "strength": 84,
+          "accuracy": 65
         }
       ]
     },
@@ -943,70 +1273,100 @@
           "name": "Roland Nilsson",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 89,
+          "strength": 62,
+          "accuracy": 68
         },
         {
           "id": "swe-1994-p-andersson",
           "name": "Patrik Andersson",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 85
+          "rating": 85,
+          "pace": 66,
+          "strength": 95,
+          "accuracy": 71
         },
         {
           "id": "swe-1994-bjorklund",
           "name": "Joachim Björklund",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 63,
+          "strength": 87,
+          "accuracy": 72
         },
         {
           "id": "swe-1994-ljung",
           "name": "Roger Ljung",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 85,
+          "strength": 59,
+          "accuracy": 65
         },
         {
           "id": "swe-1994-thern",
           "name": "Jonas Thern",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 74,
+          "strength": 73,
+          "accuracy": 91
         },
         {
           "id": "swe-1994-schwarz",
           "name": "Stefan Schwarz",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 83
+          "rating": 83,
+          "pace": 67,
+          "strength": 66,
+          "accuracy": 90
         },
         {
           "id": "swe-1994-ingesson",
           "name": "Klas Ingesson",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 81
+          "rating": 81,
+          "pace": 67,
+          "strength": 66,
+          "accuracy": 88
         },
         {
           "id": "swe-1994-brolin",
           "name": "Tomas Brolin",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 88
+          "rating": 88,
+          "pace": 75,
+          "strength": 63,
+          "accuracy": 98
         },
         {
           "id": "swe-1994-dahlin",
           "name": "Martin Dahlin",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 85
+          "rating": 85,
+          "pace": 97,
+          "strength": 74,
+          "accuracy": 71
         },
         {
           "id": "swe-1994-k-andersson",
           "name": "Kennet Andersson",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 76,
+          "strength": 86,
+          "accuracy": 68
         }
       ]
     },
@@ -1027,70 +1387,100 @@
           "name": "Cafu",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 88
+          "rating": 88,
+          "pace": 90,
+          "strength": 66,
+          "accuracy": 78
         },
         {
           "id": "bra-1998-aldair",
           "name": "Aldair",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 86
+          "rating": 86,
+          "pace": 67,
+          "strength": 95,
+          "accuracy": 71
         },
         {
           "id": "bra-1998-junior-baiano",
           "name": "Júnior Baiano",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 54,
+          "strength": 85,
+          "accuracy": 65
         },
         {
           "id": "bra-1998-carlos",
           "name": "Roberto Carlos",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 90
+          "rating": 90,
+          "pace": 95,
+          "strength": 71,
+          "accuracy": 81
         },
         {
           "id": "bra-1998-cesar-sampaio",
           "name": "César Sampaio",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 57,
+          "strength": 81,
+          "accuracy": 82
         },
         {
           "id": "bra-1998-dunga",
           "name": "Dunga",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 86
+          "rating": 86,
+          "pace": 63,
+          "strength": 83,
+          "accuracy": 81
         },
         {
           "id": "bra-1998-rivaldo",
           "name": "Rivaldo",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 91
+          "rating": 91,
+          "pace": 83,
+          "strength": 63,
+          "accuracy": 99
         },
         {
           "id": "bra-1998-leonardo",
           "name": "Leonardo",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 81,
+          "strength": 59,
+          "accuracy": 89
         },
         {
           "id": "bra-1998-ronaldo",
           "name": "Ronaldo",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 95
+          "rating": 95,
+          "pace": 82,
+          "strength": 98,
+          "accuracy": 72
         },
         {
           "id": "bra-1998-bebeto",
           "name": "Bebeto",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 74,
+          "strength": 92,
+          "accuracy": 69
         }
       ]
     },
@@ -1111,70 +1501,100 @@
           "name": "Dario Šimić",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 83,
+          "strength": 66,
+          "accuracy": 68
         },
         {
           "id": "cro-1998-stimac",
           "name": "Igor Štimac",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 61,
+          "strength": 90,
+          "accuracy": 68
         },
         {
           "id": "cro-1998-bilic",
           "name": "Slaven Bilić",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 64,
+          "strength": 88,
+          "accuracy": 67
         },
         {
           "id": "cro-1998-jarni",
           "name": "Robert Jarni",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 85
+          "rating": 85,
+          "pace": 86,
+          "strength": 69,
+          "accuracy": 72
         },
         {
           "id": "cro-1998-boban",
           "name": "Zvonimir Boban",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 88
+          "rating": 88,
+          "pace": 73,
+          "strength": 74,
+          "accuracy": 95
         },
         {
           "id": "cro-1998-asanovic",
           "name": "Aljoša Asanović",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 83
+          "rating": 83,
+          "pace": 69,
+          "strength": 68,
+          "accuracy": 92
         },
         {
           "id": "cro-1998-prosinecki",
           "name": "Robert Prosinečki",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 86
+          "rating": 86,
+          "pace": 73,
+          "strength": 62,
+          "accuracy": 91
         },
         {
           "id": "cro-1998-stanic",
           "name": "Mario Stanić",
           "positionRaw": "RM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 92,
+          "strength": 51,
+          "accuracy": 69
         },
         {
           "id": "cro-1998-suker",
           "name": "Davor Šuker",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 92
+          "rating": 92,
+          "pace": 79,
+          "strength": 99,
+          "accuracy": 76
         },
         {
           "id": "cro-1998-vlaovic",
           "name": "Goran Vlaović",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 81
+          "rating": 81,
+          "pace": 71,
+          "strength": 89,
+          "accuracy": 68
         }
       ]
     },
@@ -1195,70 +1615,100 @@
           "name": "Lilian Thuram",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 87
+          "rating": 87,
+          "pace": 86,
+          "strength": 75,
+          "accuracy": 76
         },
         {
           "id": "fra-1998-leboeuf",
           "name": "Frank Leboeuf",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 62,
+          "strength": 84,
+          "accuracy": 73
         },
         {
           "id": "fra-1998-desailly",
           "name": "Marcel Desailly",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 87
+          "rating": 87,
+          "pace": 64,
+          "strength": 99,
+          "accuracy": 71
         },
         {
           "id": "fra-1998-lizarazu",
           "name": "Bixente Lizarazu",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 85
+          "rating": 85,
+          "pace": 94,
+          "strength": 66,
+          "accuracy": 77
         },
         {
           "id": "fra-1998-karembeu",
           "name": "Christian Karembeu",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 80
+          "rating": 80,
+          "pace": 70,
+          "strength": 68,
+          "accuracy": 80
         },
         {
           "id": "fra-1998-deschamps",
           "name": "Didier Deschamps",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 67,
+          "strength": 84,
+          "accuracy": 79
         },
         {
           "id": "fra-1998-petit",
           "name": "Emmanuel Petit",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 66,
+          "strength": 72,
+          "accuracy": 84
         },
         {
           "id": "fra-1998-zidane",
           "name": "Zinedine Zidane",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 95
+          "rating": 95,
+          "pace": 83,
+          "strength": 69,
+          "accuracy": 99
         },
         {
           "id": "fra-1998-djorkaeff",
           "name": "Youri Djorkaeff",
           "positionRaw": "SS",
           "positionBucket": "ATT",
-          "rating": 85
+          "rating": 85,
+          "pace": 73,
+          "strength": 60,
+          "accuracy": 89
         },
         {
           "id": "fra-1998-guivarch",
           "name": "Stéphane Guivarc'h",
           "positionRaw": "CF",
           "positionBucket": "ATT",
-          "rating": 76
+          "rating": 76,
+          "pace": 68,
+          "strength": 78,
+          "accuracy": 62
         }
       ]
     },
@@ -1279,70 +1729,100 @@
           "name": "Michael Reiziger",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 91,
+          "strength": 68,
+          "accuracy": 71
         },
         {
           "id": "ned-1998-stam",
           "name": "Jaap Stam",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 89
+          "rating": 89,
+          "pace": 59,
+          "strength": 92,
+          "accuracy": 72
         },
         {
           "id": "ned-1998-f-de-boer",
           "name": "Frank de Boer",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 87
+          "rating": 87,
+          "pace": 68,
+          "strength": 99,
+          "accuracy": 69
         },
         {
           "id": "ned-1998-numan",
           "name": "Arthur Numan",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 81
+          "rating": 81,
+          "pace": 90,
+          "strength": 64,
+          "accuracy": 70
         },
         {
           "id": "ned-1998-davids",
           "name": "Edgar Davids",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 88
+          "rating": 88,
+          "pace": 61,
+          "strength": 86,
+          "accuracy": 81
         },
         {
           "id": "ned-1998-cocu",
           "name": "Phillip Cocu",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 76,
+          "strength": 71,
+          "accuracy": 87
         },
         {
           "id": "ned-1998-r-de-boer",
           "name": "Ronald de Boer",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 74,
+          "strength": 58,
+          "accuracy": 92
         },
         {
           "id": "ned-1998-bergkamp",
           "name": "Dennis Bergkamp",
           "positionRaw": "SS",
           "positionBucket": "ATT",
-          "rating": 92
+          "rating": 92,
+          "pace": 85,
+          "strength": 64,
+          "accuracy": 95
         },
         {
           "id": "ned-1998-overmars",
           "name": "Marc Overmars",
           "positionRaw": "LW",
           "positionBucket": "ATT",
-          "rating": 87
+          "rating": 87,
+          "pace": 97,
+          "strength": 63,
+          "accuracy": 82
         },
         {
           "id": "ned-1998-kluivert",
           "name": "Patrick Kluivert",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 88
+          "rating": 88,
+          "pace": 91,
+          "strength": 75,
+          "accuracy": 67
         }
       ]
     },
@@ -1363,70 +1843,100 @@
           "name": "Cafu",
           "positionRaw": "RWB",
           "positionBucket": "DEF",
-          "rating": 87
+          "rating": 87,
+          "pace": 93,
+          "strength": 66,
+          "accuracy": 80
         },
         {
           "id": "bra-2002-lucio",
           "name": "Lúcio",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 85
+          "rating": 85,
+          "pace": 66,
+          "strength": 93,
+          "accuracy": 77
         },
         {
           "id": "bra-2002-edmilson",
           "name": "Edmílson",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 53,
+          "strength": 84,
+          "accuracy": 69
         },
         {
           "id": "bra-2002-roque-junior",
           "name": "Roque Júnior",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 79
+          "rating": 79,
+          "pace": 58,
+          "strength": 89,
+          "accuracy": 72
         },
         {
           "id": "bra-2002-carlos",
           "name": "Roberto Carlos",
           "positionRaw": "LWB",
           "positionBucket": "DEF",
-          "rating": 88
+          "rating": 88,
+          "pace": 91,
+          "strength": 71,
+          "accuracy": 79
         },
         {
           "id": "bra-2002-gilberto",
           "name": "Gilberto Silva",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 81
+          "rating": 81,
+          "pace": 58,
+          "strength": 85,
+          "accuracy": 80
         },
         {
           "id": "bra-2002-kleberson",
           "name": "Kléberson",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 78
+          "rating": 78,
+          "pace": 64,
+          "strength": 62,
+          "accuracy": 77
         },
         {
           "id": "bra-2002-ronaldinho",
           "name": "Ronaldinho",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 89
+          "rating": 89,
+          "pace": 85,
+          "strength": 60,
+          "accuracy": 99
         },
         {
           "id": "bra-2002-rivaldo",
           "name": "Rivaldo",
           "positionRaw": "SS",
           "positionBucket": "ATT",
-          "rating": 90
+          "rating": 90,
+          "pace": 80,
+          "strength": 60,
+          "accuracy": 97
         },
         {
           "id": "bra-2002-ronaldo",
           "name": "Ronaldo",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 96
+          "rating": 96,
+          "pace": 97,
+          "strength": 95,
+          "accuracy": 79
         }
       ]
     },
@@ -1447,70 +1957,100 @@
           "name": "Torsten Frings",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 87,
+          "strength": 66,
+          "accuracy": 69
         },
         {
           "id": "ger-2002-linke",
           "name": "Thomas Linke",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 56,
+          "strength": 90,
+          "accuracy": 72
         },
         {
           "id": "ger-2002-ramelow",
           "name": "Carsten Ramelow",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 81
+          "rating": 81,
+          "pace": 57,
+          "strength": 84,
+          "accuracy": 70
         },
         {
           "id": "ger-2002-metzelder",
           "name": "Christoph Metzelder",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 79
+          "rating": 79,
+          "pace": 57,
+          "strength": 88,
+          "accuracy": 66
         },
         {
           "id": "ger-2002-ziege",
           "name": "Christian Ziege",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 82,
+          "strength": 66,
+          "accuracy": 77
         },
         {
           "id": "ger-2002-hamann",
           "name": "Dietmar Hamann",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 61,
+          "strength": 82,
+          "accuracy": 83
         },
         {
           "id": "ger-2002-ballack",
           "name": "Michael Ballack",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 90
+          "rating": 90,
+          "pace": 74,
+          "strength": 81,
+          "accuracy": 95
         },
         {
           "id": "ger-2002-schneider",
           "name": "Bernd Schneider",
           "positionRaw": "RM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 89,
+          "strength": 58,
+          "accuracy": 76
         },
         {
           "id": "ger-2002-klose",
           "name": "Miroslav Klose",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 87
+          "rating": 87,
+          "pace": 95,
+          "strength": 69,
+          "accuracy": 65
         },
         {
           "id": "ger-2002-neuville",
           "name": "Oliver Neuville",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 83
+          "rating": 83,
+          "pace": 87,
+          "strength": 67,
+          "accuracy": 69
         }
       ]
     },
@@ -1531,70 +2071,100 @@
           "name": "Song Chong-gug",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 81
+          "rating": 81,
+          "pace": 82,
+          "strength": 66,
+          "accuracy": 70
         },
         {
           "id": "kor-2002-hong",
           "name": "Hong Myung-bo",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 86
+          "rating": 86,
+          "pace": 60,
+          "strength": 96,
+          "accuracy": 78
         },
         {
           "id": "kor-2002-choi-jin-cheul",
           "name": "Choi Jin-cheul",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 56,
+          "strength": 85,
+          "accuracy": 69
         },
         {
           "id": "kor-2002-kim-tae-young",
           "name": "Kim Tae-young",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 79
+          "rating": 79,
+          "pace": 56,
+          "strength": 83,
+          "accuracy": 68
         },
         {
           "id": "kor-2002-lee-young-pyo",
           "name": "Lee Young-pyo",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 87,
+          "strength": 61,
+          "accuracy": 75
         },
         {
           "id": "kor-2002-kim-nam-il",
           "name": "Kim Nam-il",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 81
+          "rating": 81,
+          "pace": 56,
+          "strength": 79,
+          "accuracy": 77
         },
         {
           "id": "kor-2002-yoo",
           "name": "Yoo Sang-chul",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 68,
+          "strength": 69,
+          "accuracy": 89
         },
         {
           "id": "kor-2002-park",
           "name": "Park Ji-sung",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 71,
+          "strength": 69,
+          "accuracy": 90
         },
         {
           "id": "kor-2002-seol",
           "name": "Seol Ki-hyeon",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 80
+          "rating": 80,
+          "pace": 86,
+          "strength": 55,
+          "accuracy": 75
         },
         {
           "id": "kor-2002-ahn",
           "name": "Ahn Jung-hwan",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 83
+          "rating": 83,
+          "pace": 68,
+          "strength": 87,
+          "accuracy": 62
         }
       ]
     },
@@ -1615,70 +2185,100 @@
           "name": "Fatih Akyel",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 79
+          "rating": 79,
+          "pace": 78,
+          "strength": 61,
+          "accuracy": 68
         },
         {
           "id": "tur-2002-alpay",
           "name": "Alpay Özalan",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 58,
+          "strength": 91,
+          "accuracy": 68
         },
         {
           "id": "tur-2002-bulent",
           "name": "Bülent Korkmaz",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 61,
+          "strength": 84,
+          "accuracy": 65
         },
         {
           "id": "tur-2002-ergun",
           "name": "Ergün Penbe",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 86,
+          "strength": 63,
+          "accuracy": 66
         },
         {
           "id": "tur-2002-umit-davala",
           "name": "Ümit Davala",
           "positionRaw": "RM",
           "positionBucket": "MID",
-          "rating": 81
+          "rating": 81,
+          "pace": 89,
+          "strength": 59,
+          "accuracy": 78
         },
         {
           "id": "tur-2002-tugay",
           "name": "Tugay Kerimoğlu",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 74,
+          "strength": 76,
+          "accuracy": 86
         },
         {
           "id": "tur-2002-emre",
           "name": "Emre Belözoğlu",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 83
+          "rating": 83,
+          "pace": 70,
+          "strength": 66,
+          "accuracy": 85
         },
         {
           "id": "tur-2002-basturk",
           "name": "Yıldıray Baştürk",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 76,
+          "strength": 57,
+          "accuracy": 95
         },
         {
           "id": "tur-2002-hasan-sas",
           "name": "Hasan Şaş",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 93,
+          "strength": 55,
+          "accuracy": 76
         },
         {
           "id": "tur-2002-hakan-sukur",
           "name": "Hakan Şükür",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 87
+          "rating": 87,
+          "pace": 69,
+          "strength": 89,
+          "accuracy": 66
         }
       ]
     },
@@ -1699,70 +2299,100 @@
           "name": "Philipp Lahm",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 86
+          "rating": 86,
+          "pace": 89,
+          "strength": 72,
+          "accuracy": 80
         },
         {
           "id": "ger-2006-metzelder",
           "name": "Christoph Metzelder",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 81
+          "rating": 81,
+          "pace": 55,
+          "strength": 85,
+          "accuracy": 71
         },
         {
           "id": "ger-2006-mertesacker",
           "name": "Per Mertesacker",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 57,
+          "strength": 94,
+          "accuracy": 69
         },
         {
           "id": "ger-2006-friedrich",
           "name": "Arne Friedrich",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 88,
+          "strength": 59,
+          "accuracy": 74
         },
         {
           "id": "ger-2006-frings",
           "name": "Torsten Frings",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 65,
+          "strength": 89,
+          "accuracy": 77
         },
         {
           "id": "ger-2006-ballack",
           "name": "Michael Ballack",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 89
+          "rating": 89,
+          "pace": 74,
+          "strength": 79,
+          "accuracy": 97
         },
         {
           "id": "ger-2006-schweinsteiger",
           "name": "Bastian Schweinsteiger",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 75,
+          "strength": 74,
+          "accuracy": 86
         },
         {
           "id": "ger-2006-schneider",
           "name": "Bernd Schneider",
           "positionRaw": "RM",
           "positionBucket": "MID",
-          "rating": 83
+          "rating": 83,
+          "pace": 88,
+          "strength": 52,
+          "accuracy": 71
         },
         {
           "id": "ger-2006-klose",
           "name": "Miroslav Klose",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 88
+          "rating": 88,
+          "pace": 97,
+          "strength": 70,
+          "accuracy": 70
         },
         {
           "id": "ger-2006-podolski",
           "name": "Lukas Podolski",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 70,
+          "strength": 93,
+          "accuracy": 62
         }
       ]
     },
@@ -1783,70 +2413,100 @@
           "name": "Javier Zanetti",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 88
+          "rating": 88,
+          "pace": 96,
+          "strength": 67,
+          "accuracy": 79
         },
         {
           "id": "arg-2006-ayala",
           "name": "Roberto Ayala",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 87
+          "rating": 87,
+          "pace": 61,
+          "strength": 98,
+          "accuracy": 75
         },
         {
           "id": "arg-2006-coloccini",
           "name": "Fabricio Coloccini",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 58,
+          "strength": 91,
+          "accuracy": 64
         },
         {
           "id": "arg-2006-heinze",
           "name": "Gabriel Heinze",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 83,
+          "strength": 66,
+          "accuracy": 75
         },
         {
           "id": "arg-2006-mascherano",
           "name": "Javier Mascherano",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 60,
+          "strength": 82,
+          "accuracy": 85
         },
         {
           "id": "arg-2006-cambiasso",
           "name": "Esteban Cambiasso",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 68,
+          "strength": 76,
+          "accuracy": 89
         },
         {
           "id": "arg-2006-riquelme",
           "name": "Juan Román Riquelme",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 90
+          "rating": 90,
+          "pace": 79,
+          "strength": 62,
+          "accuracy": 93
         },
         {
           "id": "arg-2006-maxi",
           "name": "Maximiliano Rodríguez",
           "positionRaw": "RM",
           "positionBucket": "MID",
-          "rating": 83
+          "rating": 83,
+          "pace": 88,
+          "strength": 59,
+          "accuracy": 74
         },
         {
           "id": "arg-2006-crespo",
           "name": "Hernán Crespo",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 87
+          "rating": 87,
+          "pace": 89,
+          "strength": 72,
+          "accuracy": 68
         },
         {
           "id": "arg-2006-tevez",
           "name": "Carlos Tévez",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 85
+          "rating": 85,
+          "pace": 92,
+          "strength": 70,
+          "accuracy": 64
         }
       ]
     },
@@ -1867,70 +2527,100 @@
           "name": "Gianluca Zambrotta",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 86
+          "rating": 86,
+          "pace": 93,
+          "strength": 66,
+          "accuracy": 80
         },
         {
           "id": "ita-2006-cannavaro",
           "name": "Fabio Cannavaro",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 92
+          "rating": 92,
+          "pace": 67,
+          "strength": 96,
+          "accuracy": 73
         },
         {
           "id": "ita-2006-materazzi",
           "name": "Marco Materazzi",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 65,
+          "strength": 94,
+          "accuracy": 68
         },
         {
           "id": "ita-2006-grosso",
           "name": "Fabio Grosso",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 92,
+          "strength": 68,
+          "accuracy": 77
         },
         {
           "id": "ita-2006-camoranesi",
           "name": "Mauro Camoranesi",
           "positionRaw": "RM",
           "positionBucket": "MID",
-          "rating": 83
+          "rating": 83,
+          "pace": 87,
+          "strength": 53,
+          "accuracy": 71
         },
         {
           "id": "ita-2006-gattuso",
           "name": "Gennaro Gattuso",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 86
+          "rating": 86,
+          "pace": 74,
+          "strength": 69,
+          "accuracy": 93
         },
         {
           "id": "ita-2006-pirlo",
           "name": "Andrea Pirlo",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 91
+          "rating": 91,
+          "pace": 80,
+          "strength": 77,
+          "accuracy": 93
         },
         {
           "id": "ita-2006-perrotta",
           "name": "Simone Perrotta",
           "positionRaw": "LM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 94,
+          "strength": 53,
+          "accuracy": 75
         },
         {
           "id": "ita-2006-totti",
           "name": "Francesco Totti",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 90
+          "rating": 90,
+          "pace": 77,
+          "strength": 58,
+          "accuracy": 99
         },
         {
           "id": "ita-2006-toni",
           "name": "Luca Toni",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 91,
+          "strength": 76,
+          "accuracy": 70
         }
       ]
     },
@@ -1951,70 +2641,100 @@
           "name": "Oleh Husyev",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 88,
+          "strength": 68,
+          "accuracy": 68
         },
         {
           "id": "ukr-2006-rusol",
           "name": "Andriy Rusol",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 54,
+          "strength": 84,
+          "accuracy": 64
         },
         {
           "id": "ukr-2006-vashchuk",
           "name": "Vladyslav Vashchuk",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 79
+          "rating": 79,
+          "pace": 59,
+          "strength": 85,
+          "accuracy": 69
         },
         {
           "id": "ukr-2006-nesmachnyi",
           "name": "Andriy Nesmachnyi",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 78
+          "rating": 78,
+          "pace": 80,
+          "strength": 61,
+          "accuracy": 72
         },
         {
           "id": "ukr-2006-tymoshchuk",
           "name": "Anatoliy Tymoshchuk",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 61,
+          "strength": 88,
+          "accuracy": 80
         },
         {
           "id": "ukr-2006-shelayev",
           "name": "Oleg Shelayev",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 79
+          "rating": 79,
+          "pace": 72,
+          "strength": 62,
+          "accuracy": 80
         },
         {
           "id": "ukr-2006-husin",
           "name": "Andriy Husin",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 80
+          "rating": 80,
+          "pace": 65,
+          "strength": 65,
+          "accuracy": 79
         },
         {
           "id": "ukr-2006-kalynychenko",
           "name": "Maksim Kalynychenko",
           "positionRaw": "LM",
           "positionBucket": "MID",
-          "rating": 81
+          "rating": 81,
+          "pace": 84,
+          "strength": 52,
+          "accuracy": 70
         },
         {
           "id": "ukr-2006-shevchenko",
           "name": "Andriy Shevchenko",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 91
+          "rating": 91,
+          "pace": 99,
+          "strength": 72,
+          "accuracy": 75
         },
         {
           "id": "ukr-2006-voronin",
           "name": "Andriy Voronin",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 82
+          "rating": 82,
+          "pace": 73,
+          "strength": 91,
+          "accuracy": 62
         }
       ]
     },
@@ -2035,70 +2755,100 @@
           "name": "Gary Neville",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 83,
+          "strength": 65,
+          "accuracy": 74
         },
         {
           "id": "eng-2006-ferdinand",
           "name": "Rio Ferdinand",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 88
+          "rating": 88,
+          "pace": 60,
+          "strength": 93,
+          "accuracy": 76
         },
         {
           "id": "eng-2006-terry",
           "name": "John Terry",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 88
+          "rating": 88,
+          "pace": 61,
+          "strength": 99,
+          "accuracy": 80
         },
         {
           "id": "eng-2006-a-cole",
           "name": "Ashley Cole",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 87
+          "rating": 87,
+          "pace": 90,
+          "strength": 72,
+          "accuracy": 74
         },
         {
           "id": "eng-2006-beckham",
           "name": "David Beckham",
           "positionRaw": "RM",
           "positionBucket": "MID",
-          "rating": 87
+          "rating": 87,
+          "pace": 91,
+          "strength": 63,
+          "accuracy": 79
         },
         {
           "id": "eng-2006-gerrard",
           "name": "Steven Gerrard",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 90
+          "rating": 90,
+          "pace": 78,
+          "strength": 81,
+          "accuracy": 99
         },
         {
           "id": "eng-2006-lampard",
           "name": "Frank Lampard",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 88
+          "rating": 88,
+          "pace": 74,
+          "strength": 75,
+          "accuracy": 88
         },
         {
           "id": "eng-2006-j-cole",
           "name": "Joe Cole",
           "positionRaw": "LM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 91,
+          "strength": 53,
+          "accuracy": 80
         },
         {
           "id": "eng-2006-rooney",
           "name": "Wayne Rooney",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 89
+          "rating": 89,
+          "pace": 91,
+          "strength": 80,
+          "accuracy": 75
         },
         {
           "id": "eng-2006-owen",
           "name": "Michael Owen",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 86
+          "rating": 86,
+          "pace": 77,
+          "strength": 88,
+          "accuracy": 66
         }
       ]
     },
@@ -2119,70 +2869,100 @@
           "name": "Miguel",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 81
+          "rating": 81,
+          "pace": 86,
+          "strength": 60,
+          "accuracy": 75
         },
         {
           "id": "por-2006-carvalho",
           "name": "Ricardo Carvalho",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 88
+          "rating": 88,
+          "pace": 68,
+          "strength": 95,
+          "accuracy": 76
         },
         {
           "id": "por-2006-meira",
           "name": "Fernando Meira",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 59,
+          "strength": 86,
+          "accuracy": 74
         },
         {
           "id": "por-2006-valente",
           "name": "Nuno Valente",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 84,
+          "strength": 65,
+          "accuracy": 69
         },
         {
           "id": "por-2006-costinha",
           "name": "Costinha",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 61,
+          "strength": 85,
+          "accuracy": 79
         },
         {
           "id": "por-2006-maniche",
           "name": "Maniche",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 70,
+          "strength": 72,
+          "accuracy": 83
         },
         {
           "id": "por-2006-deco",
           "name": "Deco",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 88
+          "rating": 88,
+          "pace": 78,
+          "strength": 67,
+          "accuracy": 97
         },
         {
           "id": "por-2006-figo",
           "name": "Luís Figo",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 90
+          "rating": 90,
+          "pace": 98,
+          "strength": 66,
+          "accuracy": 77
         },
         {
           "id": "por-2006-ronaldo",
           "name": "Cristiano Ronaldo",
           "positionRaw": "LW",
           "positionBucket": "ATT",
-          "rating": 88
+          "rating": 88,
+          "pace": 93,
+          "strength": 61,
+          "accuracy": 78
         },
         {
           "id": "por-2006-pauleta",
           "name": "Pauleta",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 86
+          "rating": 86,
+          "pace": 77,
+          "strength": 90,
+          "accuracy": 67
         }
       ]
     },
@@ -2203,70 +2983,100 @@
           "name": "Cafu",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 86
+          "rating": 86,
+          "pace": 93,
+          "strength": 64,
+          "accuracy": 79
         },
         {
           "id": "bra-2006-lucio",
           "name": "Lúcio",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 87
+          "rating": 87,
+          "pace": 59,
+          "strength": 96,
+          "accuracy": 70
         },
         {
           "id": "bra-2006-juan",
           "name": "Juan",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 64,
+          "strength": 87,
+          "accuracy": 74
         },
         {
           "id": "bra-2006-carlos",
           "name": "Roberto Carlos",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 87
+          "rating": 87,
+          "pace": 95,
+          "strength": 65,
+          "accuracy": 73
         },
         {
           "id": "bra-2006-emerson",
           "name": "Emerson",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 83
+          "rating": 83,
+          "pace": 58,
+          "strength": 89,
+          "accuracy": 83
         },
         {
           "id": "bra-2006-ze-roberto",
           "name": "Zé Roberto",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 71,
+          "strength": 67,
+          "accuracy": 93
         },
         {
           "id": "bra-2006-kaka",
           "name": "Kaká",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 92
+          "rating": 92,
+          "pace": 82,
+          "strength": 63,
+          "accuracy": 99
         },
         {
           "id": "bra-2006-ronaldinho",
           "name": "Ronaldinho",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 93
+          "rating": 93,
+          "pace": 88,
+          "strength": 66,
+          "accuracy": 96
         },
         {
           "id": "bra-2006-adriano",
           "name": "Adriano",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 87
+          "rating": 87,
+          "pace": 70,
+          "strength": 93,
+          "accuracy": 70
         },
         {
           "id": "bra-2006-ronaldo",
           "name": "Ronaldo",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 90
+          "rating": 90,
+          "pace": 98,
+          "strength": 72,
+          "accuracy": 71
         }
       ]
     },
@@ -2287,70 +3097,100 @@
           "name": "Willy Sagnol",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 86,
+          "strength": 70,
+          "accuracy": 76
         },
         {
           "id": "fra-2006-thuram",
           "name": "Lilian Thuram",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 87
+          "rating": 87,
+          "pace": 58,
+          "strength": 92,
+          "accuracy": 74
         },
         {
           "id": "fra-2006-gallas",
           "name": "William Gallas",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 60,
+          "strength": 94,
+          "accuracy": 68
         },
         {
           "id": "fra-2006-abidal",
           "name": "Éric Abidal",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 86,
+          "strength": 72,
+          "accuracy": 76
         },
         {
           "id": "fra-2006-makelele",
           "name": "Claude Makélélé",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 88
+          "rating": 88,
+          "pace": 67,
+          "strength": 90,
+          "accuracy": 81
         },
         {
           "id": "fra-2006-vieira",
           "name": "Patrick Vieira",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 88
+          "rating": 88,
+          "pace": 72,
+          "strength": 80,
+          "accuracy": 88
         },
         {
           "id": "fra-2006-malouda",
           "name": "Florent Malouda",
           "positionRaw": "LM",
           "positionBucket": "MID",
-          "rating": 83
+          "rating": 83,
+          "pace": 91,
+          "strength": 53,
+          "accuracy": 71
         },
         {
           "id": "fra-2006-zidane",
           "name": "Zinedine Zidane",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 94
+          "rating": 94,
+          "pace": 80,
+          "strength": 62,
+          "accuracy": 99
         },
         {
           "id": "fra-2006-ribery",
           "name": "Franck Ribéry",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 86
+          "rating": 86,
+          "pace": 96,
+          "strength": 62,
+          "accuracy": 74
         },
         {
           "id": "fra-2006-henry",
           "name": "Thierry Henry",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 93
+          "rating": 93,
+          "pace": 83,
+          "strength": 97,
+          "accuracy": 73
         }
       ]
     },
@@ -2371,70 +3211,100 @@
           "name": "Gregory van der Wiel",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 81
+          "rating": 81,
+          "pace": 85,
+          "strength": 67,
+          "accuracy": 75
         },
         {
           "id": "ned-2010-heitinga",
           "name": "John Heitinga",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 55,
+          "strength": 86,
+          "accuracy": 66
         },
         {
           "id": "ned-2010-mathijsen",
           "name": "Joris Mathijsen",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 81
+          "rating": 81,
+          "pace": 55,
+          "strength": 88,
+          "accuracy": 68
         },
         {
           "id": "ned-2010-van-bronckhorst",
           "name": "Giovanni van Bronckhorst",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 85
+          "rating": 85,
+          "pace": 91,
+          "strength": 72,
+          "accuracy": 73
         },
         {
           "id": "ned-2010-van-bommel",
           "name": "Mark van Bommel",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 86
+          "rating": 86,
+          "pace": 65,
+          "strength": 85,
+          "accuracy": 84
         },
         {
           "id": "ned-2010-de-jong",
           "name": "Nigel de Jong",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 58,
+          "strength": 91,
+          "accuracy": 82
         },
         {
           "id": "ned-2010-sneijder",
           "name": "Wesley Sneijder",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 92
+          "rating": 92,
+          "pace": 80,
+          "strength": 67,
+          "accuracy": 95
         },
         {
           "id": "ned-2010-robben",
           "name": "Arjen Robben",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 91
+          "rating": 91,
+          "pace": 97,
+          "strength": 59,
+          "accuracy": 85
         },
         {
           "id": "ned-2010-kuyt",
           "name": "Dirk Kuyt",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 83
+          "rating": 83,
+          "pace": 87,
+          "strength": 59,
+          "accuracy": 75
         },
         {
           "id": "ned-2010-van-persie",
           "name": "Robin van Persie",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 90
+          "rating": 90,
+          "pace": 99,
+          "strength": 79,
+          "accuracy": 75
         }
       ]
     },
@@ -2455,70 +3325,100 @@
           "name": "Maicon",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 88
+          "rating": 88,
+          "pace": 97,
+          "strength": 69,
+          "accuracy": 72
         },
         {
           "id": "bra-2010-lucio",
           "name": "Lúcio",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 88
+          "rating": 88,
+          "pace": 62,
+          "strength": 94,
+          "accuracy": 75
         },
         {
           "id": "bra-2010-juan",
           "name": "Juan",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 60,
+          "strength": 88,
+          "accuracy": 72
         },
         {
           "id": "bra-2010-bastos",
           "name": "Michel Bastos",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 88,
+          "strength": 61,
+          "accuracy": 71
         },
         {
           "id": "bra-2010-silva",
           "name": "Gilberto Silva",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 67,
+          "strength": 86,
+          "accuracy": 77
         },
         {
           "id": "bra-2010-melo",
           "name": "Felipe Melo",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 81
+          "rating": 81,
+          "pace": 58,
+          "strength": 80,
+          "accuracy": 79
         },
         {
           "id": "bra-2010-elano",
           "name": "Elano",
           "positionRaw": "RM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 94,
+          "strength": 58,
+          "accuracy": 77
         },
         {
           "id": "bra-2010-kaka",
           "name": "Kaká",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 89
+          "rating": 89,
+          "pace": 81,
+          "strength": 61,
+          "accuracy": 99
         },
         {
           "id": "bra-2010-robinho",
           "name": "Robinho",
           "positionRaw": "LW",
           "positionBucket": "ATT",
-          "rating": 86
+          "rating": 86,
+          "pace": 99,
+          "strength": 59,
+          "accuracy": 74
         },
         {
           "id": "bra-2010-luis-fabiano",
           "name": "Luís Fabiano",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 87
+          "rating": 87,
+          "pace": 95,
+          "strength": 73,
+          "accuracy": 67
         }
       ]
     },
@@ -2539,70 +3439,100 @@
           "name": "Jorge Fucile",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 80,
+          "strength": 69,
+          "accuracy": 73
         },
         {
           "id": "uru-2010-lugano",
           "name": "Diego Lugano",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 85
+          "rating": 85,
+          "pace": 64,
+          "strength": 90,
+          "accuracy": 75
         },
         {
           "id": "uru-2010-godin",
           "name": "Diego Godín",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 61,
+          "strength": 88,
+          "accuracy": 72
         },
         {
           "id": "uru-2010-caceres",
           "name": "Martín Cáceres",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 81
+          "rating": 81,
+          "pace": 84,
+          "strength": 62,
+          "accuracy": 66
         },
         {
           "id": "uru-2010-perez",
           "name": "Diego Pérez",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 80
+          "rating": 80,
+          "pace": 63,
+          "strength": 78,
+          "accuracy": 73
         },
         {
           "id": "uru-2010-arevalo",
           "name": "Egidio Arévalo Ríos",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 81
+          "rating": 81,
+          "pace": 62,
+          "strength": 85,
+          "accuracy": 72
         },
         {
           "id": "uru-2010-pereira",
           "name": "Álvaro Pereira",
           "positionRaw": "LM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 94,
+          "strength": 54,
+          "accuracy": 79
         },
         {
           "id": "uru-2010-forlan",
           "name": "Diego Forlán",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 90
+          "rating": 90,
+          "pace": 75,
+          "strength": 96,
+          "accuracy": 76
         },
         {
           "id": "uru-2010-suarez",
           "name": "Luis Suárez",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 88
+          "rating": 88,
+          "pace": 71,
+          "strength": 98,
+          "accuracy": 68
         },
         {
           "id": "uru-2010-cavani",
           "name": "Edinson Cavani",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 68,
+          "strength": 95,
+          "accuracy": 71
         }
       ]
     },
@@ -2623,70 +3553,100 @@
           "name": "John Paintsil",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 83,
+          "strength": 66,
+          "accuracy": 66
         },
         {
           "id": "gha-2010-mensah",
           "name": "John Mensah",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 57,
+          "strength": 92,
+          "accuracy": 67
         },
         {
           "id": "gha-2010-vorsah",
           "name": "Isaac Vorsah",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 79
+          "rating": 79,
+          "pace": 54,
+          "strength": 83,
+          "accuracy": 71
         },
         {
           "id": "gha-2010-sarpei",
           "name": "Hans Adu Sarpei",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 78
+          "rating": 78,
+          "pace": 86,
+          "strength": 62,
+          "accuracy": 65
         },
         {
           "id": "gha-2010-annan",
           "name": "Anthony Annan",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 80
+          "rating": 80,
+          "pace": 55,
+          "strength": 83,
+          "accuracy": 75
         },
         {
           "id": "gha-2010-muntari",
           "name": "Sulley Muntari",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 75,
+          "strength": 75,
+          "accuracy": 82
         },
         {
           "id": "gha-2010-asamoah",
           "name": "Kwadwo Asamoah",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 83
+          "rating": 83,
+          "pace": 68,
+          "strength": 70,
+          "accuracy": 90
         },
         {
           "id": "gha-2010-ayew",
           "name": "André Ayew",
           "positionRaw": "LM",
           "positionBucket": "MID",
-          "rating": 81
+          "rating": 81,
+          "pace": 86,
+          "strength": 58,
+          "accuracy": 72
         },
         {
           "id": "gha-2010-gyan",
           "name": "Asamoah Gyan",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 86
+          "rating": 86,
+          "pace": 90,
+          "strength": 78,
+          "accuracy": 64
         },
         {
           "id": "gha-2010-tagoe",
           "name": "Prince Tagoe",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 78
+          "rating": 78,
+          "pace": 66,
+          "strength": 87,
+          "accuracy": 59
         }
       ]
     },
@@ -2707,70 +3667,100 @@
           "name": "Nicolás Otamendi",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 58,
+          "strength": 89,
+          "accuracy": 70
         },
         {
           "id": "arg-2010-demichelis",
           "name": "Martín Demichelis",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 62,
+          "strength": 88,
+          "accuracy": 75
         },
         {
           "id": "arg-2010-samuel",
           "name": "Walter Samuel",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 64,
+          "strength": 86,
+          "accuracy": 68
         },
         {
           "id": "arg-2010-c-rodriguez",
           "name": "Clemente Rodríguez",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 78
+          "rating": 78,
+          "pace": 81,
+          "strength": 61,
+          "accuracy": 65
         },
         {
           "id": "arg-2010-mascherano",
           "name": "Javier Mascherano",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 87
+          "rating": 87,
+          "pace": 60,
+          "strength": 94,
+          "accuracy": 87
         },
         {
           "id": "arg-2010-veron",
           "name": "Juan Sebastián Verón",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 66,
+          "strength": 68,
+          "accuracy": 87
         },
         {
           "id": "arg-2010-di-maria",
           "name": "Ángel Di María",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 85
+          "rating": 85,
+          "pace": 92,
+          "strength": 59,
+          "accuracy": 82
         },
         {
           "id": "arg-2010-messi",
           "name": "Lionel Messi",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 95
+          "rating": 95,
+          "pace": 90,
+          "strength": 69,
+          "accuracy": 99
         },
         {
           "id": "arg-2010-tevez",
           "name": "Carlos Tévez",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 87
+          "rating": 87,
+          "pace": 78,
+          "strength": 95,
+          "accuracy": 75
         },
         {
           "id": "arg-2010-higuain",
           "name": "Gonzalo Higuaín",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 86
+          "rating": 86,
+          "pace": 96,
+          "strength": 75,
+          "accuracy": 70
         }
       ]
     },
@@ -2791,70 +3781,100 @@
           "name": "Philipp Lahm",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 89
+          "rating": 89,
+          "pace": 95,
+          "strength": 76,
+          "accuracy": 73
         },
         {
           "id": "ger-2010-friedrich",
           "name": "Arne Friedrich",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 57,
+          "strength": 92,
+          "accuracy": 74
         },
         {
           "id": "ger-2010-mertesacker",
           "name": "Per Mertesacker",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 55,
+          "strength": 92,
+          "accuracy": 66
         },
         {
           "id": "ger-2010-boateng",
           "name": "Jérôme Boateng",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 81
+          "rating": 81,
+          "pace": 86,
+          "strength": 65,
+          "accuracy": 67
         },
         {
           "id": "ger-2010-khedira",
           "name": "Sami Khedira",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 75,
+          "strength": 69,
+          "accuracy": 94
         },
         {
           "id": "ger-2010-schweinsteiger",
           "name": "Bastian Schweinsteiger",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 90
+          "rating": 90,
+          "pace": 76,
+          "strength": 80,
+          "accuracy": 94
         },
         {
           "id": "ger-2010-ozil",
           "name": "Mesut Özil",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 88
+          "rating": 88,
+          "pace": 83,
+          "strength": 63,
+          "accuracy": 96
         },
         {
           "id": "ger-2010-muller",
           "name": "Thomas Müller",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 87
+          "rating": 87,
+          "pace": 91,
+          "strength": 54,
+          "accuracy": 74
         },
         {
           "id": "ger-2010-klose",
           "name": "Miroslav Klose",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 86
+          "rating": 86,
+          "pace": 77,
+          "strength": 97,
+          "accuracy": 66
         },
         {
           "id": "ger-2010-podolski",
           "name": "Lukas Podolski",
           "positionRaw": "LW",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 87,
+          "strength": 59,
+          "accuracy": 79
         }
       ]
     },
@@ -2875,70 +3895,100 @@
           "name": "Darío Verón",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 79
+          "rating": 79,
+          "pace": 86,
+          "strength": 68,
+          "accuracy": 68
         },
         {
           "id": "par-2010-da-silva",
           "name": "Paulo da Silva",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 62,
+          "strength": 87,
+          "accuracy": 69
         },
         {
           "id": "par-2010-alcaraz",
           "name": "Antolín Alcaraz",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 81
+          "rating": 81,
+          "pace": 62,
+          "strength": 87,
+          "accuracy": 65
         },
         {
           "id": "par-2010-morel",
           "name": "Claudio Morel Rodríguez",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 78
+          "rating": 78,
+          "pace": 78,
+          "strength": 67,
+          "accuracy": 65
         },
         {
           "id": "par-2010-caceres",
           "name": "Víctor Cáceres",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 80
+          "rating": 80,
+          "pace": 57,
+          "strength": 82,
+          "accuracy": 77
         },
         {
           "id": "par-2010-riveros",
           "name": "Cristian Riveros",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 81
+          "rating": 81,
+          "pace": 73,
+          "strength": 74,
+          "accuracy": 85
         },
         {
           "id": "par-2010-vera",
           "name": "Enrique Vera",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 79
+          "rating": 79,
+          "pace": 71,
+          "strength": 68,
+          "accuracy": 82
         },
         {
           "id": "par-2010-barreto",
           "name": "Édgar Barreto",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 80
+          "rating": 80,
+          "pace": 68,
+          "strength": 71,
+          "accuracy": 83
         },
         {
           "id": "par-2010-cruz",
           "name": "Roque Santa Cruz",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 89,
+          "strength": 70,
+          "accuracy": 72
         },
         {
           "id": "par-2010-valdez",
           "name": "Nelson Valdez",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 82
+          "rating": 82,
+          "pace": 84,
+          "strength": 71,
+          "accuracy": 67
         }
       ]
     },
@@ -2959,70 +4009,100 @@
           "name": "Sergio Ramos",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 87
+          "rating": 87,
+          "pace": 94,
+          "strength": 65,
+          "accuracy": 77
         },
         {
           "id": "esp-2010-pique",
           "name": "Gerard Piqué",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 86
+          "rating": 86,
+          "pace": 66,
+          "strength": 88,
+          "accuracy": 69
         },
         {
           "id": "esp-2010-puyol",
           "name": "Carles Puyol",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 87
+          "rating": 87,
+          "pace": 68,
+          "strength": 95,
+          "accuracy": 70
         },
         {
           "id": "esp-2010-capdevila",
           "name": "Joan Capdevila",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 79
+          "rating": 79,
+          "pace": 83,
+          "strength": 63,
+          "accuracy": 70
         },
         {
           "id": "esp-2010-busquets",
           "name": "Sergio Busquets",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 61,
+          "strength": 83,
+          "accuracy": 78
         },
         {
           "id": "esp-2010-alonso",
           "name": "Xabi Alonso",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 86
+          "rating": 86,
+          "pace": 73,
+          "strength": 78,
+          "accuracy": 87
         },
         {
           "id": "esp-2010-xavi",
           "name": "Xavi",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 92
+          "rating": 92,
+          "pace": 83,
+          "strength": 81,
+          "accuracy": 99
         },
         {
           "id": "esp-2010-iniesta",
           "name": "Andrés Iniesta",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 93
+          "rating": 93,
+          "pace": 80,
+          "strength": 64,
+          "accuracy": 97
         },
         {
           "id": "esp-2010-pedro",
           "name": "Pedro",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 80
+          "rating": 80,
+          "pace": 83,
+          "strength": 55,
+          "accuracy": 71
         },
         {
           "id": "esp-2010-villa",
           "name": "David Villa",
           "positionRaw": "CF",
           "positionBucket": "ATT",
-          "rating": 88
+          "rating": 88,
+          "pace": 76,
+          "strength": 97,
+          "accuracy": 74
         }
       ]
     },
@@ -3043,70 +4123,100 @@
           "name": "Dani Alves",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 86
+          "rating": 86,
+          "pace": 85,
+          "strength": 66,
+          "accuracy": 72
         },
         {
           "id": "bra-2014-silva",
           "name": "Thiago Silva",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 90
+          "rating": 90,
+          "pace": 60,
+          "strength": 93,
+          "accuracy": 78
         },
         {
           "id": "bra-2014-luiz",
           "name": "David Luiz",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 64,
+          "strength": 87,
+          "accuracy": 75
         },
         {
           "id": "bra-2014-marcelo",
           "name": "Marcelo",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 87
+          "rating": 87,
+          "pace": 92,
+          "strength": 73,
+          "accuracy": 74
         },
         {
           "id": "bra-2014-gustavo",
           "name": "Luiz Gustavo",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 60,
+          "strength": 85,
+          "accuracy": 75
         },
         {
           "id": "bra-2014-paulinho",
           "name": "Paulinho",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 68,
+          "strength": 66,
+          "accuracy": 82
         },
         {
           "id": "bra-2014-oscar",
           "name": "Oscar",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 79,
+          "strength": 59,
+          "accuracy": 89
         },
         {
           "id": "bra-2014-hulk",
           "name": "Hulk",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 90,
+          "strength": 55,
+          "accuracy": 73
         },
         {
           "id": "bra-2014-neymar",
           "name": "Neymar",
           "positionRaw": "LW",
           "positionBucket": "ATT",
-          "rating": 92
+          "rating": 92,
+          "pace": 99,
+          "strength": 60,
+          "accuracy": 80
         },
         {
           "id": "bra-2014-fred",
           "name": "Fred",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 78
+          "rating": 78,
+          "pace": 61,
+          "strength": 79,
+          "accuracy": 63
         }
       ]
     },
@@ -3127,70 +4237,100 @@
           "name": "Santiago Arias",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 84,
+          "strength": 59,
+          "accuracy": 74
         },
         {
           "id": "col-2014-zapata",
           "name": "Cristian Zapata",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 81
+          "rating": 81,
+          "pace": 61,
+          "strength": 92,
+          "accuracy": 65
         },
         {
           "id": "col-2014-yepes",
           "name": "Mario Yepes",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 61,
+          "strength": 84,
+          "accuracy": 67
         },
         {
           "id": "col-2014-armero",
           "name": "Pablo Armero",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 82,
+          "strength": 61,
+          "accuracy": 65
         },
         {
           "id": "col-2014-sanchez",
           "name": "Carlos Sánchez",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 81
+          "rating": 81,
+          "pace": 64,
+          "strength": 87,
+          "accuracy": 74
         },
         {
           "id": "col-2014-aguilar",
           "name": "Abel Aguilar",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 80
+          "rating": 80,
+          "pace": 68,
+          "strength": 63,
+          "accuracy": 88
         },
         {
           "id": "col-2014-cuadrado",
           "name": "Juan Guillermo Cuadrado",
           "positionRaw": "RM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 97,
+          "strength": 56,
+          "accuracy": 79
         },
         {
           "id": "col-2014-james",
           "name": "James Rodríguez",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 90
+          "rating": 90,
+          "pace": 76,
+          "strength": 60,
+          "accuracy": 95
         },
         {
           "id": "col-2014-quintero",
           "name": "Juan Fernando Quintero",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 70,
+          "strength": 62,
+          "accuracy": 92
         },
         {
           "id": "col-2014-jackson",
           "name": "Jackson Martínez",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 91,
+          "strength": 73,
+          "accuracy": 64
         }
       ]
     },
@@ -3211,70 +4351,100 @@
           "name": "Mathieu Debuchy",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 81
+          "rating": 81,
+          "pace": 87,
+          "strength": 66,
+          "accuracy": 76
         },
         {
           "id": "fra-2014-varane",
           "name": "Raphaël Varane",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 85
+          "rating": 85,
+          "pace": 63,
+          "strength": 97,
+          "accuracy": 77
         },
         {
           "id": "fra-2014-sakho",
           "name": "Mamadou Sakho",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 55,
+          "strength": 92,
+          "accuracy": 68
         },
         {
           "id": "fra-2014-evra",
           "name": "Patrice Evra",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 92,
+          "strength": 70,
+          "accuracy": 78
         },
         {
           "id": "fra-2014-matuidi",
           "name": "Blaise Matuidi",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 76,
+          "strength": 73,
+          "accuracy": 91
         },
         {
           "id": "fra-2014-pogba",
           "name": "Paul Pogba",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 86
+          "rating": 86,
+          "pace": 71,
+          "strength": 77,
+          "accuracy": 90
         },
         {
           "id": "fra-2014-cabaye",
           "name": "Yohan Cabaye",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 83
+          "rating": 83,
+          "pace": 69,
+          "strength": 72,
+          "accuracy": 86
         },
         {
           "id": "fra-2014-valbuena",
           "name": "Mathieu Valbuena",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 89,
+          "strength": 62,
+          "accuracy": 80
         },
         {
           "id": "fra-2014-benzema",
           "name": "Karim Benzema",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 88
+          "rating": 88,
+          "pace": 97,
+          "strength": 80,
+          "accuracy": 73
         },
         {
           "id": "fra-2014-giroud",
           "name": "Olivier Giroud",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 82
+          "rating": 82,
+          "pace": 93,
+          "strength": 74,
+          "accuracy": 65
         }
       ]
     },
@@ -3295,70 +4465,100 @@
           "name": "Philipp Lahm",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 89
+          "rating": 89,
+          "pace": 97,
+          "strength": 68,
+          "accuracy": 75
         },
         {
           "id": "ger-2014-boateng",
           "name": "Jérôme Boateng",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 85
+          "rating": 85,
+          "pace": 61,
+          "strength": 94,
+          "accuracy": 72
         },
         {
           "id": "ger-2014-hummels",
           "name": "Mats Hummels",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 86
+          "rating": 86,
+          "pace": 59,
+          "strength": 98,
+          "accuracy": 68
         },
         {
           "id": "ger-2014-howedes",
           "name": "Benedikt Höwedes",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 79
+          "rating": 79,
+          "pace": 81,
+          "strength": 59,
+          "accuracy": 70
         },
         {
           "id": "ger-2014-schweinsteiger",
           "name": "Bastian Schweinsteiger",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 88
+          "rating": 88,
+          "pace": 76,
+          "strength": 76,
+          "accuracy": 96
         },
         {
           "id": "ger-2014-kramer",
           "name": "Christoph Kramer",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 75
+          "rating": 75,
+          "pace": 64,
+          "strength": 69,
+          "accuracy": 84
         },
         {
           "id": "ger-2014-kroos",
           "name": "Toni Kroos",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 89
+          "rating": 89,
+          "pace": 71,
+          "strength": 75,
+          "accuracy": 97
         },
         {
           "id": "ger-2014-ozil",
           "name": "Mesut Özil",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 87
+          "rating": 87,
+          "pace": 83,
+          "strength": 56,
+          "accuracy": 96
         },
         {
           "id": "ger-2014-muller",
           "name": "Thomas Müller",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 89
+          "rating": 89,
+          "pace": 96,
+          "strength": 61,
+          "accuracy": 82
         },
         {
           "id": "ger-2014-klose",
           "name": "Miroslav Klose",
           "positionRaw": "CF",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 70,
+          "strength": 93,
+          "accuracy": 64
         }
       ]
     },
@@ -3379,70 +4579,100 @@
           "name": "Daryl Janmaat",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 89,
+          "strength": 61,
+          "accuracy": 67
         },
         {
           "id": "ned-2014-de-vrij",
           "name": "Stefan de Vrij",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 62,
+          "strength": 96,
+          "accuracy": 74
         },
         {
           "id": "ned-2014-vlaar",
           "name": "Ron Vlaar",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 54,
+          "strength": 88,
+          "accuracy": 68
         },
         {
           "id": "ned-2014-martins-indi",
           "name": "Bruno Martins Indi",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 57,
+          "strength": 81,
+          "accuracy": 64
         },
         {
           "id": "ned-2014-blind",
           "name": "Daley Blind",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 90,
+          "strength": 67,
+          "accuracy": 77
         },
         {
           "id": "ned-2014-de-jong",
           "name": "Nigel de Jong",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 64,
+          "strength": 80,
+          "accuracy": 83
         },
         {
           "id": "ned-2014-sneijder",
           "name": "Wesley Sneijder",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 87
+          "rating": 87,
+          "pace": 80,
+          "strength": 56,
+          "accuracy": 95
         },
         {
           "id": "ned-2014-robben",
           "name": "Arjen Robben",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 92
+          "rating": 92,
+          "pace": 99,
+          "strength": 63,
+          "accuracy": 81
         },
         {
           "id": "ned-2014-kuyt",
           "name": "Dirk Kuyt",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 81
+          "rating": 81,
+          "pace": 85,
+          "strength": 53,
+          "accuracy": 73
         },
         {
           "id": "ned-2014-van-persie",
           "name": "Robin van Persie",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 89
+          "rating": 89,
+          "pace": 96,
+          "strength": 75,
+          "accuracy": 68
         }
       ]
     },
@@ -3463,70 +4693,100 @@
           "name": "Cristian Gamboa",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 79,
+          "strength": 69,
+          "accuracy": 67
         },
         {
           "id": "crc-2014-gonzalez",
           "name": "Giancarlo González",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 64,
+          "strength": 90,
+          "accuracy": 65
         },
         {
           "id": "crc-2014-duarte",
           "name": "Óscar Duarte",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 53,
+          "strength": 82,
+          "accuracy": 72
         },
         {
           "id": "crc-2014-umana",
           "name": "Michael Umaña",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 78
+          "rating": 78,
+          "pace": 61,
+          "strength": 87,
+          "accuracy": 70
         },
         {
           "id": "crc-2014-diaz",
           "name": "Junior Díaz",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 79
+          "rating": 79,
+          "pace": 88,
+          "strength": 64,
+          "accuracy": 69
         },
         {
           "id": "crc-2014-borges",
           "name": "Celso Borges",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 74,
+          "strength": 71,
+          "accuracy": 87
         },
         {
           "id": "crc-2014-tejeda",
           "name": "Yeltsin Tejeda",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 79
+          "rating": 79,
+          "pace": 65,
+          "strength": 67,
+          "accuracy": 88
         },
         {
           "id": "crc-2014-bolanos",
           "name": "Christian Bolaños",
           "positionRaw": "RM",
           "positionBucket": "MID",
-          "rating": 80
+          "rating": 80,
+          "pace": 93,
+          "strength": 58,
+          "accuracy": 67
         },
         {
           "id": "crc-2014-ruiz",
           "name": "Bryan Ruiz",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 80,
+          "strength": 54,
+          "accuracy": 93
         },
         {
           "id": "crc-2014-campbell",
           "name": "Joel Campbell",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 82
+          "rating": 82,
+          "pace": 68,
+          "strength": 94,
+          "accuracy": 67
         }
       ]
     },
@@ -3547,70 +4807,100 @@
           "name": "Pablo Zabaleta",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 86,
+          "strength": 62,
+          "accuracy": 78
         },
         {
           "id": "arg-2014-garay",
           "name": "Ezequiel Garay",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 56,
+          "strength": 90,
+          "accuracy": 72
         },
         {
           "id": "arg-2014-demichelis",
           "name": "Martín Demichelis",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 61,
+          "strength": 88,
+          "accuracy": 66
         },
         {
           "id": "arg-2014-rojo",
           "name": "Marcos Rojo",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 90,
+          "strength": 67,
+          "accuracy": 71
         },
         {
           "id": "arg-2014-mascherano",
           "name": "Javier Mascherano",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 88
+          "rating": 88,
+          "pace": 71,
+          "strength": 89,
+          "accuracy": 81
         },
         {
           "id": "arg-2014-biglia",
           "name": "Lucas Biglia",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 83
+          "rating": 83,
+          "pace": 66,
+          "strength": 66,
+          "accuracy": 82
         },
         {
           "id": "arg-2014-di-maria",
           "name": "Ángel Di María",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 88
+          "rating": 88,
+          "pace": 99,
+          "strength": 59,
+          "accuracy": 78
         },
         {
           "id": "arg-2014-messi",
           "name": "Lionel Messi",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 97
+          "rating": 97,
+          "pace": 94,
+          "strength": 63,
+          "accuracy": 99
         },
         {
           "id": "arg-2014-higuain",
           "name": "Gonzalo Higuaín",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 86
+          "rating": 86,
+          "pace": 97,
+          "strength": 75,
+          "accuracy": 64
         },
         {
           "id": "arg-2014-lavezzi",
           "name": "Ezequiel Lavezzi",
           "positionRaw": "LW",
           "positionBucket": "ATT",
-          "rating": 83
+          "rating": 83,
+          "pace": 94,
+          "strength": 60,
+          "accuracy": 80
         }
       ]
     },
@@ -3631,70 +4921,100 @@
           "name": "Toby Alderweireld",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 87,
+          "strength": 65,
+          "accuracy": 69
         },
         {
           "id": "bel-2014-kompany",
           "name": "Vincent Kompany",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 88
+          "rating": 88,
+          "pace": 60,
+          "strength": 90,
+          "accuracy": 77
         },
         {
           "id": "bel-2014-van-buyten",
           "name": "Daniel Van Buyten",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 54,
+          "strength": 86,
+          "accuracy": 68
         },
         {
           "id": "bel-2014-vertonghen",
           "name": "Jan Vertonghen",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 85
+          "rating": 85,
+          "pace": 84,
+          "strength": 68,
+          "accuracy": 73
         },
         {
           "id": "bel-2014-witsel",
           "name": "Axel Witsel",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 72,
+          "strength": 74,
+          "accuracy": 85
         },
         {
           "id": "bel-2014-fellaini",
           "name": "Marouane Fellaini",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 83
+          "rating": 83,
+          "pace": 72,
+          "strength": 75,
+          "accuracy": 83
         },
         {
           "id": "bel-2014-de-bruyne",
           "name": "Kevin De Bruyne",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 87
+          "rating": 87,
+          "pace": 74,
+          "strength": 59,
+          "accuracy": 95
         },
         {
           "id": "bel-2014-hazard",
           "name": "Eden Hazard",
           "positionRaw": "LW",
           "positionBucket": "ATT",
-          "rating": 90
+          "rating": 90,
+          "pace": 99,
+          "strength": 56,
+          "accuracy": 85
         },
         {
           "id": "bel-2014-mertens",
           "name": "Dries Mertens",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 93,
+          "strength": 54,
+          "accuracy": 75
         },
         {
           "id": "bel-2014-lukaku",
           "name": "Romelu Lukaku",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 85
+          "rating": 85,
+          "pace": 69,
+          "strength": 96,
+          "accuracy": 71
         }
       ]
     },
@@ -3715,70 +5035,100 @@
           "name": "Guillermo Varela",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 78
+          "rating": 78,
+          "pace": 79,
+          "strength": 57,
+          "accuracy": 69
         },
         {
           "id": "uru-2018-gimenez",
           "name": "José María Giménez",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 86
+          "rating": 86,
+          "pace": 63,
+          "strength": 97,
+          "accuracy": 74
         },
         {
           "id": "uru-2018-godin",
           "name": "Diego Godín",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 89
+          "rating": 89,
+          "pace": 61,
+          "strength": 92,
+          "accuracy": 78
         },
         {
           "id": "uru-2018-caceres",
           "name": "Martín Cáceres",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 86,
+          "strength": 67,
+          "accuracy": 67
         },
         {
           "id": "uru-2018-bentancur",
           "name": "Rodrigo Bentancur",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 73,
+          "strength": 71,
+          "accuracy": 84
         },
         {
           "id": "uru-2018-torreira",
           "name": "Lucas Torreira",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 61,
+          "strength": 87,
+          "accuracy": 75
         },
         {
           "id": "uru-2018-vecino",
           "name": "Matías Vecino",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 81
+          "rating": 81,
+          "pace": 66,
+          "strength": 68,
+          "accuracy": 82
         },
         {
           "id": "uru-2018-sanchez",
           "name": "Carlos Sánchez",
           "positionRaw": "RM",
           "positionBucket": "MID",
-          "rating": 80
+          "rating": 80,
+          "pace": 89,
+          "strength": 50,
+          "accuracy": 72
         },
         {
           "id": "uru-2018-suarez",
           "name": "Luis Suárez",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 90
+          "rating": 90,
+          "pace": 76,
+          "strength": 94,
+          "accuracy": 69
         },
         {
           "id": "uru-2018-cavani",
           "name": "Edinson Cavani",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 89
+          "rating": 89,
+          "pace": 76,
+          "strength": 92,
+          "accuracy": 72
         }
       ]
     },
@@ -3799,70 +5149,100 @@
           "name": "Benjamin Pavard",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 84,
+          "strength": 61,
+          "accuracy": 69
         },
         {
           "id": "fra-2018-varane",
           "name": "Raphaël Varane",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 88
+          "rating": 88,
+          "pace": 68,
+          "strength": 92,
+          "accuracy": 72
         },
         {
           "id": "fra-2018-umtiti",
           "name": "Samuel Umtiti",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 56,
+          "strength": 87,
+          "accuracy": 72
         },
         {
           "id": "fra-2018-hernandez",
           "name": "Lucas Hernández",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 85
+          "rating": 85,
+          "pace": 88,
+          "strength": 70,
+          "accuracy": 77
         },
         {
           "id": "fra-2018-kante",
           "name": "N'Golo Kanté",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 90
+          "rating": 90,
+          "pace": 74,
+          "strength": 73,
+          "accuracy": 98
         },
         {
           "id": "fra-2018-pogba",
           "name": "Paul Pogba",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 87
+          "rating": 87,
+          "pace": 73,
+          "strength": 69,
+          "accuracy": 90
         },
         {
           "id": "fra-2018-matuidi",
           "name": "Blaise Matuidi",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 70,
+          "strength": 70,
+          "accuracy": 87
         },
         {
           "id": "fra-2018-mbappe",
           "name": "Kylian Mbappé",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 92
+          "rating": 92,
+          "pace": 99,
+          "strength": 64,
+          "accuracy": 85
         },
         {
           "id": "fra-2018-griezmann",
           "name": "Antoine Griezmann",
           "positionRaw": "SS",
           "positionBucket": "ATT",
-          "rating": 88
+          "rating": 88,
+          "pace": 76,
+          "strength": 58,
+          "accuracy": 92
         },
         {
           "id": "fra-2018-giroud",
           "name": "Olivier Giroud",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 82
+          "rating": 82,
+          "pace": 91,
+          "strength": 72,
+          "accuracy": 63
         }
       ]
     },
@@ -3883,70 +5263,100 @@
           "name": "Fagner",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 79,
+          "strength": 65,
+          "accuracy": 65
         },
         {
           "id": "bra-2018-silva",
           "name": "Thiago Silva",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 88
+          "rating": 88,
+          "pace": 67,
+          "strength": 96,
+          "accuracy": 74
         },
         {
           "id": "bra-2018-miranda",
           "name": "Miranda",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 65,
+          "strength": 94,
+          "accuracy": 76
         },
         {
           "id": "bra-2018-marcelo",
           "name": "Marcelo",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 87
+          "rating": 87,
+          "pace": 92,
+          "strength": 70,
+          "accuracy": 80
         },
         {
           "id": "bra-2018-casemiro",
           "name": "Casemiro",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 87
+          "rating": 87,
+          "pace": 62,
+          "strength": 90,
+          "accuracy": 83
         },
         {
           "id": "bra-2018-paulinho",
           "name": "Paulinho",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 83
+          "rating": 83,
+          "pace": 76,
+          "strength": 66,
+          "accuracy": 86
         },
         {
           "id": "bra-2018-coutinho",
           "name": "Philippe Coutinho",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 88
+          "rating": 88,
+          "pace": 84,
+          "strength": 67,
+          "accuracy": 99
         },
         {
           "id": "bra-2018-willian",
           "name": "Willian",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 90,
+          "strength": 58,
+          "accuracy": 81
         },
         {
           "id": "bra-2018-neymar",
           "name": "Neymar",
           "positionRaw": "LW",
           "positionBucket": "ATT",
-          "rating": 93
+          "rating": 93,
+          "pace": 99,
+          "strength": 60,
+          "accuracy": 87
         },
         {
           "id": "bra-2018-jesus",
           "name": "Gabriel Jesus",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 95,
+          "strength": 67,
+          "accuracy": 67
         }
       ]
     },
@@ -3967,70 +5377,100 @@
           "name": "Thomas Meunier",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 92,
+          "strength": 65,
+          "accuracy": 78
         },
         {
           "id": "bel-2018-alderweireld",
           "name": "Toby Alderweireld",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 86
+          "rating": 86,
+          "pace": 60,
+          "strength": 96,
+          "accuracy": 77
         },
         {
           "id": "bel-2018-kompany",
           "name": "Vincent Kompany",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 85
+          "rating": 85,
+          "pace": 57,
+          "strength": 95,
+          "accuracy": 77
         },
         {
           "id": "bel-2018-vertonghen",
           "name": "Jan Vertonghen",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 86
+          "rating": 86,
+          "pace": 91,
+          "strength": 70,
+          "accuracy": 72
         },
         {
           "id": "bel-2018-witsel",
           "name": "Axel Witsel",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 76,
+          "strength": 71,
+          "accuracy": 85
         },
         {
           "id": "bel-2018-de-bruyne",
           "name": "Kevin De Bruyne",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 92
+          "rating": 92,
+          "pace": 80,
+          "strength": 81,
+          "accuracy": 93
         },
         {
           "id": "bel-2018-chadli",
           "name": "Nacer Chadli",
           "positionRaw": "LM",
           "positionBucket": "MID",
-          "rating": 81
+          "rating": 81,
+          "pace": 89,
+          "strength": 54,
+          "accuracy": 72
         },
         {
           "id": "bel-2018-hazard",
           "name": "Eden Hazard",
           "positionRaw": "LW",
           "positionBucket": "ATT",
-          "rating": 93
+          "rating": 93,
+          "pace": 98,
+          "strength": 58,
+          "accuracy": 85
         },
         {
           "id": "bel-2018-mertens",
           "name": "Dries Mertens",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 85
+          "rating": 85,
+          "pace": 99,
+          "strength": 57,
+          "accuracy": 80
         },
         {
           "id": "bel-2018-lukaku",
           "name": "Romelu Lukaku",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 89
+          "rating": 89,
+          "pace": 73,
+          "strength": 99,
+          "accuracy": 67
         }
       ]
     },
@@ -4051,70 +5491,100 @@
           "name": "Mikael Lustig",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 81,
+          "strength": 68,
+          "accuracy": 74
         },
         {
           "id": "swe-2018-lindelof",
           "name": "Victor Lindelöf",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 65,
+          "strength": 86,
+          "accuracy": 75
         },
         {
           "id": "swe-2018-granqvist",
           "name": "Andreas Granqvist",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 62,
+          "strength": 94,
+          "accuracy": 71
         },
         {
           "id": "swe-2018-augustinsson",
           "name": "Ludwig Augustinsson",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 81,
+          "strength": 66,
+          "accuracy": 74
         },
         {
           "id": "swe-2018-larsson",
           "name": "Sebastian Larsson",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 80
+          "rating": 80,
+          "pace": 71,
+          "strength": 69,
+          "accuracy": 83
         },
         {
           "id": "swe-2018-ekdal",
           "name": "Albin Ekdal",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 81
+          "rating": 81,
+          "pace": 71,
+          "strength": 65,
+          "accuracy": 88
         },
         {
           "id": "swe-2018-forsberg",
           "name": "Emil Forsberg",
           "positionRaw": "LM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 99,
+          "strength": 59,
+          "accuracy": 76
         },
         {
           "id": "swe-2018-claesson",
           "name": "Viktor Claesson",
           "positionRaw": "RM",
           "positionBucket": "MID",
-          "rating": 81
+          "rating": 81,
+          "pace": 88,
+          "strength": 53,
+          "accuracy": 76
         },
         {
           "id": "swe-2018-toivonen",
           "name": "Ola Toivonen",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 81
+          "rating": 81,
+          "pace": 92,
+          "strength": 70,
+          "accuracy": 70
         },
         {
           "id": "swe-2018-berg",
           "name": "Marcus Berg",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 82
+          "rating": 82,
+          "pace": 87,
+          "strength": 73,
+          "accuracy": 65
         }
       ]
     },
@@ -4135,70 +5605,100 @@
           "name": "Kieran Trippier",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 92,
+          "strength": 70,
+          "accuracy": 75
         },
         {
           "id": "eng-2018-stones",
           "name": "John Stones",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 64,
+          "strength": 91,
+          "accuracy": 67
         },
         {
           "id": "eng-2018-maguire",
           "name": "Harry Maguire",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 85
+          "rating": 85,
+          "pace": 59,
+          "strength": 87,
+          "accuracy": 74
         },
         {
           "id": "eng-2018-young",
           "name": "Ashley Young",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 81
+          "rating": 81,
+          "pace": 84,
+          "strength": 67,
+          "accuracy": 73
         },
         {
           "id": "eng-2018-henderson",
           "name": "Jordan Henderson",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 69,
+          "strength": 66,
+          "accuracy": 91
         },
         {
           "id": "eng-2018-alli",
           "name": "Dele Alli",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 72,
+          "strength": 69,
+          "accuracy": 92
         },
         {
           "id": "eng-2018-lingard",
           "name": "Jesse Lingard",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 78,
+          "strength": 53,
+          "accuracy": 85
         },
         {
           "id": "eng-2018-sterling",
           "name": "Raheem Sterling",
           "positionRaw": "LW",
           "positionBucket": "ATT",
-          "rating": 87
+          "rating": 87,
+          "pace": 99,
+          "strength": 60,
+          "accuracy": 81
         },
         {
           "id": "eng-2018-kane",
           "name": "Harry Kane",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 90
+          "rating": 90,
+          "pace": 93,
+          "strength": 76,
+          "accuracy": 73
         },
         {
           "id": "eng-2018-rashford",
           "name": "Marcus Rashford",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 91,
+          "strength": 53,
+          "accuracy": 75
         }
       ]
     },
@@ -4219,70 +5719,100 @@
           "name": "Mário Fernandes",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 90,
+          "strength": 65,
+          "accuracy": 77
         },
         {
           "id": "rus-2018-kutepov",
           "name": "Ilya Kutepov",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 78
+          "rating": 78,
+          "pace": 55,
+          "strength": 87,
+          "accuracy": 63
         },
         {
           "id": "rus-2018-ignashevich",
           "name": "Sergei Ignashevich",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 59,
+          "strength": 90,
+          "accuracy": 75
         },
         {
           "id": "rus-2018-zhirkov",
           "name": "Yuri Zhirkov",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 91,
+          "strength": 68,
+          "accuracy": 69
         },
         {
           "id": "rus-2018-zobnin",
           "name": "Roman Zobnin",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 81
+          "rating": 81,
+          "pace": 73,
+          "strength": 68,
+          "accuracy": 82
         },
         {
           "id": "rus-2018-gazinsky",
           "name": "Yuri Gazinsky",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 79
+          "rating": 79,
+          "pace": 59,
+          "strength": 79,
+          "accuracy": 71
         },
         {
           "id": "rus-2018-golovin",
           "name": "Aleksandr Golovin",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 84
+          "rating": 84,
+          "pace": 78,
+          "strength": 58,
+          "accuracy": 91
         },
         {
           "id": "rus-2018-samedov",
           "name": "Aleksandr Samedov",
           "positionRaw": "RM",
           "positionBucket": "MID",
-          "rating": 80
+          "rating": 80,
+          "pace": 88,
+          "strength": 57,
+          "accuracy": 68
         },
         {
           "id": "rus-2018-cheryshev",
           "name": "Denis Cheryshev",
           "positionRaw": "LM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 90,
+          "strength": 56,
+          "accuracy": 73
         },
         {
           "id": "rus-2018-dzyuba",
           "name": "Artem Dzyuba",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 96,
+          "strength": 76,
+          "accuracy": 69
         }
       ]
     },
@@ -4303,70 +5833,100 @@
           "name": "Šime Vrsaljko",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 85,
+          "strength": 71,
+          "accuracy": 71
         },
         {
           "id": "cro-2018-lovren",
           "name": "Dejan Lovren",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 63,
+          "strength": 88,
+          "accuracy": 67
         },
         {
           "id": "cro-2018-vida",
           "name": "Domagoj Vida",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 56,
+          "strength": 86,
+          "accuracy": 73
         },
         {
           "id": "cro-2018-strinic",
           "name": "Ivan Strinić",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 79,
+          "strength": 64,
+          "accuracy": 67
         },
         {
           "id": "cro-2018-brozovic",
           "name": "Marcelo Brozović",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 61,
+          "strength": 83,
+          "accuracy": 79
         },
         {
           "id": "cro-2018-modric",
           "name": "Luka Modrić",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 94
+          "rating": 94,
+          "pace": 78,
+          "strength": 79,
+          "accuracy": 97
         },
         {
           "id": "cro-2018-rakitic",
           "name": "Ivan Rakitić",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 88
+          "rating": 88,
+          "pace": 74,
+          "strength": 76,
+          "accuracy": 91
         },
         {
           "id": "cro-2018-perisic",
           "name": "Ivan Perišić",
           "positionRaw": "LM",
           "positionBucket": "MID",
-          "rating": 87
+          "rating": 87,
+          "pace": 97,
+          "strength": 64,
+          "accuracy": 73
         },
         {
           "id": "cro-2018-rebic",
           "name": "Ante Rebić",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 82
+          "rating": 82,
+          "pace": 93,
+          "strength": 54,
+          "accuracy": 77
         },
         {
           "id": "cro-2018-mandzukic",
           "name": "Mario Mandžukić",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 87
+          "rating": 87,
+          "pace": 76,
+          "strength": 95,
+          "accuracy": 72
         }
       ]
     },
@@ -4387,70 +5947,100 @@
           "name": "Denzel Dumfries",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 85,
+          "strength": 67,
+          "accuracy": 76
         },
         {
           "id": "ned-2022-timber",
           "name": "Jurriën Timber",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 61,
+          "strength": 93,
+          "accuracy": 68
         },
         {
           "id": "ned-2022-van-dijk",
           "name": "Virgil van Dijk",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 90
+          "rating": 90,
+          "pace": 65,
+          "strength": 99,
+          "accuracy": 73
         },
         {
           "id": "ned-2022-ake",
           "name": "Nathan Aké",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 56,
+          "strength": 87,
+          "accuracy": 70
         },
         {
           "id": "ned-2022-blind",
           "name": "Daley Blind",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 89,
+          "strength": 70,
+          "accuracy": 69
         },
         {
           "id": "ned-2022-de-jong",
           "name": "Frenkie de Jong",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 88
+          "rating": 88,
+          "pace": 78,
+          "strength": 74,
+          "accuracy": 95
         },
         {
           "id": "ned-2022-de-roon",
           "name": "Marten de Roon",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 81
+          "rating": 81,
+          "pace": 65,
+          "strength": 85,
+          "accuracy": 76
         },
         {
           "id": "ned-2022-gakpo",
           "name": "Cody Gakpo",
           "positionRaw": "LW",
           "positionBucket": "ATT",
-          "rating": 86
+          "rating": 86,
+          "pace": 99,
+          "strength": 61,
+          "accuracy": 73
         },
         {
           "id": "ned-2022-depay",
           "name": "Memphis Depay",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 85
+          "rating": 85,
+          "pace": 94,
+          "strength": 71,
+          "accuracy": 72
         },
         {
           "id": "ned-2022-bergwijn",
           "name": "Steven Bergwijn",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 81
+          "rating": 81,
+          "pace": 91,
+          "strength": 50,
+          "accuracy": 75
         }
       ]
     },
@@ -4471,70 +6061,100 @@
           "name": "Nahuel Molina",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 85,
+          "strength": 62,
+          "accuracy": 72
         },
         {
           "id": "arg-2022-romero",
           "name": "Cristian Romero",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 87
+          "rating": 87,
+          "pace": 59,
+          "strength": 92,
+          "accuracy": 69
         },
         {
           "id": "arg-2022-otamendi",
           "name": "Nicolás Otamendi",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 85
+          "rating": 85,
+          "pace": 61,
+          "strength": 95,
+          "accuracy": 69
         },
         {
           "id": "arg-2022-tagliafico",
           "name": "Nicolás Tagliafico",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 92,
+          "strength": 70,
+          "accuracy": 73
         },
         {
           "id": "arg-2022-de-paul",
           "name": "Rodrigo De Paul",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 77,
+          "strength": 68,
+          "accuracy": 89
         },
         {
           "id": "arg-2022-enzo",
           "name": "Enzo Fernández",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 86
+          "rating": 86,
+          "pace": 76,
+          "strength": 70,
+          "accuracy": 90
         },
         {
           "id": "arg-2022-mac-allister",
           "name": "Alexis Mac Allister",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 74,
+          "strength": 69,
+          "accuracy": 84
         },
         {
           "id": "arg-2022-di-maria",
           "name": "Ángel Di María",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 88
+          "rating": 88,
+          "pace": 96,
+          "strength": 57,
+          "accuracy": 79
         },
         {
           "id": "arg-2022-messi",
           "name": "Lionel Messi",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 97
+          "rating": 97,
+          "pace": 90,
+          "strength": 65,
+          "accuracy": 99
         },
         {
           "id": "arg-2022-j-alvarez",
           "name": "Julián Álvarez",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 85
+          "rating": 85,
+          "pace": 93,
+          "strength": 76,
+          "accuracy": 67
         }
       ]
     },
@@ -4555,70 +6175,100 @@
           "name": "Josip Juranović",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 81
+          "rating": 81,
+          "pace": 81,
+          "strength": 69,
+          "accuracy": 68
         },
         {
           "id": "cro-2022-lovren",
           "name": "Dejan Lovren",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 62,
+          "strength": 88,
+          "accuracy": 70
         },
         {
           "id": "cro-2022-gvardiol",
           "name": "Joško Gvardiol",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 87
+          "rating": 87,
+          "pace": 67,
+          "strength": 91,
+          "accuracy": 69
         },
         {
           "id": "cro-2022-sosa",
           "name": "Borna Sosa",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 81
+          "rating": 81,
+          "pace": 84,
+          "strength": 63,
+          "accuracy": 71
         },
         {
           "id": "cro-2022-brozovic",
           "name": "Marcelo Brozović",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 86
+          "rating": 86,
+          "pace": 63,
+          "strength": 90,
+          "accuracy": 79
         },
         {
           "id": "cro-2022-modric",
           "name": "Luka Modrić",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 91
+          "rating": 91,
+          "pace": 79,
+          "strength": 73,
+          "accuracy": 97
         },
         {
           "id": "cro-2022-kovacic",
           "name": "Mateo Kovačić",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 86
+          "rating": 86,
+          "pace": 73,
+          "strength": 75,
+          "accuracy": 95
         },
         {
           "id": "cro-2022-perisic",
           "name": "Ivan Perišić",
           "positionRaw": "LM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 90,
+          "strength": 60,
+          "accuracy": 79
         },
         {
           "id": "cro-2022-kramaric",
           "name": "Andrej Kramarić",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 87,
+          "strength": 67,
+          "accuracy": 63
         },
         {
           "id": "cro-2022-pasalic",
           "name": "Mario Pašalić",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 79,
+          "strength": 55,
+          "accuracy": 92
         }
       ]
     },
@@ -4639,70 +6289,100 @@
           "name": "Danilo",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 89,
+          "strength": 71,
+          "accuracy": 74
         },
         {
           "id": "bra-2022-silva",
           "name": "Thiago Silva",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 87
+          "rating": 87,
+          "pace": 66,
+          "strength": 93,
+          "accuracy": 77
         },
         {
           "id": "bra-2022-marquinhos",
           "name": "Marquinhos",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 88
+          "rating": 88,
+          "pace": 64,
+          "strength": 98,
+          "accuracy": 74
         },
         {
           "id": "bra-2022-sandro",
           "name": "Alex Sandro",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 90,
+          "strength": 70,
+          "accuracy": 70
         },
         {
           "id": "bra-2022-casemiro",
           "name": "Casemiro",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 88
+          "rating": 88,
+          "pace": 68,
+          "strength": 89,
+          "accuracy": 87
         },
         {
           "id": "bra-2022-paqueta",
           "name": "Lucas Paquetá",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 70,
+          "strength": 68,
+          "accuracy": 92
         },
         {
           "id": "bra-2022-neymar",
           "name": "Neymar",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 92
+          "rating": 92,
+          "pace": 84,
+          "strength": 59,
+          "accuracy": 99
         },
         {
           "id": "bra-2022-raphinha",
           "name": "Raphinha",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 85
+          "rating": 85,
+          "pace": 96,
+          "strength": 56,
+          "accuracy": 78
         },
         {
           "id": "bra-2022-vinicius",
           "name": "Vinícius Júnior",
           "positionRaw": "LW",
           "positionBucket": "ATT",
-          "rating": 90
+          "rating": 90,
+          "pace": 99,
+          "strength": 58,
+          "accuracy": 76
         },
         {
           "id": "bra-2022-richarlison",
           "name": "Richarlison",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 85
+          "rating": 85,
+          "pace": 67,
+          "strength": 89,
+          "accuracy": 66
         }
       ]
     },
@@ -4723,70 +6403,100 @@
           "name": "Kyle Walker",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 86
+          "rating": 86,
+          "pace": 91,
+          "strength": 69,
+          "accuracy": 74
         },
         {
           "id": "eng-2022-stones",
           "name": "John Stones",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 86
+          "rating": 86,
+          "pace": 60,
+          "strength": 91,
+          "accuracy": 78
         },
         {
           "id": "eng-2022-maguire",
           "name": "Harry Maguire",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 83
+          "rating": 83,
+          "pace": 62,
+          "strength": 91,
+          "accuracy": 73
         },
         {
           "id": "eng-2022-shaw",
           "name": "Luke Shaw",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 92,
+          "strength": 67,
+          "accuracy": 76
         },
         {
           "id": "eng-2022-rice",
           "name": "Declan Rice",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 87
+          "rating": 87,
+          "pace": 70,
+          "strength": 88,
+          "accuracy": 86
         },
         {
           "id": "eng-2022-bellingham",
           "name": "Jude Bellingham",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 87
+          "rating": 87,
+          "pace": 78,
+          "strength": 78,
+          "accuracy": 95
         },
         {
           "id": "eng-2022-saka",
           "name": "Bukayo Saka",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 87
+          "rating": 87,
+          "pace": 95,
+          "strength": 60,
+          "accuracy": 73
         },
         {
           "id": "eng-2022-foden",
           "name": "Phil Foden",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 86
+          "rating": 86,
+          "pace": 82,
+          "strength": 57,
+          "accuracy": 88
         },
         {
           "id": "eng-2022-sterling",
           "name": "Raheem Sterling",
           "positionRaw": "LW",
           "positionBucket": "ATT",
-          "rating": 85
+          "rating": 85,
+          "pace": 92,
+          "strength": 54,
+          "accuracy": 82
         },
         {
           "id": "eng-2022-kane",
           "name": "Harry Kane",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 90
+          "rating": 90,
+          "pace": 75,
+          "strength": 99,
+          "accuracy": 75
         }
       ]
     },
@@ -4807,70 +6517,100 @@
           "name": "Jules Koundé",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 85
+          "rating": 85,
+          "pace": 90,
+          "strength": 67,
+          "accuracy": 75
         },
         {
           "id": "fra-2022-varane",
           "name": "Raphaël Varane",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 87
+          "rating": 87,
+          "pace": 59,
+          "strength": 95,
+          "accuracy": 77
         },
         {
           "id": "fra-2022-upamecano",
           "name": "Dayot Upamecano",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 85
+          "rating": 85,
+          "pace": 60,
+          "strength": 95,
+          "accuracy": 68
         },
         {
           "id": "fra-2022-theo",
           "name": "Theo Hernandez",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 87
+          "rating": 87,
+          "pace": 88,
+          "strength": 65,
+          "accuracy": 76
         },
         {
           "id": "fra-2022-tchouameni",
           "name": "Aurélien Tchouaméni",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 86
+          "rating": 86,
+          "pace": 60,
+          "strength": 86,
+          "accuracy": 77
         },
         {
           "id": "fra-2022-rabiot",
           "name": "Adrien Rabiot",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 85
+          "rating": 85,
+          "pace": 73,
+          "strength": 69,
+          "accuracy": 88
         },
         {
           "id": "fra-2022-griezmann",
           "name": "Antoine Griezmann",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 89
+          "rating": 89,
+          "pace": 76,
+          "strength": 61,
+          "accuracy": 99
         },
         {
           "id": "fra-2022-dembele",
           "name": "Ousmane Dembélé",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 86
+          "rating": 86,
+          "pace": 95,
+          "strength": 63,
+          "accuracy": 73
         },
         {
           "id": "fra-2022-mbappe",
           "name": "Kylian Mbappé",
           "positionRaw": "LW",
           "positionBucket": "ATT",
-          "rating": 96
+          "rating": 96,
+          "pace": 99,
+          "strength": 64,
+          "accuracy": 84
         },
         {
           "id": "fra-2022-giroud",
           "name": "Olivier Giroud",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 85
+          "rating": 85,
+          "pace": 69,
+          "strength": 88,
+          "accuracy": 69
         }
       ]
     },
@@ -4891,70 +6631,100 @@
           "name": "Achraf Hakimi",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 88
+          "rating": 88,
+          "pace": 91,
+          "strength": 65,
+          "accuracy": 78
         },
         {
           "id": "mar-2022-saiss",
           "name": "Romain Saïss",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 62,
+          "strength": 95,
+          "accuracy": 72
         },
         {
           "id": "mar-2022-aguerd",
           "name": "Nayef Aguerd",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 59,
+          "strength": 95,
+          "accuracy": 73
         },
         {
           "id": "mar-2022-attiyat-allah",
           "name": "Yahia Attiyat Allah",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 80
+          "rating": 80,
+          "pace": 79,
+          "strength": 64,
+          "accuracy": 66
         },
         {
           "id": "mar-2022-amrabat",
           "name": "Sofyan Amrabat",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 86
+          "rating": 86,
+          "pace": 63,
+          "strength": 93,
+          "accuracy": 84
         },
         {
           "id": "mar-2022-ounahi",
           "name": "Azzedine Ounahi",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 83
+          "rating": 83,
+          "pace": 66,
+          "strength": 76,
+          "accuracy": 88
         },
         {
           "id": "mar-2022-amallah",
           "name": "Selim Amallah",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 80
+          "rating": 80,
+          "pace": 70,
+          "strength": 66,
+          "accuracy": 86
         },
         {
           "id": "mar-2022-ziyech",
           "name": "Hakim Ziyech",
           "positionRaw": "RW",
           "positionBucket": "ATT",
-          "rating": 86
+          "rating": 86,
+          "pace": 92,
+          "strength": 63,
+          "accuracy": 79
         },
         {
           "id": "mar-2022-boufal",
           "name": "Sofiane Boufal",
           "positionRaw": "LW",
           "positionBucket": "ATT",
-          "rating": 82
+          "rating": 82,
+          "pace": 89,
+          "strength": 61,
+          "accuracy": 72
         },
         {
           "id": "mar-2022-en-nesyri",
           "name": "Youssef En-Nesyri",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 95,
+          "strength": 76,
+          "accuracy": 66
         }
       ]
     },
@@ -4975,70 +6745,100 @@
           "name": "Diogo Dalot",
           "positionRaw": "RB",
           "positionBucket": "DEF",
-          "rating": 82
+          "rating": 82,
+          "pace": 89,
+          "strength": 69,
+          "accuracy": 68
         },
         {
           "id": "por-2022-pepe",
           "name": "Pepe",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 86
+          "rating": 86,
+          "pace": 66,
+          "strength": 92,
+          "accuracy": 77
         },
         {
           "id": "por-2022-dias",
           "name": "Rúben Dias",
           "positionRaw": "CB",
           "positionBucket": "DEF",
-          "rating": 88
+          "rating": 88,
+          "pace": 59,
+          "strength": 94,
+          "accuracy": 75
         },
         {
           "id": "por-2022-guerreiro",
           "name": "Raphaël Guerreiro",
           "positionRaw": "LB",
           "positionBucket": "DEF",
-          "rating": 84
+          "rating": 84,
+          "pace": 86,
+          "strength": 65,
+          "accuracy": 74
         },
         {
           "id": "por-2022-carvalho",
           "name": "William Carvalho",
           "positionRaw": "DM",
           "positionBucket": "MID",
-          "rating": 82
+          "rating": 82,
+          "pace": 59,
+          "strength": 85,
+          "accuracy": 80
         },
         {
           "id": "por-2022-fernandes",
           "name": "Bruno Fernandes",
           "positionRaw": "CM",
           "positionBucket": "MID",
-          "rating": 88
+          "rating": 88,
+          "pace": 73,
+          "strength": 78,
+          "accuracy": 93
         },
         {
           "id": "por-2022-silva",
           "name": "Bernardo Silva",
           "positionRaw": "AM",
           "positionBucket": "MID",
-          "rating": 90
+          "rating": 90,
+          "pace": 79,
+          "strength": 61,
+          "accuracy": 98
         },
         {
           "id": "por-2022-felix",
           "name": "João Félix",
           "positionRaw": "LW",
           "positionBucket": "ATT",
-          "rating": 84
+          "rating": 84,
+          "pace": 89,
+          "strength": 58,
+          "accuracy": 79
         },
         {
           "id": "por-2022-ronaldo",
           "name": "Cristiano Ronaldo",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 88
+          "rating": 88,
+          "pace": 99,
+          "strength": 80,
+          "accuracy": 72
         },
         {
           "id": "por-2022-ramos",
           "name": "Gonçalo Ramos",
           "positionRaw": "ST",
           "positionBucket": "ATT",
-          "rating": 83
+          "rating": 83,
+          "pace": 68,
+          "strength": 89,
+          "accuracy": 68
         }
       ]
     }

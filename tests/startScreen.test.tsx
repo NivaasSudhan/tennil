@@ -12,7 +12,7 @@ const FORMATIONS: Formation[] = [
 afterEach(cleanup);
 
 describe('StartScreen', () => {
-  it('landing variant renders title, rules, formation picker, and Kick off CTA', () => {
+  it('landing variant renders title, rules, difficulty cards, Kick off CTA — no formation grid', () => {
     render(
       <StartScreen
         formations={FORMATIONS}
@@ -24,9 +24,11 @@ describe('StartScreen', () => {
     expect(screen.getByRole('heading', { level: 1 })).toBeTruthy();
     expect(screen.getByText(/11 rounds/i)).toBeTruthy();
     expect(screen.getByText(/one skip/i)).toBeTruthy();
-    expect(screen.getAllByText(/4-3-3/).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText(/4-4-2/).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText('NORMAL')).toBeTruthy();
+    expect(screen.getByText('HARD')).toBeTruthy();
     expect(screen.getByRole('button', { name: /kick off/i })).toBeTruthy();
+    expect(screen.queryAllByText(/4-3-3/).length).toBe(0);
+    expect(screen.queryAllByText(/4-4-2/).length).toBe(0);
   });
 
   it('formation-only variant does NOT render the blurb/rules', () => {
@@ -77,33 +79,151 @@ describe('StartScreen', () => {
   });
 });
 
-describe('StartScreen — MATCHDAY badge always visible (ADR-014-lite amend)', () => {
-  it('landing shows MATCHDAY badge number', () => {
+describe('StartScreen — opposition banner (ADR-020 Wave E)', () => {
+  it('landing shows the vs-opponent line + tagline under the masthead', () => {
     render(
       <StartScreen
         formations={FORMATIONS}
         defaultFormationId="4-3-3"
         variant="landing"
-        matchdayNumber={7}
+        opponentLabel="THE PRESSING MACHINE"
+        opponentTagline="Full-throttle press for ninety minutes — pace is at a premium today."
         onStart={() => {}}
       />,
     );
-    expect(screen.getByText(/MATCHDAY #7/i)).toBeTruthy();
+    expect(screen.getByText(/vs THE PRESSING MACHINE/i)).toBeTruthy();
+    expect(screen.getByText(/pace is at a premium today/i)).toBeTruthy();
   });
 
-  it('formation-only does not show MATCHDAY badge, labels CTA Confirm Draft', () => {
-    const onStart = vi.fn();
+  it('landing without an opponent renders no banner; formation-only never shows it', () => {
+    render(
+      <StartScreen
+        formations={FORMATIONS}
+        defaultFormationId="4-3-3"
+        variant="landing"
+        onStart={() => {}}
+      />,
+    );
+    expect(screen.queryByText(/^vs /i)).toBeNull();
+    cleanup();
     render(
       <StartScreen
         formations={FORMATIONS}
         defaultFormationId="4-3-3"
         variant="formation-only"
-        onStart={onStart}
+        opponentLabel="THE PRESSING MACHINE"
+        opponentTagline="Full-throttle press."
+        onStart={() => {}}
       />,
     );
-    expect(screen.queryByText(/MATCHDAY/i)).toBeNull();
-    expect(screen.getByRole('button', { name: /confirm draft/i })).toBeTruthy();
-    fireEvent.click(screen.getByRole('button', { name: /confirm draft/i }));
-    expect(onStart).toHaveBeenCalledWith('4-3-3');
+    expect(screen.queryByText(/vs THE PRESSING MACHINE/i)).toBeNull();
+  });
+});
+
+describe('StartScreen — M2a difficulty toggle, taunt, bug link', () => {
+  it('renders taunt line under the masthead', () => {
+    render(
+      <StartScreen
+        formations={FORMATIONS}
+        defaultFormationId="4-3-3"
+        variant="landing"
+        difficulty="normal"
+        onDifficultyChange={() => {}}
+        onStart={() => {}}
+      />,
+    );
+    expect(screen.getByText('Can you score 10-0?')).toBeTruthy();
+  });
+
+  it('shows Report a bug link and no longer shows old text', () => {
+    render(
+      <StartScreen
+        formations={FORMATIONS}
+        defaultFormationId="4-3-3"
+        variant="landing"
+        difficulty="normal"
+        onDifficultyChange={() => {}}
+        onStart={() => {}}
+      />,
+    );
+    expect(screen.getByText(/Report a bug/i)).toBeTruthy();
+    expect(screen.queryByText(/Report a fault/i)).toBeNull();
+  });
+
+  it('difficulty toggle renders both options with NORMAL pre-selected', () => {
+    render(
+      <StartScreen
+        formations={FORMATIONS}
+        defaultFormationId="4-3-3"
+        variant="landing"
+        difficulty="normal"
+        onDifficultyChange={() => {}}
+        onStart={() => {}}
+      />,
+    );
+    expect(screen.getByText('NORMAL')).toBeTruthy();
+    expect(screen.getByText('HARD')).toBeTruthy();
+    const normalBtn = screen.getByRole('button', { name: /^NORMAL/ });
+    expect(normalBtn.getAttribute('aria-pressed')).toBe('true');
+  });
+
+  it('selecting HARD calls onDifficultyChange with hard', () => {
+    const onDifficultyChange = vi.fn();
+    render(
+      <StartScreen
+        formations={FORMATIONS}
+        defaultFormationId="4-3-3"
+        variant="landing"
+        difficulty="normal"
+        onDifficultyChange={onDifficultyChange}
+        onStart={() => {}}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /^HARD/ }));
+    expect(onDifficultyChange).toHaveBeenCalledWith('hard');
+  });
+
+  it('landing never shows formation options regardless of difficulty', () => {
+    const { rerender } = render(
+      <StartScreen
+        formations={FORMATIONS}
+        defaultFormationId="4-3-3"
+        variant="landing"
+        difficulty="normal"
+        onDifficultyChange={() => {}}
+        onStart={() => {}}
+      />,
+    );
+    expect(screen.queryAllByText(/4-3-3/).length).toBe(0);
+    expect(screen.queryByText(/opponent reveals first/i)).toBeNull();
+
+    rerender(
+      <StartScreen
+        formations={FORMATIONS}
+        defaultFormationId="4-3-3"
+        variant="landing"
+        difficulty="hard"
+        onDifficultyChange={() => {}}
+        onStart={() => {}}
+      />,
+    );
+    expect(screen.queryAllByText(/4-3-3/).length).toBe(0);
+    expect(screen.queryByText(/opponent reveals first/i)).toBeNull();
+  });
+
+  it('footer links present: About, Rules, Report a bug', () => {
+    render(
+      <StartScreen
+        formations={FORMATIONS}
+        defaultFormationId="4-3-3"
+        variant="landing"
+        difficulty="normal"
+        onDifficultyChange={() => {}}
+        onStart={() => {}}
+      />,
+    );
+    expect(screen.getByText('About')).toBeTruthy();
+    expect(screen.getByText('RULES')).toBeTruthy();
+    expect(screen.getByText(/Report a bug/i)).toBeTruthy();
   });
 });

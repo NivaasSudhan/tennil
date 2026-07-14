@@ -17,6 +17,7 @@
  * If nextBetter is null (awarded the top band), there is no near-miss line.
  */
 import type { PositionBucket, PredicateResult, ScoreExplanation } from '../domain/types';
+import type { AttrName, OppositionDef } from '../domain/scoring/profileFit';
 
 export interface NearMissLine {
   /** null when the awarded band is the top band (no near-miss to show). */
@@ -48,6 +49,46 @@ function weakLinkLine(p: PredicateResult, bandId: string): string {
   return `PASSENGER AT ${p.actual} — A ${bandId} XI CARRIES NO ONE`;
 }
 
+/** ADR-020 Wave C card (plan.md line 48, dictated copy, verbatim):
+ * dominant weightMod on today's opposition selects the template — strength
+ * -> steel-press line, accuracy -> opponent-named craft line, pace -> legs
+ * line; no dominant mod (neutral, or opposition omitted) -> shape-fit line. */
+const ATTR_PRIORITY: AttrName[] = ['pace', 'strength', 'accuracy'];
+
+function dominantWeightMod(opposition: OppositionDef | undefined): AttrName | null {
+  if (!opposition) return null;
+  let best: AttrName | null = null;
+  let bestVal = -Infinity;
+  for (const attr of ATTR_PRIORITY) {
+    const v = opposition.weightMods[attr];
+    if (v !== undefined && v > bestVal) {
+      bestVal = v;
+      best = attr;
+    }
+  }
+  return best;
+}
+
+/** Strips a leading "THE " from an opposition label so templates that supply
+ * their own "THE" prefix don't double it up (e.g. label "THE LOW BLOCK" ->
+ * "LOW BLOCK" -> "THE LOW BLOCK HELD", matching design spec §3's example). */
+function oppositionName(opposition: OppositionDef): string {
+  return opposition.label.startsWith('THE ') ? opposition.label.slice(4) : opposition.label;
+}
+
+function minFitLine(bandId: string, opposition: OppositionDef | undefined): string {
+  switch (dominantWeightMod(opposition)) {
+    case 'strength':
+      return `TOO SOFT FOR THE PRESS — ${bandId} WANTED STEEL`;
+    case 'accuracy':
+      return `ALL LEGS, NO CRAFT — THE ${oppositionName(opposition!)} HELD`;
+    case 'pace':
+      return `CAUGHT FLAT — ${bandId} NEEDED LEGS`;
+    default:
+      return `SHAPE FIT SHORT OF A ${bandId}`;
+  }
+}
+
 const STRUCTURAL_MESSAGES: Record<PositionBucket, string> = {
   GK: 'NO KEEPER. BOLD. WRONG.',
   DEF: 'ELEVEN ARTISTS, NOBODY ON THE DOOR.',
@@ -57,7 +98,10 @@ const STRUCTURAL_MESSAGES: Record<PositionBucket, string> = {
 
 const BUCKET_PRIORITY: PositionBucket[] = ['GK', 'DEF', 'ATT', 'MID'];
 
-export function formatNearMiss(explanation: ScoreExplanation): NearMissLine {
+export function formatNearMiss(
+  explanation: ScoreExplanation,
+  opposition?: OppositionDef,
+): NearMissLine {
   const next = explanation.nextBetter;
   if (!next || next.failing.length === 0) return { text: null };
 
@@ -82,6 +126,8 @@ export function formatNearMiss(explanation: ScoreExplanation): NearMissLine {
       candidates.push({ gap: p.required - p.actual, text: bucketEffLine(p, bandId) });
     } else if (p.name === 'minWeakLink') {
       candidates.push({ gap: p.required - p.actual, text: weakLinkLine(p, bandId) });
+    } else if (p.name === 'minFit') {
+      candidates.push({ gap: p.required - p.actual, text: minFitLine(bandId, opposition) });
     } else {
       const gap = p.required - p.actual;
       candidates.push({ gap, text: `${gap} TO ${bandId}` });

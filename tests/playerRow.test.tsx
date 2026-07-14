@@ -30,6 +30,109 @@ const REVEAL_PLAYER: Player = {
   rating: 88,
 };
 
+// ---------------------------------------------------------------------------
+// ADR-020 Wave E — P·S·A micro-attr digits after the rating circle.
+// Outfield rows show all three digits with the dominant axis at full ink
+// (.row__attr--dom); GK rows (no attrs authored) render no digits at all.
+// ---------------------------------------------------------------------------
+
+const OUTFIELD_WITH_ATTRS: Player = {
+  id: 'attr-1',
+  name: 'Roberto Carlos',
+  positionRaw: 'LB',
+  positionBucket: 'DEF',
+  rating: 90,
+  pace: 94,
+  strength: 78,
+  accuracy: 82,
+};
+
+const GK_PLAYER: Player = {
+  id: 'gk-1',
+  name: 'Oliver Kahn',
+  positionRaw: 'GK',
+  positionBucket: 'GK',
+  rating: 93,
+};
+
+describe('PlayerRow — attr micro-digits (ADR-020 Wave E, ADR-021 mode-conditional)', () => {
+  it('normal mode (showAttrs=false) hides attr digits, only name/pos/rating visible', () => {
+    const { container } = render(
+      <PlayerRow player={OUTFIELD_WITH_ATTRS} state="pickable" as="button" showAttrs={false} />,
+    );
+    expect(container.querySelector('.row__attrs')).toBeNull();
+    expect(container.querySelector('.row__name')).toBeTruthy();
+    expect(container.querySelector('.row__pos')).toBeTruthy();
+    expect(container.querySelector('.row__rating')).toBeTruthy();
+  });
+
+  it('hard mode (showAttrs=true, default) shows attr digits with labels', () => {
+    const { container } = render(
+      <PlayerRow player={OUTFIELD_WITH_ATTRS} state="pickable" as="button" showAttrs={true} />,
+    );
+    expect(container.querySelector('.row__attrs')).toBeTruthy();
+  });
+
+  it('outfield row renders P·S·A digits with dominant attr at full ink', () => {
+    const { container } = render(
+      <PlayerRow player={OUTFIELD_WITH_ATTRS} state="pickable" as="button" />,
+    );
+    const attrs = container.querySelector('.row__attrs') as HTMLElement;
+    expect(attrs).toBeTruthy();
+    expect(attrs.textContent).toContain('94');
+    expect(attrs.textContent).toContain('78');
+    expect(attrs.textContent).toContain('82');
+    const dom = attrs.querySelector('.row__attr--dom') as HTMLElement;
+    expect(dom).toBeTruthy();
+    expect(dom.textContent).toBe('94');
+    expect(attrs.querySelectorAll('.row__attr--dom').length).toBe(1);
+  });
+
+  it('attr digits also appear on mine-sheet (line) rows', () => {
+    const { container } = render(
+      <PlayerRow player={OUTFIELD_WITH_ATTRS} state="owned" as="line" />,
+    );
+    expect(container.querySelector('.row__attrs')).toBeTruthy();
+  });
+
+  it('GK row renders attr digits with labels (REF·HAN·DIS)', () => {
+    const { container } = render(<PlayerRow player={GK_PLAYER} state="pickable" as="button" />);
+    const attrs = container.querySelector('.row__attrs') as HTMLElement;
+    expect(attrs).toBeTruthy();
+    const tags = attrs.querySelectorAll('.row__attr-tag');
+    expect(tags.length).toBe(3);
+    expect(tags[0].textContent).toBe('REF');
+    expect(tags[1].textContent).toBe('HAN');
+    expect(tags[2].textContent).toBe('DIS');
+    expect(attrs.textContent).toContain('96');
+    expect(attrs.textContent).toContain('91');
+    expect(attrs.textContent).toContain('92');
+  });
+
+  it('legacy fixture without authored attrs renders GK-like derived digits', () => {
+    const { container } = render(<PlayerRow player={REVEAL_PLAYER} state="pickable" as="button" />);
+    const attrs = container.querySelector('.row__attrs') as HTMLElement;
+    expect(attrs).toBeTruthy();
+    expect(attrs.querySelectorAll('.row__attr-tag').length).toBe(3);
+    expect(attrs.textContent).toContain('REF');
+    expect(attrs.textContent).toContain('HAN');
+    expect(attrs.textContent).toContain('DIS');
+  });
+
+  it('outfield row renders PAC/STR/ACC label tags', () => {
+    const { container } = render(
+      <PlayerRow player={OUTFIELD_WITH_ATTRS} state="pickable" as="button" />,
+    );
+    const attrs = container.querySelector('.row__attrs') as HTMLElement;
+    expect(attrs).toBeTruthy();
+    const tags = attrs.querySelectorAll('.row__attr-tag');
+    expect(tags.length).toBe(3);
+    expect(tags[0].textContent).toBe('PAC');
+    expect(tags[1].textContent).toBe('STR');
+    expect(tags[2].textContent).toBe('ACC');
+  });
+});
+
 describe('PlayerRow — mine sheet never shows taken (Bug 1)', () => {
   it('mine-variant row for a picked player never shows TAKEN text or line-through state', () => {
     render(<PlayerRow player={OWNED_PLAYER} state="owned" as="line" />);
@@ -94,7 +197,7 @@ function makeSession(): DraftSession {
     formationId: 'x',
     revealLog: [],
     seed: 0,
-    mode: 'daily',
+    difficulty: 'hard',
   };
 }
 

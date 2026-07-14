@@ -27,11 +27,21 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { loadGameData } from '../src/domain/loadData';
 import { startDraft, pick, skip, getFinalXI } from '../src/domain/draft/session';
 import { isPersonTaken, personKey } from '../src/domain/draft/person';
-import { computeScoreInput, scoreBand } from '../src/domain/scoring/scoreBand';
+import { computeScoreInput, evaluateBandPredicates, scoreBand } from '../src/domain/scoring/scoreBand';
 import { computeSessionCeiling } from '../src/domain/scoring/sessionCeiling';
 import { explainScoreBand } from '../src/domain/scoring/explainScoreBand';
+import { withFormationMinCounts } from '../src/domain/scoring/withFormation';
+import { withMode } from '../src/domain/scoring/withMode';
+import {
+  computeProfileFit,
+  type AttrBucket,
+  type AttrName,
+  type Attrs,
+  type FormationProfile,
+} from '../src/domain/scoring/profileFit';
 import { mulberry32 } from '../src/lib/rng';
 import type {
+  Difficulty,
   DraftSession,
   FinalXI,
   GameData,
@@ -41,6 +51,7 @@ import type {
   Rng,
   ScoreInput,
   Squad,
+  ThresholdConfig,
 } from '../src/domain/types';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -72,14 +83,31 @@ export function loadGameDataFromDisk(): GameData {
 export interface SimArgs {
   n: number;
   seed: number;
-  bot: 'greedy' | 'random';
+  bot: 'greedy' | 'random' | 'fitaware';
   skipThreshold: number;
   nearMissDelta?: number; // default 3
   report?: string;        // path for sim-report.json; omit = no file
+  /** ADR-020 Wave C: opposition id to score every draft against (looked up in
+   * ThresholdConfig.oppositions by id (ADR-021: session/sim flag, not seed-based)
+   * daily selection; the sim wants an explicit, repeatable archetype per run).
+   * Optional — every pre-Wave-C call site (existing tests constructing SimArgs
+   * literals) omits it; default 'neutral' (spec delta: sim default when no flag
+   * is passed) is applied at runSingleDraft.
+   *
+   * Wave D: the special value 'cycle' runs the full `n` for EVERY non-neutral
+   * archetype and prints a per-archetype 10-0 count table (the Reveal-Luck Law
+   * gate — 10-0 must be > 0% under every archetype with the fitaware bot). */
+  opposition?: string;
+  formation?: string;
+  /** ADR-021: which difficulty band set to score against (via withMode). Default
+   * 'hard' (the v2 fit-dominant ladder). 'normal' scores against the v1
+   * OVR/efficiency ladder — no fit gates; --opposition is then only used to
+   * compute fit for diagnostics (inert against the gateless normal bands). */
+  mode?: Difficulty;
 }
 
 export function parseArgs(argv: string[]): SimArgs {
-  const args: SimArgs = { n: 500, seed: 42, bot: 'greedy', skipThreshold: 84 };
+  const args: SimArgs = { n: 500, seed: 42, bot: 'greedy', skipThreshold: 84, opposition: 'neutral', mode: 'hard' };
 
   for (let i = 0; i < argv.length; i++) {
     const flag = argv[i];
@@ -95,8 +123,8 @@ export function parseArgs(argv: string[]): SimArgs {
         i++;
         break;
       case '--bot':
-        if (value !== 'greedy' && value !== 'random') {
-          throw new Error(`--bot must be "greedy" or "random" (got ${JSON.stringify(value)})`);
+        if (value !== 'greedy' && value !== 'random' && value !== 'fitaware') {
+          throw new Error(`--bot must be "greedy", "random", or "fitaware" (got ${JSON.stringify(value)})`);
         }
         args.bot = value;
         i++;
@@ -111,6 +139,23 @@ export function parseArgs(argv: string[]): SimArgs {
         break;
       case '--report':
         args.report = value;
+        i++;
+        break;
+      case '--opposition':
+        if (!value) throw new Error('--opposition requires a value');
+        args.opposition = value;
+        i++;
+        break;
+      case '--formation':
+        if (!value) throw new Error('--formation requires a value');
+        args.formation = value;
+        i++;
+        break;
+      case '--mode':
+        if (value !== 'normal' && value !== 'hard') {
+          throw new Error(`--mode must be "normal" or "hard" (got ${JSON.stringify(value)})`);
+        }
+        args.mode = value;
         i++;
         break;
       default:
@@ -169,8 +214,8 @@ function greedyBot(
   pickable: Player[],
   data: GameData,
   skipThreshold: number,
+  minCounts: Record<PositionBucket, number>,
 ): BotDecision {
-  const minCounts = data.thresholds.minCounts;
   const counts = bucketCounts(session.picks, data.positionMap);
   const unmet = new Set<PositionBucket>(
     (['GK', 'DEF', 'MID', 'ATT'] as PositionBucket[]).filter((b) => counts[b] < minCounts[b]),
@@ -199,6 +244,119 @@ function greedyBot(
 }
 
 /**
+ * FITAWARE BOT — ADR-020 Wave D + R-13 revision (plan.md "Wave D estimation
+ * guidance + Law gate" + SPECIALIZATION table): the second skill axis. Greedy
+ * on OVR with attr-tie-break-first near-tie swaps (ΔOVR ≤ 1) toward today's
+ * weighted attributes; existing greedy stays the attr-blind baseline, random
+ * stays the floor.
+ *
+ * Exact rule (R-13 revision, BINDING — tighter than Wave D's original ΔOVR ≤ 2
+ * so attrs win without sacrificing OVR ceiling under the decoupled SPECIALIZATION
+ * corpus): take the OVR-best need-filler UNLESS a candidate within ΔOVR ≤ 1 of
+ * it has strictly higher Σ_a w[a]·attr[a] under today's bucket weights ×
+ * opposition mods; ties ⇒ ascending id. GK candidates fall back to the OVR rule
+ * (no attrs — their score is their rating, never an attr sum).
+ *
+ * The ΔOVR ≤ 1 pool bounds the OVR sacrifice to at most 1 point: a fit-good
+ * outfielder within 1 of a higher-rated GK/peer can win the slot, but a
+ * lower-rated player never does. Once every bucket has met its minimum, picks
+ * the highest-rated pickable player overall (OVR-only, like greedy — the attr
+ * axis only breaks near-ties while needs are unmet). Skip policy matches greedy:
+ * spend the one skip iff the OVR-best need-filler is weak
+ * (rating < skipThreshold) while needs are still unmet.
+ */
+const FITAWARE_ATTR_ORDER: AttrName[] = ['pace', 'strength', 'accuracy'];
+
+/** Per-bucket effective weights = profile weights × opposition mods (absent ⇒ 1). */
+function effectiveWeights(
+  profile: FormationProfile,
+  mods: Partial<Attrs>,
+): Record<AttrBucket, Attrs> {
+  const out = {} as Record<AttrBucket, Attrs>;
+  for (const bucket of ['DEF', 'MID', 'ATT'] as AttrBucket[]) {
+    const w = profile[bucket].weights;
+    out[bucket] = {
+      pace: w.pace * (mods.pace ?? 1),
+      strength: w.strength * (mods.strength ?? 1),
+      accuracy: w.accuracy * (mods.accuracy ?? 1),
+    };
+  }
+  return out;
+}
+
+/** Σ_a effW[bucket][a] · player.attrs[a]. Outfield only (GK has no attrs). */
+function fitAwareAttrScore(player: Player, bucket: PositionBucket, effW: Record<AttrBucket, Attrs>): number {
+  const w = effW[bucket as AttrBucket];
+  let sum = 0;
+  for (const attr of FITAWARE_ATTR_ORDER) {
+    const v = player[attr];
+    // loadData v2 guarantees outfield attrs are present; defensive invariant
+    // (matches computeProfileFit's throw) — a missing attr is a data bug.
+    if (v === undefined) {
+      throw new Error(
+        `fitAwareAttrScore: outfield player '${player.id}' missing attr '${attr}' — invalid squads v2 data`,
+      );
+    }
+    sum += w[attr] * v;
+  }
+  return sum;
+}
+
+/** fitaware selection score: GK ⇒ rating (OVR rule, no attrs); outfield ⇒ Σ w·attr. */
+function fitAwareScore(player: Player, bucket: PositionBucket, effW: Record<AttrBucket, Attrs>): number {
+  return bucket === 'GK' ? player.rating : fitAwareAttrScore(player, bucket, effW);
+}
+
+function fitawareBot(
+  session: DraftSession,
+  pickable: Player[],
+  data: GameData,
+  skipThreshold: number,
+  profile: FormationProfile,
+  oppMods: Partial<Attrs>,
+  minCounts: Record<PositionBucket, number>,
+): BotDecision {
+  const counts = bucketCounts(session.picks, data.positionMap);
+  const unmet = new Set<PositionBucket>(
+    (['GK', 'DEF', 'MID', 'ATT'] as PositionBucket[]).filter((b) => counts[b] < minCounts[b]),
+  );
+
+  const needFillers = pickable
+    .filter((p) => unmet.has(data.positionMap[p.positionRaw]))
+    .sort(byRatingDescThenId);
+
+  if (needFillers.length > 0) {
+    const ovrBest = needFillers[0];
+    if (session.skipRemaining === 1 && ovrBest.rating < skipThreshold) {
+      return { action: 'skip' };
+    }
+    // Near-tie pool: need-fillers within ΔOVR ≤ 1 of the OVR-best (R-13
+    // revision — tighter than Wave D's original ΔOVR ≤ 2). The OVR primary axis
+    // is preserved (pool is bounded by rating); attrs only pick the winner
+    // among near-OVR-equivalent candidates (attr-tie-break-first).
+    const pool = needFillers.filter((p) => p.rating >= ovrBest.rating - 1);
+    const effW = effectiveWeights(profile, oppMods);
+    // Deterministic selection: max fitAwareScore; ties ⇒ ascending id.
+    const pick = pool.reduce((best, p) => {
+      const sp = fitAwareScore(p, data.positionMap[p.positionRaw], effW);
+      const sb = fitAwareScore(best, data.positionMap[best.positionRaw], effW);
+      if (sp > sb) return p;
+      if (sp < sb) return best;
+      return p.id < best.id ? p : best;
+    }, pool[0]);
+    return { action: 'pick', playerId: pick.id };
+  }
+
+  // No pickable need-filler (all needs met, or this reveal has none for the
+  // short buckets) — take the highest-rated pickable player (OVR-only, greedy).
+  if (pickable.length === 0) {
+    throw new Error('fitawareBot: no pickable players in reveal — draft-session invariant violated');
+  }
+  const best = [...pickable].sort(byRatingDescThenId)[0];
+  return { action: 'pick', playerId: best.id };
+}
+
+/**
  * RANDOM BOT — the floor. Picks uniformly at random among pickable players
  * every round and NEVER skips (documented choice: a "random" player has no
  * strategic reason to burn the skip token, so it is left unused — this keeps
@@ -221,6 +379,8 @@ export interface DraftResult {
   bandId: string;
   finalXI: FinalXI;
   scoreInput: ScoreInput;
+  formationId: string;
+  revealLog: string[];
 }
 
 // Cheap memo so repeated sim runs (N drafts, same `data` object) don't rebuild
@@ -238,28 +398,49 @@ function squadsById(data: GameData): Record<string, Squad> {
 export function runSingleDraft(
   data: GameData,
   seed: number,
-  botType: 'greedy' | 'random',
+  botType: 'greedy' | 'random' | 'fitaware',
   skipThreshold: number,
+  oppositionId: string = 'neutral',
+  formationId?: string,
+  mode: Difficulty = 'hard',
 ): DraftResult {
   const rng = mulberry32(seed);
-  // ADR-017 C6: sim drives the default (reference) formation only.
-  let session = startDraft(data, rng);
+  const oppositionDef = data.thresholds.oppositions.find((o) => o.id === oppositionId);
+  if (!oppositionDef) {
+    throw new Error(`runSingleDraft: unknown --opposition id '${oppositionId}' (not in thresholds.oppositions)`);
+  }
+
+  // ADR-021: select the difficulty band set, then apply the formation view
+  // (mirrors ResultScreen's withFormationMinCounts(withMode(...)) path). The
+  // draft session itself is drawn in the default (normal) mode — no opponent
+  // draw — so reveal sequences stay identical across --mode; fit is scored
+  // against the explicit --opposition regardless of mode (inert vs normal bands).
+  const modeConfig = withMode(data.thresholds, mode);
+  // Always run formation view: Record minFit resolves only here (ADR-021). Default = referenceFormation.
+  const config = withFormationMinCounts(modeConfig, formationId ?? modeConfig.referenceFormation);
+  const effFormationId = config.referenceFormation; // withFormationMinCounts sets this to the target
+  const minCounts = config.minCounts;
+  const profile = config.profiles[effFormationId];
+
+  let session = startDraft(data, rng, effFormationId);
 
   while (session.phase !== 'COMPLETE') {
     const reveal = session.currentReveal;
     if (!reveal) throw new Error('runSingleDraft: AWAIT_PICK session has no currentReveal');
 
     const pickedIds = new Set(session.picks.map((p) => p.id));
-    // Filter by id AND person (ADR-018) — an era-duplicate of an already-picked
-    // human would make pick() throw if a bot chose it.
     const pickable = reveal.players.filter(
       (p) => !pickedIds.has(p.id) && !isPersonTaken(session, p),
     );
 
-    const decision: BotDecision =
-      botType === 'greedy'
-        ? greedyBot(session, pickable, data, skipThreshold)
-        : randomBot(pickable, rng);
+    let decision: BotDecision;
+    if (botType === 'random') {
+      decision = randomBot(pickable, rng);
+    } else if (botType === 'fitaware') {
+      decision = fitawareBot(session, pickable, data, skipThreshold, profile, oppositionDef.weightMods, minCounts);
+    } else {
+      decision = greedyBot(session, pickable, data, skipThreshold, minCounts);
+    }
 
     if (decision.action === 'skip' && session.skipRemaining === 1) {
       session = skip(session, data, rng);
@@ -273,14 +454,15 @@ export function runSingleDraft(
   const ceiling = computeSessionCeiling(
     session.revealLog,
     squadsById(data),
-    data.thresholds.minCounts,
+    minCounts,
     data.positionMap,
     personKey,
   );
-  const scoreInput = computeScoreInput(finalXI, data.positionMap, ceiling);
-  const { bandId } = scoreBand(scoreInput, data.thresholds);
+  const fit = computeProfileFit(finalXI, data.positionMap, profile, oppositionDef.weightMods);
+  const scoreInput = computeScoreInput(finalXI, data.positionMap, ceiling, fit, oppositionDef.id);
+  const { bandId } = scoreBand(scoreInput, config);
 
-  return { bandId, finalXI, scoreInput };
+  return { bandId, finalXI, scoreInput, formationId: effFormationId, revealLog: session.revealLog };
 }
 
 // ---------------------------------------------------------------------------
@@ -297,12 +479,14 @@ export interface SimResult {
 }
 
 export function runSimulation(data: GameData, args: SimArgs): SimResult {
+  const mode: Difficulty = args.mode ?? 'hard';
+  const modeConfig = withMode(data.thresholds, mode);
   const results: DraftResult[] = [];
   for (let i = 0; i < args.n; i++) {
-    results.push(runSingleDraft(data, args.seed + i, args.bot, args.skipThreshold));
+    results.push(runSingleDraft(data, args.seed + i, args.bot, args.skipThreshold, args.opposition, args.formation, mode));
   }
 
-  const bandsByPriorityDesc = [...data.thresholds.bands].sort((a, b) => b.priority - a.priority);
+  const bandsByPriorityDesc = [...modeConfig.bands].sort((a, b) => b.priority - a.priority);
   const counts = new Map<string, number>();
   for (const band of bandsByPriorityDesc) counts.set(band.id, 0);
   for (const r of results) counts.set(r.bandId, (counts.get(r.bandId) ?? 0) + 1);
@@ -321,7 +505,7 @@ export function runSimulation(data: GameData, args: SimArgs): SimResult {
   const topBandExample = topBand ? results.find((r) => r.bandId === topBand.id) ?? null : null;
   const fallbackExample = fallbackBand ? results.find((r) => r.bandId === fallbackBand.id) ?? null : null;
 
-  const diagnostics = computeDiagnostics(results, data, args.nearMissDelta ?? 3);
+  const diagnostics = computeDiagnostics(results, modeConfig, args.nearMissDelta ?? 3);
   return { args, results, histogram, topBandExample, fallbackExample, diagnostics };
 }
 
@@ -340,6 +524,10 @@ export interface SimDiagnostics {
   bucketSums: Record<PositionBucket, DistributionSummary>;
   weakLink: DistributionSummary;
   efficiency: DistributionSummary; // ADR-019: integer % points, userTotal/ceilingTotal
+  /** ADR-020 Wave D: per-draft profile-fit distribution (integer 0-100) — the
+   * second skill axis. p10-p90 per bot per archetype drives minFit tuning per
+   * the plan addendum ("top-band minFit ≈ fitaware p60-p70"). */
+  fit: DistributionSummary;
   seedQuartiles: { drafts: string; bands: Record<string, number> }[];
   nearMisses: { missedBandId: string; count: number; percent: number }[];
   nearMissDelta: number;
@@ -371,17 +559,20 @@ export function summarizeDistribution(values: number[]): DistributionSummary {
 
 // ADR-019: minBucketSum retired from real thresholds (efficiency replaces it) but kept
 // here for synthetic/legacy configs; minEfficiency/minBucketEfficiency are the new
-// numeric gates near-miss diagnostics care about.
+// numeric gates near-miss diagnostics care about. ADR-020 Wave D: minFit joins the
+// numeric set so near-miss counts fit-margin shortfalls (≤ delta) on the top bands —
+// the top-band near-miss gate (12-20%) is "efficiency OR fit margin within 3".
 const NUMERIC_PREDICATES: ReadonlySet<PredicateName> = new Set([
   'minBucketSum',
   'minWeakLink',
   'minEfficiency',
   'minBucketEfficiency',
+  'minFit',
 ]);
 
 export function computeDiagnostics(
   results: DraftResult[],
-  data: GameData,
+  config: ThresholdConfig,
   nearMissDelta: number,
 ): SimDiagnostics {
   const buckets: PositionBucket[] = ['GK', 'DEF', 'MID', 'ATT'];
@@ -398,10 +589,11 @@ export function computeDiagnostics(
       return ceilingTotal === 0 ? 100 : Math.round((100 * userTotal) / ceilingTotal);
     }),
   );
+  const fit = summarizeDistribution(results.map((r) => r.scoreInput.fit));
 
   // Contiguous quartiles over the seed range: detects drift across seeds
   // (should be roughly flat when n is large enough to trust the histogram).
-  const bandIds = data.thresholds.bands.map((b) => b.id);
+  const bandIds = config.bands.map((b) => b.id);
   const quartileSize = Math.ceil(results.length / 4);
   const seedQuartiles = [0, 1, 2, 3].map((q) => {
     const slice = results.slice(q * quartileSize, (q + 1) * quartileSize);
@@ -415,7 +607,7 @@ export function computeDiagnostics(
   // shortfall <= delta. Structural failures (counts/empty buckets) never count.
   const nearMissCounts = new Map<string, number>();
   for (const r of results) {
-    const next = explainScoreBand(r.scoreInput, data.thresholds).nextBetter;
+    const next = explainScoreBand(r.scoreInput, config).nextBetter;
     if (!next || next.failing.length === 0) continue;
     const close = next.failing.every(
       (p) => NUMERIC_PREDICATES.has(p.name) && p.required - p.actual <= nearMissDelta,
@@ -430,7 +622,7 @@ export function computeDiagnostics(
       percent: (nearMissCounts.get(id)! / results.length) * 100,
     }));
 
-  return { bucketSums, weakLink, efficiency, seedQuartiles, nearMisses, nearMissDelta };
+  return { bucketSums, weakLink, efficiency, fit, seedQuartiles, nearMisses, nearMissDelta };
 }
 
 // ---------------------------------------------------------------------------
@@ -458,7 +650,9 @@ function formatXI(data: GameData, result: DraftResult): string {
 export function formatReport(data: GameData, sim: SimResult): string {
   const lines: string[] = [];
   lines.push('=== TenNil rarity simulation (T-014) ===');
-  lines.push(`n=${sim.args.n} seed=${sim.args.seed} bot=${sim.args.bot} skipThreshold=${sim.args.skipThreshold}`);
+  lines.push(
+    `n=${sim.args.n} seed=${sim.args.seed} bot=${sim.args.bot} skipThreshold=${sim.args.skipThreshold} mode=${sim.args.mode ?? 'hard'} opposition=${sim.args.opposition}`,
+  );
   lines.push('');
   lines.push('Band histogram (sorted by priority desc):');
   for (const row of sim.histogram) {
@@ -491,6 +685,7 @@ export function formatReport(data: GameData, sim: SimResult): string {
   }
   lines.push(`  weakLink ${fmt(sim.diagnostics.weakLink)}`);
   lines.push(`  efficiency% ${fmt(sim.diagnostics.efficiency)}`);
+  lines.push(`  fit      ${fmt(sim.diagnostics.fit)}`);
   if (sim.diagnostics.nearMisses.length > 0) {
     for (const nm of sim.diagnostics.nearMisses) {
       lines.push(`  near-miss ${nm.missedBandId}: ${nm.count} drafts (${nm.percent.toFixed(2)}%) within ${sim.diagnostics.nearMissDelta} pts`);
@@ -516,6 +711,221 @@ export function buildSimReport(sim: SimResult): object {
 }
 
 // ---------------------------------------------------------------------------
+// ADR-020 Wave D — opposition cycle (Reveal-Luck Law gate)
+// ---------------------------------------------------------------------------
+
+/**
+ * Per-archetype summary from a cycle run. The Law gate (plan addendum): with
+ * the fitaware bot, 10-0 count must be > 0 for EVERY non-neutral archetype at
+ * n=500 — if any archetype zeroes out, lower minFit (never raise targets).
+ */
+export interface CycleArchetypeResult {
+  oppositionId: string;
+  oppositionLabel: string;
+  tenZeroCount: number;
+  tenZeroPercent: number;
+  fit: DistributionSummary;
+  histogram: SimResult['histogram'];
+}
+
+export interface CycleResult {
+  args: SimArgs;
+  perArchetype: CycleArchetypeResult[];
+  /** true iff every archetype has tenZeroCount > 0 (the Law gate). */
+  lawGatePass: boolean;
+}
+
+/**
+ * Runs the full `n` drafts for EVERY non-neutral opposition archetype (sorted
+ * by id for determinism) and collects each one's 10-0 count + fit distribution.
+ * The Law gate is `lawGatePass` — every archetype must let 10-0 stay attainable.
+ */
+export function runOppositionCycle(data: GameData, args: SimArgs): CycleResult {
+  const nonNeutral = [...data.thresholds.oppositions]
+    .filter((o) => o.id !== 'neutral')
+    .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+
+  const perArchetype: CycleArchetypeResult[] = [];
+  for (const opp of nonNeutral) {
+    const sim = runSimulation(data, { ...args, opposition: opp.id });
+    const tenZero = sim.histogram.find((h) => h.bandId === '10-0');
+    perArchetype.push({
+      oppositionId: opp.id,
+      oppositionLabel: opp.label,
+      tenZeroCount: tenZero?.count ?? 0,
+      tenZeroPercent: tenZero?.percent ?? 0,
+      fit: sim.diagnostics.fit,
+      histogram: sim.histogram,
+    });
+  }
+
+  const lawGatePass = perArchetype.every((r) => r.tenZeroCount > 0);
+  return { args, perArchetype, lawGatePass };
+}
+
+export function formatCycleReport(cycle: CycleResult): string {
+  const lines: string[] = [];
+  lines.push('=== TenNil opposition cycle — Reveal-Luck Law gate (ADR-020 Wave D) ===');
+  lines.push(
+    `n=${cycle.args.n} seed=${cycle.args.seed} bot=${cycle.args.bot} skipThreshold=${cycle.args.skipThreshold}`,
+  );
+  lines.push('');
+  lines.push('Per-archetype 10-0 attainment (Law: every archetype > 0%):');
+  lines.push(`  ${'archetype'.padEnd(20)} ${'10-0 count'.padStart(10)} ${'10-0 %'.padStart(9)}   fit p10/p50/p90`);
+  for (const r of cycle.perArchetype) {
+    const mark = r.tenZeroCount > 0 ? 'OK ' : 'ZERO';
+    lines.push(
+      `  ${r.oppositionId.padEnd(20)} ${String(r.tenZeroCount).padStart(10)} ${r.tenZeroPercent.toFixed(2).padStart(8)}%   ` +
+        `p10 ${r.fit.p10.toFixed(0)} / p50 ${r.fit.p50.toFixed(0)} / p90 ${r.fit.p90.toFixed(0)}  [${mark}]`,
+    );
+  }
+  lines.push('');
+  lines.push(`Law gate: ${cycle.lawGatePass ? 'PASS (10-0 attainable under every archetype)' : 'FAIL (some archetype blocks 10-0 — lower minFit, never raise targets)'}`);
+  return lines.join('\n');
+}
+
+export function buildCycleReport(cycle: CycleResult): object {
+  return {
+    schema: 2,
+    kind: 'opposition-cycle',
+    args: cycle.args,
+    lawGatePass: cycle.lawGatePass,
+    perArchetype: cycle.perArchetype,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Per-formation comparison (--formation all)
+// ---------------------------------------------------------------------------
+
+export interface FormationSimResult {
+  formationId: string;
+  label: string;
+  sim: SimResult;
+}
+
+/**
+ * Among non-10-0 drafts, count how many fail each 10-0 predicate type.
+ * Uses evaluateBandPredicates against the 10-0 band with the formation's config.
+ */
+export function computeMissed10Breakdown(
+  results: DraftResult[],
+  config: ThresholdConfig,
+): {
+  total: number; minEfficiency: number; minFit: number; minWeakLink: number;
+  minBucketEfficiencyMID: number; minBucketEfficiencyATT: number;
+} {
+  const tenZeroBand = config.bands.find((b) => b.id === '10-0');
+  if (!tenZeroBand) return { total: 0, minEfficiency: 0, minFit: 0, minWeakLink: 0, minBucketEfficiencyMID: 0, minBucketEfficiencyATT: 0 };
+
+  let total = 0, minEfficiency = 0, minFit = 0, minWeakLink = 0, minBucketEfficiencyMID = 0, minBucketEfficiencyATT = 0;
+
+  for (const r of results) {
+    if (r.bandId === '10-0') continue;
+    // Re-derive the formation config from what was used at scoring time
+    const predicates = evaluateBandPredicates(tenZeroBand, r.scoreInput, config);
+    total++;
+    for (const p of predicates) {
+      if (p.passed) continue;
+      if (p.name === 'minEfficiency') minEfficiency++;
+      else if (p.name === 'minFit') minFit++;
+      else if (p.name === 'minWeakLink') minWeakLink++;
+      else if (p.name === 'minBucketEfficiency' && p.bucket === 'MID') minBucketEfficiencyMID++;
+      else if (p.name === 'minBucketEfficiency' && p.bucket === 'ATT') minBucketEfficiencyATT++;
+    }
+  }
+  return { total, minEfficiency, minFit, minWeakLink, minBucketEfficiencyMID, minBucketEfficiencyATT };
+}
+
+export function runFormationComparison(data: GameData, args: SimArgs): FormationSimResult[] {
+  return data.thresholds.formations.map((f) => ({
+    formationId: f.id,
+    label: f.label,
+    sim: runSimulation(data, { ...args, formation: f.id }),
+  }));
+}
+
+export function formatFormationReport(_data: GameData, fr: FormationSimResult): string {
+  const lines: string[] = [];
+  lines.push(`=== Formation: ${fr.label} (${fr.formationId}) ===`);
+  lines.push(`n=${fr.sim.args.n} seed=${fr.sim.args.seed} bot=${fr.sim.args.bot} opposition=${fr.sim.args.opposition}`);
+  lines.push('');
+  for (const row of fr.sim.histogram) {
+    const pct = row.percent.toFixed(2).padStart(6, ' ');
+    lines.push(`  ${row.bandId.padEnd(6)} ${row.label.padEnd(20)} count=${String(row.count).padStart(4)}  ${pct}%`);
+  }
+  lines.push('');
+  const eff = fr.sim.diagnostics.efficiency;
+  const fit = fr.sim.diagnostics.fit;
+  lines.push(`  efficiency%  p50 ${eff.p50.toFixed(1)}  p90 ${eff.p90.toFixed(1)}`);
+  lines.push(`  fit          p50 ${fit.p50.toFixed(1)}  p90 ${fit.p90.toFixed(1)}`);
+  return lines.join('\n');
+}
+
+export function formatFormationComparison(
+  data: GameData,
+  comparisons: FormationSimResult[],
+  extraSeedResults?: { seed: number; formationId: string; tenZeroCount: number; tenZeroPercent: number }[],
+): string {
+  const lines: string[] = [];
+  lines.push('=== TenNil formation comparison ===');
+  const first = comparisons[0];
+  const mode: Difficulty = first.sim.args.mode ?? 'hard';
+  lines.push(`n=${first.sim.args.n} seed=${first.sim.args.seed} bot=${first.sim.args.bot} mode=${mode} opposition=${first.sim.args.opposition}`);
+  lines.push('');
+
+  // Band histogram comparison table (ids are shared across modes)
+  const bandIds = withMode(data.thresholds, mode).bands.map((b) => b.id);
+  const header = ['Formation', ...bandIds.map((id) => id.padStart(6)), 'eff p50', 'eff p90', 'fit p50', 'fit p90'].join(' ');
+  lines.push(header);
+  for (const c of comparisons) {
+    const histMap = new Map(c.sim.histogram.map((h) => [h.bandId, h.percent.toFixed(2)]));
+    const bands = bandIds.map((id) => (histMap.get(id) ?? '0.00').padStart(6));
+    const eff = c.sim.diagnostics.efficiency;
+    const fit = c.sim.diagnostics.fit;
+    const row = [
+      c.formationId.padEnd(8),
+      ...bands,
+      eff.p50.toFixed(1).padStart(7),
+      eff.p90.toFixed(1).padStart(7),
+      fit.p50.toFixed(1).padStart(7),
+      fit.p90.toFixed(1).padStart(7),
+    ].join(' ');
+    lines.push(row);
+  }
+
+  // Extra seed 10-0 rates
+  if (extraSeedResults && extraSeedResults.length > 0) {
+    lines.push('');
+    lines.push('10-0 rate by seed:');
+    lines.push('  formation     seed=42    seed=1000  seed=5000');
+    for (const c of comparisons) {
+      const s42 = (c.sim.histogram.find((h) => h.bandId === '10-0')?.percent ?? 0).toFixed(2).padStart(8);
+      const s1000 = (extraSeedResults.find((e) => e.formationId === c.formationId && e.seed === 1000)?.tenZeroPercent ?? 0).toFixed(2).padStart(8);
+      const s5000 = (extraSeedResults.find((e) => e.formationId === c.formationId && e.seed === 5000)?.tenZeroPercent ?? 0).toFixed(2).padStart(8);
+      lines.push(`  ${c.formationId.padEnd(12)} ${s42}%  ${s1000}%  ${s5000}%`);
+    }
+  }
+
+  // Missed-10-0 failure-predicate breakdown per formation
+  lines.push('');
+  lines.push('Missed-10-0 failure-predicate breakdown (among non-10-0 drafts, seed=42):');
+  lines.push('  formation      total  eff<99  fit<94  wl<86  bEff-MID  bEff-ATT  any-multi');
+  for (const c of comparisons) {
+    const config = withFormationMinCounts(withMode(data.thresholds, mode), c.formationId);
+    const breakdown = computeMissed10Breakdown(c.sim.results, config);
+    const multi = breakdown.total > 0
+      ? (breakdown.minEfficiency + breakdown.minFit + breakdown.minWeakLink + breakdown.minBucketEfficiencyMID + breakdown.minBucketEfficiencyATT - breakdown.total).toFixed(0)
+      : '0';
+    lines.push(
+      `  ${c.formationId.padEnd(12)} ${String(breakdown.total).padStart(5)} ${String(breakdown.minEfficiency).padStart(7)} ${String(breakdown.minFit).padStart(7)} ${String(breakdown.minWeakLink).padStart(6)} ${String(breakdown.minBucketEfficiencyMID).padStart(9)} ${String(breakdown.minBucketEfficiencyATT).padStart(9)} ${multi.padStart(10)}`,
+    );
+  }
+
+  return lines.join('\n');
+}
+
+// ---------------------------------------------------------------------------
 // CLI entry point
 // ---------------------------------------------------------------------------
 
@@ -528,10 +938,63 @@ function isMainModule(): boolean {
 if (isMainModule()) {
   const args = parseArgs(process.argv.slice(2));
   const data = loadGameDataFromDisk();
-  const sim = runSimulation(data, args);
-  console.log(formatReport(data, sim));
-  if (args.report) {
-    fs.writeFileSync(args.report, JSON.stringify(buildSimReport(sim), null, 2) + '\n');
-    console.log(`\nreport written: ${args.report}`);
+
+  if (args.opposition === 'cycle') {
+    // Law gate: run the full n for every non-neutral archetype, print the
+    // per-archetype 10-0 table. Exit non-zero iff the fitaware bot fails the
+    // Law (some archetype zeroes 10-0) — the gate the addendum binds.
+    const cycle = runOppositionCycle(data, args);
+    console.log(formatCycleReport(cycle));
+    if (args.report) {
+      fs.writeFileSync(args.report, JSON.stringify(buildCycleReport(cycle), null, 2) + '\n');
+      console.log(`\nreport written: ${args.report}`);
+    }
+    if (!cycle.lawGatePass && args.bot === 'fitaware') {
+      process.exitCode = 2;
+    }
+  } else if (args.formation === 'all') {
+    // Per-formation comparison: run the full n for every cataloged formation
+    // and print a comparison table.
+    const comparisons = runFormationComparison(data, args);
+
+    // Also run extra seeds for 10-0 rate (seed 1000 and 5000)
+    const extraSeedResults: { seed: number; formationId: string; tenZeroCount: number; tenZeroPercent: number }[] = [];
+    for (const extraSeed of [1000, 5000]) {
+      for (const f of data.thresholds.formations) {
+        const s = runSimulation(data, { ...args, seed: extraSeed, formation: f.id });
+        const tenZero = s.histogram.find((h) => h.bandId === '10-0');
+        extraSeedResults.push({
+          seed: extraSeed,
+          formationId: f.id,
+          tenZeroCount: tenZero?.count ?? 0,
+          tenZeroPercent: tenZero?.percent ?? 0,
+        });
+      }
+    }
+
+    console.log(formatFormationComparison(data, comparisons, extraSeedResults));
+
+    // Write detailed per-formation reports
+    fs.mkdirSync('./.simout', { recursive: true });
+    for (const fr of comparisons) {
+      const text = formatFormationReport(data, fr);
+      fs.writeFileSync(`./.simout/${fr.formationId}.txt`, text + '\n');
+    }
+    // Write seed comparison
+    const seedLines = extraSeedResults.map(
+      (e) => `${e.formationId} seed=${e.seed} 10-0=${e.tenZeroCount} (${e.tenZeroPercent.toFixed(2)}%)`,
+    );
+    fs.writeFileSync('./.simout/tenzero_seeds.txt', seedLines.join('\n') + '\n');
+
+    if (args.report) {
+      fs.writeFileSync(args.report, JSON.stringify(comparisons.map((c) => ({ formationId: c.formationId, histogram: c.sim.histogram, diagnostics: c.sim.diagnostics })), null, 2) + '\n');
+    }
+  } else {
+    const sim = runSimulation(data, args);
+    console.log(formatReport(data, sim));
+    if (args.report) {
+      fs.writeFileSync(args.report, JSON.stringify(buildSimReport(sim), null, 2) + '\n');
+      console.log(`\nreport written: ${args.report}`);
+    }
   }
 }
