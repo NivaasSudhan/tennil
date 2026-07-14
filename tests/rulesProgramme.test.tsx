@@ -41,21 +41,26 @@ const PRESSING: OppositionDef = {
 // Dialog polyfill tests — component uses native <dialog>, jsdom polyfill above
 // ---------------------------------------------------------------------------
 
-describe('RulesProgramme — packaged copy (rulesCopy.ts)', () => {
-  it('returns 3 pages without opposition, 4 pages with opposition', () => {
-    expect(getRulesPages()).toHaveLength(3);
-    expect(getRulesPages(PRESSING)).toHaveLength(4);
+describe('RulesProgramme — packaged copy (rulesCopy.ts, ADR-021 difficulty)', () => {
+  it('hard: 3 pages without opposition, 4 pages with opposition', () => {
+    expect(getRulesPages('hard')).toHaveLength(3);
+    expect(getRulesPages('hard', PRESSING)).toHaveLength(4);
+  });
+
+  it('normal: 3 pages without opposition, 3 pages with opposition (no opponent page)', () => {
+    expect(getRulesPages('normal')).toHaveLength(3);
+    expect(getRulesPages('normal', PRESSING)).toHaveLength(3);
   });
 
   it('all page titles are non-empty', () => {
-    for (const page of getRulesPages(PRESSING)) {
+    for (const page of getRulesPages('hard', PRESSING)) {
       expect(page.title).toBeTruthy();
       expect(page.paragraphs.length).toBeGreaterThan(0);
     }
   });
 
   it('jargon ban — none of the banned engine terms appear in rendered copy', () => {
-    for (const page of getRulesPages(PRESSING)) {
+    for (const page of getRulesPages('hard', PRESSING)) {
       const text = page.paragraphs.join(' ').toLowerCase();
       for (const banned of ['efficiency', 'ceiling', 'predicate', 'config']) {
         expect(text).not.toContain(banned);
@@ -63,8 +68,8 @@ describe('RulesProgramme — packaged copy (rulesCopy.ts)', () => {
     }
   });
 
-  it('glossary renders on your-target page — PAC pace and REF reflexes both present', () => {
-    const pages = getRulesPages(PRESSING);
+  it('hard mode: glossary renders on your-target page — PAC pace and REF reflexes both present', () => {
+    const pages = getRulesPages('hard', PRESSING);
     const targetPage = pages.find((p) => p.id === 'your-target');
     expect(targetPage).toBeTruthy();
     const text = targetPage!.paragraphs.join(' ');
@@ -72,16 +77,32 @@ describe('RulesProgramme — packaged copy (rulesCopy.ts)', () => {
     expect(text).toContain('REF reflexes');
   });
 
-  it('opponent page includes the opposition label', () => {
-    const pages = getRulesPages(PRESSING);
+  it('normal mode: no glossary on your-target page (no marks paragraph)', () => {
+    const pages = getRulesPages('normal', PRESSING);
+    const targetPage = pages.find((p) => p.id === 'your-target');
+    expect(targetPage).toBeTruthy();
+    expect(targetPage!.paragraphs).toHaveLength(2);
+    const text = targetPage!.paragraphs.join(' ');
+    expect(text).not.toContain('PAC pace');
+    expect(text).not.toContain('REF reflexes');
+  });
+
+  it('hard opponent page uses "Your opponent" (not "Today\'s opponent")', () => {
+    const pages = getRulesPages('hard', PRESSING);
     const oppPage = pages.find((p) => p.id === 'today-opponent');
     expect(oppPage).toBeTruthy();
+    expect(oppPage!.title).toBe('Your opponent');
     expect(oppPage!.paragraphs.some((p) => p.includes('THE PRESSING MACHINE'))).toBe(true);
   });
 
-  it('no opposition page when opposition omitted', () => {
-    const pages = getRulesPages();
+  it('hard: no opposition page when opposition omitted', () => {
+    const pages = getRulesPages('hard');
     expect(pages.find((p) => p.id === 'today-opponent')).toBeUndefined();
+  });
+
+  it('default difficulty is hard (backward compat)', () => {
+    const pages = getRulesPages(undefined, PRESSING);
+    expect(pages.find((p) => p.id === 'today-opponent')).toBeTruthy();
   });
 });
 
@@ -120,7 +141,7 @@ describe('RulesProgramme — StartScreen mount', () => {
     });
   });
 
-  it('opponent page renders in dialog when opposition passed', async () => {
+  it('opponent page renders in dialog when opposition passed (HARD mode)', async () => {
     render(
       <StartScreen
         formations={FORMATIONS}
@@ -128,29 +149,32 @@ describe('RulesProgramme — StartScreen mount', () => {
         variant="landing"
         onStart={() => {}}
         opposition={PRESSING}
+        difficulty="hard"
       />,
     );
 
     fireEvent.click(screen.getByText('RULES'));
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /Today[’']s opponent/i })).toBeTruthy();
+      expect(screen.getByRole('heading', { name: /Your opponent/i })).toBeTruthy();
       expect(screen.getByText(/THE PRESSING MACHINE/i)).toBeTruthy();
     });
   });
 
-  it('no opponent page when no opposition prop', async () => {
+  it('no opponent page in NORMAL mode even with opposition prop', async () => {
     render(
       <StartScreen
         formations={FORMATIONS}
         defaultFormationId="4-3-3"
         variant="landing"
         onStart={() => {}}
+        opposition={PRESSING}
+        difficulty="normal"
       />,
     );
 
     fireEvent.click(screen.getByText('RULES'));
     await waitFor(() => {
-      expect(screen.queryByRole('heading', { name: /Today[’']s opponent/i })).toBeNull();
+      expect(screen.queryByRole('heading', { name: /Your opponent/i })).toBeNull();
     });
   });
 });
@@ -333,8 +357,8 @@ describe('RulesProgramme — ResultScreen mount', () => {
       expect(dialog).toBeTruthy();
       expect(dialog.open).toBe(true);
     });
-    // ResultScreen has opposition → opponent page should render
-    expect(screen.getByRole('heading', { name: /Today[’']s opponent/i })).toBeTruthy();
+    // ResultScreen has opposition (HARD mode) → opponent page should render
+    expect(screen.getByRole('heading', { name: /Your opponent/i })).toBeTruthy();
 
     fireEvent.click(screen.getByLabelText('Close programme'));
     await waitFor(() => {

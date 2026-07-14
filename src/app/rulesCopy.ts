@@ -1,4 +1,5 @@
 import type { OppositionDef, AttrName } from '../domain/scoring/profileFit';
+import type { Difficulty } from '../domain/types';
 
 export interface RulesPage {
   id: string;
@@ -15,13 +16,22 @@ const PAGE_HOW_IT_WORKS: RulesPage = {
   ],
 };
 
-const PAGE_YOUR_TARGET: RulesPage = {
+const PAGE_YOUR_TARGET_BASE: RulesPage = {
   id: 'your-target',
   title: 'Your target',
   paragraphs: [
     'The formation you choose before kickoff sets the shape your XI is scored against. Each position bucket — defence, midfield, attack — has a minimum count: fill that many slots or that bucket cannot qualify for the highest result bands.',
     'You can still pick anyone you like. The formation is a target, not a cage. It tells you what the scoreline needs — you decide who delivers.',
-    'Every player carries three marks. Outfield: PAC pace, STR strength, ACC accuracy. Keepers read differently — REF reflexes, HAN handling, DIS distribution. The dominant mark sits in bold ink. Today\u2019s opponent prizes one of them — draft to match.',
+  ],
+};
+
+const PAGE_YOUR_TARGET_GLOSSARY: RulesPage = {
+  id: 'your-target',
+  title: 'Your target',
+  paragraphs: [
+    'The formation you choose before kickoff sets the shape your XI is scored against. Each position bucket — defence, midfield, attack — has a minimum count: fill that many slots or that bucket cannot qualify for the highest result bands.',
+    'You can still pick anyone you like. The formation is a target, not a cage. It tells you what the scoreline needs — you decide who delivers.',
+    'Every player carries three marks. Outfield: PAC pace, STR strength, ACC accuracy. Keepers read differently — REF reflexes, HAN handling, DIS distribution. The dominant mark sits in bold ink. Your opponent prizes one of them — draft to match.',
   ],
 };
 
@@ -60,16 +70,16 @@ function opponentDescription(weightMods: Partial<Record<AttrName, number>>): str
   return lines.join(' ');
 }
 
-export function getRulesPages(opposition?: OppositionDef): RulesPage[] {
+export function getRulesPages(difficulty: Difficulty = 'hard', opposition?: OppositionDef): RulesPage[] {
   const pages: RulesPage[] = [
     PAGE_HOW_IT_WORKS,
-    PAGE_YOUR_TARGET,
+    difficulty === 'hard' ? PAGE_YOUR_TARGET_GLOSSARY : PAGE_YOUR_TARGET_BASE,
   ];
 
-  if (opposition) {
+  if (difficulty === 'hard' && opposition) {
     pages.push({
       id: 'today-opponent',
-      title: 'Today\u2019s opponent',
+      title: 'Your opponent',
       paragraphs: [
         `${opposition.label}. ${opponentDescription(opposition.weightMods)}`,
         'Read the opposition. Draft to match.',

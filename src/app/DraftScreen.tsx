@@ -123,6 +123,7 @@ export default function DraftScreen({
           reveal={reveal}
           takenIds={takenIds}
           onPick={handlePick}
+          showAttrs={session.difficulty === 'hard'}
         />
         <div>
           <TeamSheet
@@ -130,6 +131,7 @@ export default function DraftScreen({
             picks={session.picks}
             lastPickId={stampPickId}
             bucketCaps={bucketCaps}
+            showAttrs={session.difficulty === 'hard'}
           />
           {marginaliaText && (
             <p className="sheet__marginalia">{marginaliaText}</p>
@@ -140,6 +142,7 @@ export default function DraftScreen({
       <RulesProgramme
         open={rulesOpen}
         onClose={() => setRulesOpen(false)}
+        difficulty={session.difficulty}
       />
     </div>
   );

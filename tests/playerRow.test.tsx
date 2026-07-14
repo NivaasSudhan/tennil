@@ -55,7 +55,24 @@ const GK_PLAYER: Player = {
   rating: 93,
 };
 
-describe('PlayerRow — attr micro-digits (ADR-020 Wave E)', () => {
+describe('PlayerRow — attr micro-digits (ADR-020 Wave E, ADR-021 mode-conditional)', () => {
+  it('normal mode (showAttrs=false) hides attr digits, only name/pos/rating visible', () => {
+    const { container } = render(
+      <PlayerRow player={OUTFIELD_WITH_ATTRS} state="pickable" as="button" showAttrs={false} />,
+    );
+    expect(container.querySelector('.row__attrs')).toBeNull();
+    expect(container.querySelector('.row__name')).toBeTruthy();
+    expect(container.querySelector('.row__pos')).toBeTruthy();
+    expect(container.querySelector('.row__rating')).toBeTruthy();
+  });
+
+  it('hard mode (showAttrs=true, default) shows attr digits with labels', () => {
+    const { container } = render(
+      <PlayerRow player={OUTFIELD_WITH_ATTRS} state="pickable" as="button" showAttrs={true} />,
+    );
+    expect(container.querySelector('.row__attrs')).toBeTruthy();
+  });
+
   it('outfield row renders P·S·A digits with dominant attr at full ink', () => {
     const { container } = render(
       <PlayerRow player={OUTFIELD_WITH_ATTRS} state="pickable" as="button" />,
@@ -67,7 +84,7 @@ describe('PlayerRow — attr micro-digits (ADR-020 Wave E)', () => {
     expect(attrs.textContent).toContain('82');
     const dom = attrs.querySelector('.row__attr--dom') as HTMLElement;
     expect(dom).toBeTruthy();
-    expect(dom.textContent).toBe('94'); // pace is this player's dominant axis
+    expect(dom.textContent).toBe('94');
     expect(attrs.querySelectorAll('.row__attr--dom').length).toBe(1);
   });
 

@@ -121,13 +121,8 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       ATT: groups.ATT.map((p) => ({ name: p.name, rating: p.rating })),
     };
     const nearMissText = formatNearMiss(explanation as ScoreExplanation, opposition).text;
-    // ADR-021: matchday is retired. M2 owns the share/card rework (mode tags,
-    // clean vs [HARD] vs {OPPONENT}). Interim mapping keeps matchdayCard compiling:
-    // HARD → opponent-framed ('daily'-style) card, NORMAL → clean ('free'-style).
-    const cardMode = session.difficulty === 'hard' ? 'daily' : 'free';
     return buildCardData({
-      mode: cardMode,
-      matchdayNumber: undefined,
+      difficulty: session.difficulty,
       formationId: session.formationId,
       formationLabel,
       bandId: band.bandId,
@@ -199,7 +194,9 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       <div className="broadcast-chrome">
         <span className="broadcast-chrome__eyebrow eyebrow">
           {showScoreline ? 'Full time' : visibleBeatCount === 0 ? 'Kickoff' : 'Live'}
-          <span className="broadcast-chrome__vs"> vs {opposition.label}</span>
+          {session.difficulty === 'hard' && (
+            <span className="broadcast-chrome__vs"> vs {opposition.label}</span>
+          )}
         </span>
         <Scoreboard home={home} away={away} />
         <button
@@ -257,12 +254,12 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
             opposition={opposition}
           />
         )}
-        {showScoreline && fitInsight && (
+        {session.difficulty === 'hard' && showScoreline && fitInsight && (
           <p className="fit-insight">
             {`YOUR SHAPE WAS ${fitInsight.formationId} — UNDER IT: ${fitInsight.bandId}`.toUpperCase()}
           </p>
         )}
-        {showScoreline && (
+        {session.difficulty === 'hard' && showScoreline && (
           <StatsScreen
             means={bucketMeans}
             profile={profile}
@@ -297,7 +294,8 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       <RulesProgramme
         open={rulesOpen}
         onClose={() => setRulesOpen(false)}
-        opposition={opposition}
+        opposition={session.difficulty === 'hard' ? opposition : undefined}
+        difficulty={session.difficulty}
       />
     </div>
   );

@@ -15,6 +15,8 @@ interface TeamSheetBaseProps {
   onPick?: (playerId: string) => void;
   /** Advisory per-bucket caps from chosen formation (mine variant only). */
   bucketCaps?: Record<PositionBucket, number>;
+  /** ADR-021: hide attr micro-digits in normal mode. */
+  showAttrs?: boolean;
 }
 
 export type TeamSheetProps = TeamSheetBaseProps & {
@@ -39,6 +41,7 @@ export default function TeamSheet({
   lastPickId,
   onPick,
   bucketCaps,
+  showAttrs,
 }: TeamSheetProps) {
   if (variant === 'reveal') {
     if (!reveal) return null;
@@ -60,6 +63,7 @@ export default function TeamSheet({
                   state={taken ? 'taken' : 'pickable'}
                   as="button"
                   onPick={onPick}
+                  showAttrs={showAttrs}
                 />
               </li>
             );
@@ -98,6 +102,7 @@ export default function TeamSheet({
                     state={p.id === lastPickId ? 'picked' : 'owned'}
                     as="line"
                     showStamp={p.id === lastPickId}
+                    showAttrs={showAttrs}
                   />
                 ))}
               </div>

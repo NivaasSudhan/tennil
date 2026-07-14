@@ -40,8 +40,7 @@ export interface CardGroups {
 }
 
 export interface MatchdayCardData {
-  mode: 'daily' | 'free';
-  matchdayNumber: number | undefined;
+  difficulty: 'normal' | 'hard';
   formationId: string;
   formationLabel: string;
   bandId: string;
@@ -57,8 +56,7 @@ export interface MatchdayCardData {
 }
 
 export interface BuildCardDataInput {
-  mode: 'daily' | 'free';
-  matchdayNumber?: number;
+  difficulty: 'normal' | 'hard';
   formationId: string;
   formationLabel: string;
   bandId: string;
@@ -80,42 +78,34 @@ function resolveTopPlayer(groups: CardGroups): string {
   return best?.name ?? 'XI';
 }
 
-/** Daily: 'TenNil Matchday #N vs OPPONENT: BAND LABEL. Draft your XI: URL' (exact).
- * Opponent segment (' vs THE PRESSING MACHINE') only when a label is known —
- * ADR-020 Wave E; template without it is the pre-v2 shape, kept for safety. */
-function dailyShareText(
-  matchdayNumber: number,
+/** Hard: 'TenNil [HARD] vs THE PRESSING MACHINE: 7-1 CLASSY WIN. Draft your XI: URL' */
+function hardShareText(
   bandId: string,
   bandLabel: string,
   opponentLabel?: string,
 ): string {
   const vs = opponentLabel ? ` vs ${opponentLabel}` : '';
-  return `TenNil Matchday #${matchdayNumber}${vs}: ${bandId} ${bandLabel}. Draft your XI: ${SHARE_URL}`;
+  return `TenNil [HARD]${vs}: ${bandId} ${bandLabel}. Draft your XI: ${SHARE_URL}`;
 }
 
-/** Free: 'TenNil: I drafted {top} and it ended BANDID. URL' (exact). */
-function freeShareText(topPlayer: string, bandId: string): string {
-  return `TenNil: I drafted ${topPlayer} and it ended ${bandId}. ${SHARE_URL}`;
+/** Normal: 'TenNil: 7-1 CLASSY WIN. Draft your XI: URL' */
+function normalShareText(bandId: string, bandLabel: string): string {
+  return `TenNil: ${bandId} ${bandLabel}. Draft your XI: ${SHARE_URL}`;
 }
 
 /** Pure payload builder — no DOM, no canvas, no RNG. */
 export function buildCardData(input: BuildCardDataInput): MatchdayCardData {
   const topPlayerName = resolveTopPlayer(input.groups);
-  const isDaily = input.mode === 'daily';
-  const matchdayNumber = isDaily ? input.matchdayNumber : undefined;
-  // Wave E: opponent joins the EYEBROW LINE ONLY — nothing is added to the
-  // verdict block, so the P-034 y-budget (verdict ends <=1270, footer 1310)
-  // is untouched by this feature.
-  const vsEyebrow = input.opponentLabel ? ` · vs ${input.opponentLabel}` : '';
-  const eyebrow = isDaily
-    ? `MATCHDAY #${matchdayNumber ?? ''}${vsEyebrow}`
-    : `FREE DRAFT${vsEyebrow}`;
-  const shareText = isDaily
-    ? dailyShareText(matchdayNumber ?? 0, input.bandId, input.bandLabel, input.opponentLabel)
-    : freeShareText(topPlayerName, input.bandId);
+  const isHard = input.difficulty === 'hard';
+  const vsEyebrow = isHard && input.opponentLabel ? ` · vs ${input.opponentLabel}` : '';
+  const eyebrow = isHard
+    ? `[HARD]${vsEyebrow}`
+    : '';
+  const shareText = isHard
+    ? hardShareText(input.bandId, input.bandLabel, input.opponentLabel)
+    : normalShareText(input.bandId, input.bandLabel);
   return {
-    mode: input.mode,
-    matchdayNumber,
+    difficulty: input.difficulty,
     formationId: input.formationId,
     formationLabel: input.formationLabel,
     bandId: input.bandId,
@@ -131,10 +121,8 @@ export function buildCardData(input: BuildCardDataInput): MatchdayCardData {
 }
 
 /** Anchor download filename for the rendered PNG. */
-export function cardFilename(data: MatchdayCardData): string {
-  return data.mode === 'daily'
-    ? `tennil-matchday-${data.matchdayNumber}.png`
-    : `tennil-card-${data.bandId}.png`;
+export function cardFilename(_data: MatchdayCardData): string {
+  return 'tennil-result.png';
 }
 
 /** Twitter / X intent href (URL-encoded share text). */

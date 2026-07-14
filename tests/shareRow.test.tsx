@@ -38,11 +38,10 @@ function groups(): Record<PositionBucket, { name: string; rating: number }[]> {
 
 afterEach(cleanup);
 
-describe('buildCardData — share text templates (pure)', () => {
-  it('daily mode with opponent (ADR-020 Wave E): exact share text + eyebrow carry the opponent', () => {
+describe('buildCardData — share text templates (pure, ADR-021)', () => {
+  it('hard mode with opponent: [HARD] eyebrow, share text with opponent', () => {
     const data = buildCardData({
-      mode: 'daily',
-      matchdayNumber: 7,
+      difficulty: 'hard',
       formationId: '4-3-3',
       formationLabel: '4-3-3',
       bandId: '7-1',
@@ -51,20 +50,18 @@ describe('buildCardData — share text templates (pure)', () => {
       groups: groups(),
       opponentLabel: 'THE PRESSING MACHINE',
     });
-    expect(data.mode).toBe('daily');
-    expect(data.matchdayNumber).toBe(7);
+    expect(data.difficulty).toBe('hard');
     expect(data.opponentLabel).toBe('THE PRESSING MACHINE');
-    expect(data.eyebrow).toBe('MATCHDAY #7 · vs THE PRESSING MACHINE');
+    expect(data.eyebrow).toBe('[HARD] · vs THE PRESSING MACHINE');
     expect(data.shareUrl).toBe(SHARE_URL);
     expect(data.shareText).toBe(
-      'TenNil Matchday #7 vs THE PRESSING MACHINE: 7-1 CLASSY WIN. Draft your XI: https://nivaassudhan.github.io/tennil/',
+      'TenNil [HARD] vs THE PRESSING MACHINE: 7-1 CLASSY WIN. Draft your XI: https://nivaassudhan.github.io/tennil/',
     );
   });
 
-  it('daily mode without opponent: pre-v2 template unchanged (safety fallback)', () => {
+  it('hard mode without opponent: no vs segment, clean [HARD] eyebrow', () => {
     const data = buildCardData({
-      mode: 'daily',
-      matchdayNumber: 7,
+      difficulty: 'hard',
       formationId: '4-3-3',
       formationLabel: '4-3-3',
       bandId: '7-1',
@@ -72,15 +69,15 @@ describe('buildCardData — share text templates (pure)', () => {
       nearMissText: '2 SHY OF A 9-0 SQUAD',
       groups: groups(),
     });
-    expect(data.eyebrow).toBe('MATCHDAY #7');
+    expect(data.eyebrow).toBe('[HARD]');
     expect(data.shareText).toBe(
-      'TenNil Matchday #7: 7-1 CLASSY WIN. Draft your XI: https://nivaassudhan.github.io/tennil/',
+      'TenNil [HARD]: 7-1 CLASSY WIN. Draft your XI: https://nivaassudhan.github.io/tennil/',
     );
   });
 
-  it('free mode: exact share text with top player + FREE DRAFT eyebrow', () => {
+  it('normal mode: no eyebrow, clean share text', () => {
     const data = buildCardData({
-      mode: 'free',
+      difficulty: 'normal',
       formationId: '4-4-2',
       formationLabel: '4-4-2',
       bandId: '3-2',
@@ -88,53 +85,46 @@ describe('buildCardData — share text templates (pure)', () => {
       nearMissText: null,
       groups: groups(),
     });
-    expect(data.mode).toBe('free');
-    expect(data.matchdayNumber).toBeUndefined();
-    expect(data.eyebrow).toBe('FREE DRAFT');
-    expect(data.topPlayerName).toBe('Romário'); // 92 = highest in groups
+    expect(data.difficulty).toBe('normal');
+    expect(data.eyebrow).toBe('');
     expect(data.shareText).toBe(
-      'TenNil: I drafted Romário and it ended 3-2. https://nivaassudhan.github.io/tennil/',
+      'TenNil: 3-2 SCRAPED HOME. Draft your XI: https://nivaassudhan.github.io/tennil/',
     );
   });
 
-  it('top player tie breaks to the first encountered (GK>DEF>MID>ATT order)', () => {
-    const tied = {
-      GK: [{ name: 'Aaa', rating: 90 }],
-      DEF: [{ name: 'Bbb', rating: 90 }],
-      MID: [],
-      ATT: [],
-    };
+  it('normal mode with opponentLabel: opponent ignored (no opponent in normal)', () => {
     const data = buildCardData({
-      mode: 'free',
+      difficulty: 'normal',
       formationId: '4-3-3',
       formationLabel: '4-3-3',
-      bandId: '1-0',
-      bandLabel: 'NIL-NIL HEART',
+      bandId: '7-1',
+      bandLabel: 'CLASSY WIN',
       nearMissText: null,
-      groups: tied,
+      groups: groups(),
+      opponentLabel: 'THE PRESSING MACHINE',
     });
-    expect(data.topPlayerName).toBe('Aaa');
+    expect(data.eyebrow).toBe('');
+    expect(data.shareText).toBe(
+      'TenNil: 7-1 CLASSY WIN. Draft your XI: https://nivaassudhan.github.io/tennil/',
+    );
   });
 });
 
 describe('cardFilename', () => {
-  it('daily → tennil-matchday-N.png', () => {
-    const data = buildCardData({
-      mode: 'daily',
-      matchdayNumber: 14,
+  it('always → tennil-result.png regardless of difficulty', () => {
+    const hard = buildCardData({
+      difficulty: 'hard',
       formationId: '4-3-3',
       formationLabel: '4-3-3',
       bandId: '5-0',
       bandLabel: 'ROUT',
       nearMissText: null,
       groups: groups(),
+      opponentLabel: 'THE PRESSING MACHINE',
     });
-    expect(cardFilename(data)).toBe('tennil-matchday-14.png');
-  });
-
-  it('free → tennil-card-BANDID.png', () => {
-    const data = buildCardData({
-      mode: 'free',
+    expect(cardFilename(hard)).toBe('tennil-result.png');
+    const normal = buildCardData({
+      difficulty: 'normal',
       formationId: '4-3-3',
       formationLabel: '4-3-3',
       bandId: '3-2',
@@ -142,8 +132,8 @@ describe('cardFilename', () => {
       nearMissText: null,
       groups: groups(),
     });
-    expect(cardFilename(data)).toBe('tennil-card-3-2.png');
-    expect(cardFilename(data)).toMatch(/\.png$/);
+    expect(cardFilename(normal)).toBe('tennil-result.png');
+    expect(cardFilename(normal)).toMatch(/\.png$/);
   });
 });
 
@@ -169,14 +159,14 @@ describe('ShareRow', () => {
 
   it('COPY writes the share text to the clipboard', () => {
     const data = buildCardData({
-      mode: 'daily',
-      matchdayNumber: 7,
+      difficulty: 'hard',
       formationId: '4-3-3',
       formationLabel: '4-3-3',
       bandId: '7-1',
       bandLabel: 'CLASSY WIN',
       nearMissText: null,
       groups: groups(),
+      opponentLabel: 'THE PRESSING MACHINE',
     });
     render(<ShareRow cardData={data} />);
     fireEvent.click(screen.getByRole('button', { name: /copy/i }));
@@ -185,14 +175,14 @@ describe('ShareRow', () => {
 
   it('POST TO X link href URL-encodes the share text', () => {
     const data = buildCardData({
-      mode: 'daily',
-      matchdayNumber: 7,
+      difficulty: 'hard',
       formationId: '4-3-3',
       formationLabel: '4-3-3',
       bandId: '7-1',
       bandLabel: 'CLASSY WIN',
       nearMissText: null,
       groups: groups(),
+      opponentLabel: 'THE PRESSING MACHINE',
     });
     render(<ShareRow cardData={data} />);
     const xLink = screen.getByRole('link', { name: /post to x/i });
@@ -204,13 +194,14 @@ describe('ShareRow', () => {
 
   it('WHATSAPP link href encodes the share text on wa.me', () => {
     const data = buildCardData({
-      mode: 'free',
+      difficulty: 'hard',
       formationId: '4-3-3',
       formationLabel: '4-3-3',
       bandId: '3-2',
       bandLabel: 'SCRAPED HOME',
       nearMissText: null,
       groups: groups(),
+      opponentLabel: 'THE PRESSING MACHINE',
     });
     render(<ShareRow cardData={data} />);
     const wa = screen.getByRole('link', { name: /whatsapp/i });
@@ -221,14 +212,14 @@ describe('ShareRow', () => {
 
   it(' SHARE button is absent when navigator.share is unavailable', () => {
     const data = buildCardData({
-      mode: 'daily',
-      matchdayNumber: 7,
+      difficulty: 'hard',
       formationId: '4-3-3',
       formationLabel: '4-3-3',
       bandId: '7-1',
       bandLabel: 'CLASSY WIN',
       nearMissText: null,
       groups: groups(),
+      opponentLabel: 'THE PRESSING MACHINE',
     });
     render(<ShareRow cardData={data} />);
     expect(screen.queryByRole('button', { name: /^share$/i })).toBeNull();
@@ -238,14 +229,14 @@ describe('ShareRow', () => {
     const shareMock = vi.fn().mockResolvedValue(undefined);
     Object.assign(navigator, { share: shareMock });
     const data = buildCardData({
-      mode: 'daily',
-      matchdayNumber: 7,
+      difficulty: 'hard',
       formationId: '4-3-3',
       formationLabel: '4-3-3',
       bandId: '7-1',
       bandLabel: 'CLASSY WIN',
       nearMissText: null,
       groups: groups(),
+      opponentLabel: 'THE PRESSING MACHINE',
     });
     render(<ShareRow cardData={data} />);
     const shareBtn = screen.getByRole('button', { name: /^share$/i });
@@ -294,14 +285,14 @@ describe('ShareRow', () => {
     });
 
     const data = buildCardData({
-      mode: 'daily',
-      matchdayNumber: 9,
+      difficulty: 'hard',
       formationId: '4-3-3',
       formationLabel: '4-3-3',
       bandId: '6-0',
       bandLabel: 'ROUT',
       nearMissText: null,
       groups: groups(),
+      opponentLabel: 'THE PRESSING MACHINE',
     });
     render(<ShareRow cardData={data} />);
     await fireEvent.click(screen.getByRole('button', { name: /download card/i }));
@@ -309,7 +300,7 @@ describe('ShareRow', () => {
     // transient download anchor carries a `download` attribute.
     const dlAnchor = createdAnchors.find((a) => a.download);
     expect(dlAnchor).toBeTruthy();
-    expect(dlAnchor!.download).toBe('tennil-matchday-9.png');
+    expect(dlAnchor!.download).toBe('tennil-result.png');
     expect(dlAnchor!.download).toMatch(/\.png$/);
   });
 });

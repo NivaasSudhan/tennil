@@ -170,6 +170,7 @@ export default function StartScreen({
         open={rulesOpen}
         onClose={() => setRulesOpen(false)}
         opposition={opposition}
+        difficulty={difficulty}
       />
     </div>
   );

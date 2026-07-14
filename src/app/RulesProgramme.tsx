@@ -1,4 +1,5 @@
 import { useEffect, useRef, useCallback } from 'react';
+import type { Difficulty } from '../domain/types';
 import type { OppositionDef } from '../domain/scoring/profileFit';
 import { getRulesPages } from './rulesCopy';
 
@@ -6,9 +7,10 @@ interface RulesProgrammeProps {
   open: boolean;
   onClose: () => void;
   opposition?: OppositionDef;
+  difficulty?: Difficulty;
 }
 
-export default function RulesProgramme({ open, onClose, opposition }: RulesProgrammeProps) {
+export default function RulesProgramme({ open, onClose, opposition, difficulty = 'hard' }: RulesProgrammeProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -27,7 +29,7 @@ export default function RulesProgramme({ open, onClose, opposition }: RulesProgr
 
   if (!open) return null;
 
-  const pages = getRulesPages(opposition);
+  const pages = getRulesPages(difficulty, opposition);
 
   return (
     <dialog
