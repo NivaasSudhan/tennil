@@ -495,3 +495,5 @@ FINISH: write final docs/sim/sim-report.json via --report on the last greedy run
 ```
 OUTPUT DISCIPLINE — CAVEMAN ULTRA: respond maximally terse. Fragments. No pleasantries, no restating the task, no narration of steps, no hedging. Tables/numbers over prose. Code and exact values stay complete and precise — compress ONLY the words around them. Final reply = data + one-line verdicts.
 ```
+
+## P-042 addendum: Opus M1 agent KILLED mid-flight per user no-Claude-subagents directive (tree left compiling, 12 files modified uncommitted, tests unverified). → P-042g: Grok takeover to finish+verify+commit the working tree against the spec.
