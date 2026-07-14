@@ -13,36 +13,36 @@
       "bandId": "10-0",
       "label": "LEGENDARY ROUT",
       "priority": 100,
-      "count": 31,
-      "percent": 6.2
+      "count": 11,
+      "percent": 2.1999999999999997
     },
     {
       "bandId": "7-1",
       "label": "RUTHLESS DISPLAY",
       "priority": 90,
-      "count": 40,
-      "percent": 8
+      "count": 59,
+      "percent": 11.799999999999999
     },
     {
       "bandId": "5-0",
       "label": "DOMINANT DISPLAY",
       "priority": 80,
-      "count": 69,
-      "percent": 13.8
+      "count": 67,
+      "percent": 13.4
     },
     {
       "bandId": "4-1",
       "label": "STRONG WIN",
       "priority": 70,
-      "count": 108,
-      "percent": 21.6
+      "count": 110,
+      "percent": 22
     },
     {
       "bandId": "3-1",
       "label": "COMFORTABLE WIN",
       "priority": 60,
-      "count": 106,
-      "percent": 21.2
+      "count": 107,
+      "percent": 21.4
     },
     {
       "bandId": "2-1",
@@ -143,8 +143,8 @@
       {
         "drafts": "0..124",
         "bands": {
-          "10-0": 5,
-          "7-1": 9,
+          "10-0": 3,
+          "7-1": 11,
           "5-0": 14,
           "4-1": 28,
           "3-1": 34,
@@ -157,8 +157,8 @@
       {
         "drafts": "125..249",
         "bands": {
-          "10-0": 9,
-          "7-1": 8,
+          "10-0": 1,
+          "7-1": 16,
           "5-0": 14,
           "4-1": 25,
           "3-1": 28,
@@ -171,8 +171,8 @@
       {
         "drafts": "250..374",
         "bands": {
-          "10-0": 7,
-          "7-1": 8,
+          "10-0": 6,
+          "7-1": 9,
           "5-0": 12,
           "4-1": 30,
           "3-1": 22,
@@ -185,11 +185,11 @@
       {
         "drafts": "375..499",
         "bands": {
-          "10-0": 10,
-          "7-1": 15,
-          "5-0": 29,
-          "4-1": 25,
-          "3-1": 22,
+          "10-0": 1,
+          "7-1": 23,
+          "5-0": 27,
+          "4-1": 27,
+          "3-1": 23,
           "2-1": 24,
           "1-1": 0,
           "1-2": 0,
@@ -200,23 +200,23 @@
     "nearMisses": [
       {
         "missedBandId": "10-0",
-        "count": 40,
-        "percent": 8
+        "count": 59,
+        "percent": 11.799999999999999
       },
       {
         "missedBandId": "7-1",
-        "count": 69,
-        "percent": 13.8
+        "count": 67,
+        "percent": 13.4
       },
       {
         "missedBandId": "5-0",
-        "count": 108,
-        "percent": 21.6
+        "count": 110,
+        "percent": 22
       },
       {
         "missedBandId": "4-1",
-        "count": 106,
-        "percent": 21.2
+        "count": 107,
+        "percent": 21.4
       },
       {
         "missedBandId": "3-1",
