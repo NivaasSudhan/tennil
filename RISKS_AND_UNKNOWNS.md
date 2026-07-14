@@ -496,6 +496,38 @@ n=500/seed=42 baseline (10-0 = 1.80%, fit p50=100).
   demanding archetype) on top of a near-optimal, not necessarily perfect, XI —
   `docs/sim/sim-report.json` = fitaware/neutral/n=500/seed=42 (10-0=2.60%).
 
+- **2026-07-14 (M3 / P-044 — per-formation hard minFit calibration, ADR-021):**
+  P-041 diagnosis under flat minFit=94: fitaware-neutral 10-0 spread
+  **4-3-3 2.6% / 4-4-2 2.8% / 3-5-2 6.6% (exploit) / 5-3-2 1.0%** (s42 n=500).
+  Fit p50: 4-3-3=93, 4-4-2=98, 3-5-2=98, 5-3-2=97 — only 3-5-2 still overshoots
+  after fit gate; 5-3-2 bottleneck is WL/eff (minFit inert even at 85).
+
+  **Calibration (modes.hard.bands numbers ONLY; profiles/targets/weights/oppositions
+  + normal bands untouched):** 10-0 `minFit` → Record
+  `{ "4-3-3": 94, "4-4-2": 94, "3-5-2": 99, "5-3-2": 94 }`; 7-1/5-0 stay scalar 89.
+
+  **fitaware-neutral 10-0 % (n=500):**
+
+  | formation | s42 | s1000 | s5000 | note |
+  |---|---:|---:|---:|---|
+  | 4-3-3 | 2.6 | 1.8 | 1.6 | in 2-4% at s42 |
+  | 4-4-2 | 2.8 | 1.8 | 1.4 | in 2-4% at s42 |
+  | 3-5-2 | 3.8 | 2.2 | 2.0 | exploit killed (was 6.6) |
+  | 5-3-2 | 1.0 | 1.2 | 0.8 | **M3-STRUCTURAL** — minFit floor 85 still 1.0%; WL/eff gate, not fit |
+
+  Never 0%, never >6% on any seed×formation. Best s42 = **3-5-2 (3.8%)**.
+
+  **Law matrix (hard, fitaware, n=500 s42, 5 non-neutral archetypes × 4 formations
+  = 20 pairs):** all 10-0 count > 0. Lowest cell = 5-3-2×pressing-machine 0.8%.
+  4-3-3 cycle: aerial 2.0 / counter 2.0 / low-block 2.8 / possession 2.8 / pressing 4.2.
+
+  **Normal mode check:** `--mode normal --bot greedy n=200 s42` → 10-0 = **6.0%**
+  (prior ~4-6% window; normal bands untouched).
+
+  **Ship:** thresholds v5 hard 10-0 per-formation Record; `docs/sim/sim-report.json`
+  = fitaware/neutral/hard/4-3-3/n=500/s42 (10-0=2.60%) + m3 block. 5-3-2 sub-2%
+  is accepted structural under config-only budget (profile/bot change = ADR).
+
 ## Open questions (answer before or during the named task)
 
 1. Should skip replacement exclude only the skipped squad or all seen? **Answered in ADR-003**: excludes skipped squad id; normal seen-preference applies.
