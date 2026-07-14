@@ -28,7 +28,7 @@ import { isPersonTaken } from './person';
  * throwing (real configs always ship ≥1 non-neutral opposition). This is the pure
  * draw helper that replaces the retired seed-based `selectOpposition`.
  */
-function drawOpposition(config: ThresholdConfig, rng: Rng): string {
+export function drawOpposition(config: ThresholdConfig, rng: Rng): string {
   const candidates = config.oppositions
     .filter((o) => o.id !== 'neutral')
     .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));

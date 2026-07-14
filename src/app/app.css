@@ -473,6 +473,123 @@ button {
   max-width: 32rem;
 }
 
+/* ---------- OpponentCard — paper team-sheet stock, flip reveal (M2b) ---------- */
+.opponent-card {
+  perspective: 800px;
+  max-width: min(32rem, 92vw);
+  margin: 2rem auto;
+  display: flex;
+  justify-content: center;
+}
+
+.opponent-card__inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 2rem 2rem 2.5rem;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 4px;
+  text-align: center;
+  width: 100%;
+  box-shadow:
+    0 1px 1px oklch(0.2 0.02 260 / 0.4),
+    0 14px 28px oklch(0.15 0.03 260 / 0.55),
+    0 30px 60px oklch(0.1 0.02 260 / 0.4);
+  animation: card-flip-in 500ms var(--ease-out-quint) both;
+  transform-origin: center center;
+}
+
+.opponent-card__grain {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.15' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+  mix-blend-mode: multiply;
+}
+
+.opponent-card__inner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  border: 1px solid oklch(0.7 0.02 95 / 0.5);
+  box-shadow: inset 0 0 0 1px oklch(0.85 0.01 95 / 0.4);
+}
+
+.opponent-card__eyebrow {
+  font-family: 'Courier Prime', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ink-faded);
+  margin-bottom: 0.2rem;
+}
+
+.opponent-card__label {
+  font-family: 'Courier Prime', monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: clamp(1.3rem, 4vw, 1.8rem);
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+.opponent-card__tagline {
+  margin: 0;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--ink-faded);
+  max-width: 26rem;
+}
+
+.opponent-card__btn {
+  margin-top: 0.4rem;
+  font-family: 'Courier Prime', monospace;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: transparent;
+  border: 1.5px solid var(--ink);
+  border-radius: 4px;
+  padding: 0.6rem 1.6rem;
+  cursor: pointer;
+  transition: background 180ms var(--ease-out-quart),
+              color 180ms var(--ease-out-quart);
+}
+
+.opponent-card__btn:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.opponent-card__btn:focus-visible {
+  outline: 2px solid var(--stamp);
+  outline-offset: 3px;
+}
+
+@keyframes card-flip-in {
+  from {
+    transform: rotateY(90deg) scale(0.92);
+    opacity: 0.3;
+  }
+  to {
+    transform: rotateY(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
 /* ---------- StadiumButton — floodlit signage CTA ---------- */
 .stadium-button {
   --stadium-glow: 0 0 18px oklch(0.82 0.14 88 / 0.55), 0 0 44px oklch(0.82 0.14 88 / 0.3);
@@ -1338,6 +1455,13 @@ button {
   /* Kill the infinite signage pulse so glow is steady. */
   .stadium-button {
     animation: none;
+  }
+
+  /* Opponent card instant show */
+  .opponent-card__inner {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
   }
 }
 

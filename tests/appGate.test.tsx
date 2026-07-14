@@ -4,12 +4,19 @@
  * auto-starts on mount (old App.tsx:19 behavior) and that Start Game enters
  * the draft. Uses the real vendored game data via the simulator's disk loader.
  */
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import App from '../src/app/App';
 import { loadGameDataFromDisk } from '../scripts/simulate';
 
-afterEach(cleanup);
+beforeEach(() => {
+  vi.spyOn(Math, 'random').mockReturnValue(0.5);
+});
+
+afterEach(() => {
+  cleanup();
+  vi.restoreAllMocks();
+});
 
 describe('App landing gate', () => {
   it('shows the landing screen on mount — no draft auto-start', () => {
@@ -39,11 +46,30 @@ describe('App kick-off (ADR-021 — matchday badge retired; M2 owns mode toggle 
     expect(screen.getByText(/now revealing/i)).toBeTruthy();
   });
 
-  it('selecting HARD then Kick off begins a draft', () => {
+  it('HARD mode shows opponent card before draft (card then formation then draft)', async () => {
     render(<App data={loadGameDataFromDisk()} />);
     const hardBtn = screen.getByRole('button', { name: /^HARD\b/ });
     fireEvent.click(hardBtn);
     fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
+
+    expect(await screen.findByText(/your opponent/i)).toBeTruthy();
+    const label = await screen.findByText(/THE |COUNTER |AERIAL |POSSESSION/i);
+    expect(label).toBeTruthy();
+
+    expect(screen.queryByText(/now revealing/i)).toBeNull();
+
+    fireEvent.click(screen.getByRole('button', { name: /choose your shape/i }));
+    expect(await screen.findByRole('button', { name: /confirm draft/i })).toBeTruthy();
+
+    fireEvent.click(screen.getByRole('button', { name: /confirm draft/i }));
+    expect(await screen.findByText(/now revealing/i)).toBeTruthy();
+  });
+
+  it('NORMAL flow never renders the opponent card', () => {
+    render(<App data={loadGameDataFromDisk()} />);
+    fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
+    // Normal mode goes straight to draft, no card
+    expect(screen.queryByText(/your opponent/i)).toBeNull();
     expect(screen.getByText(/now revealing/i)).toBeTruthy();
   });
 

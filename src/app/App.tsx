@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 import type { Difficulty, DraftSession, GameData, Rng } from '../domain/types';
 import { IllegalActionError } from '../domain/types';
-import { pick as domainPick, skip as domainSkip, startDraft } from '../domain/draft/session';
+import { drawOpposition, pick as domainPick, skip as domainSkip, startDraft } from '../domain/draft/session';
+import OpponentCard from './OpponentCard';
 import { mulberry32 } from '../lib/rng';
 import DraftScreen from './DraftScreen';
 import ResultScreen from './ResultScreen';
@@ -12,23 +13,35 @@ export default function App({ data }: { data: GameData }) {
   const [session, setSession] = useState<DraftSession | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty>('normal');
-  const [gate, setGate] = useState<'landing' | 'formation'>('landing');
+  const [gate, setGate] = useState<'landing' | 'opponent-card' | 'formation'>('landing');
   const [lastFormationId, setLastFormationId] = useState(data.thresholds.referenceFormation);
   // ADR-014-lite: one rng instance per session, threaded through its whole
   // lifetime (startDraft + every pick/skip), constructed from the recorded
   // seed at handleStart time. A ref (not state) because it's mutated in place
   // by mulberry32's internal closure, not by React.
   const rngRef = useRef<Rng | null>(null);
+  const preSeedRef = useRef<number | null>(null);
+  const preOppositionIdRef = useRef<string | null>(null);
 
   function handleStart(formationId: string) {
     setActionError(null);
     try {
-      const seed = Math.floor(Math.random() * 2 ** 31);
+      if (difficulty === 'hard' && gate === 'landing') {
+        const seed = Math.floor(Math.random() * 2 ** 31);
+        const rng = mulberry32(seed);
+        preSeedRef.current = seed;
+        preOppositionIdRef.current = drawOpposition(data.thresholds, rng);
+        setLastFormationId(formationId);
+        setGate('opponent-card');
+        return;
+      }
+      const seed = preSeedRef.current ?? Math.floor(Math.random() * 2 ** 31);
       const rng = mulberry32(seed);
       rngRef.current = rng;
-      // ADR-021 M2a: difficulty from landing toggle state.
       setSession(startDraft(data, rng, formationId, { seed, difficulty }));
       setLastFormationId(formationId);
+      preSeedRef.current = null;
+      preOppositionIdRef.current = null;
     } catch (err) {
       if (err instanceof IllegalActionError) {
         setActionError(err.message);
@@ -73,15 +86,25 @@ export default function App({ data }: { data: GameData }) {
     const lid = session?.formationId ?? data.thresholds.referenceFormation;
     setLastFormationId(lid);
     setSession(null);
-    setGate('formation');
+    const diff = session?.difficulty ?? difficulty;
+    if (diff === 'hard') {
+      const seed = Math.floor(Math.random() * 2 ** 31);
+      const rng = mulberry32(seed);
+      preSeedRef.current = seed;
+      preOppositionIdRef.current = drawOpposition(data.thresholds, rng);
+      setGate('opponent-card');
+    } else {
+      setGate('formation');
+    }
     if (session) setDifficulty(session.difficulty);
   }
 
   const showFormationGate = session === null && gate === 'formation';
   const showLanding = session === null && gate === 'landing';
-  // ADR-021: matchday/daily removed and the opponent is now drawn at kickoff (per
-  // session, HARD only) rather than pre-selected for the landing. M2 owns the
-  // OpponentCard reveal + NORMAL/HARD toggle; this M1 landing is opponent-free.
+  const showOpponentCard = session === null && gate === 'opponent-card';
+  const preOppositionDef = preOppositionIdRef.current
+    ? data.thresholds.oppositions.find((o) => o.id === preOppositionIdRef.current) ?? null
+    : null;
 
   return (
     <div className="app-shell">
@@ -93,6 +116,11 @@ export default function App({ data }: { data: GameData }) {
           difficulty={difficulty}
           onDifficultyChange={setDifficulty}
           onStart={handleStart}
+        />
+      ) : showOpponentCard && preOppositionDef ? (
+        <OpponentCard
+          opposition={preOppositionDef}
+          onContinue={() => setGate('formation')}
         />
       ) : showFormationGate ? (
         <StartScreen
