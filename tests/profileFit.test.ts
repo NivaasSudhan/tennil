@@ -9,7 +9,7 @@
  * heading below).
  */
 import { describe, expect, it } from 'vitest';
-import { computeProfileFit, selectOpposition } from '../src/domain/scoring/profileFit';
+import { computeProfileFit } from '../src/domain/scoring/profileFit';
 import type { Attrs, FormationProfile, OppositionDef } from '../src/domain/scoring/profileFit';
 import { computeScoreInput, evaluateBandPredicates, scoreBand } from '../src/domain/scoring/scoreBand';
 import { explainScoreBand } from '../src/domain/scoring/explainScoreBand';
@@ -303,19 +303,15 @@ describe('computeProfileFit — test15: defensive throw', () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// test12: selectOpposition. Per the SPEC DELTA (DECISIONS.md ADR-020, dated
-// 2026-07-12) selectOpposition dropped its `mode` parameter entirely — every
-// draft is matchday-framed now, so there is no 'free' mode branch to test.
-// Adapted battery: selectOpposition NEVER returns neutral (structurally
-// excluded from the candidate pool); deterministic per seed; JSON-reordered
-// config yields identical selection (sort guard); a seed sweep hits every
-// non-neutral archetype at least once.
-// ---------------------------------------------------------------------------
+// ADR-021: the seed-based selectOpposition was retired — the HARD-mode opponent
+// is now drawn off the injected draft rng in draft/session.ts (drawOpposition).
+// Its determinism / sorted-by-id-stability / hard-only behavior is covered in
+// tests/draft.test.ts ('ADR-021 opponent draw'). The synthetic config builder
+// below stays for the minFit predicate tests (test13/test14).
 
 function oppositionConfig(oppositions: OppositionDef[]): ThresholdConfig {
   return {
-    version: 4,
+    version: 5,
     referenceFormation: '4-3-3',
     minCounts: { GK: 1, DEF: 4, MID: 3, ATT: 3 },
     formations: [{ id: '4-3-3', label: '4-3-3', description: '', minCounts: { GK: 1, DEF: 4, MID: 3, ATT: 3 } }],
@@ -327,46 +323,7 @@ function oppositionConfig(oppositions: OppositionDef[]): ThresholdConfig {
 }
 
 const OPP_A: OppositionDef = { id: 'aaa', label: 'A', tagline: 'a', weightMods: { pace: 1.2 } };
-const OPP_B: OppositionDef = { id: 'bbb', label: 'B', tagline: 'b', weightMods: { strength: 1.2 } };
-const OPP_C: OppositionDef = { id: 'ccc', label: 'C', tagline: 'c', weightMods: { accuracy: 1.2 } };
 const NEUTRAL: OppositionDef = { id: 'neutral', label: 'NEUTRAL', tagline: 'n', weightMods: {} };
-
-describe('selectOpposition — test12: opposition selection', () => {
-  it('never returns neutral (structurally excluded from the candidate pool)', () => {
-    const config = oppositionConfig([NEUTRAL, OPP_A, OPP_B, OPP_C]);
-    for (let seed = 0; seed < 20; seed++) {
-      expect(selectOpposition(config, seed).id).not.toBe('neutral');
-    }
-  });
-
-  it('is deterministic per seed', () => {
-    const config = oppositionConfig([NEUTRAL, OPP_A, OPP_B, OPP_C]);
-    expect(selectOpposition(config, 7).id).toBe(selectOpposition(config, 7).id);
-    expect(selectOpposition(config, 7)).toEqual(selectOpposition(config, 7));
-  });
-
-  it('JSON-reordered config yields identical selection (sort guard)', () => {
-    const inOrder = oppositionConfig([NEUTRAL, OPP_A, OPP_B, OPP_C]);
-    const reordered = oppositionConfig([OPP_C, NEUTRAL, OPP_B, OPP_A]);
-    for (let seed = 0; seed < 10; seed++) {
-      expect(selectOpposition(reordered, seed)).toEqual(selectOpposition(inOrder, seed));
-    }
-  });
-
-  it('a seed sweep hits every non-neutral archetype at least once', () => {
-    const config = oppositionConfig([NEUTRAL, OPP_A, OPP_B, OPP_C]);
-    const seen = new Set<string>();
-    for (let seed = 0; seed < 30; seed++) {
-      seen.add(selectOpposition(config, seed).id);
-    }
-    expect(seen).toEqual(new Set(['aaa', 'bbb', 'ccc']));
-  });
-
-  it('falls back to neutral when the catalog has zero non-neutral entries (defensive)', () => {
-    const config = oppositionConfig([NEUTRAL]);
-    expect(selectOpposition(config, 5).id).toBe('neutral');
-  });
-});
 
 // ---------------------------------------------------------------------------
 // test13: minFit emission rule (absent / 0 / >0) + integer margins.

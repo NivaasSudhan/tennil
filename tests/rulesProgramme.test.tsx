@@ -183,7 +183,7 @@ function makeSession(): DraftSession {
     formationId: '4-3-3',
     revealLog: [],
     seed: 42,
-    mode: 'daily',
+    difficulty: 'hard',
   };
 }
 
@@ -310,7 +310,8 @@ function completeSession(): DraftSession {
     formationId: '4-3-3',
     revealLog: [],
     seed: 42,
-    mode: 'daily',
+    difficulty: 'hard',
+    oppositionId: 'pressing-machine',
   };
 }
 

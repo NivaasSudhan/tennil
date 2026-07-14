@@ -18,18 +18,26 @@ type RawBundle = Parameters<typeof loadGameData>[0];
 // A fully valid synthetic baseline bundle (built fresh each call).
 // ---------------------------------------------------------------------------
 
+function fbBand() {
+  return { id: 'fb', priority: 0, label: 'FALL', fallback: true as const };
+}
+
 function validRaw() {
   return {
     positionMap: { GK: 'GK', CB: 'DEF', CM: 'MID', ST: 'ATT' },
     thresholds: {
-      version: 1,
+      version: 5,
       referenceFormation: 'test-form',
       minCounts: { GK: 1, DEF: 3, MID: 2, ATT: 5 },
       formations: [
         { id: 'test-form', label: 'TestForm', description: 'test', minCounts: { GK: 1, DEF: 3, MID: 2, ATT: 5 } },
       ],
       ratingScale: { min: 1, max: 100 },
-      bands: [{ id: 'fb', priority: 0, label: 'FALL', fallback: true }],
+      // ADR-021: band ladders live under modes; loadData defaults active bands = hard.
+      modes: {
+        normal: { bands: [fbBand()] },
+        hard: { bands: [fbBand()] },
+      },
       profiles: {
         'test-form': {
           DEF: { weights: { pace: 0.5, strength: 0.5, accuracy: 0.5 }, targets: { pace: 75, strength: 75, accuracy: 75 } },
@@ -152,7 +160,7 @@ describe('audit: malformed entries COLLECTED, not fail-fast', () => {
   it('three problems in three separate config files all collected', () => {
     const raw = makeRaw() as unknown as AnyObj;
     raw.commentary.scripts.fb.beats[0].type = 'bogus'; // commentary
-    raw.thresholds.bands[0].priority = 'not-a-number'; // thresholds
+    raw.thresholds.modes.hard.bands[0].priority = 'not-a-number'; // thresholds
     raw.squads.squads[0].players[0].rating = 0; // squads (rating below min)
     expectRejects(raw, (problems) => {
       expect(problems.some((p) => p.includes('beat[0]') && p.includes('bogus'))).toBe(true);
@@ -247,7 +255,7 @@ describe('audit: duplicate ids', () => {
 
   it('a duplicate BAND id is rejected', () => {
     const raw = makeRaw() as unknown as AnyObj;
-    raw.thresholds.bands.push({
+    raw.thresholds.modes.hard.bands.push({
       id: 'fb', priority: 5, label: 'DUP', fallback: false,
     });
     raw.commentary.scripts.fb2 = clone(raw.commentary.scripts.fb); // ensure fb2 only if needed
@@ -270,7 +278,7 @@ describe('audit: cross-section band↔commentary consistency', () => {
   it('a band id with no commentary script is reported', () => {
     const raw = makeRaw() as unknown as AnyObj;
     // Add a second band; comment will lack its script.
-    raw.thresholds.bands.push({ id: 'extra', priority: 10, label: 'X' });
+    raw.thresholds.modes.hard.bands.push({ id: 'extra', priority: 10, label: 'X' });
     expectRejects(raw, (problems) => {
       expect(problems.some((p) => p === 'band extra: missing commentary script')).toBe(true);
     });
@@ -278,12 +286,12 @@ describe('audit: cross-section band↔commentary consistency', () => {
 
   it('zero and multiple fallback bands are both rejected', () => {
     const zero = makeRaw() as unknown as AnyObj;
-    delete (zero.thresholds.bands[0] as AnyObj).fallback;
+    delete (zero.thresholds.modes.hard.bands[0] as AnyObj).fallback;
     expectRejects(zero, (p) =>
       expect(p.some((m) => m.includes('no band has fallback:true'))).toBe(true));
 
     const multi = makeRaw() as unknown as AnyObj;
-    multi.thresholds.bands.push({ id: 'fb2', priority: 1, label: 'F2', fallback: true });
+    multi.thresholds.modes.hard.bands.push({ id: 'fb2', priority: 1, label: 'F2', fallback: true });
     multi.commentary.scripts.fb2 = clone(multi.commentary.scripts.fb);
     expectRejects(multi, (p) =>
       expect(p.some((m) => m.includes('bands have fallback:true'))).toBe(true));

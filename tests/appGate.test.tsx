@@ -26,13 +26,14 @@ describe('App landing gate', () => {
   });
 });
 
-describe('App MATCHDAY badge always visible (ADR-014-lite amend)', () => {
-  it('landing shows MATCHDAY badge number on the start screen', () => {
+describe('App kick-off (ADR-021 — matchday badge retired; M2 owns mode toggle UI)', () => {
+  it('landing still shows Kick off (matchday domain removed)', () => {
     render(<App data={loadGameDataFromDisk()} />);
-    expect(screen.getByText(/MATCHDAY #\d+/i)).toBeTruthy();
+    expect(screen.getByRole('button', { name: /kick off/i })).toBeTruthy();
+    expect(screen.queryByText(/MATCHDAY #\d+/i)).toBeNull();
   });
 
-  it('Kick off always begins a draft (no mode toggle)', () => {
+  it('Kick off always begins a draft (no mode toggle yet — M2)', () => {
     render(<App data={loadGameDataFromDisk()} />);
     fireEvent.click(screen.getByRole('button', { name: /kick off/i }));
     expect(screen.getByText(/now revealing/i)).toBeTruthy();

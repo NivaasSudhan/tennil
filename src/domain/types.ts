@@ -59,15 +59,23 @@ export interface DraftSession {
                                 // included); canonical truth for computeSessionCeiling.
                                 // revealLog.length === roundsPlayed, always.
   readonly seed: number;       // ADR-014-lite: seed the session's rng was constructed from
-  readonly mode: 'daily' | 'free'; // ADR-014-lite: daily = shared seed, free = per-session random seed
+  readonly difficulty: Difficulty; // ADR-021: 'normal' = v1 OVR/efficiency; 'hard' = v2 attrs/fit/opponent
+  /** ADR-021: opponent archetype id, stamped by startDraft in HARD sessions ONLY
+   * (drawn via the injected rng before the first squad reveal). Absent in normal
+   * sessions — those consume no extra rng and have no opponent. */
+  readonly oppositionId?: string;
 }
 
-/** startDraft options (ADR-014-lite): seed/mode are recorded on the session for
- * attribution/replay; they do NOT construct the rng themselves — the caller
- * (App) constructs `rng` from the same `seed` and passes both through. */
+/** ADR-021 house style: two difficulty modes replace ADR-014-lite's daily/free. */
+export type Difficulty = 'normal' | 'hard';
+
+/** startDraft options (ADR-021, supersedes ADR-014-lite's mode): seed/difficulty
+ * are recorded on the session; `seed` does NOT construct the rng itself (the
+ * caller passes both). `difficulty` selects the band set + (hard only) triggers
+ * the opponent-archetype draw off the injected rng before the first reveal. */
 export interface StartDraftOptions {
   seed?: number;
-  mode?: 'daily' | 'free';
+  difficulty?: Difficulty;
 }
 
 /** Injectable randomness (ADR-008). NEVER imported by scoring/ or commentary/. */
@@ -109,8 +117,12 @@ export interface BandDef {
   minEfficiency?: number;
   /** ADR-019: per-bucket variant, same integer-% convention. */
   minBucketEfficiency?: Partial<Record<PositionBucket, number>>;
-  /** ADR-020: integer 0-100, top-three-bands-only gate on the session's effectiveFit. */
-  minFit?: number;
+  /** ADR-020/ADR-021: integer 0-100 gate on the session's effectiveFit, top three
+   * hard bands only. A `Record<formationId, number>` authors a per-formation
+   * calibration (M3); the config-view layer (withMode/withFormationMinCounts +
+   * resolveMinFit) resolves it to a scalar per the session's formation BEFORE
+   * evaluateBandPredicates sees it, so the evaluator always reads a number. */
+  minFit?: number | Record<string, number>;
   fallback?: boolean;         // exactly one band; matches unconditionally
 }
 
@@ -121,13 +133,27 @@ export interface Formation {
   minCounts: Record<PositionBucket, number>;
 }
 
+/** ADR-021 (schema v5): one band ladder per difficulty. */
+export interface ModeBandSets {
+  normal: { bands: BandDef[] };
+  hard: { bands: BandDef[] };
+}
+
 export interface ThresholdConfig {
   version: number;
   referenceFormation: string; // e.g. "4-3-3"
   minCounts: Record<PositionBucket, number>;
   formations: Formation[];    // NEW required after schema v2
   ratingScale: { min: number; max: number };
+  /** The ACTIVE band set the engine reads (scoreBand/explainScoreBand). loadData
+   * defaults this to `modes.hard.bands` (app default difficulty = hard); `withMode`
+   * swaps it to the selected mode's set. Synthetic test configs may set it directly
+   * without `modes` — those never call `withMode`. */
   bands: BandDef[];
+  /** ADR-021 (schema v5): the two difficulty band sets. loadData always populates
+   * both; optional in the type so pre-v5 synthetic ThresholdConfig fixtures (which
+   * carry only `bands` and never call `withMode`) still typecheck. */
+  modes?: ModeBandSets;
   /** ADR-020 (schema v4): per-formation attr targets, keyed by Formation.id. */
   profiles: Record<string, FormationProfile>;
   /** ADR-020 (schema v4): rotating daily opponent catalog; must include id 'neutral'. */

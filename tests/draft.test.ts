@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { dailySeed, mulberry32 } from '../src/lib/rng';
+import { mulberry32 } from '../src/lib/rng';
 import {
   startDraft,
   pick,
@@ -424,47 +424,47 @@ describe('formationId', () => {
   });
 });
 
-describe('seed + mode (ADR-014-lite)', () => {
-  it('startDraft with no options defaults seed to 0 and mode to free', () => {
+describe('seed + difficulty (ADR-021, supersedes ADR-014-lite mode)', () => {
+  it('startDraft with no options defaults seed to 0 and difficulty to normal', () => {
     const data = corpus(7);
     const session = startDraft(data, mulberry32(1));
     expect(session.seed).toBe(0);
-    expect(session.mode).toBe('free');
+    expect(session.difficulty).toBe('normal');
+    expect(session.oppositionId).toBeUndefined();
   });
 
-  it('startDraft records the given seed and mode on the session', () => {
+  it('startDraft records the given seed and difficulty on the session', () => {
     const data = corpus(7);
-    const session = startDraft(data, mulberry32(2026), 'draft-test', { seed: 2026, mode: 'daily' });
+    const session = startDraft(data, mulberry32(2026), 'draft-test', { seed: 2026, difficulty: 'hard' });
     expect(session.seed).toBe(2026);
-    expect(session.mode).toBe('daily');
+    expect(session.difficulty).toBe('hard');
   });
 
-  it('free mode is recorded when explicitly given', () => {
+  it('normal difficulty is recorded when explicitly given', () => {
     const data = corpus(7);
-    const session = startDraft(data, mulberry32(99), 'draft-test', { seed: 99, mode: 'free' });
+    const session = startDraft(data, mulberry32(99), 'draft-test', { seed: 99, difficulty: 'normal' });
     expect(session.seed).toBe(99);
-    expect(session.mode).toBe('free');
+    expect(session.difficulty).toBe('normal');
   });
 
-  it('seed and mode survive pick/skip transitions unchanged', () => {
+  it('seed and difficulty survive pick/skip transitions unchanged', () => {
     const data = corpus(7);
     const seed = 4242;
     const rng = mulberry32(seed);
-    let session = startDraft(data, rng, 'draft-test', { seed, mode: 'daily' });
+    let session = startDraft(data, rng, 'draft-test', { seed, difficulty: 'hard' });
     session = pick(session, data, firstPickable(session), rng);
     session = skip(session, data, rng);
     expect(session.seed).toBe(seed);
-    expect(session.mode).toBe('daily');
+    expect(session.difficulty).toBe('hard');
   });
 
-  it('two sessions built from the same daily seed produce identical revealLogs (replay determinism)', () => {
+  it('two sessions built from the same seed produce identical revealLogs (replay determinism)', () => {
     const data = corpus(7);
-    const fixedDate = new Date(Date.UTC(2026, 6, 12));
-    const seed = dailySeed(fixedDate);
+    const seed = 20260712;
 
     function driveFullDraft(): DraftSession {
       const rng = mulberry32(seed);
-      let session = startDraft(data, rng, 'draft-test', { seed, mode: 'daily' });
+      let session = startDraft(data, rng, 'draft-test', { seed, difficulty: 'normal' });
       // Skip the very first reveal, then pick through to completion.
       session = skip(session, data, rng);
       while (session.phase !== 'COMPLETE') {
@@ -477,7 +477,88 @@ describe('seed + mode (ADR-014-lite)', () => {
     const s2 = driveFullDraft();
     expect(s1.revealLog).toEqual(s2.revealLog);
     expect(s1.seed).toBe(s2.seed);
-    expect(s1.mode).toBe(s2.mode);
+    expect(s1.difficulty).toBe(s2.difficulty);
+  });
+});
+
+describe('ADR-021 opponent draw (hard only, off the injected rng before first reveal)', () => {
+  // corpus() ships an empty oppositions catalog; inject a non-neutral archetype
+  // set (+ required neutral) so the hard draw has candidates.
+  function hardData(n = 7): GameData {
+    const data = corpus(n);
+    return {
+      ...data,
+      thresholds: {
+        ...data.thresholds,
+        oppositions: [
+          { id: 'alpha', label: 'ALPHA', tagline: 'a', weightMods: { pace: 1.2 } },
+          { id: 'bravo', label: 'BRAVO', tagline: 'b', weightMods: { strength: 1.2 } },
+          { id: 'charlie', label: 'CHARLIE', tagline: 'c', weightMods: { accuracy: 1.2 } },
+          { id: 'neutral', label: 'NEUTRAL', tagline: 'n', weightMods: {} },
+        ],
+      },
+    };
+  }
+  const FORM = 'draft-test';
+
+  it('hard session stamps a non-neutral oppositionId; normal session stamps none', () => {
+    const data = hardData();
+    const hard = startDraft(data, mulberry32(42), FORM, { seed: 42, difficulty: 'hard' });
+    const normal = startDraft(data, mulberry32(42), FORM, { seed: 42, difficulty: 'normal' });
+    expect(hard.oppositionId).toBeDefined();
+    expect(hard.oppositionId).not.toBe('neutral');
+    expect(normal.oppositionId).toBeUndefined();
+  });
+
+  it('opponent draw is deterministic per seed (same seed => same archetype)', () => {
+    const data = hardData();
+    const a = startDraft(data, mulberry32(7), FORM, { seed: 7, difficulty: 'hard' });
+    const b = startDraft(data, mulberry32(7), FORM, { seed: 7, difficulty: 'hard' });
+    expect(a.oppositionId).toBe(b.oppositionId);
+  });
+
+  it('normal consumes NO extra rng: same seed => IDENTICAL revealLog to a no-options (pre-modes) draft', () => {
+    const data = hardData();
+
+    function drive(opts?: Parameters<typeof startDraft>[3]): DraftSession {
+      const rng = mulberry32(555);
+      let session = startDraft(data, rng, FORM, opts);
+      while (session.phase !== 'COMPLETE') {
+        session = pick(session, data, firstPickable(session), rng);
+      }
+      return session;
+    }
+
+    const preModes = drive(); // defaults to normal, no draw — pre-modes behavior
+    const explicitNormal = drive({ seed: 555, difficulty: 'normal' });
+    expect(explicitNormal.revealLog).toEqual(preModes.revealLog);
+  });
+
+  it('hard consumes exactly ONE extra rng: its first reveal equals normal after one burn', () => {
+    const data = hardData();
+    // Hard: 1× rng for opponent, then first squad. Mirror: burn one next(), then
+    // startDraft normal — first reveals must match (pick after start burns more).
+    const hard = startDraft(data, mulberry32(31), FORM, { seed: 31, difficulty: 'hard' });
+    const advanced = mulberry32(31);
+    advanced.next();
+    const normalShifted = startDraft(data, advanced, FORM, { seed: 31, difficulty: 'normal' });
+    expect(hard.revealLog[0]).toBe(normalShifted.revealLog[0]);
+  });
+
+  it('opponent draw is stable under archetype-catalog reordering (sorted-by-id guard)', () => {
+    const base = hardData();
+    const reordered: GameData = {
+      ...base,
+      thresholds: {
+        ...base.thresholds,
+        oppositions: [...base.thresholds.oppositions].reverse(),
+      },
+    };
+    const a = startDraft(base, mulberry32(9), FORM, { seed: 9, difficulty: 'hard' });
+    const b = startDraft(reordered, mulberry32(9), FORM, { seed: 9, difficulty: 'hard' });
+    expect(a.oppositionId).toBe(b.oppositionId);
+    // revealLog unchanged too (draw index identical => same rng advance).
+    expect(a.revealLog).toEqual(b.revealLog);
   });
 });
 

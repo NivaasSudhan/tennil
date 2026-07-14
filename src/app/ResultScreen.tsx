@@ -8,11 +8,10 @@ import { computeScoreInput, scoreBand } from '../domain/scoring/scoreBand';
 import { computeSessionCeiling } from '../domain/scoring/sessionCeiling';
 import { explainScoreBand } from '../domain/scoring/explainScoreBand';
 import { withFormationMinCounts } from '../domain/scoring/withFormation';
+import { withMode } from '../domain/scoring/withMode';
 import { detectFormationFit, scoreUnderFormation } from '../domain/scoring/formationFit';
-import { computeBucketAttrMeans, computeProfileFit, selectOpposition } from '../domain/scoring/profileFit';
+import { computeBucketAttrMeans, computeProfileFit } from '../domain/scoring/profileFit';
 import { buildCommentary } from '../domain/commentary/build';
-import { matchdayNumber } from '../lib/daily';
-import { dailySeed } from '../lib/rng';
 import { progressScoreline } from './scorelineProgress';
 import { buildCardData } from './matchdayCard';
 import { formatNearMiss } from './nearMiss';
@@ -46,7 +45,9 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
     profileFit, bucketMeans, profile,
   } = useMemo(() => {
     const xi: FinalXI = getFinalXI(session);
-    const config = withFormationMinCounts(data.thresholds, session.formationId);
+    // ADR-021: select the difficulty band set (withMode) then the formation view.
+    const modeConfig = withMode(data.thresholds, session.difficulty);
+    const config = withFormationMinCounts(modeConfig, session.formationId);
     const squadsById = Object.fromEntries(data.squads.map((s) => [s.id, s]));
     const ceiling = computeSessionCeiling(
       session.revealLog,
@@ -55,10 +56,12 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       data.positionMap,
       personKey,
     );
-    // ADR-020: today's opposition is seed-selected ONCE here (dailySeed(new Date()) —
-    // SPEC DELTA, plan.md: reveals are always random now, every draft is
-    // matchday-framed, so opposition selection no longer branches on a mode param).
-    const todaysOpposition = selectOpposition(config, dailySeed(new Date()));
+    // ADR-021: the opponent was drawn at draft start (HARD only) and stamped on
+    // the session. Normal sessions have no opponent → score fit against 'neutral'.
+    const oppId = session.oppositionId ?? 'neutral';
+    const todaysOpposition =
+      config.oppositions.find((o) => o.id === oppId) ??
+      config.oppositions.find((o) => o.id === 'neutral')!;
     const formationProfile = config.profiles[session.formationId];
     const fitScore = computeProfileFit(xi, data.positionMap, formationProfile, todaysOpposition.weightMods);
     // Wave E stats screen: per-bucket attr means, computed ONCE here alongside
@@ -86,7 +89,7 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
         squadsById,
         data.positionMap,
         personKey,
-        data.thresholds,
+        modeConfig,
         fittedFormationId,
       );
       fit = { formationId: fittedFormationId, bandId: fittedBand.bandId, label: fittedBand.label };
@@ -118,10 +121,13 @@ export default function ResultScreen({ session, data, onRestart }: ResultScreenP
       ATT: groups.ATT.map((p) => ({ name: p.name, rating: p.rating })),
     };
     const nearMissText = formatNearMiss(explanation as ScoreExplanation, opposition).text;
-    const matchday = session.mode === 'daily' ? matchdayNumber(new Date()) : undefined;
+    // ADR-021: matchday is retired. M2 owns the share/card rework (mode tags,
+    // clean vs [HARD] vs {OPPONENT}). Interim mapping keeps matchdayCard compiling:
+    // HARD → opponent-framed ('daily'-style) card, NORMAL → clean ('free'-style).
+    const cardMode = session.difficulty === 'hard' ? 'daily' : 'free';
     return buildCardData({
-      mode: session.mode,
-      matchdayNumber: matchday,
+      mode: cardMode,
+      matchdayNumber: undefined,
       formationId: session.formationId,
       formationLabel,
       bandId: band.bandId,

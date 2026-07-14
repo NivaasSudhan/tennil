@@ -31,6 +31,7 @@ import { computeScoreInput, evaluateBandPredicates, scoreBand } from '../src/dom
 import { computeSessionCeiling } from '../src/domain/scoring/sessionCeiling';
 import { explainScoreBand } from '../src/domain/scoring/explainScoreBand';
 import { withFormationMinCounts } from '../src/domain/scoring/withFormation';
+import { withMode } from '../src/domain/scoring/withMode';
 import {
   computeProfileFit,
   type AttrBucket,
@@ -40,6 +41,7 @@ import {
 } from '../src/domain/scoring/profileFit';
 import { mulberry32 } from '../src/lib/rng';
 import type {
+  Difficulty,
   DraftSession,
   FinalXI,
   GameData,
@@ -86,7 +88,7 @@ export interface SimArgs {
   nearMissDelta?: number; // default 3
   report?: string;        // path for sim-report.json; omit = no file
   /** ADR-020 Wave C: opposition id to score every draft against (looked up in
-   * ThresholdConfig.oppositions by id — NOT selectOpposition, which is seed-based
+   * ThresholdConfig.oppositions by id (ADR-021: session/sim flag, not seed-based)
    * daily selection; the sim wants an explicit, repeatable archetype per run).
    * Optional — every pre-Wave-C call site (existing tests constructing SimArgs
    * literals) omits it; default 'neutral' (spec delta: sim default when no flag
@@ -97,10 +99,15 @@ export interface SimArgs {
    * gate — 10-0 must be > 0% under every archetype with the fitaware bot). */
   opposition?: string;
   formation?: string;
+  /** ADR-021: which difficulty band set to score against (via withMode). Default
+   * 'hard' (the v2 fit-dominant ladder). 'normal' scores against the v1
+   * OVR/efficiency ladder — no fit gates; --opposition is then only used to
+   * compute fit for diagnostics (inert against the gateless normal bands). */
+  mode?: Difficulty;
 }
 
 export function parseArgs(argv: string[]): SimArgs {
-  const args: SimArgs = { n: 500, seed: 42, bot: 'greedy', skipThreshold: 84, opposition: 'neutral' };
+  const args: SimArgs = { n: 500, seed: 42, bot: 'greedy', skipThreshold: 84, opposition: 'neutral', mode: 'hard' };
 
   for (let i = 0; i < argv.length; i++) {
     const flag = argv[i];
@@ -142,6 +149,13 @@ export function parseArgs(argv: string[]): SimArgs {
       case '--formation':
         if (!value) throw new Error('--formation requires a value');
         args.formation = value;
+        i++;
+        break;
+      case '--mode':
+        if (value !== 'normal' && value !== 'hard') {
+          throw new Error(`--mode must be "normal" or "hard" (got ${JSON.stringify(value)})`);
+        }
+        args.mode = value;
         i++;
         break;
       default:
@@ -388,6 +402,7 @@ export function runSingleDraft(
   skipThreshold: number,
   oppositionId: string = 'neutral',
   formationId?: string,
+  mode: Difficulty = 'hard',
 ): DraftResult {
   const rng = mulberry32(seed);
   const oppositionDef = data.thresholds.oppositions.find((o) => o.id === oppositionId);
@@ -395,8 +410,13 @@ export function runSingleDraft(
     throw new Error(`runSingleDraft: unknown --opposition id '${oppositionId}' (not in thresholds.oppositions)`);
   }
 
-  // Formation-specific config: mirrors ResultScreen's withFormationMinCounts path
-  const config = formationId ? withFormationMinCounts(data.thresholds, formationId) : data.thresholds;
+  // ADR-021: select the difficulty band set, then apply the formation view
+  // (mirrors ResultScreen's withFormationMinCounts(withMode(...)) path). The
+  // draft session itself is drawn in the default (normal) mode — no opponent
+  // draw — so reveal sequences stay identical across --mode; fit is scored
+  // against the explicit --opposition regardless of mode (inert vs normal bands).
+  const modeConfig = withMode(data.thresholds, mode);
+  const config = formationId ? withFormationMinCounts(modeConfig, formationId) : modeConfig;
   const effFormationId = config.referenceFormation; // withFormationMinCounts sets this to the target
   const minCounts = config.minCounts;
   const profile = config.profiles[effFormationId];
@@ -458,12 +478,14 @@ export interface SimResult {
 }
 
 export function runSimulation(data: GameData, args: SimArgs): SimResult {
+  const mode: Difficulty = args.mode ?? 'hard';
+  const modeConfig = withMode(data.thresholds, mode);
   const results: DraftResult[] = [];
   for (let i = 0; i < args.n; i++) {
-    results.push(runSingleDraft(data, args.seed + i, args.bot, args.skipThreshold, args.opposition, args.formation));
+    results.push(runSingleDraft(data, args.seed + i, args.bot, args.skipThreshold, args.opposition, args.formation, mode));
   }
 
-  const bandsByPriorityDesc = [...data.thresholds.bands].sort((a, b) => b.priority - a.priority);
+  const bandsByPriorityDesc = [...modeConfig.bands].sort((a, b) => b.priority - a.priority);
   const counts = new Map<string, number>();
   for (const band of bandsByPriorityDesc) counts.set(band.id, 0);
   for (const r of results) counts.set(r.bandId, (counts.get(r.bandId) ?? 0) + 1);
@@ -482,7 +504,7 @@ export function runSimulation(data: GameData, args: SimArgs): SimResult {
   const topBandExample = topBand ? results.find((r) => r.bandId === topBand.id) ?? null : null;
   const fallbackExample = fallbackBand ? results.find((r) => r.bandId === fallbackBand.id) ?? null : null;
 
-  const diagnostics = computeDiagnostics(results, data, args.nearMissDelta ?? 3);
+  const diagnostics = computeDiagnostics(results, modeConfig, args.nearMissDelta ?? 3);
   return { args, results, histogram, topBandExample, fallbackExample, diagnostics };
 }
 
@@ -549,7 +571,7 @@ const NUMERIC_PREDICATES: ReadonlySet<PredicateName> = new Set([
 
 export function computeDiagnostics(
   results: DraftResult[],
-  data: GameData,
+  config: ThresholdConfig,
   nearMissDelta: number,
 ): SimDiagnostics {
   const buckets: PositionBucket[] = ['GK', 'DEF', 'MID', 'ATT'];
@@ -570,7 +592,7 @@ export function computeDiagnostics(
 
   // Contiguous quartiles over the seed range: detects drift across seeds
   // (should be roughly flat when n is large enough to trust the histogram).
-  const bandIds = data.thresholds.bands.map((b) => b.id);
+  const bandIds = config.bands.map((b) => b.id);
   const quartileSize = Math.ceil(results.length / 4);
   const seedQuartiles = [0, 1, 2, 3].map((q) => {
     const slice = results.slice(q * quartileSize, (q + 1) * quartileSize);
@@ -584,7 +606,7 @@ export function computeDiagnostics(
   // shortfall <= delta. Structural failures (counts/empty buckets) never count.
   const nearMissCounts = new Map<string, number>();
   for (const r of results) {
-    const next = explainScoreBand(r.scoreInput, data.thresholds).nextBetter;
+    const next = explainScoreBand(r.scoreInput, config).nextBetter;
     if (!next || next.failing.length === 0) continue;
     const close = next.failing.every(
       (p) => NUMERIC_PREDICATES.has(p.name) && p.required - p.actual <= nearMissDelta,
@@ -628,7 +650,7 @@ export function formatReport(data: GameData, sim: SimResult): string {
   const lines: string[] = [];
   lines.push('=== TenNil rarity simulation (T-014) ===');
   lines.push(
-    `n=${sim.args.n} seed=${sim.args.seed} bot=${sim.args.bot} skipThreshold=${sim.args.skipThreshold} opposition=${sim.args.opposition}`,
+    `n=${sim.args.n} seed=${sim.args.seed} bot=${sim.args.bot} skipThreshold=${sim.args.skipThreshold} mode=${sim.args.mode ?? 'hard'} opposition=${sim.args.opposition}`,
   );
   lines.push('');
   lines.push('Band histogram (sorted by priority desc):');
@@ -847,11 +869,12 @@ export function formatFormationComparison(
   const lines: string[] = [];
   lines.push('=== TenNil formation comparison ===');
   const first = comparisons[0];
-  lines.push(`n=${first.sim.args.n} seed=${first.sim.args.seed} bot=${first.sim.args.bot} opposition=${first.sim.args.opposition}`);
+  const mode: Difficulty = first.sim.args.mode ?? 'hard';
+  lines.push(`n=${first.sim.args.n} seed=${first.sim.args.seed} bot=${first.sim.args.bot} mode=${mode} opposition=${first.sim.args.opposition}`);
   lines.push('');
 
-  // Band histogram comparison table
-  const bandIds = data.thresholds.bands.map((b) => b.id);
+  // Band histogram comparison table (ids are shared across modes)
+  const bandIds = withMode(data.thresholds, mode).bands.map((b) => b.id);
   const header = ['Formation', ...bandIds.map((id) => id.padStart(6)), 'eff p50', 'eff p90', 'fit p50', 'fit p90'].join(' ');
   lines.push(header);
   for (const c of comparisons) {
@@ -888,7 +911,7 @@ export function formatFormationComparison(
   lines.push('Missed-10-0 failure-predicate breakdown (among non-10-0 drafts, seed=42):');
   lines.push('  formation      total  eff<99  fit<94  wl<86  bEff-MID  bEff-ATT  any-multi');
   for (const c of comparisons) {
-    const config = withFormationMinCounts(data.thresholds, c.formationId);
+    const config = withFormationMinCounts(withMode(data.thresholds, mode), c.formationId);
     const breakdown = computeMissed10Breakdown(c.sim.results, config);
     const multi = breakdown.total > 0
       ? (breakdown.minEfficiency + breakdown.minFit + breakdown.minWeakLink + breakdown.minBucketEfficiencyMID + breakdown.minBucketEfficiencyATT - breakdown.total).toFixed(0)

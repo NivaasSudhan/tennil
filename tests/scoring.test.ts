@@ -80,7 +80,11 @@ function makeConfig(bands: BandDef[]): ThresholdConfig {
 
 const CONFIG = makeConfig([TOP_BAND, MID_BAND, LOW_BAND, FALLBACK_BAND]);
 
-const REAL_THRESHOLDS = realThresholdsRaw as ThresholdConfig;
+// ADR-021 (schema v5): band sets live under `modes` now. Attach hard as active `bands`.
+const REAL_THRESHOLDS = {
+  ...(realThresholdsRaw as unknown as ThresholdConfig),
+  bands: (realThresholdsRaw as unknown as { modes: { hard: { bands: BandDef[] } } }).modes.hard.bands,
+} as ThresholdConfig;
 
 // ---------- XI builder ----------
 

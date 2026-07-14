@@ -34,7 +34,12 @@ import type {
 } from '../src/domain/types';
 import realThresholdsRaw from '../src/data/config/thresholds.json';
 
-const REAL_THRESHOLDS = realThresholdsRaw as ThresholdConfig;
+// ADR-021 (schema v5): thresholds.json now carries band sets under `modes`, not a
+// top-level `bands`. Attach the hard band set as the active `bands` for this cast.
+const REAL_THRESHOLDS = {
+  ...(realThresholdsRaw as unknown as ThresholdConfig),
+  bands: (realThresholdsRaw as unknown as { modes: { hard: { bands: BandDef[] } } }).modes.hard.bands,
+} as ThresholdConfig;
 
 const POSITION_MAP: Record<string, PositionBucket> = { GK: 'GK', CB: 'DEF', CM: 'MID', ST: 'ATT' };
 const RAW_FOR_BUCKET: Record<PositionBucket, string> = { GK: 'GK', DEF: 'CB', MID: 'CM', ATT: 'ST' };

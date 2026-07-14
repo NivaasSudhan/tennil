@@ -1,11 +1,15 @@
 /**
  * profileFit.ts — ADR-020 attribute profile fit.
  *
- * Wave C: `computeProfileFit` and `selectOpposition` land here (types were
- * Wave A). PURE module (no RNG, no react, no src/app imports) — this file only
- * ever grows pure functions/types, per the layering rule (ADR-002).
+ * Wave C: `computeProfileFit` lands here (types were Wave A). PURE module (no
+ * RNG, no react, no src/app imports) — this file only ever grows pure
+ * functions/types, per the layering rule (ADR-002).
+ *
+ * ADR-021: the seed-based `selectOpposition` was retired — the HARD-mode opponent
+ * is now drawn in `draft/session.ts` (`drawOpposition`) and stamped on the
+ * session as `oppositionId`; result/sim code reads that id.
  */
-import type { FinalXI, PositionBucket, PositionMap, ThresholdConfig } from '../types';
+import type { FinalXI, PositionBucket, PositionMap } from '../types';
 
 /** The three attribute axes authored on outfield players (ADR-020 spec §2). */
 export type AttrName = 'pace' | 'strength' | 'accuracy';
@@ -42,9 +46,8 @@ export interface OppositionDef {
 }
 
 // ---------------------------------------------------------------------------
-// Wave C — computeProfileFit / selectOpposition (plan.md "Wave C/D algorithm
-// addendum", BINDING exact-math steps 1-7). PURE, deterministic, no rounding
-// until the final step.
+// Wave C — computeProfileFit (plan.md "Wave C/D algorithm addendum", BINDING
+// exact-math steps 1-7). PURE, deterministic, no rounding until the final step.
 // ---------------------------------------------------------------------------
 
 const FIT_BUCKET_ORDER: AttrBucket[] = ['DEF', 'MID', 'ATT']; // step 1: fixed order
@@ -173,34 +176,4 @@ export function computeBucketAttrMeans(
     out[bucket] = means;
   }
   return out;
-}
-
-/**
- * selectOpposition — SPEC DELTA (2026-07-12, ADR-014-lite amendment): free play
- * no longer exists, so the mode parameter is dropped entirely. Every draft is
- * matchday-framed: candidates = non-neutral oppositions sorted by id (stability
- * under JSON reordering — the sort guard), pick `candidates[seed % candidates.length]`.
- * Pure; no Date access (caller passes a seed, e.g. `dailySeed(new Date())`).
- * `neutral` stays in the catalog (validation requires it) for synthetic tests
- * and as the sim default when no `--opposition` flag is passed — but `selectOpposition`
- * itself NEVER returns it (it is excluded from the candidate pool by construction).
- * Defensive fallback: if the catalog somehow has zero non-neutral entries, returns
- * `neutral` itself rather than throwing (never crash the result screen over a
- * catalog authoring gap) — real configs always ship >=1 non-neutral opposition.
- */
-export function selectOpposition(config: ThresholdConfig, seed: number): OppositionDef {
-  const candidates = config.oppositions
-    .filter((o) => o.id !== 'neutral')
-    .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
-
-  if (candidates.length === 0) {
-    const neutral = config.oppositions.find((o) => o.id === 'neutral');
-    if (!neutral) {
-      throw new Error('selectOpposition: no oppositions configured at all — invalid ThresholdConfig');
-    }
-    return neutral;
-  }
-
-  const idx = ((seed % candidates.length) + candidates.length) % candidates.length; // never negative
-  return candidates[idx];
 }

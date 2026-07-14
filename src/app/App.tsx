@@ -2,9 +2,7 @@ import { useRef, useState } from 'react';
 import type { DraftSession, GameData, Rng } from '../domain/types';
 import { IllegalActionError } from '../domain/types';
 import { pick as domainPick, skip as domainSkip, startDraft } from '../domain/draft/session';
-import { mulberry32, dailySeed } from '../lib/rng';
-import { matchdayNumber } from '../lib/daily';
-import { selectOpposition } from '../domain/scoring/profileFit';
+import { mulberry32 } from '../lib/rng';
 import DraftScreen from './DraftScreen';
 import ResultScreen from './ResultScreen';
 import StartScreen from './StartScreen';
@@ -27,7 +25,9 @@ export default function App({ data }: { data: GameData }) {
       const seed = Math.floor(Math.random() * 2 ** 31);
       const rng = mulberry32(seed);
       rngRef.current = rng;
-      setSession(startDraft(data, rng, formationId, { seed, mode: 'daily' }));
+      // ADR-021: default difficulty is 'hard' (preserves the current v2 canary
+      // experience — attrs/fit/opponent). M2 adds the NORMAL/HARD landing toggle.
+      setSession(startDraft(data, rng, formationId, { seed, difficulty: 'hard' }));
       setLastFormationId(formationId);
     } catch (err) {
       if (err instanceof IllegalActionError) {
@@ -78,11 +78,9 @@ export default function App({ data }: { data: GameData }) {
 
   const showFormationGate = session === null && gate === 'formation';
   const showLanding = session === null && gate === 'landing';
-  const todayMatchday = matchdayNumber(new Date());
-  // ADR-020: today's opponent, seed-selected ONCE (same seed the ResultScreen
-  // uses, so the landing banner and the finals chrome agree). Pure fn — the
-  // only opposition logic in the app layer is this single call.
-  const todayOpposition = selectOpposition(data.thresholds, dailySeed(new Date()));
+  // ADR-021: matchday/daily removed and the opponent is now drawn at kickoff (per
+  // session, HARD only) rather than pre-selected for the landing. M2 owns the
+  // OpponentCard reveal + NORMAL/HARD toggle; this M1 landing is opponent-free.
 
   return (
     <div className="app-shell">
@@ -91,10 +89,6 @@ export default function App({ data }: { data: GameData }) {
           formations={data.thresholds.formations}
           defaultFormationId={data.thresholds.referenceFormation}
           variant="landing"
-          matchdayNumber={todayMatchday}
-          opponentLabel={todayOpposition.label}
-          opponentTagline={todayOpposition.tagline}
-          opposition={todayOpposition}
           onStart={handleStart}
         />
       ) : showFormationGate ? (
@@ -102,7 +96,6 @@ export default function App({ data }: { data: GameData }) {
           formations={data.thresholds.formations}
           defaultFormationId={lastFormationId}
           variant="formation-only"
-          matchdayNumber={todayMatchday}
           onStart={handleStart}
         />
       ) : session === null ? null : session.phase === 'COMPLETE' ? (

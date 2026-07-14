@@ -55,7 +55,10 @@ describe('loadGameData — happy path', () => {
     expect(data.squads).toHaveLength(60);
     const totalPlayers = data.squads.reduce((n, s) => n + s.players.length, 0);
     expect(totalPlayers).toBe(660);
-    expect(data.thresholds.version).toBe(4);
+    expect(data.thresholds.version).toBe(5);
+    expect(data.thresholds.modes?.normal.bands.length).toBeGreaterThan(0);
+    expect(data.thresholds.modes?.hard.bands.length).toBeGreaterThan(0);
+    expect(data.thresholds.bands).toEqual(data.thresholds.modes!.hard.bands);
     expect(data.commentary.version).toBe(1);
     expect(Object.keys(data.positionMap).length).toBeGreaterThan(0);
   });
@@ -170,8 +173,8 @@ describe('loadGameData — failure modes (ARCHITECTURE.md §6)', () => {
 
   it('rejects zero fallback bands', () => {
     const raw = validRaw();
-    const bands = (raw.thresholds as { bands: { id: string; fallback?: boolean }[] }).bands;
-    const fb = bands.find((b) => b.fallback === true)!;
+    const modes = (raw.thresholds as { modes: { hard: { bands: { id: string; fallback?: boolean }[] } } }).modes;
+    const fb = modes.hard.bands.find((b) => b.fallback === true)!;
     fb.fallback = false;
     expectRejects(raw, (problems) => {
       expect(problems.some((p) => p.includes('no band has fallback:true'))).toBe(true);
@@ -180,8 +183,8 @@ describe('loadGameData — failure modes (ARCHITECTURE.md §6)', () => {
 
   it('rejects two fallback bands', () => {
     const raw = validRaw();
-    const bands = (raw.thresholds as { bands: { id: string; fallback?: boolean }[] }).bands;
-    const nonFallback = bands.find((b) => b.fallback !== true)!;
+    const modes = (raw.thresholds as { modes: { hard: { bands: { id: string; fallback?: boolean }[] } } }).modes;
+    const nonFallback = modes.hard.bands.find((b) => b.fallback !== true)!;
     nonFallback.fallback = true;
     expectRejects(raw, (problems) => {
       expect(problems.some((p) => p.includes('bands have fallback:true'))).toBe(true);
@@ -504,7 +507,7 @@ describe('loadGameData — ADR-020 thresholds v4 profiles/oppositions/minFit', (
 
   it('rejects minFit outside [0,100]', () => {
     const raw = validRaw();
-    const bands = (raw.thresholds as { bands: { id: string; minFit?: number }[] }).bands;
+    const bands = (raw.thresholds as { modes: { hard: { bands: { id: string; minFit?: number }[] } } }).modes.hard.bands;
     const band = bands.find((b) => b.id === '10-0')!;
     band.minFit = 150;
     expectRejects(raw, (problems) => {
@@ -514,12 +517,61 @@ describe('loadGameData — ADR-020 thresholds v4 profiles/oppositions/minFit', (
 
   it('rejects minFit configured on more than 3 bands', () => {
     const raw = validRaw();
-    const bands = (raw.thresholds as { bands: { id: string; minFit?: number }[] }).bands;
-    // Real config already has minFit on the top 3 bands (10-0/7-1/5-0); add a 4th.
+    const bands = (raw.thresholds as { modes: { hard: { bands: { id: string; minFit?: number }[] } } }).modes.hard.bands;
+    // Real hard config already has minFit on the top 3 bands (10-0/7-1/5-0); add a 4th.
     const fourthBand = bands.find((b) => b.id === '4-1')!;
     fourthBand.minFit = 0;
     expectRejects(raw, (problems) => {
       expect(problems.some((p) => p.includes('minFit configured on 4 bands'))).toBe(true);
+    });
+  });
+});
+
+describe('loadGameData — ADR-021 thresholds v5 modes', () => {
+  it('rejects minFit on a normal band (both directions of the forbid)', () => {
+    const raw = validRaw();
+    const normal = (raw.thresholds as { modes: { normal: { bands: { id: string; minFit?: number }[] } } }).modes.normal;
+    const band = normal.bands.find((b) => b.id === '10-0')!;
+    band.minFit = 90;
+    expectRejects(raw, (problems) => {
+      expect(problems.some((p) => p.includes('minFit is not allowed in normal bands'))).toBe(true);
+    });
+  });
+
+  it('rejects unknown formation keys in per-formation minFit', () => {
+    const raw = validRaw();
+    const hard = (raw.thresholds as { modes: { hard: { bands: { id: string; minFit?: unknown }[] } } }).modes.hard;
+    const band = hard.bands.find((b) => b.id === '10-0')!;
+    band.minFit = { '4-3-3': 94, 'not-a-formation': 90 };
+    expectRejects(raw, (problems) => {
+      expect(problems.some((p) => p.includes("minFit formation key 'not-a-formation'"))).toBe(true);
+    });
+  });
+
+  it('rejects a mode missing its fallback (one fallback PER mode)', () => {
+    const raw = validRaw();
+    const normal = (raw.thresholds as { modes: { normal: { bands: { fallback?: boolean }[] } } }).modes.normal;
+    const fb = normal.bands.find((b) => b.fallback === true)!;
+    fb.fallback = false;
+    expectRejects(raw, (problems) => {
+      expect(problems.some((p) => p.includes('thresholds.modes.normal.bands') && p.includes('no band has fallback:true'))).toBe(
+        true,
+      );
+    });
+  });
+
+  it('accepts per-formation minFit with known formation ids', () => {
+    const raw = validRaw();
+    const hard = (raw.thresholds as { modes: { hard: { bands: { id: string; minFit?: unknown }[] } } }).modes.hard;
+    const band = hard.bands.find((b) => b.id === '10-0')!;
+    band.minFit = { '4-3-3': 94, '4-4-2': 93, '3-5-2': 92, '5-3-2': 91 };
+    expect(() => loadGameData(raw)).not.toThrow();
+    const data = loadGameData(raw);
+    expect(data.thresholds.modes!.hard.bands.find((b) => b.id === '10-0')!.minFit).toEqual({
+      '4-3-3': 94,
+      '4-4-2': 93,
+      '3-5-2': 92,
+      '5-3-2': 91,
     });
   });
 });

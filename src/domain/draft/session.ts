@@ -14,9 +14,28 @@ import type {
   Rng,
   Squad,
   StartDraftOptions,
+  ThresholdConfig,
 } from '../types';
 import { IllegalActionError } from '../types';
 import { isPersonTaken } from './person';
+
+/**
+ * drawOpposition (ADR-021) — the HARD-mode opponent archetype draw. Candidates
+ * are the non-neutral oppositions sorted by id (JSON-order stability — the sort
+ * guard, so reordering the catalog never changes which archetype a seed draws),
+ * indexed by `floor(rng.next() * candidates.length)`. Consumes EXACTLY ONE
+ * `rng.next()`. Defensive: an all-neutral catalog returns 'neutral' rather than
+ * throwing (real configs always ship ≥1 non-neutral opposition). This is the pure
+ * draw helper that replaces the retired seed-based `selectOpposition`.
+ */
+function drawOpposition(config: ThresholdConfig, rng: Rng): string {
+  const candidates = config.oppositions
+    .filter((o) => o.id !== 'neutral')
+    .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+  if (candidates.length === 0) return 'neutral';
+  const idx = Math.floor(rng.next() * candidates.length);
+  return candidates[idx].id;
+}
 
 interface SelectResult {
   reveal: Squad;
@@ -77,6 +96,16 @@ export function startDraft(
     );
   }
 
+  const difficulty = options?.difficulty ?? 'normal';
+
+  // ADR-021 / ADR-008 amendment: in HARD mode the injected rng ALSO draws the
+  // opponent archetype — and it does so BEFORE the first squad draw, consuming
+  // exactly one rng.next(). So a hard session's reveal sequence differs from a
+  // normal session's (same seed) by only that one consumed draw; a normal session
+  // consumes no extra rng and its revealLog is identical to pre-modes behavior.
+  const oppositionId =
+    difficulty === 'hard' ? drawOpposition(data.thresholds, rng) : undefined;
+
   const { reveal, breached } = selectSquad(data.squads, [], [], null, rng);
   const breachLog: string[] = [];
   if (breached) breachLog.push('repeat:1');
@@ -93,7 +122,8 @@ export function startDraft(
     formationId: id,
     revealLog: [reveal.id],
     seed: options?.seed ?? 0,
-    mode: options?.mode ?? 'free',
+    difficulty,
+    oppositionId,
   };
 }
 

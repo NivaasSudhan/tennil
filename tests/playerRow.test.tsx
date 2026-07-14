@@ -180,7 +180,7 @@ function makeSession(): DraftSession {
     formationId: 'x',
     revealLog: [],
     seed: 0,
-    mode: 'daily',
+    difficulty: 'hard',
   };
 }
 

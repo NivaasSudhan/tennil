@@ -168,6 +168,8 @@ Changing anything marked **Invariant** in PROJECT.md requires a new ADR here fir
 - **Consequences**: `tests/draft.test.ts` uses `mulberry32(fixedSeed)`; full-draft simulations (T-012) are reproducible by seed.
 - **Revisit when**: never for MVP.
 
+**Amendment (2026-07-14, ADR-021):** the injected draft-RNG also draws the HARD-mode opponent archetype (one `rng.next()` before the first squad reveal). Scoring remains pure given the draw; only the session stamp is stochastic.
+
 ---
 
 ## ADR-009 — Deploy: GitHub Pages via Actions
@@ -277,6 +279,8 @@ Changing anything marked **Invariant** in PROJECT.md requires a new ADR here fir
 
 **Amendment (2026-07-12, user product directive):** Reveals are always random — every draft draws a fresh random seed (`Math.floor(Math.random() * 2**31)`); the identical-reveals daily mode is removed. `dailySeed` no longer seeds reveal RNG; it is reserved for v2 Daily Opposition. Matchday number is pure date framing — it remains as the visible badge. Cross-player comparability comes from ADR-019 relative scoring (efficiency-vs-ceiling), not shared reveals. The `mode` field on `DraftSession` is always `'daily'` (the session's `'free'` value is dead at the UI layer; the domain type retains both values for call-site compatibility). Mode toggle removed from StartScreen; MATCHDAY badge always visible.
 
+**SUPERSEDED (2026-07-14, ADR-021):** daily/matchday framing and `mode: 'daily'|'free'` are retired. Difficulty (`normal`|`hard`) replaces mode; `dailySeed`/`matchdayNumber` deleted. See ADR-021.
+
 ---
 
 ## ADR-020 — Attributes, ProfileFit & Daily Opposition (v2, Reveal-Luck-Law-bounded)
@@ -290,3 +294,17 @@ Changing anything marked **Invariant** in PROJECT.md requires a new ADR here fir
 - **Revisit when**: Wave B lands real corpus attrs (squads.json → v2 for real, dual-accept of v1 can retire once nothing on `main` still needs it); Wave C implements the fit/opposition math and wires `minFit` into `evaluateBandPredicates`; Wave D retunes the `minFit` numbers and profile weights/targets from corpus-60 sim data against the §4 difficulty targets (fit-aware 10-0 6-7%, attr-blind 3-4%).
 
 **SPEC DELTA (2026-07-12, Wave C, supersedes design §3's free-play-neutral rule):** free mode no longer exists (ADR-014-lite amendment — every draft is matchday-framed); `selectOpposition(config, seed)` drops the `mode` parameter entirely — candidates are non-neutral oppositions sorted by id, pick `candidates[seed % candidates.length]`; the caller passes `dailySeed(new Date())` at the ResultScreen/App layer and `--opposition <id>` in the sim; `neutral` stays in the catalog (validation requires it) for synthetic tests and as the sim default when no flag is passed.
+
+**Amendment (2026-07-14, ADR-021):** seed-based `selectOpposition` retired. HARD-mode opponent drawn off the injected draft rng in `startDraft` (`drawOpposition`) and stamped as `session.oppositionId`. Normal has no opponent.
+
+---
+
+## ADR-021 — Difficulty modes (Normal / Hard) + opponent draw (schema v5)
+
+- **Decision**: (1) **One app, two difficulties.** `DraftSession.difficulty: 'normal' | 'hard'` replaces retired `mode: 'daily'|'free'`. **Normal** = v1 OVR/efficiency ladder only (no fit gates, no opponent, no attr scoring influence). **Hard** = v2 fit-dominant ladder + attrs + opponent archetype. (2) **thresholds.json v5:** `modes: { normal: { bands }, hard: { bands } }`. Normal bands = main's tuned efficiency ladder verbatim (no `minFit`). Hard bands = current fit-dominant ladder; `minFit` may be `number | Record<formationId, number>`. Shared: formations/profiles/oppositions/minCounts/ratingScale. loadData validates each mode (exactly one fallback each; minFit forbidden in normal; per-formation minFit keys must be known formation ids). Active `bands` defaults to hard; `withMode(config, difficulty)` swaps the view. (3) **`withMode` / `resolveMinFit`:** immutable config-view pattern (like `withFormationMinCounts`). Per-formation minFit collapses to a scalar at the formation-view layer so `scoreBand`/`explainScoreBand`/`evaluateBandPredicates` signatures stay unchanged. (4) **Opponent draw (hard only):** `startDraft` draws `oppositionId` via one `rng.next()` over non-neutral oppositions sorted by id, BEFORE the first squad reveal. Normal consumes no extra rng — same seed ⇒ identical revealLog to pre-modes. (5) **Matchday/daily deleted:** `dailySeed`, `matchdayNumber`, `src/lib/daily.ts`, seed-based `selectOpposition` gone. Sim gains `--mode normal|hard` (default hard); `--opposition` inert against normal bands. (6) UI toggle / OpponentCard / share tags = M2; per-formation hard calibration = M3.
+- **Rationale**: Product wants both the original retention ladder and the harder attr/fit game in one ship, without date-framed daily/matchday. Difficulty is a scoring/config choice; opponent is a session stamp drawn once; purity of scoring stays intact.
+- **Alternatives**: Two separate deploys (rejected: one site); keep dailySeed for opponent (rejected: date coupling; want per-session randomness); change scoreBand signatures for Record minFit (rejected: ADR-013/C2 discipline — resolve at view layer).
+- **Tradeoffs**: Hard same-seed revealLog shifts by one draw vs normal (documented, tested). Interim ResultScreen still maps hard→cardMode `'daily'` until M2 reworks share/card.
+- **Consequences**: Schema v5 only; ADR-008 amended (rng also draws opponent); ADR-014-lite superseded; ADR-020 selectOpposition path superseded. Tests migrate `mode`→`difficulty`; new withMode/minFit/opposition-draw coverage.
+- **Risks**: Per-formation hard fairness still flat minFit until M3. Mitigation: M3 Law matrix + calibration.
+- **Revisit when**: M3 balance lands; M2 UI mode toggle ships.

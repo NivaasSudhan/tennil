@@ -28,16 +28,12 @@ const BUCKETS: PositionBucket[] = ['GK', 'DEF', 'MID', 'ATT'];
  * powers the minEfficiency/minBucketEfficiency predicates below.
  *
  * `fit`/`oppositionId` are OPTIONAL, computed-elsewhere values (ADR-020): the
- * real call sites (ResultScreen, scripts/simulate.ts) compute `fit` via
- * `computeProfileFit` and `oppositionId` via `selectOpposition` BEFORE calling
- * this function, then pass them through — this function never computes fit
- * itself (it has no FormationProfile/OppositionDef in scope, keeping this
- * module's signature stable for every pre-Wave-C caller). Callers that don't
- * pass them (every synthetic scoring/draft fixture predating Wave C) get the
- * inert defaults `fit: 0, oppositionId: 'neutral'` — harmless because every
- * real `minFit` gate shipped so far is staged at 0 (Wave A placeholder; any
- * `fit >= 0` passes) until Wave D tunes real numbers.
- */
+  * real call sites (ResultScreen, scripts/simulate.ts) compute `fit` via
+  * `computeProfileFit` and an `oppositionId` (ADR-021: session stamp / sim flag)
+  * BEFORE calling this function, then pass them through — this function never
+  * computes fit itself. Callers that omit them get inert defaults
+  * `fit: 0, oppositionId: 'neutral'`.
+  */
 export function computeScoreInput(
   xi: FinalXI,
   positionMap: PositionMap,
@@ -163,7 +159,11 @@ export function evaluateBandPredicates(
 
   // ADR-020: minFit predicate — emitted ONLY when band.minFit is a positive integer
   // (band.minFit === 0, the Wave A placeholder, emits nothing; addendum exact rule).
-  if (band.minFit !== undefined && band.minFit > 0) {
+  // ADR-021: minFit widened to `number | Record<formationId, number>`; the
+  // config-view layer (resolveMinFit) collapses the Record to a scalar before this
+  // runs, so a Record reaching here means no formation was resolved — the typeof
+  // guard makes that a no-op rather than a crash (signature unchanged, ADR-013/C2).
+  if (typeof band.minFit === 'number' && band.minFit > 0) {
     results.push({
       name: 'minFit',
       required: band.minFit,
