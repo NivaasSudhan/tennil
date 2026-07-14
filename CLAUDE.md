@@ -2,9 +2,8 @@
 
 You are continuing a planned 1-week MVP. All judgment lives in the docs, not in any prior chat.
 
-## NEXT: v2 CANARY LIVE at https://nivaassudhan.github.io/tennil-beta/ (branch v2/attrs, 382 tests). User playtests; merge v2->main ONLY on user sign-off. Parked decisions: fit-gate teeth (info-only now — decide from canary human data, RISKS R-13); optional first-axis rarity nudge (minEfficiency 0.99->0.992); player-row baseline-vs-center alignment (scroll-fix agent flag); 2026's 8 QF squads pending research drop into squads/. Redeploy beta: TENNIL_BASE=/tennil-beta/ npm run build, push dist to NivaasSudhan/tennil-beta main.
-Orchestration: prompts cached .claude/subagent-prompts.md (P-001..P-037+); routing memory = UI->Opus medium, small->Deepseek free (cap-proof) else Haiku babysat, medium->Sonnet ONLY if harness pins 4.6 (bare alias resolves Sonnet 5 = banned); DESIGN-BRIEF-v1 in every UI prompt; one browser design-check per UI wave (pane ghosts scrolled captures — verify scroll UX in a real browser).
-
+## NEXT: MODES BUILD LIVE ON BETA https://nivaassudhan.github.io/tennil-beta/ (v2/attrs @ modes build; 416 tests). Normal = v1 feel (OVR-only, clean rows, no opponent); Hard = opponent card draw -> counter-pick formation -> attrs/fit (per-formation minFit, 20-pair Law matrix green). Matchday/daily fully retired. User playtests BOTH modes -> sign-off gates v2->main merge (then one site serves both; beta = staging). Parked polish: landing formation section redundant in HARD (post-card gate supersedes); 2026 QF squads pending. Redeploy beta: TENNIL_BASE=/tennil-beta/ npm run build; push dist to NivaasSudhan/tennil-beta main.
+Orchestration (current): NO Claude subagents. Grok 4.5 (zen high, prepend CAVEMAN-ULTRA block from prompt cache) = reasoning-heavy chunks; deepseek-v4-flash-free (max, very specific prompts) = everything else; split tasks so most chunks go Deepseek. Reveals stay uniform-random over all 60 (difficulty = thresholds.json only). Prompt cache .claude/subagent-prompts.md P-001..P-045+; check `git worktree list` whenever test counts jump (stale agent worktrees double-count).
 
 ## Read order (do this before any work)
 1. PROJECT.md — goals, non-goals, invariants, assumptions
