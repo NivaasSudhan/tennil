@@ -512,5 +512,5 @@ OUTPUT DISCIPLINE — CAVEMAN ULTRA: respond maximally terse. Fragments. No plea
 ## P-051 — DNS poller for wctennil.com (Deepseek, read-only)
 - date: 2026-07-15
 - target: opencode/deepseek-v4-flash-free --variant max
-- status: dispatched
+- status: succeeded (DNS-LIVE: apex A + www CNAME resolve to GitHub)
 - task: poll dig wctennil.com A until GitHub Pages IPs (185.199.108-111.153) appear; report DNS-LIVE + records or DNS-PENDING on timeout; NO repo changes/push (orchestrator pushes main c2b129d on the signal).
