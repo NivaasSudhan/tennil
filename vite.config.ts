@@ -5,5 +5,5 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   // beta canary builds set TENNIL_BASE=/tennil-beta/
-  base: process.env.TENNIL_BASE ?? '/tennil/',
+  base: process.env.TENNIL_BASE ?? '/',
 })

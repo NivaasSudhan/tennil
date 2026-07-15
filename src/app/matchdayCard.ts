@@ -23,7 +23,7 @@ const MARGIN = 60; // outer margin (px, left/right)
 // Top-down layout budget (y-values in px on 1080×1350 canvas) — docs
 const VERDICT_START_Y = 1060;
 const FOOTER_Y = 1310;
-export const SHARE_URL = 'https://nivaassudhan.github.io/tennil/';
+export const SHARE_URL = 'https://wctennil.com/';
 
 export const BUCKET_ORDER: PositionBucket[] = ['GK', 'DEF', 'MID', 'ATT'];
 
@@ -300,7 +300,7 @@ export function renderMatchdayCard(canvas: HTMLCanvasElement, data: MatchdayCard
   }
   ctx.fillStyle = INK_FADED;
   ctx.font = monoFont(24);
-  ctx.fillText('nivaassudhan.github.io/tennil', CARD_W / 2, FOOTER_Y);
+  ctx.fillText('wctennil.com', CARD_W / 2, FOOTER_Y);
   ctx.textAlign = 'left';
 }
 

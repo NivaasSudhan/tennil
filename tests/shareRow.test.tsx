@@ -16,7 +16,7 @@ import type { PositionBucket } from '../src/domain/types';
 import { buildCardData, cardFilename } from '../src/app/matchdayCard';
 import ShareRow from '../src/app/ShareRow';
 
-const SHARE_URL = 'https://nivaassudhan.github.io/tennil/';
+const SHARE_URL = 'https://wctennil.com/';
 
 function groups(): Record<PositionBucket, { name: string; rating: number }[]> {
   return {
@@ -55,7 +55,7 @@ describe('buildCardData — share text templates (pure, ADR-021)', () => {
     expect(data.eyebrow).toBe('[HARD] · vs THE PRESSING MACHINE');
     expect(data.shareUrl).toBe(SHARE_URL);
     expect(data.shareText).toBe(
-      'TenNil [HARD] vs THE PRESSING MACHINE: 7-1 CLASSY WIN. Draft your XI: https://nivaassudhan.github.io/tennil/',
+      'TenNil [HARD] vs THE PRESSING MACHINE: 7-1 CLASSY WIN. Draft your XI: https://wctennil.com/',
     );
   });
 
@@ -71,7 +71,7 @@ describe('buildCardData — share text templates (pure, ADR-021)', () => {
     });
     expect(data.eyebrow).toBe('[HARD]');
     expect(data.shareText).toBe(
-      'TenNil [HARD]: 7-1 CLASSY WIN. Draft your XI: https://nivaassudhan.github.io/tennil/',
+      'TenNil [HARD]: 7-1 CLASSY WIN. Draft your XI: https://wctennil.com/',
     );
   });
 
@@ -88,7 +88,7 @@ describe('buildCardData — share text templates (pure, ADR-021)', () => {
     expect(data.difficulty).toBe('normal');
     expect(data.eyebrow).toBe('');
     expect(data.shareText).toBe(
-      'TenNil: 3-2 SCRAPED HOME. Draft your XI: https://nivaassudhan.github.io/tennil/',
+      'TenNil: 3-2 SCRAPED HOME. Draft your XI: https://wctennil.com/',
     );
   });
 
@@ -105,7 +105,7 @@ describe('buildCardData — share text templates (pure, ADR-021)', () => {
     });
     expect(data.eyebrow).toBe('');
     expect(data.shareText).toBe(
-      'TenNil: 7-1 CLASSY WIN. Draft your XI: https://nivaassudhan.github.io/tennil/',
+      'TenNil: 7-1 CLASSY WIN. Draft your XI: https://wctennil.com/',
     );
   });
 });
