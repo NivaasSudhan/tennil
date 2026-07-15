@@ -508,3 +508,9 @@ OUTPUT DISCIPLINE — CAVEMAN ULTRA: respond maximally terse. Fragments. No plea
 - status: dispatched — Normal hides attr digits/banner/StatsScreen; rulesCopy per mode ("Your opponent" not "Today's"); share/card [HARD] vs {OPP} tags + matchday text removal.
 ## P-044 — M3: per-formation calibration + Law matrix (Grok, caveman ultra)
 - status: dispatched — hard-mode per-formation minFit Records (~2-4% each vs neutral, fixes 3-5-2 exploit + 5-3-2 floor + 4-3-3 block); archetype×formation Law matrix all >0%; normal verified vs main histogram; RISKS + sim-report.
+
+## P-051 — DNS poller for wctennil.com (Deepseek, read-only)
+- date: 2026-07-15
+- target: opencode/deepseek-v4-flash-free --variant max
+- status: dispatched
+- task: poll dig wctennil.com A until GitHub Pages IPs (185.199.108-111.153) appear; report DNS-LIVE + records or DNS-PENDING on timeout; NO repo changes/push (orchestrator pushes main c2b129d on the signal).
